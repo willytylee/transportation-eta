@@ -26,11 +26,15 @@ export const Section = (props) => {
 
     		if (api.url.length === 1){
 					res = await axios.get(api.url[0])
-					result.push(res.data.data);
+					result.push(res.data.data.filter(item => item.seq == 1)); // Default we get the 1st stop insteam of last stop
 				}else{
 					res1 = await axios.get(api.url[0])
 					res2 = await axios.get(api.url[1])
-					res = res1.data.data.concat(res2.data.data)
+
+					const data1 = res1.data.data.filter(item => item.seq == 1)
+					const data2 = res2.data.data.filter(item => item.seq == 1)
+
+					res = data1.concat(data2)
 					res.sort((a,b) => {
 						if (a.eta <= b.eta){
 							return -1;
