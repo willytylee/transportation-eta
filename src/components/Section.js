@@ -26,22 +26,33 @@ export const Section = (props) => {
 
     		if (api.url.length === 1){
 					res = await axios.get(api.url[0])
-					result.push(res.data.data.filter(item => item.seq == 1)); // Default we get the 1st stop insteam of last stop
+					if (api.seq){
+						result.push(res.data.data.filter(item => item.seq == api.seq)); // Default we get the 1st stop insteam of last stop
+					}else{
+						result.push(res.data.data)	
+					}
 				}else{
 					res1 = await axios.get(api.url[0])
 					res2 = await axios.get(api.url[1])
 
-					const data1 = res1.data.data.filter(item => item.seq == 1)
-					const data2 = res2.data.data.filter(item => item.seq == 1)
-
-					res = data1.concat(data2)
+					if (api.seq){
+						const data1 = res1.data.data.filter(item => item.seq == 1)
+						const data2 = res2.data.data.filter(item => item.seq == 1)
+						res = data1.concat(data2)
+					}else{
+						res = res1.data.data.concat(res2.data.data);
+					}
+					
 					res.sort((a,b) => {
-						if (a.eta <= b.eta){
-							return -1;
-						}else{
+						if (a.eta === '' || a.eta === null){
 							return 1;
 						}
+						if (b.eta === '' || b.eta === null){
+							return -1
+						}
+						return moment(a.eta).diff(moment(b.eta), 'second');
 					})
+
 					res = res.slice(0, 3)
 					result.push(res);
 				}

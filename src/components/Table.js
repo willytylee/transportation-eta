@@ -15,7 +15,7 @@ export const Table = (props) => {
 		}else{
 			result[i] = etas.map(eta => {
 	      if (eta){
-	        if (moment(eta).diff(moment(), 'minutes') === 0 || moment(eta).diff(moment(), 'minutes') === -1){
+	        if (moment(eta).diff(moment(), 'minutes') <= 0){
 	          return '準備埋站';
 	        }else{
 	          return `${moment(eta).diff(moment(), 'minutes')}分鐘`;

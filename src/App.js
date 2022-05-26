@@ -15,7 +15,7 @@ const App = () => {
       </div>
       <div className="section">
         <div>回家</div>
-        <Section stop="九龍灣宏展街 => 庇利街"  range={[4, 5]}/>
+        <Section stop="九龍灣宏展街 (公司) => 庇利街"  range={[4, 5]}/>
         <Section stop="將軍澳隧道轉車站 => 庇利街"  range={[6, 7]}/>
       </div>
       <div className="section">
@@ -30,6 +30,9 @@ const App = () => {
       </div>
       <div className="section">
         <Section stop="Testing"  range={[18, 19]}/>
+      </div>
+      <div className="section">
+        <Section stop="北拱街 => 四美街"  range={[14, 14]}/>
       </div>
     </div>
   );

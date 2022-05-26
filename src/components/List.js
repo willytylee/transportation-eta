@@ -22,19 +22,20 @@ export const List = (props) => {
 		}
 	})
 
-
 	fullArray.sort((a,b) => {
-		if (a.eta <= b.eta){
-			return -1;
-		}else{
+		if (a.eta === '' || a.eta === null){
 			return 1;
 		}
+		if (b.eta === '' || b.eta === null){
+			return -1
+		}
+		return moment(a.eta).diff(moment(b.eta), 'second');
 	}).forEach((routeData, i) => {
-		// console.log(fullArray);
+		
 		const {eta} = routeData;
 
 		if (eta){
-      if (moment(eta).diff(moment(), 'minutes') === 0 || moment(eta).diff(moment(), 'minutes') === -1){
+      if (moment(eta).diff(moment(), 'minutes') <= 0){
         fullArray[i].eta =  '準備埋站';
       }else{
         fullArray[i].eta =  `${moment(eta).diff(moment(), 'minutes')}分鐘`;
