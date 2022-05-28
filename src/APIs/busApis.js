@@ -116,6 +116,7 @@ export const apis = [
     {
       'id': 17,
       'route': '96R',
+      'seq': 1,
       'url': [
         'https://data.etabus.gov.hk/v1/transport/kmb/eta/D7132C4D6287B688/96R/1'
       ],

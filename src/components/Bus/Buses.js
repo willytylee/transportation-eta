@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import axios from 'axios';
 import moment from 'moment';
-import {apis} from './../apis.js';
+import {apis} from './../../APIs/busApis.js';
 import {Table} from './Table.js';
 import {List} from './List.js';
 
-export const Section = (props) => {
+export const Buses = (props) => {
 
 	const [sectionData, setSectionData] = useState([]);
 	const [routeNo, setRouteNo] = useState([]);
