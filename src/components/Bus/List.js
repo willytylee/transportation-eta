@@ -3,19 +3,27 @@ import moment from 'moment';
 
 export const List = (props) => {
 
-	const {sectionData, routeNo} = props;
+	const {sectionData} = props;
 
 	let fullArray = [];
 
 	sectionData.forEach((routeData, i) => {
-		if (routeData.length === 0){
-			fullArray.push({'route': routeNo[i],'eta': ''})
+		const {etas, route} = routeData
+		
+		if (etas.length === 0){
+			fullArray.push({
+				route,
+				eta: ''})
 		}else{
-			routeData.forEach((data, j) => {
+			etas.forEach((data, j) => {
 				if (data.eta){
-					fullArray.push({'route': routeNo[i],'eta': data.eta})
+					fullArray.push({
+						route,
+						eta: data.eta})
 				}else{
-					fullArray.push({'route': routeNo[i],'eta': ''})
+					fullArray.push({
+						route,
+						eta: ''})
 				}
 			})	
 		}
@@ -30,9 +38,8 @@ export const List = (props) => {
 		}
 		return moment(a.eta).diff(moment(b.eta), 'second');
 	}).forEach((routeData, i) => {
-		
-		const {eta} = routeData;
 
+	const {eta} = routeData;
 		if (eta){
       if (moment(eta).diff(moment(), 'minutes') <= 0){
         fullArray[i].eta =  '準備埋站';

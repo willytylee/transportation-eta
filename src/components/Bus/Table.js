@@ -3,16 +3,19 @@ import moment from 'moment';
 
 export const Table = (props) => {
 
-	const {sectionData, routeNo} = props;
+	const {sectionData} = props;
 
+	const txts = [];
 	const result = [];
 
 	sectionData.forEach((routeData, i) => {
-		const etas = routeData.map((data, i) => data.eta)
+		let {etas, route} = routeData;
+		etas = routeData.etas.map((data, i) => data.eta)
+		
 		if (etas.length === 0){
-			result[i] = ['沒有班次']
+			txts[i] = ['沒有班次']
 		}else{
-			result[i] = etas.map(eta => {
+			txts[i] = etas.map(eta => {
 	      if (eta){
 	        if (moment(eta).diff(moment(), 'minutes') <= 0){
 	          return '準備埋站';
@@ -24,19 +27,23 @@ export const Table = (props) => {
 	      }
 	    })      
 		}
+		result.push({
+			route,
+			etas: txts[i]
+		})
 	})
 
 	return (
 		<>
 	    <table>
 	      <tbody>
-	        {result.map((routeEta, i) => {
+	        {result.map((routeData, i) => {
             return (
               <tr key={i}>
                 <td>
-                	{routeNo[i]}
+                	{routeData.route}
                 </td>
-                {routeEta.map((eta, j) => {
+                {routeData.etas.map((eta, j) => {
                   return (
                     <td key={j} className="eta">
                       {eta}

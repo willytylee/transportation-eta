@@ -8,30 +8,62 @@ import {List} from './List.js';
 export const Buses = (props) => {
 
 	const [sectionData, setSectionData] = useState([]);
-	const [routeNo, setRouteNo] = useState([]);
+	const [kmbStopList, setKmbStopList] = useState([]);
 	const [view, setView] = useState('list');
 	const {stop, range} = props;
 
   useEffect(() => {
 
+		axios.get('https://data.etabus.gov.hk/v1/transport/kmb/stop/').then((response) => {
+  		setKmbStopList(response)
+  	})
+
     const interval = setInterval( async () => {
 
-    	const result = [], routeNo = [];
+    	const result = [];
 
     	for (let i = range[0] - 1; i < range[1]; i++){
     		let res, res1 = [], res2 = [];
     		const api = apis[i];
 
-    		routeNo.push(api.route);
-
     		if (api.url.length === 1){
-					res = await axios.get(api.url[0])
+    			let route;
+    			const apiUrl = api.url[0]
+    			const apiUrlArr = apiUrl.split("/")
+    			const endPoint = apiUrlArr[2]
+
+    			if (endPoint === 'data.etabus.gov.hk'){
+    				route = apiUrlArr[8]
+    			}else if (endPoint === 'rt.data.gov.hk'){
+    				route = apiUrlArr[9]
+    			}
+    			
+					res = await axios.get(apiUrl)
 					if (api.seq){
-						result.push(res.data.data.filter(item => item.seq == api.seq)); // Default we get the 1st stop insteam of last stop
+						result.push({
+							etas: res.data.data.filter(item => item.seq == api.seq), // Default we get the 1st stop insteam of last stop
+							route: route
+						}); 
 					}else{
-						result.push(res.data.data)	
+						result.push({
+							etas: res.data.data,
+							route: route
+						})	
 					}
 				}else{
+
+					let route
+					const apiUrl = api.url[0]
+    			const apiUrlArr = apiUrl.split("/")
+    			const endPoint = apiUrlArr[2]
+
+    			if (endPoint === 'data.etabus.gov.hk'){
+    				route = apiUrlArr[8]
+    			}else if (endPoint === 'rt.data.gov.hk'){
+    				route = apiUrlArr[9]
+    			}
+
+
 					res1 = await axios.get(api.url[0])
 					res2 = await axios.get(api.url[1])
 
@@ -54,11 +86,13 @@ export const Buses = (props) => {
 					})
 
 					res = res.slice(0, 3)
-					result.push(res);
+					result.push({
+						etas: res,
+						route
+					});
 				}
     	}
 
-    	setRouteNo(routeNo)
   		setSectionData(result);  
 
     }, 1000)
@@ -80,9 +114,9 @@ export const Buses = (props) => {
 			<div>{stop} <button onClick={() => switchView(view)}>{view === 'list'?'Table':'List'} view</button></div>
 			{
 				view === 'list'?
-					<List sectionData={sectionData} routeNo={routeNo} />
+					<List sectionData={sectionData} />
 				:
-					<Table sectionData={sectionData} routeNo={routeNo} />
+					<Table sectionData={sectionData} />
 			}
 		</>
 	)
