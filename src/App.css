@@ -5,7 +5,7 @@ body{
 	margin:  0;
 }
 .container{
-	margin: 1rem;
+	font-size: 14px;
 }
 .nav{
 	background-color: #333;
@@ -36,15 +36,42 @@ body{
 	background-color: #555;
 }
 .section{
-	padding-bottom: 20px;
+	padding: 10px;
+  box-shadow: 1px 1px 4px grey;
+  margin: 8px;
+  border-radius: 6px;
 }
-.eta{
-	text-align:  right;
-	width:  80px;
+.tableView, .listView, .mtrTable{
+	width: 100%;
+}
+.route{
+	width: 10%;
+	font-weight: 900;
+}
+.stopName{
+	font-size:  12px;
+	width: 35%;
+}
+.tableView .eta{
+	text-align:  left;
+	width:  15%;
+}
+.listView .eta{
+	text-align:  left;
+	width:  45%;
+}
+.mtrTable .ttntText{
+	width: 40%;
+}
+.mtrTable .ttnt{
+	width: 20%;
 }
 td{
 	vertical-align: baseline;
 }
-.ttnt{
-	padding-left: 10px;
+.dest{
+	font-weight: 900;
+}
+.refresh-wrapper{
+	text-align: center;
 }

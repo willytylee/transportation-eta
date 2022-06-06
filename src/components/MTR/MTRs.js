@@ -7,42 +7,30 @@ import {constDest} from './../../constants/MTRDests.js'
 
 export const MTRs = (props) => {
 
-	const {range} = props;
+	const {id, direction} = props;
 	const [sectionData, setSectionData] = useState([])
 
   useEffect(() => {
 
     const interval = setInterval( async () => {
 
-    	const result = [], sectionData = []
+    	const sectionData = []
+  		const api = apis[id];
+  		const url = new URL(api.url);
+  		const name = api.stop
+  		const lineSta = `${url.searchParams.get('line')}-${url.searchParams.get('sta')}`
+  		const apiReturn = await axios.get(api.url);
+  		const stationData = apiReturn.data.data[lineSta];
 
-    	for (let i = range[0] - 1; i < range[1]; i++){
-    		const api = apis[i];
-    		const url = new URL(api.url);
-    		result.push({
-    			'name': api.stop,
-    			'lineSta': `${url.searchParams.get('line')}-${url.searchParams.get('sta')}`,
-    			'data': await axios.get(api.url)
-    		})
-    	}
-
-    	result.forEach(station => {
-    		const etas = []
-    		const {lineSta} = station
-    		const stationData = station.data.data.data[lineSta]
-
-    		sectionData.push({
-    			'name': station['name'],
-    			'down': {
-  					dest: stationData.DOWN.length > 1 ? constDest[stationData.DOWN[0].dest] : '',
-  					ttnts: stationData.DOWN.map(data => (data.ttnt == 0) ? "準備埋站" : `${data.ttnt}分鐘`),
-  				},
-    			'up': {
-  					dest: stationData.UP.length > 1 ? constDest[stationData.UP[0].dest] : '',
-  					ttnts: stationData.UP.map(data => (data.ttnt == 0) ? "準備埋站" : `${data.ttnt}分鐘`),
-  				},
-    		})
-    	})
+  		sectionData.name = name;
+  		sectionData.down = {
+				dest: stationData.DOWN.length > 1 ? constDest[stationData.DOWN[0].dest] : '',
+				ttnts: stationData.DOWN.map(data => (data.ttnt == 0) ? "準備埋站" : `${data.ttnt}分鐘`),
+			}
+			sectionData.up = {
+				dest: stationData.UP.length > 1 ? constDest[stationData.UP[0].dest] : '',
+				ttnts: stationData.UP.map(data => (data.ttnt == 0) ? "準備埋站" : `${data.ttnt}分鐘`),
+			}
 
     	setSectionData(sectionData)
 
@@ -52,49 +40,43 @@ export const MTRs = (props) => {
 
   }, []);
 
-
-	return (
-		<>
-			{sectionData.map((station, i) => {
-				return (
-					<div className="section" key={i}>
-						<div>{station.name}</div>
-						{(!station.down.dest && !station.up.dest)?
-								"已停站"
-						: null
-						}
-						{(station.down.dest)?
-							<>
-								<div>終點站: {station.down.dest}</div>
-								<div>距離到站時間: 
-								{station.down.ttnts.map((ttnt, j) => (
-									<span className="ttnt" key={j}>
-										{ttnt} 
-									</span>
-								))}
-								</div>
-							</>
-						:
-							null
-						}
-						{(station.up.dest)?
-							<>
-								<div>終點站: {station.up.dest}</div>
-								<div>距離到站時間: 
-								{station.up.ttnts.map((ttnt, j) => (
-									<span className="ttnt" key={j}>
-										{ttnt}
-									</span>
-								))}
-								</div>		
-							</>
-						:
-							null
-						}
-						
-					</div>
-				)
-			})}
-		</>
-	)
+	return <>
+		<div>{sectionData.name}</div>
+		{(!sectionData?.down?.dest && !sectionData?.up?.dest)?
+				"已停站"
+		: null
+		}
+		<table className="mtrTable">
+			<tbody>
+				{(sectionData?.down?.dest) && direction.includes('down') ?
+					<tr>
+						<td>往 <span className="dest">{sectionData.down.dest}</span> 到站時間:</td>
+						{sectionData.down.ttnts.map((ttnt, j) => (
+							<td className="ttnt" key={j}>
+								{ttnt} 
+							</td>
+						)).slice(0, 3)}
+					</tr>
+					:
+					null
+				}
+			</tbody>
+		</table>
+		<table className="mtrTable">
+			<tbody>
+				{(sectionData?.up?.dest) && direction.includes('up') ?
+					<tr>
+						<td>往 <span className="dest">{sectionData.up.dest}</span> 到站時間:</td>
+						{sectionData.up.ttnts.map((ttnt, j) => (
+							<td className="ttnt" key={j}>
+								{ttnt} 
+							</td>
+						)).slice(0, 3)}
+					</tr>
+					:
+					null
+				}
+			</tbody>
+		</table>
+	</>
 }

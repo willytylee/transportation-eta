@@ -11,13 +11,16 @@ const App = () => {
 
   return (
     <> 
-      {/*<Navbar />*/}
+      <Navbar />
       <div className="container">
         <Routes>
           <Route path="/" element={<Willy />} />
           <Route path="/willy" element={<Willy />} />
           <Route path="/shan" element={<Shan />} />
         </Routes>
+        <div className="refresh-wrapper">
+          <button onClick={() => window.location.reload()}>Refresh to update the app</button>
+        </div>
       </div>
     </>
   );

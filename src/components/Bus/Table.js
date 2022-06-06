@@ -9,7 +9,7 @@ export const Table = (props) => {
 	const result = [];
 
 	sectionData.forEach((routeData, i) => {
-		let {etas, route} = routeData;
+		let {etas, route, stopName, latLng} = routeData
 		etas = routeData.etas.map((data, i) => data.eta)
 		
 		if (etas.length === 0){
@@ -29,19 +29,26 @@ export const Table = (props) => {
 		}
 		result.push({
 			route,
-			etas: txts[i]
+			etas: txts[i],
+			stopName,
+			latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`
 		})
 	})
 
 	return (
 		<>
-	    <table>
+	    <table className="tableView">
 	      <tbody>
 	        {result.map((routeData, i) => {
             return (
               <tr key={i}>
-                <td>
+                <td className="route">
                 	{routeData.route}
+                </td>
+                <td className="stopName">
+                	<a href={routeData.latLngUrl}>
+                		{routeData.stopName}
+                	</a>
                 </td>
                 {routeData.etas.map((eta, j) => {
                   return (

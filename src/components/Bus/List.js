@@ -8,22 +8,31 @@ export const List = (props) => {
 	let fullArray = [];
 
 	sectionData.forEach((routeData, i) => {
-		const {etas, route} = routeData
+		const {etas, route, stopName, latLng} = routeData
 		
 		if (etas.length === 0){
 			fullArray.push({
 				route,
-				eta: ''})
+				eta: '',
+				stopName,
+				latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`
+			})
 		}else{
 			etas.forEach((data, j) => {
 				if (data.eta){
 					fullArray.push({
 						route,
-						eta: data.eta})
+						eta: data.eta,
+						stopName,
+						latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`
+					})
 				}else{
 					fullArray.push({
 						route,
-						eta: ''})
+						eta: '',
+						stopName,
+						latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`
+					})
 				}
 			})	
 		}
@@ -51,16 +60,21 @@ export const List = (props) => {
     }   
 	})
 
-	fullArray = fullArray.slice(0, 3)
+	if (sectionData.length >= 3){
+		fullArray = fullArray.slice(0, sectionData.length)
+	}else{
+		fullArray = fullArray.slice(0, 3)
+	}
 
 	return (
 		<>
-			<table>
+			<table className="listView">
 				<tbody>
 					{fullArray.map((data, i) => {
 						return (
 							<tr key={i}>
-								<td>{data?.route}</td>
+								<td className="route">{data?.route}</td>
+								<td className="stopName"><a href={data?.latLngUrl}>{data?.stopName}</a></td>
 								<td className="eta">{data?.eta}</td>
 							</tr>
 						)

@@ -24,7 +24,10 @@ export const Willy = () => {
 	    <Buses stop="鑽石山站" range={[18, 18]}/>
 	  </div>
 	  <div className="section">
-	    <MTRs range={[1, 2]} />
+	    <MTRs id={0} direction={['up', 'down']}/>
+	  </div>
+	  <div className="section">
+	    <MTRs id={1} direction={['up', 'down']}/>
 	  </div>
 	  <div className="section">
 	    <Buses stop="Testing" range={[19, 20]}/>
