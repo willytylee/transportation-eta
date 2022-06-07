@@ -53,7 +53,7 @@ export const List = (props) => {
     }   
 	})
 
-	sectionData.length >= 3 ?
+	if (sectionData.length >= 3){
 		fullArray = fullArray.slice(0, sectionData.length)
 	}else{
 		fullArray = fullArray.slice(0, 3)
