@@ -1,4 +1,3 @@
-import axios from 'axios';
 import moment from 'moment';
 
 export const List = (props) => {
@@ -9,6 +8,8 @@ export const List = (props) => {
 
 	sectionData.forEach((routeData, i) => {
 		const {etas, route, stopName, latLng} = routeData
+
+		let eta;
 		
 		if (etas.length === 0){
 			fullArray.push({
@@ -19,21 +20,13 @@ export const List = (props) => {
 			})
 		}else{
 			etas.forEach((data, j) => {
-				if (data.eta){
-					fullArray.push({
-						route,
-						eta: data.eta,
-						stopName,
-						latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`
-					})
-				}else{
-					fullArray.push({
-						route,
-						eta: '',
-						stopName,
-						latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`
-					})
-				}
+				data.eta ? eta = data.eta : eta = ''
+				fullArray.push({
+					route,
+					eta,
+					stopName,
+					latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`
+				})
 			})	
 		}
 	})
@@ -60,7 +53,7 @@ export const List = (props) => {
     }   
 	})
 
-	if (sectionData.length >= 3){
+	sectionData.length >= 3 ?
 		fullArray = fullArray.slice(0, sectionData.length)
 	}else{
 		fullArray = fullArray.slice(0, 3)

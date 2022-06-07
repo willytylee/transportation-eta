@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import moment from 'moment';
 import {apis} from './../../APIs/mtrApis.js';
 import {constDest} from './../../constants/MTRDests.js'
 
@@ -14,10 +13,10 @@ export const MTRs = (props) => {
 
     const interval = setInterval( async () => {
 
-    	const sectionData = []
+    	const sectionData = {}
   		const api = apis[id];
-  		const url = new URL(api.url);
   		const name = api.stop
+  		const url = new URL(api.url);
   		const lineSta = `${url.searchParams.get('line')}-${url.searchParams.get('sta')}`
   		const apiReturn = await axios.get(api.url);
   		const stationData = apiReturn.data.data[lineSta];
@@ -25,11 +24,11 @@ export const MTRs = (props) => {
   		sectionData.name = name;
   		sectionData.down = {
 				dest: stationData.DOWN.length > 1 ? constDest[stationData.DOWN[0].dest] : '',
-				ttnts: stationData.DOWN.map(data => (data.ttnt == 0) ? "準備埋站" : `${data.ttnt}分鐘`),
+				ttnts: stationData.DOWN.map(data => (data.ttnt === 0) ? "準備埋站" : `${data.ttnt}分鐘`),
 			}
 			sectionData.up = {
 				dest: stationData.UP.length > 1 ? constDest[stationData.UP[0].dest] : '',
-				ttnts: stationData.UP.map(data => (data.ttnt == 0) ? "準備埋站" : `${data.ttnt}分鐘`),
+				ttnts: stationData.UP.map(data => (data.ttnt === 0) ? "準備埋站" : `${data.ttnt}分鐘`),
 			}
 
     	setSectionData(sectionData)

@@ -1,6 +1,3 @@
-import {useState, useEffect} from 'react';
-import axios from 'axios';
-import moment from 'moment';
 import './App.css';
 import {Navbar} from './Navbar'
 import {Willy} from './pages/Willy'

@@ -10,7 +10,7 @@ export const Buses = (props) => {
 	const [sectionData, setSectionData] = useState([]);
 	// const [kmbStopList, setKmbStopList] = useState([]);
 	const [view, setView] = useState('list');
-	const {stop, range} = props;
+	const {range} = props;
 
   useEffect(() => {
 
@@ -38,7 +38,7 @@ export const Buses = (props) => {
     			if (endPoint === 'data.etabus.gov.hk'){
     				route = apiUrlArr[8]
     				stopCode = apiUrlArr[7]
-    				stopIndex = kmbStopList.findIndex(stop => stop.stop == stopCode)
+    				stopIndex = kmbStopList.findIndex(stop => stop.stop === stopCode)
     				stopName = kmbStopList[stopIndex].name_tc
     				stopLat = kmbStopList[stopIndex].lat
     				stopLng = kmbStopList[stopIndex].long
@@ -54,18 +54,18 @@ export const Buses = (props) => {
 					res = await axios.get(apiUrl)
 
 					result.push({
-							etas: api.seq ? res.data.data.filter(item => item.seq == api.seq) : res.data.data, // Default we get the 1st stop insteam of last stop
-							route,
-							stopName,
-							latLng: [stopLat, stopLng]
-						}); 
+						etas: api.seq ? res.data.data.filter(item => item.seq === api.seq) : res.data.data, // Default we get the 1st stop insteam of last stop
+						route,
+						stopName,
+						latLng: [stopLat, stopLng]
+					}); 
 
 				}else{
 
     			if (endPoint === 'data.etabus.gov.hk'){
     				route = apiUrlArr[8]
     				stopCode = apiUrlArr[7]
-    				stopIndex = kmbStopList.findIndex(stop => stop.stop == stopCode)
+    				stopIndex = kmbStopList.findIndex(stop => stop.stop === stopCode)
     				stopName = kmbStopList[stopIndex].name_tc
     				stopLat = kmbStopList[stopIndex].lat
     				stopLng = kmbStopList[stopIndex].long
@@ -78,8 +78,8 @@ export const Buses = (props) => {
 					res2 = await axios.get(api.url[1])
 
 					if (api.seq){
-						const data1 = res1.data.data.filter(item => item.seq == 1)
-						const data2 = res2.data.data.filter(item => item.seq == 1)
+						const data1 = res1.data.data.filter(item => item.seq === 1)
+						const data2 = res2.data.data.filter(item => item.seq === 1)
 						res = data1.concat(data2)
 					}else{
 						res = res1.data.data.concat(res2.data.data);
