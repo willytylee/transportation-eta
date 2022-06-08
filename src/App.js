@@ -1,13 +1,12 @@
-import './App.css';
-import {Navbar} from './Navbar'
-import {Willy} from './pages/Willy'
-import {Shan} from './pages/Shan'
-import {Route, Routes} from "react-router-dom"
+import "./App.css";
+import { Navbar } from "./Navbar";
+import { Willy } from "./pages/Willy";
+import { Shan } from "./pages/Shan";
+import { Route, Routes } from "react-router-dom";
 
 const App = () => {
-
   return (
-    <> 
+    <>
       <Navbar />
       <div className="container">
         <Routes>
@@ -16,11 +15,13 @@ const App = () => {
           <Route path="/shan" element={<Shan />} />
         </Routes>
         <div className="refresh-wrapper">
-          <button onClick={() => window.location.reload()}>Refresh to update the app</button>
+          <button onClick={() => window.location.reload()}>
+            Refresh to update the app
+          </button>
         </div>
       </div>
     </>
   );
-}
+};
 
 export default App;
