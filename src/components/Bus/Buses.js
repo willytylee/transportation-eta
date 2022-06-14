@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
-import { apis } from "./../../APIs/busApis.js";
 import { Table } from "./Table.js";
 import { List } from "./List.js";
 
 export const Buses = (props) => {
   const [sectionData, setSectionData] = useState([]);
   const [view, setView] = useState("list");
-  const { range } = props;
+  const { section } = props;
 
   useEffect(() => {
     let kmbStopList = [];
@@ -28,13 +27,14 @@ export const Buses = (props) => {
     const interval = setInterval(async () => {
       const result = [];
 
-      for (let i = range[0] - 1; i < range[1]; i++) {
+      // for (let i = range[0] - 1; i < range[1]; i++) {
+      for (let i = 0; i < section.length; i++) {
         let res,
           res1 = [],
           res2 = [];
         let route, stopCode, stopIndex, stopName, stopLat, stopLng;
 
-        const api = apis[i];
+        const api = section[i];
         const apiUrl = api.url[0];
         const apiUrlArr = apiUrl.split("/");
         const endPoint = apiUrlArr[2];
