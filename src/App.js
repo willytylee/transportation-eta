@@ -1,19 +1,20 @@
 import "./App.css";
+import { useState } from "react";
 import { Navbar } from "./Navbar";
-import { Willy } from "./pages/Willy";
-import { Shan } from "./pages/Shan";
-import { Route, Routes } from "react-router-dom";
+import { DataReader } from "./DataReader";
 
 const App = () => {
+  const [name, setName] = useState("");
+
+  const handleLink = (e) => {
+    setName(e.target.id);
+  };
+
   return (
     <>
-      <Navbar />
+      <Navbar handleLink={handleLink} />
       <div className="container">
-        <Routes>
-          <Route path="/" element={<Willy />} />
-          <Route path="/willy" element={<Willy />} />
-          <Route path="/shan" element={<Shan />} />
-        </Routes>
+        <DataReader name={name} />
         <div className="refresh-wrapper">
           <button onClick={() => window.location.reload()}>
             Refresh to update the app

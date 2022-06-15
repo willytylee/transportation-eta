@@ -116,7 +116,7 @@ export const Buses = (props) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [section]);
 
   const switchView = () => {
     if (view === "list") {
