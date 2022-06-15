@@ -4,25 +4,19 @@ import { MTRs } from "./components/MTR/MTRs.js";
 import { dataSet } from "./data/DataSet.js";
 
 export const DataReader = (props) => {
-  const [transportData, setTransportData] = useState([]);
-
   const { name } = props;
 
-  useEffect(() => {
-    let data;
+  let data;
 
-    if (name) {
-      data = dataSet.find((o) => o.user === name);
-    } else {
-      data = dataSet[0];
-    }
-
-    setTransportData(data.transportData);
-  }, [name]);
+  if (name) {
+    data = dataSet.find((o) => o.user === name);
+  } else {
+    data = dataSet[0];
+  }
 
   return (
     <>
-      {transportData.map((category, i) => {
+      {data.transportData.map((category, i) => {
         return (
           <div className="section" key={i} id={i}>
             <div>{category.title}</div>
@@ -31,9 +25,7 @@ export const DataReader = (props) => {
               if (firstUrl.includes("citybus") || firstUrl.includes("kmb")) {
                 return <Buses key={j} section={section} />;
               } else {
-                return (
-                  <MTRs key={j} direction={["up", "down"]} section={section} />
-                );
+                return <MTRs key={j} section={section} />;
               }
             })}
           </div>

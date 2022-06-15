@@ -138,11 +138,13 @@ export const dataSet = [
               url: [
                 "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=TML&sta=TKW",
               ],
+              direction: ["up", "down"],
             },
             {
               url: [
                 "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=TML&sta=SIH",
               ],
+              direction: ["up", "down"],
             },
           ],
         ],
@@ -178,6 +180,7 @@ export const dataSet = [
               url: [
                 "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=TML&sta=TKW",
               ],
+              direction: ["up"],
             },
           ],
           [
@@ -194,11 +197,6 @@ export const dataSet = [
             {
               url: [
                 "https://data.etabus.gov.hk/v1/transport/kmb/eta/7CC8FC8889FF1596/5P/1",
-              ],
-            },
-            {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/7CC8FC8889FF1596/14/1",
               ],
             },
             {

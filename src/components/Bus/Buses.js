@@ -10,6 +10,8 @@ export const Buses = (props) => {
   const { section } = props;
 
   useEffect(() => {
+    setSectionData([]);
+
     let kmbStopList = [];
 
     const kmbStopListLocal = localStorage.getItem("kmbStopList");

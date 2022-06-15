@@ -3,10 +3,11 @@ import axios from "axios";
 import { constDest } from "./../../constants/MTRDests.js";
 
 export const MTRs = (props) => {
-  const { direction, section } = props;
+  const { section } = props;
   const [sectionData, setSectionData] = useState([]);
 
   useEffect(() => {
+    setSectionData([]);
     const interval = setInterval(async () => {
       const result = [];
 
@@ -18,11 +19,11 @@ export const MTRs = (props) => {
         const lineSta = `${url.searchParams.get("line")}-${url.searchParams.get(
           "sta"
         )}`;
-        const name = constDest[station];
         const apiReturn = await axios.get(api.url);
         const stationData = apiReturn.data.data[lineSta];
 
-        sectionData.name = name;
+        sectionData.name = constDest[station];
+        sectionData.direction = api.direction;
         sectionData.down = {
           dest:
             stationData.DOWN.length > 1
@@ -45,7 +46,7 @@ export const MTRs = (props) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [section]);
 
   return (
     <>
@@ -56,7 +57,7 @@ export const MTRs = (props) => {
             {!data?.down?.dest && !data?.up?.dest ? "已停站" : null}
             <table className="mtrTable">
               <tbody>
-                {data?.down?.dest && direction.includes("down") ? (
+                {data?.down?.dest && data.direction.includes("down") ? (
                   <tr>
                     <td>
                       往 <span className="dest">{data.down.dest}</span>{" "}
@@ -75,7 +76,7 @@ export const MTRs = (props) => {
             </table>
             <table className="mtrTable">
               <tbody>
-                {data?.up?.dest && direction.includes("up") ? (
+                {data?.up?.dest && data.direction.includes("up") ? (
                   <tr>
                     <td>
                       往 <span className="dest">{data.up.dest}</span> 到站時間:
