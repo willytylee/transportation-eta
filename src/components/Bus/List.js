@@ -5,7 +5,7 @@ export const List = (props) => {
 
   let fullArray = [];
 
-  sectionData.forEach((routeData, i) => {
+  sectionData.forEach((routeData) => {
     const { etas, route, stopName, latLng } = routeData;
 
     let eta;
@@ -18,7 +18,7 @@ export const List = (props) => {
         latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`,
       });
     } else {
-      etas.forEach((data, j) => {
+      etas.forEach((data) => {
         data.eta ? (eta = data.eta) : (eta = "");
         fullArray.push({
           route,

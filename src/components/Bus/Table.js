@@ -8,7 +8,7 @@ export const Table = (props) => {
 
   sectionData.forEach((routeData, i) => {
     let { etas, route, stopName, latLng } = routeData;
-    etas = routeData.etas.map((data, i) => data.eta);
+    etas = routeData.etas.map((data) => data.eta);
 
     if (etas.length === 0) {
       txts[i] = ["沒有班次"];

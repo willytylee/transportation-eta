@@ -1,20 +1,27 @@
 import "./App.css";
 import { useState } from "react";
 import { Navbar } from "./Navbar";
-import { DataReader } from "./DataReader";
+import { Section } from "./components/Section";
+import { dataSet } from "./data/DataSet";
 
 const App = () => {
-  const [name, setName] = useState("");
+  const [data, setData] = useState(dataSet[0]);
 
   const handleLink = (e) => {
-    setName(e.target.id);
+    if (e.target.id) {
+      setData(dataSet.find((o) => o.user === e.target.id));
+    } else {
+      setData(dataSet[0]);
+    }
   };
 
   return (
     <>
       <Navbar handleLink={handleLink} />
       <div className="container">
-        <DataReader name={name} />
+        {data.transportData.map((category, i) => {
+          return <Section key={i} category={category} />;
+        })}
         <div className="refresh-wrapper">
           <button onClick={() => window.location.reload()}>
             Refresh to update the app
