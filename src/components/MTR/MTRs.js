@@ -30,14 +30,22 @@ export const MTRs = (props) => {
               ? constDest[stationData.DOWN[0].dest]
               : "",
           ttnts: stationData.DOWN.map((data) =>
-            data.ttnt === "0" ? "準備埋站" : `${data.ttnt}分鐘`
+            parseInt(data.ttnt) === 0
+              ? "準備埋站"
+              : parseInt(data.ttnt) >= 60
+              ? "已停站"
+              : `${data.ttnt}分鐘`
           ),
         };
         sectionData.up = {
           dest:
             stationData.UP.length > 1 ? constDest[stationData.UP[0].dest] : "",
           ttnts: stationData.UP.map((data) =>
-            data.ttnt === "0" ? "準備埋站" : `${data.ttnt}分鐘`
+            parseInt(data.ttnt) === 0
+              ? "準備埋站"
+              : parseInt(data.ttnt) >= 60
+              ? "已停站"
+              : `${data.ttnt}分鐘`
           ),
         };
         result.push(sectionData);
