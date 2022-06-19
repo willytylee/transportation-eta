@@ -29,7 +29,6 @@ export const Buses = (props) => {
     const interval = setInterval(async () => {
       const result = [];
 
-      // for (let i = range[0] - 1; i < range[1]; i++) {
       for (let i = 0; i < section.length; i++) {
         let res,
           res1 = [],

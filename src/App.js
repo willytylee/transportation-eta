@@ -19,9 +19,9 @@ const App = () => {
     <>
       <Navbar handleLink={handleLink} />
       <div className="container">
-        {data.transportData.map((category, i) => {
-          return <Section key={i} category={category} />;
-        })}
+        {data.transportData.map((category, i) => (
+          <Section key={i} category={category} />
+        ))}
         <div className="refresh-wrapper">
           <button onClick={() => window.location.reload()}>
             Refresh to update the app
