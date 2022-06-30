@@ -1,32 +1,19 @@
 import "./App.css";
-import { useState } from "react";
 import { Navbar } from "./Navbar";
-import { Section } from "./components/Section";
-import { dataSet } from "./data/DataSet";
+import { Route, Routes } from "react-router-dom";
+import { PersonalEta } from "./pages/PersonalEta";
+import { Search } from "./pages/Search";
 
 const App = () => {
-  const [data, setData] = useState(dataSet[0]);
-
-  const handleLink = (e) => {
-    if (e.target.id) {
-      setData(dataSet.find((o) => o.user === e.target.id));
-    } else {
-      setData(dataSet[0]);
-    }
-  };
-
   return (
     <>
-      <Navbar handleLink={handleLink} />
+      <Navbar />
       <div className="container">
-        {data.transportData.map((category, i) => (
-          <Section key={i} category={category} />
-        ))}
-        <div className="refresh-wrapper">
-          <button onClick={() => window.location.reload()}>
-            Refresh to update the app
-          </button>
-        </div>
+        <Routes>
+          <Route path="/" element={<Search />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/eta/:name" element={<PersonalEta />} />
+        </Routes>
       </div>
     </>
   );

@@ -1,4 +1,5 @@
 import moment from "moment";
+import PropTypes from "prop-types";
 
 export const Table = (props) => {
   const { sectionData } = props;
@@ -15,14 +16,15 @@ export const Table = (props) => {
     } else {
       txts[i] = etas.map((eta) => {
         if (eta) {
-          if (moment(eta).diff(moment(), "minutes") <= 0) {
+          const minutesLeft = moment(eta).diff(moment(), "minutes");
+          if (minutesLeft === 0) {
             return "準備埋站";
-          } else {
-            return `${moment(eta).diff(moment(), "minutes")}分鐘`;
+          } else if (minutesLeft < 0) {
+            return "已埋站";
           }
-        } else {
-          return "沒有班次";
+          return `${minutesLeft}分鐘`;
         }
+        return "沒有班次";
       });
     }
     result.push({
@@ -58,4 +60,8 @@ export const Table = (props) => {
       </table>
     </>
   );
+};
+
+Table.propTypes = {
+  sectionData: PropTypes.array,
 };
