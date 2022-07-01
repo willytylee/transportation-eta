@@ -4,36 +4,25 @@ import _ from "underscore";
 import { Card } from "@mui/material";
 import { useState, useEffect } from "react";
 import { StopEta } from "./StopEta";
+import { getStopList } from "../utils/EtaUtils";
 
 export const SearchResult = (props) => {
-  const { searchValue, expandItem, setExpandItem } = props;
+  const { route, expandItem, setExpandItem } = props;
   const [searchResult, setSearchResult] = useState([]);
 
-  let kmbStopList = [];
-
-  const kmbStopListLocal = localStorage.getItem("kmbStopList");
-  if (kmbStopListLocal) {
-    kmbStopList = JSON.parse(kmbStopListLocal);
-  } else {
-    axios
-      .get("https://data.etabus.gov.hk/v1/transport/kmb/stop/")
-      .then((response) => {
-        kmbStopList = response.data.data;
-        localStorage.setItem("kmbStopList", JSON.stringify(kmbStopList));
-      });
-  }
+  const kmbStopList = getStopList();
 
   const handleCardOnClick = (i) => {
     setExpandItem(i);
   };
 
   useEffect(() => {
-    if (searchValue) {
+    if (route) {
       const urls = [
-        `https://data.etabus.gov.hk/v1/transport/kmb/route/${searchValue}/inbound/1`,
-        `https://data.etabus.gov.hk/v1/transport/kmb/route/${searchValue}/outbound/1`,
-        `https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${searchValue}/inbound/1`,
-        `https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${searchValue}/outbound/1`,
+        `https://data.etabus.gov.hk/v1/transport/kmb/route/${route}/inbound/1`,
+        `https://data.etabus.gov.hk/v1/transport/kmb/route/${route}/outbound/1`,
+        `https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${route}/inbound/1`,
+        `https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${route}/outbound/1`,
       ];
 
       const fetchURL = (url) => axios.get(url);
@@ -55,7 +44,7 @@ export const SearchResult = (props) => {
     } else {
       setSearchResult([]);
     }
-  }, [searchValue, expandItem]);
+  }, [route, expandItem]);
 
   return (
     <div className="searchResult">
@@ -91,8 +80,9 @@ export const SearchResult = (props) => {
                 return (
                   <StopEta
                     key={j}
+                    id={j}
                     stopId={data.stop}
-                    route={searchValue}
+                    route={route}
                     stopName={stopName}
                   />
                 );

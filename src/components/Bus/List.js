@@ -1,5 +1,5 @@
 import moment from "moment";
-import { etaTimeConverter } from "./../../utils/EtaUtils";
+import { etaTimeConverter } from "../../utils/EtaUtils";
 
 export const List = (props) => {
   const { sectionData } = props;

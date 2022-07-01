@@ -1,4 +1,5 @@
 import moment from "moment";
+import axios from "axios";
 
 export const etaTimeConverter = (timeString) => {
   let textReturn;
@@ -17,4 +18,22 @@ export const etaTimeConverter = (timeString) => {
   }
 
   return textReturn;
+};
+
+export const getStopList = () => {
+  let kmbStopList = [];
+
+  const kmbStopListLocal = localStorage.getItem("kmbStopList");
+  if (kmbStopListLocal) {
+    kmbStopList = JSON.parse(kmbStopListLocal);
+  } else {
+    axios
+      .get("https://data.etabus.gov.hk/v1/transport/kmb/stop/")
+      .then((response) => {
+        kmbStopList = response.data.data;
+        localStorage.setItem("kmbStopList", JSON.stringify(kmbStopList));
+      });
+  }
+
+  return kmbStopList;
 };

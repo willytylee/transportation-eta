@@ -1,10 +1,10 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { etaTimeConverter } from "./../utils/EtaUtils";
+import { etaTimeConverter } from "../utils/EtaUtils";
 
 export const StopEta = (props) => {
-  const { stopId, route, stopName } = props;
+  const { stopId, route, stopName, id } = props;
   const [eta, setEta] = useState([]);
 
   useEffect(() => {
@@ -23,10 +23,16 @@ export const StopEta = (props) => {
 
   return (
     <tr>
-      <td>{stopName}</td>
-      {eta.map((data, i) => {
-        return <td key={i}> {etaTimeConverter(data.eta)} </td>;
-      })}
+      <td>
+        {id + 1}. {stopName}
+      </td>
+      {eta
+        .filter((item) => {
+          return item.seq === id + 1;
+        })
+        .map((data, i) => {
+          return <td key={i}> {etaTimeConverter(data.eta)} </td>;
+        })}
     </tr>
   );
 };

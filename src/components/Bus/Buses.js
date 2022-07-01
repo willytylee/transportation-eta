@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
+import { getStopList } from "../../utils/EtaUtils";
 import { Table } from "./Table.js";
 import { List } from "./List.js";
 
@@ -12,19 +13,7 @@ export const Buses = (props) => {
   useEffect(() => {
     setSectionData([]);
 
-    let kmbStopList = [];
-
-    const kmbStopListLocal = localStorage.getItem("kmbStopList");
-    if (kmbStopListLocal) {
-      kmbStopList = JSON.parse(kmbStopListLocal);
-    } else {
-      axios
-        .get("https://data.etabus.gov.hk/v1/transport/kmb/stop/")
-        .then((response) => {
-          kmbStopList = response.data.data;
-          localStorage.setItem("kmbStopList", JSON.stringify(kmbStopList));
-        });
-    }
+    const kmbStopList = getStopList();
 
     const interval = setInterval(async () => {
       const result = [];

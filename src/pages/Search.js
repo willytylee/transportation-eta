@@ -25,7 +25,7 @@ export const Search = () => {
         />
       </div>
       <SearchResult
-        searchValue={searchValue}
+        route={searchValue}
         expandItem={expandItem}
         setExpandItem={setExpandItem}
       />
