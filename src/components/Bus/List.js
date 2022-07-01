@@ -1,4 +1,5 @@
 import moment from "moment";
+import { etaTimeConverter } from "./../../utils/EtaUtils";
 
 export const List = (props) => {
   const { sectionData } = props;
@@ -42,18 +43,7 @@ export const List = (props) => {
     })
     .forEach((routeData, i) => {
       const { eta } = routeData;
-      if (eta) {
-        const mintuesLeft = moment(eta).diff(moment(), "minutes");
-        if (mintuesLeft === 0) {
-          fullArray[i].eta = "準備埋站";
-        } else if (mintuesLeft <= 0) {
-          fullArray[i].eta = "已埋站";
-        } else {
-          fullArray[i].eta = `${mintuesLeft}分鐘`;
-        }
-      } else {
-        fullArray[i].eta = "沒有班次";
-      }
+      fullArray[i].eta = etaTimeConverter(eta);
     });
 
   if (sectionData.length >= 3) {

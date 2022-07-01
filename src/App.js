@@ -15,6 +15,11 @@ const App = () => {
           <Route path="/eta/:name" element={<PersonalEta />} />
         </Routes>
       </div>
+      <div className="refresh-wrapper">
+        <button onClick={() => window.location.reload()}>
+          Refresh to update the app
+        </button>
+      </div>
     </>
   );
 };

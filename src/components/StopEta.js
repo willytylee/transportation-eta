@@ -8,6 +8,7 @@ export const StopEta = (props) => {
   const [eta, setEta] = useState([]);
 
   useEffect(() => {
+    setEta([]);
     const interval = setInterval(async () => {
       axios
         .get(
@@ -18,7 +19,7 @@ export const StopEta = (props) => {
         });
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [stopId, route]);
 
   return (
     <tr>

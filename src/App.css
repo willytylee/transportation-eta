@@ -73,5 +73,34 @@ td{
 	font-weight: 900;
 }
 .refresh-wrapper{
+	margin: 12px 0;
 	text-align: center;
 }
+.search{
+	width: 100%;
+}
+.searchBarWrapper{
+	width: 100%;
+	text-align: center;
+	margin: 10px 0;
+}
+.searchBar{
+	text-align: center;
+}
+.routeTitle{
+	text-align: center;
+	font-weight: 900;
+	padding: 4px 0;
+	font-size: 13px;
+}
+.searchResult{
+	font-size: 12px;
+}
+.searchResultTable{
+	width: 100%;
+}
+.searchResultCard{
+	margin: 10px;
+}
+
+

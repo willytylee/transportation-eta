@@ -16,11 +16,6 @@ export const PersonalEta = () => {
       {data.transportData.map((category, i) => (
         <Section key={i} category={category} />
       ))}
-      <div className="refresh-wrapper">
-        <button onClick={() => window.location.reload()}>
-          Refresh to update the app
-        </button>
-      </div>
     </>
   );
 };

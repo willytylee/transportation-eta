@@ -1,5 +1,5 @@
-import moment from "moment";
 import PropTypes from "prop-types";
+import { etaTimeConverter } from "../../utils/EtaUtils";
 
 export const Table = (props) => {
   const { sectionData } = props;
@@ -15,16 +15,7 @@ export const Table = (props) => {
       txts[i] = ["沒有班次"];
     } else {
       txts[i] = etas.map((eta) => {
-        if (eta) {
-          const minutesLeft = moment(eta).diff(moment(), "minutes");
-          if (minutesLeft === 0) {
-            return "準備埋站";
-          } else if (minutesLeft < 0) {
-            return "已埋站";
-          }
-          return `${minutesLeft}分鐘`;
-        }
-        return "沒有班次";
+        return etaTimeConverter(eta);
       });
     }
     result.push({
