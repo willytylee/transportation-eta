@@ -5,15 +5,15 @@ export const Navbar = (props) => {
     <nav className="nav">
       <ul>
         <li>
-          <Link to="/eta/willy">Willy</Link>
-        </li>
-        <li>
-          <Link to="/eta/shan">Shan</Link>
+          <Link to="/search">Search</Link>
         </li>
       </ul>
       <ul>
         <li>
-          <Link to="/search">Search</Link>
+          <Link to="/eta/willy">Willy</Link>
+        </li>
+        <li>
+          <Link to="/eta/shan">Shan</Link>
         </li>
       </ul>
     </nav>

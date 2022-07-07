@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { etaTimeConverter } from "../../utils/EtaUtils";
+import { etaTimeConverter } from "../../Utils";
 
 export const Table = (props) => {
   const { sectionData } = props;
@@ -7,15 +7,14 @@ export const Table = (props) => {
   const txts = [];
   const result = [];
 
-  sectionData.forEach((routeData, i) => {
-    let { etas, route, stopName, latLng } = routeData;
-    etas = routeData.etas.map((data) => data.eta);
+  sectionData.forEach((item, i) => {
+    let { etas, route, stopName, latLng } = item;
 
     if (etas.length === 0) {
       txts[i] = ["沒有班次"];
     } else {
-      txts[i] = etas.map((eta) => {
-        return etaTimeConverter(eta);
+      txts[i] = etas.map((item) => {
+        return etaTimeConverter(item.eta, item.rmk_tc);
       });
     }
     result.push({
@@ -30,17 +29,17 @@ export const Table = (props) => {
     <>
       <table className="tableView">
         <tbody>
-          {result.map((routeData, i) => {
+          {result.map((item, i) => {
             return (
               <tr key={i}>
-                <td className="route">{routeData.route}</td>
+                <td className="route">{item.route}</td>
                 <td className="stopName">
-                  <a href={routeData.latLngUrl}>{routeData.stopName}</a>
+                  <a href={item.latLngUrl}>{item.stopName}</a>
                 </td>
-                {routeData.etas.map((eta, j) => {
+                {item.etas.map((item, j) => {
                   return (
                     <td key={j} className="eta">
-                      {eta}
+                      {item}
                     </td>
                   );
                 })}

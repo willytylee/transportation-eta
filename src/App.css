@@ -96,6 +96,10 @@ td{
 .searchResult{
 	font-size: 12px;
 }
+.special{
+	font-size: 10px;
+	font-weight: normal;
+}
 .searchResultTable{
 	width: 100%;
 }

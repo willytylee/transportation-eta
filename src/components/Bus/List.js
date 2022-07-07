@@ -1,13 +1,13 @@
 import moment from "moment";
-import { etaTimeConverter } from "../../utils/EtaUtils";
+import { etaTimeConverter, sortEtaObject } from "../../Utils";
 
 export const List = (props) => {
   const { sectionData } = props;
 
   let fullArray = [];
 
-  sectionData.forEach((routeData) => {
-    const { etas, route, stopName, latLng } = routeData;
+  sectionData.forEach((item) => {
+    const { etas, route, stopName, latLng } = item;
 
     let eta;
 
@@ -19,11 +19,13 @@ export const List = (props) => {
         latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`,
       });
     } else {
-      etas.forEach((data) => {
-        data.eta ? (eta = data.eta) : (eta = "");
+      etas.forEach((item) => {
+        item.eta ? (eta = item.eta) : (eta = "");
+        const { rmk_tc } = item;
         fullArray.push({
           route,
           eta,
+          rmk_tc,
           stopName,
           latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`,
         });
@@ -31,20 +33,14 @@ export const List = (props) => {
     }
   });
 
-  fullArray
-    .sort((a, b) => {
-      if (a.eta === "" || a.eta === null) {
-        return 1;
-      }
-      if (b.eta === "" || b.eta === null) {
-        return -1;
-      }
-      return moment(a.eta).diff(moment(b.eta), "second");
-    })
-    .forEach((routeData, i) => {
-      const { eta } = routeData;
-      fullArray[i].eta = etaTimeConverter(eta);
-    });
+  // Sort the eta for same section
+
+  fullArray = sortEtaObject(fullArray);
+
+  fullArray.forEach((item, i) => {
+    const { eta, rmk_tc } = item;
+    fullArray[i].eta = etaTimeConverter(eta, rmk_tc);
+  });
 
   if (sectionData.length >= 3) {
     fullArray = fullArray.slice(0, sectionData.length);
@@ -56,14 +52,14 @@ export const List = (props) => {
     <>
       <table className="listView">
         <tbody>
-          {fullArray.map((data, i) => {
+          {fullArray.map((item, i) => {
             return (
               <tr key={i}>
-                <td className="route">{data?.route}</td>
+                <td className="route">{item?.route}</td>
                 <td className="stopName">
-                  <a href={data?.latLngUrl}>{data?.stopName}</a>
+                  <a href={item?.latLngUrl}>{item?.stopName}</a>
                 </td>
-                <td className="eta">{data?.eta}</td>
+                <td className="eta">{item?.eta}</td>
               </tr>
             );
           })}

@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import { TextField } from "@mui/material";
-import { SearchResult } from "../components/SearchResult";
+import { SearchResult } from "../components/Search/SearchResult";
+import { SearchBar } from "../components/Search/SearchBar";
 
 export const Search = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -14,16 +14,10 @@ export const Search = () => {
 
   return (
     <div className="search">
-      <div className="searchBarWrapper">
-        <TextField
-          variant="standard"
-          inputProps={{ className: "searchBar" }}
-          size="small"
-          name="category"
-          value={searchValue}
-          onChange={(e) => handleFormChange(e)}
-        />
-      </div>
+      <SearchBar
+        handleFormChange={handleFormChange}
+        searchValue={searchValue}
+      />
       <SearchResult
         route={searchValue}
         expandItem={expandItem}

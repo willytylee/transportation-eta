@@ -7,19 +7,22 @@ export const dataSet = [
         data: [
           [
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/AA97FFC49AE957A5/13X/1",
-              ],
+              co: "kmb",
+              route: "13X",
+              stopId: "AA97FFC49AE957A5",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/AA97FFC49AE957A5/213X/1",
-              ],
+              co: "kmb",
+              route: "213X",
+              stopId: "AA97FFC49AE957A5",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/AA97FFC49AE957A5/224X/1",
-              ],
+              co: "kmb",
+              route: "224X",
+              stopId: "AA97FFC49AE957A5",
+              serviceType: 1,
             },
           ],
         ],
@@ -29,33 +32,37 @@ export const dataSet = [
         data: [
           [
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/F90ED764C7A95649/28/1",
-              ],
+              co: "kmb",
+              route: "28",
+              stopId: "F90ED764C7A95649",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/F90ED764C7A95649/297/1",
-              ],
-            },
-          ],
-          [
-            {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/9762FC524B26C4A7/297/1",
-              ],
-            },
-            {
-              url: [
-                "https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/nwfb/003589/796X",
-              ],
+              co: "kmb",
+              route: "297",
+              stopId: "F90ED764C7A95649",
+              serviceType: 1,
             },
           ],
           [
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/5D77A5CBE41F2984/26/1",
-              ],
+              co: "kmb",
+              route: "297",
+              stopId: "9762FC524B26C4A7",
+              serviceType: 1,
+            },
+            {
+              co: "nwfb",
+              route: "796X",
+              stopId: "003589",
+            },
+          ],
+          [
+            {
+              co: "kmb",
+              route: "26",
+              stopId: "5D77A5CBE41F2984",
+              serviceType: 1,
             },
           ],
         ],
@@ -65,36 +72,40 @@ export const dataSet = [
         data: [
           [
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/BE27F066CF40DF7D/98D/1",
-              ],
+              co: "kmb",
+              route: "98D",
+              stopId: "BE27F066CF40DF7D",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/BE27F066CF40DF7D/296D/1",
-              ],
+              co: "kmb",
+              route: "296D",
+              stopId: "BE27F066CF40DF7D",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/nwfb/003365/796P",
-              ],
+              co: "nwfb",
+              route: "796P",
+              stopId: "003365",
             },
           ],
           [
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/33033960343A57A8/98D/1",
-              ],
+              co: "kmb",
+              route: "98D",
+              stopId: "33033960343A57A8",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/33033960343A57A8/296D/1",
-              ],
+              co: "kmb",
+              route: "296D",
+              stopId: "33033960343A57A8",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/nwfb/001412/796P",
-              ],
+              co: "nwfb",
+              route: "796P",
+              stopId: "001412",
             },
           ],
         ],
@@ -104,29 +115,31 @@ export const dataSet = [
         data: [
           [
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/F6A446C66F7F805E/111/1",
-                "https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/nwfb/001413/111",
-              ],
+              co: "kmb",
+              route: "111",
+              stopId: "F6A446C66F7F805E",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/F6A446C66F7F805E/116/1",
-                "https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/nwfb/001413/116",
-              ],
+              co: "kmb",
+              route: "116",
+              stopId: "F6A446C66F7F805E",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/E37FF663075361FE/5/1",
-              ],
+              co: "kmb",
+              route: "5",
+              stopId: "E37FF663075361FE",
+              serviceType: 1,
             },
           ],
           [
             {
               seq: 1,
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/D7132C4D6287B688/96R/1",
-              ],
+              co: "kmb",
+              route: "96R",
+              stopId: "D7132C4D6287B688",
+              serviceType: 1,
             },
           ],
         ],
@@ -154,15 +167,22 @@ export const dataSet = [
           [
             {
               seq: 1,
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/0D8135B0D81F29A1/N216/1",
-              ],
+              co: "kmb",
+              route: "N216",
+              stopId: "0D8135B0D81F29A1",
+              serviceType: 1,
             },
             {
               seq: 1,
-              url: [
-                "https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/nwfb/003329/N796/",
-              ],
+              co: "nwfb",
+              route: "N796",
+              stopId: "003329",
+            },
+            {
+              co: "kmb",
+              route: "S1",
+              stopId: "89A83934270E9BFB",
+              serviceType: 1,
             },
           ],
         ],
@@ -185,29 +205,34 @@ export const dataSet = [
           ],
           [
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/7CC8FC8889FF1596/5/1",
-              ],
+              co: "kmb",
+              route: "5",
+              stopId: "7CC8FC8889FF1596",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/7CC8FC8889FF1596/5A/1",
-              ],
+              co: "kmb",
+              route: "5A",
+              stopId: "7CC8FC8889FF1596",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/7CC8FC8889FF1596/5P/1",
-              ],
+              co: "kmb",
+              route: "5P",
+              stopId: "7CC8FC8889FF1596",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/7CC8FC8889FF1596/26/1",
-              ],
+              co: "kmb",
+              route: "26",
+              stopId: "7CC8FC8889FF1596",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/AB51CD6EFEF7E09E/28/1",
-              ],
+              co: "kmb",
+              route: "28",
+              stopId: "AB51CD6EFEF7E09E",
+              serviceType: 1,
             },
           ],
         ],
@@ -218,43 +243,50 @@ export const dataSet = [
           [
             {
               seq: 1,
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/96363F113F394E8A/5/1",
-              ],
+              co: "kmb",
+              route: "5",
+              stopId: "96363F113F394E8A",
+              serviceType: 1,
             },
             {
               seq: 1,
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/D7E4D53EF0B874EB/5A/1",
-              ],
+              co: "kmb",
+              route: "5A",
+              stopId: "D7E4D53EF0B874EB",
+              serviceType: 1,
             },
             {
               seq: 1,
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/4D5FBE4639E869E3/5P/1",
-              ],
+              co: "kmb",
+              route: "5P",
+              stopId: "4D5FBE4639E869E3",
+              serviceType: 1,
             },
             {
               seq: 1,
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/9D843189602DE04F/14/1",
-              ],
+              co: "kmb",
+              route: "14",
+              stopId: "9D843189602DE04F",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/DAE7B6CB56131B50/26/1",
-              ],
+              co: "kmb",
+              route: "26",
+              stopId: "DAE7B6CB56131B50",
+              serviceType: 1,
             },
             {
               seq: 1,
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/96363F113F394E8A/28/1",
-              ],
+              co: "kmb",
+              route: "28",
+              stopId: "96363F113F394E8A",
+              serviceType: 1,
             },
             {
-              url: [
-                "https://data.etabus.gov.hk/v1/transport/kmb/eta/B7A8F179CD71B22E/215X/1",
-              ],
+              co: "kmb",
+              route: "215X",
+              stopId: "B7A8F179CD71B22E",
+              serviceType: 1,
             },
           ],
         ],

@@ -8,12 +8,12 @@ export const Section = (props) => {
   return (
     <div className="section">
       <div>{category.title}</div>
-      {category.data.map((section, j) => {
-        const firstUrl = section[0].url[0];
-        if (firstUrl.includes("citybus") || firstUrl.includes("kmb")) {
-          return <Buses key={j} section={section} />;
+      {category.data.map((item, j) => {
+        const firstCo = item[0].co;
+        if (firstCo === "citybus" || firstCo === "kmb") {
+          return <Buses key={j} section={item} />;
         } else {
-          return <MTRs key={j} section={section} />;
+          return <MTRs key={j} section={item} />;
         }
       })}
     </div>
