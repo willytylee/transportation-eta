@@ -1,17 +1,13 @@
 import React from "react";
-import axios from "axios";
 import { Card } from "@mui/material";
 import { useState, useEffect } from "react";
 import { StopEta } from "./StopEta";
-import { getLocalStorage } from "../../Utils";
+import { fetchEtas } from "../../fetch";
 
 export const SearchResult = (props) => {
-  const { route, expandItem, setExpandItem } = props;
-  const [searchResult, setSearchResult] = useState([]);
+  const { route, expandItem, setExpandItem, gRouteList, gStopList } = props;
   const [routeList, setRouteList] = useState([]);
-
-  const kmbStopList = getLocalStorage("kmbStopList");
-  const kmbRouteList = getLocalStorage("kmbRouteList");
+  const [stopList, setStopList] = useState([]);
 
   const handleCardOnClick = (i) => {
     setExpandItem(i);
@@ -19,41 +15,54 @@ export const SearchResult = (props) => {
 
   useEffect(() => {
     if (route) {
-      const list = kmbRouteList
-        .filter((item) => item.route === route)
-        .sort((a, b) => a.service_type - b.service_type);
-      setRouteList(list);
+      const _routeList = Object.keys(gRouteList)
+        .map((item) => gRouteList[item])
+        .filter(
+          (item) =>
+            item.route == route &&
+            (item.co.includes("kmb") ||
+              item.co.includes("nwfb") ||
+              item.co.includes("ctb"))
+        )
+        .sort((a, b) => a.serviceType - b.serviceType);
+      setRouteList(_routeList);
 
-      const urls = [];
+      console.log(_routeList);
 
-      list.forEach((item) => {
-        let bound;
-        switch (item.bound) {
-          case "O":
-            bound = "outbound";
-            break;
-          case "I":
-            bound = "inbound";
-            break;
-          default:
-            break;
-        }
-        urls.push(
-          `https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${route}/${bound}/${item.service_type}`
-        );
-      });
-
-      const fetchURL = (url) => axios.get(url);
-      const promiseArray = urls.map(fetchURL);
-      Promise.all(promiseArray).then((response) => {
-        setSearchResult(
-          response.map((item) => {
-            return item.data.data;
-          })
-        );
-      });
+      if (expandItem != null) {
+        const _stopList = _routeList.map((route) => {
+          if (route.co.includes("kmb")) {
+            // kmb is the priority
+            return route.stops["kmb"].map((item) => {
+              return Object.assign(
+                {
+                  bound: route.bound["kmb"],
+                  co: "kmb",
+                  serviceType: route.serviceType,
+                  stop: item,
+                },
+                gStopList[item]
+              );
+            });
+          } else if (route.co.includes("nwfb") || route.co.includes("ctb")) {
+            return route.stops[route.co[0]].map((item) => {
+              return Object.assign(
+                {
+                  bound: route.bound[route.co[0]],
+                  co: route.co[0],
+                  serviceType: route.serviceType,
+                  stop: item,
+                },
+                gStopList[item]
+              );
+            });
+          }
+        });
+        setStopList(_stopList);
+      }
     } else {
-      setSearchResult([]);
+      setRouteList([]);
+      setStopList([]);
     }
   }, [route, expandItem]);
 
@@ -67,9 +76,9 @@ export const SearchResult = (props) => {
                 className="routeTitle"
                 style={expandItem === i ? { backgroundColor: "lightgrey" } : {}}
               >
-                {item.orig_tc} - {item.dest_tc}{" "}
+                {item.orig.zh} - {item.dest.zh}{" "}
                 <span className="special">
-                  {item.service_type !== "1" && "特別班次"}
+                  {item.serviceType !== "1" && "特別班次"}
                 </span>
               </div>
             </Card>
@@ -80,23 +89,24 @@ export const SearchResult = (props) => {
       <Card>
         <table className="searchResultTable">
           <tbody>
-            {searchResult &&
+            {routeList &&
+              stopList &&
               expandItem != null &&
-              searchResult[expandItem]?.map((item) => {
-                const stopIndex = kmbStopList.findIndex(
-                  (stop) => stop.stop === item.stop
-                );
-                const { name_tc, lat, long } = kmbStopList[stopIndex];
+              stopList[expandItem]?.map((item, i) => {
+                const { lat, long } = item.location;
+                const { name } = item;
                 const latLng = [lat, long];
                 return (
                   <StopEta
-                    key={item.seq}
-                    seq={item.seq}
-                    kmbStopId={item.stop}
+                    key={i}
+                    seq={i + 1}
+                    co={item.co}
+                    stopId={item.stop}
                     route={route}
-                    stopName={name_tc}
+                    stopName={name.zh}
                     latLng={latLng}
-                    serviceType={item.service_type}
+                    bound={item.bound}
+                    serviceType={item.serviceType}
                   />
                 );
               })}

@@ -1,4 +1,3 @@
-import moment from "moment";
 import { etaTimeConverter, sortEtaObject } from "../../Utils";
 
 export const List = (props) => {
@@ -6,8 +5,8 @@ export const List = (props) => {
 
   let fullArray = [];
 
-  sectionData.forEach((item) => {
-    const { etas, route, stopName, latLng } = item;
+  sectionData.forEach((e) => {
+    const { etas, route, stopName, latLng } = e;
 
     let eta;
 
@@ -19,9 +18,9 @@ export const List = (props) => {
         latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`,
       });
     } else {
-      etas.forEach((item) => {
-        item.eta ? (eta = item.eta) : (eta = "");
-        const { rmk_tc } = item;
+      etas.forEach((e) => {
+        e.eta ? (eta = e.eta) : (eta = "");
+        const { rmk_tc } = e;
         fullArray.push({
           route,
           eta,
@@ -37,8 +36,8 @@ export const List = (props) => {
 
   fullArray = sortEtaObject(fullArray);
 
-  fullArray.forEach((item, i) => {
-    const { eta, rmk_tc } = item;
+  fullArray.forEach((e, i) => {
+    const { eta, rmk_tc } = e;
     fullArray[i].eta = etaTimeConverter(eta, rmk_tc);
   });
 
@@ -52,14 +51,14 @@ export const List = (props) => {
     <>
       <table className="listView">
         <tbody>
-          {fullArray.map((item, i) => {
+          {fullArray.map((e, i) => {
             return (
               <tr key={i}>
-                <td className="route">{item?.route}</td>
+                <td className="route">{e?.route}</td>
                 <td className="stopName">
-                  <a href={item?.latLngUrl}>{item?.stopName}</a>
+                  <a href={e?.latLngUrl}>{e?.stopName}</a>
                 </td>
-                <td className="eta">{item?.eta}</td>
+                <td className="eta">{e?.eta}</td>
               </tr>
             );
           })}

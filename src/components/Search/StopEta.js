@@ -1,42 +1,27 @@
 import React from "react";
-import axios from "axios";
 import { useState, useEffect } from "react";
-import {
-  etaTimeConverter,
-  getAllEtaUrlsFromKmb,
-  sortEtaObject,
-} from "../../Utils";
+
+import { etaTimeConverter } from "../../Utils";
+import { fetchEtas } from "../../fetch";
 
 export const StopEta = (props) => {
-  const { kmbStopId, route, stopName, seq, latLng, serviceType } = props;
+  const { stopName, seq, latLng, routeObj } = props;
   const [eta, setEta] = useState([]);
 
   useEffect(() => {
     setEta([]);
 
     const intervalContent = async () => {
-      const urls = getAllEtaUrlsFromKmb(kmbStopId, route, serviceType);
-
-      const fetchURL = (url) => axios.get(url);
-      const promiseArray = urls.map(fetchURL);
-      Promise.all(promiseArray).then((response) => {
-        const parsedResponse = response.map((item) => {
-          const data = item.data.data;
-          return data.filter((item) => item.seq == seq);
-        });
-        const mergedEtas = parsedResponse
-          .flat()
-          .filter((item) => item != "" && item != null);
-
-        setEta(sortEtaObject(mergedEtas).slice(0, 3));
-      });
+      fetchEtas({ ...routeObj, seq: parseInt(seq, 10) }).then((response) =>
+        setEta(response)
+      );
     };
 
     intervalContent();
     const interval = setInterval(intervalContent, 5000);
 
     return () => clearInterval(interval);
-  }, [kmbStopId, route, seq]);
+  }, [routeObj]);
 
   return (
     <tr>
@@ -49,8 +34,8 @@ export const StopEta = (props) => {
         </a>
       </td>
       {eta.length !== 0 ? (
-        eta.map((item, i) => {
-          return <td key={i}> {etaTimeConverter(item.eta, item.rmk_tc)} </td>;
+        eta.map((e, i) => {
+          return <td key={i}> {etaTimeConverter(e.eta, e.rmk_tc)} </td>;
         })
       ) : (
         <td>沒有班次</td>

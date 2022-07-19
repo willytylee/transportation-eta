@@ -30,12 +30,12 @@ export const MTRs = (props) => {
             stationData?.DOWN?.length > 1
               ? constDest[stationData.DOWN[0].dest]
               : "",
-          ttnts: stationData?.DOWN?.map((item) =>
-            parseInt(item.ttnt) === 0
+          ttnts: stationData?.DOWN?.map((e) =>
+            parseInt(e.ttnt) === 0
               ? "準備埋站"
-              : parseInt(item.ttnt) >= 60
+              : parseInt(e.ttnt) >= 60
               ? "已停站"
-              : `${item.ttnt}分鐘`
+              : `${e.ttnt}分鐘`
           ),
         };
         sectionData.up = {
@@ -43,12 +43,12 @@ export const MTRs = (props) => {
             stationData?.UP?.length > 1
               ? constDest[stationData.UP[0].dest]
               : "",
-          ttnts: stationData?.UP?.map((item) =>
-            parseInt(item.ttnt) === 0
+          ttnts: stationData?.UP?.map((e) =>
+            parseInt(e.ttnt) === 0
               ? "準備埋站"
-              : parseInt(item.ttnt) >= 60
+              : parseInt(e.ttnt) >= 60
               ? "已停站"
-              : `${item.ttnt}分鐘`
+              : `${e.ttnt}分鐘`
           ),
         };
         result.push(sectionData);
@@ -64,23 +64,22 @@ export const MTRs = (props) => {
 
   return (
     <>
-      {sectionData.map((item, i) => {
+      {sectionData.map((e, i) => {
         return (
           <div key={i}>
-            <div>{item.name}站</div>
-            {!item?.down?.dest && !item?.up?.dest ? "已停站" : null}
+            <div>{e.name}站</div>
+            {!e?.down?.dest && !e?.up?.dest ? "已停站" : null}
             <table className="mtrTable">
               <tbody>
-                {item?.down?.dest && item.direction.includes("down") ? (
+                {e?.down?.dest && e.direction.includes("down") ? (
                   <tr>
                     <td>
-                      往 <span className="dest">{item.down.dest}</span>{" "}
-                      到站時間:
+                      往 <span className="dest">{e.down.dest}</span> 到站時間:
                     </td>
-                    {item.down.ttnts
-                      .map((item, j) => (
+                    {e.down.ttnts
+                      .map((e, j) => (
                         <td className="ttnt" key={j}>
-                          {item}
+                          {e}
                         </td>
                       ))
                       .slice(0, 3)}
@@ -90,15 +89,15 @@ export const MTRs = (props) => {
             </table>
             <table className="mtrTable">
               <tbody>
-                {item?.up?.dest && item.direction.includes("up") ? (
+                {e?.up?.dest && e.direction.includes("up") ? (
                   <tr>
                     <td>
-                      往 <span className="dest">{item.up.dest}</span> 到站時間:
+                      往 <span className="dest">{e.up.dest}</span> 到站時間:
                     </td>
-                    {item.up.ttnts
-                      .map((item, j) => (
+                    {e.up.ttnts
+                      .map((e, j) => (
                         <td className="ttnt" key={j}>
-                          {item}
+                          {e}
                         </td>
                       ))
                       .slice(0, 3)}

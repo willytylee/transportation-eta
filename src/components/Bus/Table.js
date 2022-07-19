@@ -7,14 +7,14 @@ export const Table = (props) => {
   const txts = [];
   const result = [];
 
-  sectionData.forEach((item, i) => {
-    let { etas, route, stopName, latLng } = item;
+  sectionData.forEach((e, i) => {
+    let { etas, route, stopName, latLng } = e;
 
     if (etas.length === 0) {
       txts[i] = ["沒有班次"];
     } else {
-      txts[i] = etas.map((item) => {
-        return etaTimeConverter(item.eta, item.rmk_tc);
+      txts[i] = etas.map((e) => {
+        return etaTimeConverter(e.eta, e.rmk_tc);
       });
     }
     result.push({
@@ -29,17 +29,17 @@ export const Table = (props) => {
     <>
       <table className="tableView">
         <tbody>
-          {result.map((item, i) => {
+          {result.map((e, i) => {
             return (
               <tr key={i}>
-                <td className="route">{item.route}</td>
+                <td className="route">{e.route}</td>
                 <td className="stopName">
-                  <a href={item.latLngUrl}>{item.stopName}</a>
+                  <a href={e.latLngUrl}>{e.stopName}</a>
                 </td>
-                {item.etas.map((item, j) => {
+                {e.etas.map((e, j) => {
                   return (
                     <td key={j} className="eta">
-                      {item}
+                      {e}
                     </td>
                   );
                 })}

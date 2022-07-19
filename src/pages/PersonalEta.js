@@ -13,8 +13,8 @@ export const PersonalEta = () => {
 
   return (
     <>
-      {data.transportData.map((item, i) => (
-        <Section key={i} category={item} />
+      {data.transportData.map((e, i) => (
+        <Section key={i} category={e} />
       ))}
     </>
   );

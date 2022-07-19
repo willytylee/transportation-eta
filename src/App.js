@@ -3,12 +3,13 @@ import { Navbar } from "./Navbar";
 import { Route, Routes } from "react-router-dom";
 import { PersonalEta } from "./pages/PersonalEta";
 import { Search } from "./pages/Search";
-import { setKmbRouteList, setKmbStopList, setStopMap } from "./Utils";
+import { setKmbRouteList, setKmbStopList, setRouteFareList } from "./Utils";
 
 const App = () => {
   setKmbStopList();
   setKmbRouteList();
-  setStopMap();
+  setRouteFareList();
+  setRouteFareList();
   return (
     <>
       <Navbar />

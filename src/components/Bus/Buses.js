@@ -16,20 +16,20 @@ export const Buses = (props) => {
   useEffect(() => {
     setSectionData([]);
 
-    const kmbStopList = getLocalStorage("kmbStopList");
+    const stopList = getLocalStorage("stopList");
 
     const intervalContent = async () => {
       const result = [];
 
       for (let i = 0; i < section.length; i++) {
-        let stopIndex, stopName, stopLat, stopLng, urls, res;
-        const { co, route, stopId, serviceType, seq } = section[i];
+        let stopName, stopLat, stopLng, urls, res;
+        const { co, route, stopId, serviceType } = section[i];
 
         if (co === "kmb") {
-          stopIndex = kmbStopList.findIndex((item) => item.stop === stopId);
-          stopName = kmbStopList[stopIndex].name_tc;
-          stopLat = kmbStopList[stopIndex].lat;
-          stopLng = kmbStopList[stopIndex].long;
+          const stop = stopList[stopId];
+          stopName = stop.name.zh;
+          stopLat = stop.location.lat;
+          stopLng = stop.location.long;
           urls = getAllEtaUrlsFromKmb(stopId, route, serviceType);
         } else if (co === "nwfb") {
           const stopRes = await axios.get(
@@ -50,8 +50,8 @@ export const Buses = (props) => {
         res = await Promise.all(promiseArray);
 
         res = res
-          .map((item) => {
-            return item.data.data;
+          .map((e) => {
+            return e.data.data;
           })
           .flat();
 
