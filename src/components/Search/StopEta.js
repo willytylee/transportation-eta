@@ -13,7 +13,7 @@ export const StopEta = (props) => {
 
     const intervalContent = async () => {
       fetchEtas({ ...routeObj, seq: parseInt(seq, 10) }).then((response) =>
-        setEta(response)
+        setEta(response.slice(0, 3))
       );
     };
 
