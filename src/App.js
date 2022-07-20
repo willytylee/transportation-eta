@@ -1,15 +1,16 @@
+import { useContext } from "react";
 import "./App.css";
 import { Navbar } from "./Navbar";
 import { Route, Routes } from "react-router-dom";
 import { PersonalEta } from "./pages/PersonalEta";
 import { Search } from "./pages/Search";
-import { setKmbRouteList, setKmbStopList, setRouteFareList } from "./Utils";
+import { AppContext } from "./context/AppContext";
 
 const App = () => {
-  setKmbStopList();
-  setKmbRouteList();
-  setRouteFareList();
-  setRouteFareList();
+  const { initDb } = useContext(AppContext);
+
+  initDb();
+
   return (
     <>
       <Navbar />
@@ -21,9 +22,9 @@ const App = () => {
         </Routes>
       </div>
       <div className="refresh-wrapper">
-        <button onClick={() => window.location.reload()}>
-          Refresh to update the app
-        </button>
+        <a href="https://eta.willytylee.com/">
+          <button>Refresh to update the app</button>
+        </a>
       </div>
     </>
   );

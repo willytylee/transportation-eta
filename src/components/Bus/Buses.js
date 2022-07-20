@@ -16,7 +16,7 @@ export const Buses = (props) => {
   useEffect(() => {
     setSectionData([]);
 
-    const stopList = getLocalStorage("stopList");
+    const gStopList = getLocalStorage("stopList");
 
     const intervalContent = async () => {
       const result = [];
@@ -26,7 +26,7 @@ export const Buses = (props) => {
         const { co, route, stopId, serviceType } = section[i];
 
         if (co === "kmb") {
-          const stop = stopList[stopId];
+          const stop = gStopList[stopId];
           stopName = stop.name.zh;
           stopLat = stop.location.lat;
           stopLng = stop.location.long;

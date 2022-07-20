@@ -10,6 +10,7 @@ export const fetchEtas = async ({
   seq,
   serviceType,
   co,
+  stopId,
 }) => {
   try {
     let _etas = [];
@@ -22,7 +23,7 @@ export const fetchEtas = async ({
             route,
             seq,
             serviceType,
-            stopId: stops[company_id][seq - 1],
+            stopId: stopId ? stopId : stops[company_id][seq - 1],
           })
         );
       } else if (company_id === "nwfb") {
@@ -32,7 +33,7 @@ export const fetchEtas = async ({
             route,
             seq,
             serviceType,
-            stopId: stops[company_id][seq - 1],
+            stopId: stopId ? stopId : stops[company_id][seq - 1],
           })
         );
       } else if (company_id === "ctb") {
@@ -42,7 +43,7 @@ export const fetchEtas = async ({
             route,
             seq,
             serviceType,
-            stopId: stops[company_id][seq - 1],
+            stopId: stopId ? stopId : stops[company_id][seq - 1],
           })
         );
       }

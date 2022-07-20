@@ -21,7 +21,7 @@ export const StopEta = (props) => {
     const interval = setInterval(intervalContent, 5000);
 
     return () => clearInterval(interval);
-  }, [routeObj]);
+  }, [routeObj, seq]);
 
   return (
     <tr>

@@ -5,8 +5,8 @@ export const fetchEtas = async ({ stopId, route, seq, bound }) => {
     `https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/nwfb/${stopId}/${route}`
   );
 
-  console.log({ stopId, route, seq, bound });
-  console.log(response.data.data);
+  // console.log({ stopId, route, seq, bound });
+  // console.log(response.data.data);
 
   return response.data.data
     .filter((e) => e.eta !== null && bound.includes(e.dir))

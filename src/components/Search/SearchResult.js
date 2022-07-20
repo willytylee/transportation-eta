@@ -1,12 +1,22 @@
-import React from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import { Card } from "@mui/material";
-import { useState, useEffect } from "react";
 import { StopEta } from "./StopEta";
+import { getLocalStorage } from "../../Utils";
+import { AppContext } from "../../context/AppContext";
 
 export const SearchResult = (props) => {
-  const { route, expandItem, setExpandItem, gRouteList, gStopList } = props;
+  const { route, expandItem, setExpandItem } = props;
   const [routeList, setRouteList] = useState([]);
   const [stopList, setStopList] = useState([]);
+  const { dbVersion } = useContext(AppContext);
+
+  const gRouteList = useMemo(() => {
+    return getLocalStorage("routeList");
+  }, [dbVersion]);
+
+  const gStopList = useMemo(() => {
+    return getLocalStorage("stopList");
+  }, [dbVersion]);
 
   const handleCardOnClick = (i) => {
     setExpandItem(i);
@@ -73,8 +83,8 @@ export const SearchResult = (props) => {
               expandItem != null &&
               stopList[expandItem]?.map((e, i) => {
                 const { lat, long } = e.location;
-                const { name } = e;
                 const latLng = [lat, long];
+                const { name } = e;
                 return (
                   <StopEta
                     key={i}
