@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { constDest } from "../../constants/MTRDests";
 
-export const MTRs = (props) => {
-  const { section } = props;
+export const MTRs = ({ section }) => {
   const [sectionData, setSectionData] = useState([]);
 
   useEffect(() => {

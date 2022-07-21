@@ -1,6 +1,7 @@
 export const dataSet = [
   {
     user: "willy",
+    name: "Willy",
     transportData: [
       {
         title: "上班",
@@ -191,6 +192,7 @@ export const dataSet = [
   },
   {
     user: "shan",
+    name: "Shan",
     transportData: [
       {
         title: "上班",

@@ -1,14 +1,16 @@
-import PropTypes from "prop-types";
 import { etaTimeConverter } from "../../Utils";
 
-export const Table = (props) => {
-  const { sectionData } = props;
-
+export const Table = ({ sectionData }) => {
   const txts = [];
   const result = [];
 
   sectionData.forEach((e, i) => {
-    let { etas, route, stopName, latLng } = e;
+    let {
+      etas,
+      route,
+      stopName,
+      location: { lat, lng },
+    } = e;
 
     if (etas.length === 0) {
       txts[i] = ["沒有班次"];
@@ -21,7 +23,7 @@ export const Table = (props) => {
       route,
       etas: txts[i],
       stopName,
-      latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`,
+      latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${lat},${lng}`,
     });
   });
 
@@ -50,8 +52,4 @@ export const Table = (props) => {
       </table>
     </>
   );
-};
-
-Table.propTypes = {
-  sectionData: PropTypes.array,
 };

@@ -13,11 +13,11 @@ export const fetchEtas = async ({
   stopId,
 }) => {
   try {
-    let _etas = [];
+    let etas = [];
 
     for (const company_id of co) {
       if (company_id === "kmb") {
-        _etas = _etas.concat(
+        etas = etas.concat(
           await kmbFetchEtas({
             bound: bound[company_id],
             route,
@@ -27,21 +27,19 @@ export const fetchEtas = async ({
           })
         );
       } else if (company_id === "nwfb") {
-        _etas = _etas.concat(
+        etas = etas.concat(
           await nwfbFetchEtas({
             bound: bound[company_id],
             route,
-            seq,
             serviceType,
             stopId: stopId ? stopId : stops[company_id][seq - 1],
           })
         );
       } else if (company_id === "ctb") {
-        _etas = _etas.concat(
+        etas = etas.concat(
           await ctbFetchEtas({
             bound: bound[company_id],
             route,
-            seq,
             serviceType,
             stopId: stopId ? stopId : stops[company_id][seq - 1],
           })
@@ -49,7 +47,7 @@ export const fetchEtas = async ({
       }
     }
 
-    return sortEtaObject(_etas);
+    return sortEtaObject(etas);
   } catch (err) {
     console.error(err);
     return [];

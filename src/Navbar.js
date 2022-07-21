@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
+import { dataSet } from "./data/DataSet";
 
-export const Navbar = (props) => {
+export const Navbar = () => {
   return (
     <nav className="nav">
       <ul>
@@ -9,12 +10,13 @@ export const Navbar = (props) => {
         </li>
       </ul>
       <ul>
-        <li>
-          <Link to="/eta/willy">Willy</Link>
-        </li>
-        <li>
-          <Link to="/eta/shan">Shan</Link>
-        </li>
+        {dataSet.map((e, i) => {
+          return (
+            <li key={i}>
+              <Link to={`/eta/${e.user}`}>{e.name}</Link>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

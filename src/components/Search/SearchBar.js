@@ -2,8 +2,7 @@ import { useContext } from "react";
 import { TextField } from "@mui/material";
 import { AppContext } from "../../context/AppContext";
 
-export const SearchBar = (props) => {
-  const { handleFormChange, searchValue } = props;
+export const SearchBar = ({ handleFormChange, searchValue }) => {
   const { dbVersion } = useContext(AppContext);
 
   return (

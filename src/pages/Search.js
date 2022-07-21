@@ -4,11 +4,11 @@ import { SearchBar } from "../components/Search/SearchBar";
 
 export const Search = () => {
   const [searchValue, setSearchValue] = useState("");
-  const [expandItem, setExpandItem] = useState("");
+  const [expandIndex, setExpandIndex] = useState(-1);
 
   const handleFormChange = (e) => {
     setSearchValue(e.target.value.toUpperCase());
-    setExpandItem("");
+    setExpandIndex(-1);
   };
 
   return (
@@ -19,8 +19,8 @@ export const Search = () => {
       />
       <SearchResult
         route={searchValue}
-        expandItem={expandItem}
-        setExpandItem={setExpandItem}
+        expandIndex={expandIndex}
+        setExpandIndex={setExpandIndex}
       />
     </div>
   );

@@ -30,12 +30,11 @@ export const getLocalStorage = (key) => {
 
 export const getAllEtaUrlsFromKmb = (kmbStopId, route, serviceType) => {
   const stopMap = getLocalStorage("stopMap");
-  const _stopIds = stopMap[kmbStopId];
 
   const urls = [
     `https://data.etabus.gov.hk/v1/transport/kmb/eta/${kmbStopId}/${route}/${serviceType}`,
   ];
-  _stopIds?.forEach(([company, stopId]) => {
+  stopMap[kmbStopId]?.forEach(([company, stopId]) => {
     urls.push(
       `https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/${company}/${stopId}/${route}`
     );

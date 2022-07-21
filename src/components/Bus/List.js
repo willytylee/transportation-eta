@@ -1,12 +1,15 @@
 import { etaTimeConverter, sortEtaObject } from "../../Utils";
 
-export const List = (props) => {
-  const { sectionData } = props;
-
+export const List = ({ sectionData }) => {
   let fullArray = [];
 
   sectionData.forEach((e) => {
-    const { etas, route, stopName, latLng } = e;
+    const {
+      etas,
+      route,
+      stopName,
+      location: { lat, lng },
+    } = e;
 
     let eta;
 
@@ -15,7 +18,7 @@ export const List = (props) => {
         route,
         eta: "",
         stopName,
-        latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`,
+        latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${lat},${lng}`,
       });
     } else {
       etas.forEach((e) => {
@@ -26,7 +29,7 @@ export const List = (props) => {
           eta,
           rmk_tc,
           stopName,
-          latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${latLng[0]},${latLng[1]}`,
+          latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${lat},${lng}`,
         });
       });
     }

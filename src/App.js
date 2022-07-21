@@ -8,8 +8,10 @@ import { AppContext } from "./context/AppContext";
 
 const App = () => {
   const { initDb } = useContext(AppContext);
+  const { getGeoLocation, error } = useContext(AppContext);
 
   initDb();
+  getGeoLocation();
 
   return (
     <>
@@ -26,6 +28,9 @@ const App = () => {
           <button>Refresh to update the app</button>
         </a>
       </div>
+      {error.map((e) => {
+        return e;
+      })}
     </>
   );
 };
