@@ -23,25 +23,27 @@ export const etaTimeConverter = (etaString, remark) => {
 export const getLocalStorage = (key) => {
   if (localStorage.getItem(key) != null) {
     return JSON.parse(
-      decompressJson(localStorage.getItem(key), { inputEncoding: "Base64" })
+      decompressJson(localStorage.getItem(key), {
+        inputEncoding: "Base64",
+      }).replaceAll("／", "/")
     );
   }
 };
 
-export const getAllEtaUrlsFromKmb = (kmbStopId, route, serviceType) => {
-  const stopMap = getLocalStorage("stopMap");
+// export const getAllEtaUrlsFromKmb = (kmbStopId, route, serviceType) => {
+//   const stopMap = getLocalStorage("stopMap");
 
-  const urls = [
-    `https://data.etabus.gov.hk/v1/transport/kmb/eta/${kmbStopId}/${route}/${serviceType}`,
-  ];
-  stopMap[kmbStopId]?.forEach(([company, stopId]) => {
-    urls.push(
-      `https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/${company}/${stopId}/${route}`
-    );
-  });
+//   const urls = [
+//     `https://data.etabus.gov.hk/v1/transport/kmb/eta/${kmbStopId}/${route}/${serviceType}`,
+//   ];
+//   stopMap[kmbStopId]?.forEach(([company, stopId]) => {
+//     urls.push(
+//       `https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/${company}/${stopId}/${route}`
+//     );
+//   });
 
-  return urls;
-};
+//   return urls;
+// };
 
 export const sortEtaObject = (etaObjectArray) => {
   etaObjectArray.sort((a, b) => {

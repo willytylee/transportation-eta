@@ -39,7 +39,7 @@ body{
 	padding: 10px;
   box-shadow: 1px 1px 4px grey;
   margin: 8px;
-  border-radius: 6px;
+  border-radius: 2px;
 }
 .tableView, .listView, .mtrTable{
 	width: 100%;

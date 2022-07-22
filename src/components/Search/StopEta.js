@@ -3,9 +3,12 @@ import { etaTimeConverter } from "../../Utils";
 import { fetchEtas } from "../../fetch";
 
 export const StopEta = ({
-  stopName,
   seq,
-  location: { lat, lng },
+  stopObj: {
+    name,
+    stopId,
+    location: { lat, lng },
+  },
   routeObj,
   isClosestStop,
   bound,
@@ -13,24 +16,12 @@ export const StopEta = ({
   const [eta, setEta] = useState([]);
 
   useEffect(() => {
-    setEta([]);
-
-    console.log(routeObj);
-
     const intervalContent = async () => {
-      if (bound === "") {
-        // Normal handling
-        fetchEtas({ ...routeObj, seq: parseInt(seq, 10) }).then((response) =>
-          setEta(response.slice(0, 3))
-        );
-      } else if (bound !== "") {
-        // Special handling if manually insert bound
-        fetchEtas({
-          ...routeObj,
-          seq: parseInt(seq, 10),
-          bound: { [routeObj.co[0]]: bound }, // replace the IO / OI bound
-        }).then((response) => setEta(response.slice(0, 3)));
-      }
+      fetchEtas({
+        ...routeObj,
+        seq: parseInt(seq, 10),
+        bound: bound !== "" ? { [routeObj.co[0]]: bound } : "",
+      }).then((response) => setEta(response.slice(0, 3)));
     };
 
     intervalContent();
@@ -48,8 +39,9 @@ export const StopEta = ({
       <td>
         <a
           href={`https://www.google.com.hk/maps/search/?api=1&query=${lat},${lng}`}
+          title={stopId}
         >
-          {stopName}
+          {name.zh}
         </a>
       </td>
       {eta.length !== 0 ? (

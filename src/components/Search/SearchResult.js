@@ -6,11 +6,12 @@ import { getLocalStorage } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
 import { fetchEtas } from "../../fetch";
 
-export const SearchResult = ({ route, expandIndex, setExpandIndex }) => {
+export const SearchResult = ({ route }) => {
   const [routeList, setRouteList] = useState([]);
   const [stopList, setStopList] = useState([]);
   const [closestStopId, setClosestStopId] = useState("");
   const [winBound, setWinBound] = useState("");
+  const [expandIndex, setExpandIndex] = useState(-1);
   const { dbVersion, location: currentLocation } = useContext(AppContext);
 
   const gRouteList = useMemo(() => {
@@ -26,21 +27,22 @@ export const SearchResult = ({ route, expandIndex, setExpandIndex }) => {
   };
 
   useEffect(() => {
-    setRouteList([]);
     setStopList([]);
     setWinBound("");
+    setExpandIndex(-1);
 
     if (route) {
       setRouteList(
         Object.keys(gRouteList)
           .map((e) => gRouteList[e])
-          .filter(
-            (e) =>
-              e.route == route &&
+          .filter((e) => {
+            return (
+              e.route === route &&
               (e.co.includes("kmb") ||
                 e.co.includes("nwfb") ||
                 e.co.includes("ctb"))
-          )
+            );
+          })
           .sort((a, b) => a.serviceType - b.serviceType)
       );
     }
@@ -50,11 +52,56 @@ export const SearchResult = ({ route, expandIndex, setExpandIndex }) => {
     setWinBound("");
     setStopList([]);
 
-    if (route && expandIndex != -1) {
+    if (route && expandIndex !== -1) {
       const expandRoute = routeList[expandIndex];
       const companyId = expandRoute.co[0];
       const expandStopIdList = expandRoute.stops[companyId];
       const routeBound = expandRoute.bound[companyId];
+
+      setStopList(
+        expandStopIdList.map((e) => {
+          return { ...gStopList[e], stopId: e };
+        })
+      );
+
+      // Due to the route got both bound (i.e. (IO / OI)),
+      // we need to find the correct bound by fetch all the other stop,
+      // which bound got the more number, who will be the bound
+      if (routeBound.length === 2) {
+        let promises = [];
+
+        expandStopIdList.forEach((e) =>
+          promises.push(fetchEtas({ ...expandRoute, stopId: e }))
+        );
+
+        Promise.all(promises).then((response) => {
+          const boundCount = response.reduce(
+            (prev, curr) => {
+              if (curr.length > 0) {
+                const { bound } = curr[0];
+                return { ...prev, [bound]: prev[bound] + 1 };
+              } else {
+                return { ...prev };
+              }
+            },
+            { I: 0, O: 0 }
+          );
+
+          setWinBound(
+            Object.keys(boundCount).reduce((prev, curr) =>
+              boundCount[prev] > boundCount[curr] ? prev : curr
+            )
+          );
+        });
+      }
+    }
+  }, [expandIndex]);
+
+  useEffect(() => {
+    if (expandIndex !== -1) {
+      const expandRoute = routeList[expandIndex];
+      const companyId = expandRoute.co[0];
+      const expandStopIdList = expandRoute.stops[companyId];
 
       setClosestStopId(
         expandStopIdList.reduce((prev, curr) => {
@@ -79,44 +126,8 @@ export const SearchResult = ({ route, expandIndex, setExpandIndex }) => {
           return curr;
         })
       );
-
-      setStopList(expandStopIdList.map((e) => gStopList[e]));
-
-      if (routeBound.length === 2) {
-        // Due to the route got both bound (i.e. (IO / OI)),
-        // we need to find the correct bound by fetch all the other stop,
-        // which bound got the more number, who will be the bound
-        let promises = [];
-
-        expandStopIdList.forEach((e) =>
-          promises.push(fetchEtas({ ...expandRoute, stopId: e }))
-        );
-
-        Promise.all(promises).then((response) => {
-          console.log(response);
-          const boundCount = response.reduce(
-            (prev, curr) => {
-              if (curr.length > 0) {
-                const { bound } = curr[0];
-                return { ...prev, [bound]: prev[bound] + 1 };
-              } else {
-                return { ...prev };
-              }
-            },
-            { I: 0, O: 0 }
-          );
-
-          setWinBound(
-            Object.keys(boundCount).reduce((prev, curr) =>
-              boundCount[prev] > boundCount[curr] ? prev : curr
-            )
-          );
-        });
-      }
-    } else {
-      setRouteList([]);
     }
-  }, [expandIndex]);
+  }, [expandIndex, currentLocation.lat, currentLocation.lng]);
 
   return (
     <div className="searchResult">
@@ -145,17 +156,15 @@ export const SearchResult = ({ route, expandIndex, setExpandIndex }) => {
           <tbody>
             {routeList &&
               stopList &&
-              expandIndex != -1 &&
+              expandIndex !== -1 &&
               stopList?.map((e, i) => {
-                const { name, location } = e;
-                const isClosestStop = gStopList[closestStopId]?.name === name;
+                const isClosestStop = gStopList[closestStopId]?.name === e.name;
                 return (
                   <StopEta
                     key={i}
                     seq={i + 1} // TODO: seq = i + 1 not accurate
                     routeObj={routeList[expandIndex]}
-                    stopName={name.zh}
-                    location={location}
+                    stopObj={e}
                     isClosestStop={isClosestStop}
                     bound={winBound}
                   />

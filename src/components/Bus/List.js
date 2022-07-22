@@ -9,6 +9,7 @@ export const List = ({ sectionData }) => {
       route,
       stopName,
       location: { lat, lng },
+      stopId,
     } = e;
 
     let eta;
@@ -18,6 +19,7 @@ export const List = ({ sectionData }) => {
         route,
         eta: "",
         stopName,
+        stopId,
         latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${lat},${lng}`,
       });
     } else {
@@ -29,6 +31,7 @@ export const List = ({ sectionData }) => {
           eta,
           rmk_tc,
           stopName,
+          stopId,
           latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${lat},${lng}`,
         });
       });
@@ -59,7 +62,9 @@ export const List = ({ sectionData }) => {
               <tr key={i}>
                 <td className="route">{e?.route}</td>
                 <td className="stopName">
-                  <a href={e?.latLngUrl}>{e?.stopName}</a>
+                  <a href={e?.latLngUrl} title={e?.stopId}>
+                    {e?.stopName}
+                  </a>
                 </td>
                 <td className="eta">{e?.eta}</td>
               </tr>

@@ -1,4 +1,4 @@
-import { createContext, useState, useMemo } from "react";
+import { createContext, useState, useMemo, useCallback } from "react";
 import { compress as compressJson } from "lzutf8-light";
 import axios from "axios";
 
@@ -11,9 +11,26 @@ export const AppProvider = ({ children }) => {
     lat: 22.313879,
     lng: 114.186484,
   });
-  const [error] = useState([]);
 
-  const initDb = () => {
+  const getGeoLocation = useCallback(() => {
+    const success = (position) => {
+      setLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+      // setLocation({
+      //   lat: Math.random() * (22.35 - 22.08) + 22.08,
+      //   lng: Math.random() * (114.31 - 113.49) + 113.49,
+      // });
+    };
+    // setInterval(() => {
+    //   navigator.geolocation.getCurrentPosition(success);
+    // }, 1000);
+
+    navigator.geolocation.watchPosition(success);
+  }, []);
+
+  const initDb = useCallback(() => {
     const dbVersionLocal = localStorage.getItem("dbVersion");
 
     if (!dbVersionLocal || dbVersionLocal !== "0.0.1") {
@@ -43,32 +60,16 @@ export const AppProvider = ({ children }) => {
           );
         });
     }
-  };
-
-  const getGeoLocation = () => {
-    const success = (position) => {
-      setLocation({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      });
-    };
-    const fail = (err) => {
-      // setError((prevState) => {
-      //   return [...prevState, err.message];
-      // });
-    };
-    navigator.geolocation.getCurrentPosition(success, fail);
-  };
+  });
 
   const value = useMemo(
     () => ({
       dbVersion,
       location,
-      error,
       initDb,
       getGeoLocation,
     }),
-    [dbVersion, location, error]
+    [dbVersion, location, initDb, getGeoLocation]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

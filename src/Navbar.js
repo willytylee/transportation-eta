@@ -10,13 +10,15 @@ export const Navbar = () => {
         </li>
       </ul>
       <ul>
-        {dataSet.map((e, i) => {
-          return (
-            <li key={i}>
-              <Link to={`/eta/${e.user}`}>{e.name}</Link>
-            </li>
-          );
-        })}
+        {dataSet
+          .filter((e) => e.display)
+          .map((e, i) => {
+            return (
+              <li key={i}>
+                <Link to={`/eta/${e.user}`}>{e.name}</Link>
+              </li>
+            );
+          })}
       </ul>
     </nav>
   );

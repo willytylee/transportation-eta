@@ -22,8 +22,8 @@ export const fetchEtas = async ({
             bound: bound[company_id],
             route,
             seq,
-            serviceType,
-            stopId: stopId ? stopId : stops[company_id][seq - 1],
+            serviceType: serviceType ? serviceType : 1,
+            stopId: stopId ? stopId : seq ? stops[company_id][seq - 1] : "",
           })
         );
       } else if (company_id === "nwfb") {
@@ -31,8 +31,8 @@ export const fetchEtas = async ({
           await nwfbFetchEtas({
             bound: bound[company_id],
             route,
-            serviceType,
-            stopId: stopId ? stopId : stops[company_id][seq - 1],
+            serviceType: serviceType ? serviceType : 1,
+            stopId: stopId ? stopId : seq ? stops[company_id][seq - 1] : "",
           })
         );
       } else if (company_id === "ctb") {
@@ -40,8 +40,8 @@ export const fetchEtas = async ({
           await ctbFetchEtas({
             bound: bound[company_id],
             route,
-            serviceType,
-            stopId: stopId ? stopId : stops[company_id][seq - 1],
+            serviceType: serviceType ? serviceType : 1,
+            stopId: stopId ? stopId : seq ? stops[company_id][seq - 1] : "",
           })
         );
       }

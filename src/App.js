@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import "./App.css";
 import { Navbar } from "./Navbar";
 import { Route, Routes } from "react-router-dom";
@@ -8,10 +8,12 @@ import { AppContext } from "./context/AppContext";
 
 const App = () => {
   const { initDb } = useContext(AppContext);
-  const { getGeoLocation, error } = useContext(AppContext);
+  const { getGeoLocation } = useContext(AppContext);
 
-  initDb();
-  getGeoLocation();
+  useEffect(() => {
+    getGeoLocation();
+    initDb();
+  }, []);
 
   return (
     <>
@@ -28,9 +30,6 @@ const App = () => {
           <button>Refresh to update the app</button>
         </a>
       </div>
-      {error.map((e) => {
-        return e;
-      })}
     </>
   );
 };

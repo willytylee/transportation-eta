@@ -6,7 +6,9 @@ export const fetchEtas = async ({ stopId, route, seq, serviceType, bound }) => {
   );
 
   return response.data.data
-    .filter((e) => e.eta !== null && e.dir === bound && e.seq === seq)
+    .filter((e) => {
+      return e.eta !== null && e.dir === bound && (seq ? e.seq == seq : true);
+    })
     .map((e) => ({
       co: "kmb",
       eta: e.eta,
