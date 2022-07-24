@@ -42,8 +42,12 @@ export const SearchResult = ({ route }) => {
                 e.co.includes("ctb"))
             );
           })
-          .sort((a, b) => a.serviceType - b.serviceType)
+          .sort(
+            (a, b) => parseInt(a.serviceType, 10) - parseInt(b.serviceType, 10)
+          )
       );
+    } else {
+      setRouteList([]);
     }
   }, [route]);
 
@@ -94,7 +98,6 @@ export const SearchResult = ({ route }) => {
       );
     }
   }, [expandIdx, currentLocation.lat, currentLocation.lng]);
-  console.log(routeList);
 
   return (
     <div className="searchResult">
@@ -114,7 +117,8 @@ export const SearchResult = ({ route }) => {
                 <div className="origDest">
                   {e.orig.zh} → {e.dest.zh}
                   <span className="special">
-                    {e.serviceType !== "1" && "特別班次"}
+                    {" "}
+                    {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
                   </span>
                 </div>
               </div>

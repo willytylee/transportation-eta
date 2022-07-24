@@ -88,8 +88,7 @@ td{
 	text-align: center;
 }
 .routeTitle{
-	text-align: center;
-	padding: 4px 0;
+	padding: 4px;
 	font-size: 13px;
 	display: flex;
 }
@@ -97,11 +96,11 @@ td{
 	font-size: 12px;
 }
 .company{
-	width: 10%;
+	width: 20%;
 	float: left;
 }
 .origDest{
-	width: 90%;
+	width: 80%;
 	float: left;
 	font-weight: 900;
 }

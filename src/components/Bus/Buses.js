@@ -20,7 +20,7 @@ export const Buses = ({ section, gStopList, gRouteList }) => {
           .filter((e) => {
             return (
               e.route === route &&
-              e.serviceType == (serviceType ? serviceType : 1) && // Default 1
+              parseInt(e.serviceType) === (serviceType ? serviceType : 1) && // Default 1
               e.co.includes(co) &&
               e.stops[co][seq - 1] === stopId
             );
