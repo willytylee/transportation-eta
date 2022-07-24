@@ -10,8 +10,8 @@ export const SearchResult = ({ route }) => {
   const [routeList, setRouteList] = useState([]);
   const [stopList, setStopList] = useState([]);
   const [closestStopId, setClosestStopId] = useState("");
-  const [winBound, setWinBound] = useState("");
-  const [expandIndex, setExpandIndex] = useState(-1);
+  // const [winBound, setWinBound] = useState("");
+  const [expandIdx, setExpandIdx] = useState(-1);
   const { dbVersion, location: currentLocation } = useContext(AppContext);
 
   const gRouteList = useMemo(() => {
@@ -23,13 +23,13 @@ export const SearchResult = ({ route }) => {
   }, [dbVersion]);
 
   const handleCardOnClick = (i) => {
-    setExpandIndex(i);
+    setExpandIdx(i);
   };
 
   useEffect(() => {
     setStopList([]);
-    setWinBound("");
-    setExpandIndex(-1);
+    // setWinBound("");
+    setExpandIdx(-1);
 
     if (route) {
       setRouteList(
@@ -49,11 +49,11 @@ export const SearchResult = ({ route }) => {
   }, [route]);
 
   useEffect(() => {
-    setWinBound("");
+    // setWinBound("");
     setStopList([]);
 
-    if (route && expandIndex !== -1) {
-      const expandRoute = routeList[expandIndex];
+    if (route && expandIdx !== -1) {
+      const expandRoute = routeList[expandIdx];
       const companyId = expandRoute.co[0];
       const expandStopIdList = expandRoute.stops[companyId];
       const routeBound = expandRoute.bound[companyId];
@@ -63,43 +63,12 @@ export const SearchResult = ({ route }) => {
           return { ...gStopList[e], stopId: e };
         })
       );
-
-      // Due to the route got both bound (i.e. (IO / OI)),
-      // we need to find the correct bound by fetch all the other stop,
-      // which bound got the more number, who will be the bound
-      if (routeBound.length === 2) {
-        let promises = [];
-
-        expandStopIdList.forEach((e) =>
-          promises.push(fetchEtas({ ...expandRoute, stopId: e }))
-        );
-
-        Promise.all(promises).then((response) => {
-          const boundCount = response.reduce(
-            (prev, curr) => {
-              if (curr.length > 0) {
-                const { bound } = curr[0];
-                return { ...prev, [bound]: prev[bound] + 1 };
-              } else {
-                return { ...prev };
-              }
-            },
-            { I: 0, O: 0 }
-          );
-
-          setWinBound(
-            Object.keys(boundCount).reduce((prev, curr) =>
-              boundCount[prev] > boundCount[curr] ? prev : curr
-            )
-          );
-        });
-      }
     }
-  }, [expandIndex]);
+  }, [expandIdx]);
 
   useEffect(() => {
-    if (expandIndex !== -1) {
-      const expandRoute = routeList[expandIndex];
+    if (expandIdx !== -1) {
+      const expandRoute = routeList[expandIdx];
       const companyId = expandRoute.co[0];
       const expandStopIdList = expandRoute.stops[companyId];
 
@@ -127,7 +96,7 @@ export const SearchResult = ({ route }) => {
         })
       );
     }
-  }, [expandIndex, currentLocation.lat, currentLocation.lng]);
+  }, [expandIdx, currentLocation.lat, currentLocation.lng]);
 
   return (
     <div className="searchResult">
@@ -138,7 +107,7 @@ export const SearchResult = ({ route }) => {
               <div
                 className="routeTitle"
                 style={
-                  expandIndex === i ? { backgroundColor: "lightyellow" } : {}
+                  expandIdx === i ? { backgroundColor: "lightyellow" } : {}
                 }
               >
                 {e.orig.zh} → {e.dest.zh}{" "}
@@ -156,17 +125,17 @@ export const SearchResult = ({ route }) => {
           <tbody>
             {routeList &&
               stopList &&
-              expandIndex !== -1 &&
+              expandIdx !== -1 &&
               stopList?.map((e, i) => {
                 const isClosestStop = gStopList[closestStopId]?.name === e.name;
                 return (
                   <StopEta
                     key={i}
                     seq={i + 1} // TODO: seq = i + 1 not accurate
-                    routeObj={routeList[expandIndex]}
+                    routeObj={routeList[expandIdx]}
                     stopObj={e}
                     isClosestStop={isClosestStop}
-                    bound={winBound}
+                    // bound={winBound}
                   />
                 );
               })}

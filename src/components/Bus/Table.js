@@ -16,7 +16,7 @@ export const Table = ({ sectionData }) => {
       txts[i] = ["沒有班次"];
     } else {
       txts[i] = etas.map((e) => {
-        return etaTimeConverter(e.eta, e.rmk_tc);
+        return etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr;
       });
     }
     result.push({

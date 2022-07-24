@@ -1,7 +1,6 @@
-import { sortEtaObject } from "../Utils";
+import { sortEtaObj } from "../Utils";
 import { fetchEtas as kmbFetchEtas } from "./Kmb";
-import { fetchEtas as nwfbFetchEtas } from "./Nwfb";
-import { fetchEtas as ctbFetchEtas } from "./Ctb";
+import { fetchEtas as nwfbCtbFetchEtas } from "./NwfbCtb";
 
 export const fetchEtas = async ({
   route,
@@ -11,6 +10,7 @@ export const fetchEtas = async ({
   serviceType,
   co,
   stopId,
+  dest,
 }) => {
   try {
     let etas = [];
@@ -26,28 +26,20 @@ export const fetchEtas = async ({
             stopId: stopId ? stopId : seq ? stops[company_id][seq - 1] : "",
           })
         );
-      } else if (company_id === "nwfb") {
+      } else if (company_id === "nwfb" || company_id === "ctb") {
         etas = etas.concat(
-          await nwfbFetchEtas({
+          await nwfbCtbFetchEtas({
             bound: bound[company_id],
+            co: company_id,
             route,
-            serviceType: serviceType ? serviceType : 1,
             stopId: stopId ? stopId : seq ? stops[company_id][seq - 1] : "",
-          })
-        );
-      } else if (company_id === "ctb") {
-        etas = etas.concat(
-          await ctbFetchEtas({
-            bound: bound[company_id],
-            route,
-            serviceType: serviceType ? serviceType : 1,
-            stopId: stopId ? stopId : seq ? stops[company_id][seq - 1] : "",
+            dest,
           })
         );
       }
     }
 
-    return sortEtaObject(etas);
+    return sortEtaObj(etas);
   } catch (err) {
     console.error(err);
     return [];

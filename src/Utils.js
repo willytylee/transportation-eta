@@ -1,23 +1,25 @@
 import moment from "moment";
 import { decompress as decompressJson } from "lzutf8-light";
 
-export const etaTimeConverter = (etaString, remark) => {
-  if (etaString) {
-    const mintuesLeft = moment(etaString).diff(moment(), "minutes");
+export const etaTimeConverter = (etaStr, remark) => {
+  let etaIntervalStr = "";
+  let remarkStr = "";
+  if (etaStr) {
+    const mintuesLeft = moment(etaStr).diff(moment(), "minutes");
     if (mintuesLeft === 0) {
-      return "準備埋站";
+      etaIntervalStr = "準備埋站";
     } else if (mintuesLeft <= 0) {
-      return "已埋站";
+      etaIntervalStr = "已埋站";
     } else {
-      return `${mintuesLeft}分鐘`;
+      etaIntervalStr = `${mintuesLeft}分鐘`;
     }
   } else {
-    if (remark) {
-      return remark;
-    } else {
-      return "沒有班次";
-    }
+    etaIntervalStr = "沒有班次";
   }
+  if (remark) {
+    remarkStr = ` (${remark})`;
+  }
+  return { etaIntervalStr, remarkStr };
 };
 
 export const getLocalStorage = (key) => {
@@ -28,6 +30,28 @@ export const getLocalStorage = (key) => {
       }).replaceAll("／", "/")
     );
   }
+};
+
+export const getClosestStr = (str, strArr) => {
+  const countArr = [];
+  const getMatchCount = (str1, str2) => {
+    let count = 3;
+    const obj = str2.split("");
+    for (str of str1) {
+      let idx = obj.findIndex((s) => s === str);
+      if (idx >= 0) {
+        count++;
+        obj.splice(idx, 1);
+      }
+    }
+    return count;
+  };
+  strArr.forEach((e, i) => {
+    countArr[i] = getMatchCount(str, e);
+  });
+  const max = Math.max(...countArr);
+  const idx = countArr.indexOf(max);
+  return strArr[idx];
 };
 
 // export const getAllEtaUrlsFromKmb = (kmbStopId, route, serviceType) => {
@@ -45,8 +69,8 @@ export const getLocalStorage = (key) => {
 //   return urls;
 // };
 
-export const sortEtaObject = (etaObjectArray) => {
-  etaObjectArray.sort((a, b) => {
+export const sortEtaObj = (etaObjArr) => {
+  etaObjArr.sort((a, b) => {
     if (a.eta === "" || a.eta === null) {
       return 1;
     }
@@ -56,5 +80,5 @@ export const sortEtaObject = (etaObjectArray) => {
     return moment(a.eta).diff(moment(b.eta), "second");
   });
 
-  return etaObjectArray;
+  return etaObjArr;
 };

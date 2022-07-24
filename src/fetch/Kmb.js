@@ -12,9 +12,6 @@ export const fetchEtas = async ({ stopId, route, seq, serviceType, bound }) => {
     .map((e) => ({
       co: "kmb",
       eta: e.eta,
-      remark: {
-        zh: e.rmk_tc,
-        en: e.rmk_en,
-      },
+      rmk_tc: e.rmk_tc,
     }));
 };

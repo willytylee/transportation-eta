@@ -38,43 +38,6 @@ export const Buses = ({ section, gStopList, gRouteList }) => {
             stopId,
           });
         }
-
-        // if (co === "kmb") {
-        //   const stop = gStopList[stopId];
-        //   stopName = stop.name.zh;
-        //   location = stop.location;
-        //   urls = getAllEtaUrlsFromKmb(stopId, route, serviceType);
-        // } else if (co === "nwfb") {
-        //   const stopRes = await axios.get(
-        //     `https://rt.data.gov.hk/v1/transport/citybus-nwfb/stop/${stopId}`
-        //   );
-        //   const { data } = stopRes.data;
-        //   stopName = data.name_tc;
-        //   location = { lat: data.lat, lng: data.long };
-        //   urls = [
-        //     `https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/nwfb/${stopId}/${route}`,
-        //   ];
-        // }
-
-        // const fetchURL = (url) => axios.get(url);
-        // const promiseArray = urls.map(fetchURL);
-
-        // res = await Promise.all(promiseArray);
-
-        // res = res
-        //   .map((e) => e.data.data)
-        //   .flat()
-        //   .filter((e) => (seq ? e.seq == seq : e));
-
-        // res = sortEtaObject(res);
-
-        // res = res.slice(0, 3);
-        // result.push({
-        //   etas: res,
-        //   route,
-        //   stopName,
-        //   location,
-        // });
       }
 
       setSectionData(result);

@@ -11,7 +11,6 @@ export const StopEta = ({
   },
   routeObj,
   isClosestStop,
-  bound,
 }) => {
   const [eta, setEta] = useState([]);
 
@@ -20,7 +19,7 @@ export const StopEta = ({
       fetchEtas({
         ...routeObj,
         seq: parseInt(seq, 10),
-        bound: bound !== "" ? { [routeObj.co[0]]: bound } : "",
+        // bound: bound === "" ? routeObj.bound : { [routeObj.co[0]]: bound },
       }).then((response) => setEta(response.slice(0, 3)));
     };
 
@@ -31,7 +30,7 @@ export const StopEta = ({
     return () => {
       clearInterval(interval);
     };
-  }, [routeObj, seq, bound]);
+  }, [routeObj, seq]);
 
   return (
     <tr style={isClosestStop ? { backgroundColor: "lightblue" } : {}}>
@@ -46,7 +45,13 @@ export const StopEta = ({
       </td>
       {eta.length !== 0 ? (
         eta.map((e, i) => {
-          return <td key={i}> {etaTimeConverter(e.eta, e.rmk_tc)} </td>;
+          return (
+            <td key={i}>
+              {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
+              {/* <br />
+              {etaTimeConverter(e.eta, e.rmk_tc).remarkStr} */}
+            </td>
+          );
         })
       ) : (
         <td>沒有班次</td>
