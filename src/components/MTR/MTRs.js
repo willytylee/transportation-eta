@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { constDest } from "../../constants/MTRDests";
+import { stationMap } from "../../constants/MTR";
 
 export const MTRs = ({ section }) => {
   const [sectionData, setSectionData] = useState([]);
@@ -22,12 +22,12 @@ export const MTRs = ({ section }) => {
         const apiReturn = await axios.get(api.url);
         const stationData = apiReturn.data.data[lineSta];
 
-        sectionData.name = constDest[station];
+        sectionData.name = stationMap[station];
         sectionData.direction = api.direction;
         sectionData.down = {
           dest:
             stationData?.DOWN?.length > 1
-              ? constDest[stationData.DOWN[0].dest]
+              ? stationMap[stationData.DOWN[0].dest]
               : "",
           ttnts: stationData?.DOWN?.map((e) =>
             parseInt(e.ttnt) === 0
@@ -40,7 +40,7 @@ export const MTRs = ({ section }) => {
         sectionData.up = {
           dest:
             stationData?.UP?.length > 1
-              ? constDest[stationData.UP[0].dest]
+              ? stationMap[stationData.UP[0].dest]
               : "",
           ttnts: stationData?.UP?.map((e) =>
             parseInt(e.ttnt) === 0

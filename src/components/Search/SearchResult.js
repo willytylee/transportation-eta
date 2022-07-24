@@ -4,7 +4,7 @@ import { Card } from "@mui/material";
 import { StopEta } from "./StopEta";
 import { getLocalStorage } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
-import { fetchEtas } from "../../fetch";
+import { companyMap } from "../../constants/Bus";
 
 export const SearchResult = ({ route }) => {
   const [routeList, setRouteList] = useState([]);
@@ -94,6 +94,7 @@ export const SearchResult = ({ route }) => {
       );
     }
   }, [expandIdx, currentLocation.lat, currentLocation.lng]);
+  console.log(routeList);
 
   return (
     <div className="searchResult">
@@ -107,10 +108,15 @@ export const SearchResult = ({ route }) => {
                   expandIdx === i ? { backgroundColor: "lightyellow" } : {}
                 }
               >
-                {e.orig.zh} → {e.dest.zh}{" "}
-                <span className="special">
-                  {e.serviceType !== "1" && "特別班次"}
-                </span>
+                <div className="company">
+                  {e.co.map((e) => companyMap[e]).join("+")}{" "}
+                </div>
+                <div className="origDest">
+                  {e.orig.zh} → {e.dest.zh}
+                  <span className="special">
+                    {e.serviceType !== "1" && "特別班次"}
+                  </span>
+                </div>
               </div>
             </Card>
           </div>
