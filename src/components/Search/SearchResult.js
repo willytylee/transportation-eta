@@ -10,7 +10,7 @@ export const SearchResult = ({ route }) => {
   const [routeList, setRouteList] = useState([]);
   const [stopList, setStopList] = useState([]);
   const [closestStopId, setClosestStopId] = useState("");
-  // const [winBound, setWinBound] = useState("");
+
   const [expandIdx, setExpandIdx] = useState(-1);
   const { dbVersion, location: currentLocation } = useContext(AppContext);
 
@@ -28,7 +28,6 @@ export const SearchResult = ({ route }) => {
 
   useEffect(() => {
     setStopList([]);
-    // setWinBound("");
     setExpandIdx(-1);
 
     if (route) {
@@ -49,14 +48,12 @@ export const SearchResult = ({ route }) => {
   }, [route]);
 
   useEffect(() => {
-    // setWinBound("");
     setStopList([]);
 
     if (route && expandIdx !== -1) {
       const expandRoute = routeList[expandIdx];
       const companyId = expandRoute.co[0];
       const expandStopIdList = expandRoute.stops[companyId];
-      const routeBound = expandRoute.bound[companyId];
 
       setStopList(
         expandStopIdList.map((e) => {
@@ -131,11 +128,10 @@ export const SearchResult = ({ route }) => {
                 return (
                   <StopEta
                     key={i}
-                    seq={i + 1} // TODO: seq = i + 1 not accurate
+                    seq={i + 1}
                     routeObj={routeList[expandIdx]}
                     stopObj={e}
                     isClosestStop={isClosestStop}
-                    // bound={winBound}
                   />
                 );
               })}

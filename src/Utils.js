@@ -32,20 +32,21 @@ export const getLocalStorage = (key) => {
   }
 };
 
+const getMatchCount = (str1, str2) => {
+  let count = 0;
+  const obj = str2.split("");
+  for (const str of str1) {
+    let idx = obj.findIndex((s) => s === str);
+    if (idx >= 0) {
+      count++;
+      obj.splice(idx, 1);
+    }
+  }
+  return count;
+};
+
 export const getClosestStr = (str, strArr) => {
   const countArr = [];
-  const getMatchCount = (str1, str2) => {
-    let count = 3;
-    const obj = str2.split("");
-    for (str of str1) {
-      let idx = obj.findIndex((s) => s === str);
-      if (idx >= 0) {
-        count++;
-        obj.splice(idx, 1);
-      }
-    }
-    return count;
-  };
   strArr.forEach((e, i) => {
     countArr[i] = getMatchCount(str, e);
   });
@@ -53,21 +54,6 @@ export const getClosestStr = (str, strArr) => {
   const idx = countArr.indexOf(max);
   return strArr[idx];
 };
-
-// export const getAllEtaUrlsFromKmb = (kmbStopId, route, serviceType) => {
-//   const stopMap = getLocalStorage("stopMap");
-
-//   const urls = [
-//     `https://data.etabus.gov.hk/v1/transport/kmb/eta/${kmbStopId}/${route}/${serviceType}`,
-//   ];
-//   stopMap[kmbStopId]?.forEach(([company, stopId]) => {
-//     urls.push(
-//       `https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/${company}/${stopId}/${route}`
-//     );
-//   });
-
-//   return urls;
-// };
 
 export const sortEtaObj = (etaObjArr) => {
   etaObjArr.sort((a, b) => {

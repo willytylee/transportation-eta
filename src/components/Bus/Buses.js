@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-// import axios from "axios";
 import { Table } from "./Table.js";
 import { List } from "./List.js";
-// import { sortEtaObject, getAllEtaUrlsFromKmb } from "../../Utils.js";
 import { fetchEtas } from "../../fetch/index.js";
 
 export const Buses = ({ section, gStopList, gRouteList }) => {

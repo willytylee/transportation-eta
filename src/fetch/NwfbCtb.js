@@ -8,16 +8,20 @@ export const fetchEtas = async ({ co, stopId, route, bound, dest }) => {
 
   const routeDest = dest.zh;
 
-  const destList = response.data.data.reduce((prev, curr) => {
+  const { data } = response.data;
+
+  // Find the destination list if different eta using in same stop
+  const destList = data.reduce((prev, curr) => {
     if (!prev.includes(curr.dest_tc)) {
       prev.push(curr.dest_tc);
     }
     return prev;
   }, []);
 
+  // Find the correct destination by geting the closest destination string
   const correctDest = getClosestStr(routeDest, destList);
 
-  return response.data.data
+  return data
     .filter(
       (e) =>
         e.eta !== null && bound?.includes(e.dir) && e.dest_tc === correctDest

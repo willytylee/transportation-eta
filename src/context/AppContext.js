@@ -18,14 +18,7 @@ export const AppProvider = ({ children }) => {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       });
-      // setLocation({
-      //   lat: Math.random() * (22.35 - 22.08) + 22.08,
-      //   lng: Math.random() * (114.31 - 113.49) + 113.49,
-      // });
     };
-    // setInterval(() => {
-    //   navigator.geolocation.getCurrentPosition(success);
-    // }, 1000);
 
     navigator.geolocation.watchPosition(success);
   }, []);
