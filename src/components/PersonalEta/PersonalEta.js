@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
-import { Section } from "./../components/Section";
-import { useParams } from "react-router-dom";
-import { dataSet } from "./../data/DataSet";
-import { getLocalStorage } from "../Utils";
-import { AppContext } from "../context/AppContext";
+import { dataSet } from "../../data/DataSet";
+import { getLocalStorage } from "../../Utils";
+import { AppContext } from "../../context/AppContext";
+import { Section } from "./Section";
 
-export const PersonalEta = () => {
-  const [data, setData] = useState(dataSet[0]);
+export const PersonalEta = ({ name }) => {
+  const [data, setData] = useState([]);
   const { dbVersion } = useContext(AppContext);
-  const { name } = useParams();
 
   const gStopList = useMemo(() => {
     return getLocalStorage("stopList");
@@ -23,8 +21,8 @@ export const PersonalEta = () => {
   }, [name]);
 
   return (
-    <>
-      {data.transportData.map((e, i) => (
+    <div className="personalEta">
+      {data?.transportData?.map((e, i) => (
         <Section
           key={i}
           category={e}
@@ -32,6 +30,6 @@ export const PersonalEta = () => {
           gRouteList={gRouteList}
         />
       ))}
-    </>
+    </div>
   );
 };

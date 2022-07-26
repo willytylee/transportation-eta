@@ -1,4 +1,4 @@
-import { sortEtaObj } from "../Utils";
+import { sortEtaObj } from "../../Utils";
 import { fetchEtas as kmbFetchEtas } from "./Kmb";
 import { fetchEtas as nwfbCtbFetchEtas } from "./NwfbCtb";
 

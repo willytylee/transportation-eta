@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Table } from "./Table.js";
 import { List } from "./List.js";
-import { fetchEtas } from "../../fetch/index.js";
+import { fetchEtas } from "../../../fetch/transports";
 
 export const Buses = ({ section, gStopList, gRouteList }) => {
   const [sectionData, setSectionData] = useState([]);

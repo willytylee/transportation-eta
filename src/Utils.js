@@ -2,9 +2,9 @@ import moment from "moment";
 import { decompress as decompressJson } from "lzutf8-light";
 
 export const etaTimeConverter = (etaStr, remark) => {
-  let etaIntervalStr = "";
-  let remarkStr = "";
-  if (etaStr) {
+  let etaIntervalStr, remarkStr;
+
+  if (moment(etaStr).isValid()) {
     const mintuesLeft = moment(etaStr).diff(moment(), "minutes");
     if (mintuesLeft === 0) {
       etaIntervalStr = "準備埋站";
@@ -13,11 +13,17 @@ export const etaTimeConverter = (etaStr, remark) => {
     } else {
       etaIntervalStr = `${mintuesLeft}分鐘`;
     }
-  } else {
-    etaIntervalStr = "沒有班次";
+  } else if (etaStr === "loading") {
+    etaIntervalStr = "載入中...";
+  } else if (etaStr === "") {
+    if (remark) {
+      etaIntervalStr = `${remark}`;
+    } else {
+      etaIntervalStr = "沒有班次";
+    }
   }
   if (remark) {
-    remarkStr = ` (${remark})`;
+    remarkStr = `${remark}`;
   }
   return { etaIntervalStr, remarkStr };
 };
@@ -67,4 +73,19 @@ export const sortEtaObj = (etaObjArr) => {
   });
 
   return etaObjArr;
+};
+
+export const getHeatIndex = (temperature, humidity) => {
+  const F = temperature * 1.8 + 32;
+  const heatIndex =
+    -42.379 +
+    2.04901523 * F +
+    10.14333127 * humidity -
+    0.22475541 * F * humidity -
+    0.00683783 * F * F -
+    0.05481717 * humidity * humidity +
+    0.00122874 * F * F * humidity +
+    0.00085282 * F * humidity * humidity -
+    0.00000199 * F * F * humidity * humidity;
+  return (heatIndex - 32) / 1.8;
 };

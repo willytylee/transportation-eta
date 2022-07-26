@@ -11,6 +11,7 @@ export const AppProvider = ({ children }) => {
     lat: 22.313879,
     lng: 114.186484,
   });
+  const [currRoute, setCurrRoute] = useState({});
 
   const getGeoLocation = useCallback(() => {
     const success = (position) => {
@@ -22,6 +23,10 @@ export const AppProvider = ({ children }) => {
 
     navigator.geolocation.watchPosition(success);
   }, []);
+
+  const updateCurrRoute = useCallback((route) => {
+    setCurrRoute(route);
+  });
 
   const initDb = useCallback(() => {
     const dbVersionLocal = localStorage.getItem("dbVersion");
@@ -61,8 +66,10 @@ export const AppProvider = ({ children }) => {
       location,
       initDb,
       getGeoLocation,
+      currRoute,
+      updateCurrRoute,
     }),
-    [dbVersion, location, initDb, getGeoLocation]
+    [dbVersion, location, initDb, getGeoLocation, currRoute, updateCurrRoute]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

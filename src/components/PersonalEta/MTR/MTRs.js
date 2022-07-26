@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { stationMap } from "../../constants/MTR";
+import { stationMap } from "../../../constants/MTR";
 
 export const MTRs = ({ section }) => {
   const [sectionData, setSectionData] = useState([]);
@@ -66,14 +66,14 @@ export const MTRs = ({ section }) => {
       {sectionData.map((e, i) => {
         return (
           <div key={i}>
-            <div>{e.name}站</div>
+            <div className="orig">{e.name}站</div>
             {!e?.down?.dest && !e?.up?.dest ? "已停站" : null}
             <table className="mtrTable">
               <tbody>
                 {e?.down?.dest && e.direction.includes("down") ? (
                   <tr>
                     <td>
-                      往 <span className="dest">{e.down.dest}</span> 到站時間:
+                      → <span className="dest">{e.down.dest}</span> 到站時間:
                     </td>
                     {e.down.ttnts
                       .map((e, j) => (
@@ -91,7 +91,7 @@ export const MTRs = ({ section }) => {
                 {e?.up?.dest && e.direction.includes("up") ? (
                   <tr>
                     <td>
-                      往 <span className="dest">{e.up.dest}</span> 到站時間:
+                      → <span className="dest">{e.up.dest}</span> 到站時間:
                     </td>
                     {e.up.ttnts
                       .map((e, j) => (

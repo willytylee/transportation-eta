@@ -1,7 +1,7 @@
-import { etaTimeConverter, sortEtaObj } from "../../Utils";
+import { etaTimeConverter, sortEtaObj } from "../../../Utils";
 
 export const List = ({ sectionData }) => {
-  let fullArr = [];
+  let result = [];
 
   sectionData.forEach((e) => {
     const {
@@ -15,7 +15,7 @@ export const List = ({ sectionData }) => {
     let eta;
 
     if (etas.length === 0) {
-      fullArr.push({
+      result.push({
         route,
         eta: "",
         stopName,
@@ -24,9 +24,9 @@ export const List = ({ sectionData }) => {
       });
     } else {
       etas.forEach((e) => {
-        e.eta ? (eta = e.eta) : (eta = "");
+        eta = e.eta ? e.eta : "";
         const { rmk_tc } = e;
-        fullArr.push({
+        result.push({
           route,
           eta,
           rmk_tc,
@@ -40,24 +40,24 @@ export const List = ({ sectionData }) => {
 
   // Sort the eta for same section
 
-  fullArr = sortEtaObj(fullArr);
+  result = sortEtaObj(result);
 
-  fullArr.forEach((e, i) => {
+  result.forEach((e, i) => {
     const { eta, rmk_tc } = e;
-    fullArr[i].eta = etaTimeConverter(eta, rmk_tc).etaIntervalStr;
+    result[i].eta = etaTimeConverter(eta, rmk_tc).etaIntervalStr;
   });
 
   if (sectionData.length >= 3) {
-    fullArr = fullArr.slice(0, sectionData.length);
+    result = result.slice(0, sectionData.length);
   } else {
-    fullArr = fullArr.slice(0, 3);
+    result = result.slice(0, 3);
   }
 
   return (
     <>
       <table className="listView">
         <tbody>
-          {fullArr.map((e, i) => {
+          {result.map((e, i) => {
             return (
               <tr key={i}>
                 <td className="route">{e?.route}</td>

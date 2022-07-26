@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getClosestStr } from "../Utils";
+import { getClosestStr } from "../../Utils";
 
 export const fetchEtas = async ({ co, stopId, route, bound, dest }) => {
   const response = await axios.get(

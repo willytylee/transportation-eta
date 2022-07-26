@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { etaTimeConverter } from "../../Utils";
-import { fetchEtas } from "../../fetch";
+import { fetchEtas } from "../../fetch/transports";
 
 export const StopEta = ({
   seq,
@@ -12,14 +12,14 @@ export const StopEta = ({
   routeObj,
   isClosestStop,
 }) => {
-  const [eta, setEta] = useState([]);
+  const [eta, setEta] = useState([{ eta: "loading" }]);
 
   useEffect(() => {
+    setEta([{ eta: "loading" }]);
     const intervalContent = async () => {
       fetchEtas({
         ...routeObj,
         seq: parseInt(seq, 10),
-        // bound: bound === "" ? routeObj.bound : { [routeObj.co[0]]: bound },
       }).then((response) => setEta(response.slice(0, 3)));
     };
 

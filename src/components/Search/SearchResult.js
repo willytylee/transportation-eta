@@ -12,7 +12,12 @@ export const SearchResult = ({ route }) => {
   const [closestStopId, setClosestStopId] = useState("");
 
   const [expandIdx, setExpandIdx] = useState(-1);
-  const { dbVersion, location: currentLocation } = useContext(AppContext);
+  const {
+    dbVersion,
+    location: currentLocation,
+    updateCurrRoute,
+    currRoute,
+  } = useContext(AppContext);
 
   const gRouteList = useMemo(() => {
     return getLocalStorage("routeList");
@@ -26,6 +31,7 @@ export const SearchResult = ({ route }) => {
     setExpandIdx(i);
   };
 
+  // When the route number is changed
   useEffect(() => {
     setStopList([]);
     setExpandIdx(-1);
@@ -51,13 +57,20 @@ export const SearchResult = ({ route }) => {
     }
   }, [route]);
 
+  // When the route list is clicked
   useEffect(() => {
     setStopList([]);
-
     if (route && expandIdx !== -1) {
       const expandRoute = routeList[expandIdx];
-      const companyId = expandRoute.co[0];
-      const expandStopIdList = expandRoute.stops[companyId];
+      updateCurrRoute(expandRoute);
+    }
+  }, [expandIdx]);
+
+  // When the currRoute in AppContext changed
+  useEffect(() => {
+    if (Object.keys(currRoute).length !== 0) {
+      const companyId = currRoute.co[0];
+      const expandStopIdList = currRoute.stops[companyId];
 
       setStopList(
         expandStopIdList.map((e) => {
@@ -65,8 +78,9 @@ export const SearchResult = ({ route }) => {
         })
       );
     }
-  }, [expandIdx]);
+  }, [currRoute]);
 
+  // When the route list is clicked and location is changed
   useEffect(() => {
     if (expandIdx !== -1) {
       const expandRoute = routeList[expandIdx];
@@ -111,11 +125,12 @@ export const SearchResult = ({ route }) => {
                   expandIdx === i ? { backgroundColor: "lightyellow" } : {}
                 }
               >
+                <div className="route">{e.route}</div>
                 <div className="company">
                   {e.co.map((e) => companyMap[e]).join("+")}{" "}
                 </div>
                 <div className="origDest">
-                  {e.orig.zh} → {e.dest.zh}
+                  {e.orig.zh} → <span className="dest">{e.dest.zh}</span>
                   <span className="special">
                     {" "}
                     {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
@@ -130,16 +145,15 @@ export const SearchResult = ({ route }) => {
       <Card>
         <table className="searchResultTable">
           <tbody>
-            {routeList &&
+            {currRoute &&
               stopList &&
-              expandIdx !== -1 &&
-              stopList?.map((e, i) => {
+              stopList.map((e, i) => {
                 const isClosestStop = gStopList[closestStopId]?.name === e.name;
                 return (
                   <StopEta
                     key={i}
                     seq={i + 1}
-                    routeObj={routeList[expandIdx]}
+                    routeObj={currRoute}
                     stopObj={e}
                     isClosestStop={isClosestStop}
                   />
