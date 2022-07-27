@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { PersonalEta } from "../components/PersonalEta/PersonalEta";
-import { FatherHolidays } from "../components/FatherHolidays/FatherHolidays";
 
 export const PersonalAsst = () => {
   const { name } = useParams();
@@ -14,6 +13,6 @@ export const PersonalAsst = () => {
       </>
     );
   } else if (name === "test") {
-    // return <FatherHolidays />;
+    // return <FatherLeave />;
   }
 };

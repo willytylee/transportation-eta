@@ -6,11 +6,10 @@ import { getLocalStorage } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
 import { companyMap } from "../../constants/Bus";
 
-export const SearchResult = ({ route }) => {
+export const SearchResult = ({ route, open }) => {
   const [routeList, setRouteList] = useState([]);
   const [stopList, setStopList] = useState([]);
   const [closestStopId, setClosestStopId] = useState("");
-
   const [expandIdx, setExpandIdx] = useState(-1);
   const {
     dbVersion,
@@ -31,6 +30,9 @@ export const SearchResult = ({ route }) => {
     setExpandIdx(i);
   };
 
+  const compareTwoArray = (a, b) =>
+    a.length === b.length && a.every((v, i) => v === b[i]);
+
   // When the route number is changed
   useEffect(() => {
     setStopList([]);
@@ -43,6 +45,7 @@ export const SearchResult = ({ route }) => {
           .filter((e) => {
             return (
               e.route === route &&
+              // compareTwoArray(e.co, Object.keys(e.stops)) &&
               (e.co.includes("kmb") ||
                 e.co.includes("nwfb") ||
                 e.co.includes("ctb"))
@@ -54,12 +57,12 @@ export const SearchResult = ({ route }) => {
       );
     } else {
       setRouteList([]);
+      updateCurrRoute({});
     }
   }, [route]);
 
   // When the route list is clicked
   useEffect(() => {
-    setStopList([]);
     if (route && expandIdx !== -1) {
       const expandRoute = routeList[expandIdx];
       updateCurrRoute(expandRoute);
@@ -82,10 +85,9 @@ export const SearchResult = ({ route }) => {
 
   // When the route list is clicked and location is changed
   useEffect(() => {
-    if (expandIdx !== -1) {
-      const expandRoute = routeList[expandIdx];
-      const companyId = expandRoute.co[0];
-      const expandStopIdList = expandRoute.stops[companyId];
+    if (Object.keys(currRoute).length !== 0) {
+      const companyId = currRoute.co[0];
+      const expandStopIdList = currRoute.stops[companyId];
 
       setClosestStopId(
         expandStopIdList.reduce((prev, curr) => {
@@ -111,10 +113,10 @@ export const SearchResult = ({ route }) => {
         })
       );
     }
-  }, [expandIdx, currentLocation.lat, currentLocation.lng]);
+  }, [currRoute, currentLocation.lat, currentLocation.lng]);
 
   return (
-    <div className="searchResult">
+    <div className="searchResult" style={{ opacity: open ? "20%" : "100%" }}>
       {routeList.map((e, i) => {
         return (
           <div key={i} onClick={() => handleCardOnClick(i)}>
@@ -122,10 +124,11 @@ export const SearchResult = ({ route }) => {
               <div
                 className="routeTitle"
                 style={
-                  expandIdx === i ? { backgroundColor: "lightyellow" } : {}
+                  JSON.stringify(currRoute) === JSON.stringify(e)
+                    ? { backgroundColor: "lightyellow" }
+                    : {}
                 }
               >
-                <div className="route">{e.route}</div>
                 <div className="company">
                   {e.co.map((e) => companyMap[e]).join("+")}{" "}
                 </div>
@@ -145,7 +148,7 @@ export const SearchResult = ({ route }) => {
       <Card>
         <table className="searchResultTable">
           <tbody>
-            {currRoute &&
+            {Object.keys(currRoute).length !== 0 &&
               stopList &&
               stopList.map((e, i) => {
                 const isClosestStop = gStopList[closestStopId]?.name === e.name;

@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { Popover } from "@mui/material";
+import { useState, useRef } from "react";
+import { Popper } from "@mui/material";
 import { SearchResult } from "../components/Search/SearchResult";
 import { SearchBar } from "../components/Search/SearchBar";
 import { AutoComplete } from "../components/Search/AutoComplete";
@@ -13,41 +13,40 @@ export const Search = () => {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
   const divRef = useRef();
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <div className="search">
       <SearchBar
         handleFormChange={handleFormChange}
         searchValue={searchValue}
+        anchorEl={anchorEl}
         setAnchorEl={setAnchorEl}
         divRef={divRef}
       />
-      <div ref={divRef} aria-describedby={id}></div>
-      {open ? (
-        <Popover
-          sx={{ width: "100%" }}
-          id={id}
+      <div ref={divRef}></div>
+      {open && (
+        <Popper
+          sx={{
+            width: "95%",
+            height: "40%",
+            overflow: "auto",
+            border: "1px solid lightgrey",
+            borderRadius: "5px",
+            background: "white",
+          }}
           open={open}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
+          placement="bottom"
           anchorEl={anchorEl}
-          onClose={handlePopoverClose}
         >
-          <AutoComplete route={searchValue} />
-        </Popover>
-      ) : null}
-      <SearchResult route={searchValue} />
+          <AutoComplete
+            route={searchValue}
+            setAnchorEl={setAnchorEl}
+            setSearchValue={setSearchValue}
+          />
+        </Popper>
+      )}
+      <SearchResult route={searchValue} open={open} />
     </div>
   );
 };

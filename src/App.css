@@ -131,15 +131,33 @@ td{
 	text-align: center;
 }
 .autoComplete{
-	height: 100px;
 	overflow: auto;
 	margin: 8px;
-	font-size: 14px;
+	font-size: 12px;
+}
+.autoComplete .title{
+	text-align: center;
+	font-weight: 700;
+	padding-bottom: 2px;
 }
 .autoComplete .item{
 	display: flex;
 	align-items: center;
-	padding: 2px;
+	padding: 4px;
+  border-bottom: 1px solid lightgrey;
+}
+.autoComplete .item .routeCompany{
+	width: 20%;
+}
+.autoComplete .item .routeCompany .route{
+	font-weight: 900;
+}
+.autoComplete .item .routeCompany .company{
+	font-size: 10px;
+}
+.autoComplete .item .NearStopOrigDest{
+	width: 80%;
+	float: left;
 }
 .routeTitle{
 	padding: 4px;
@@ -150,15 +168,15 @@ td{
 	font-size: 12px;
 	overflow: auto;
 }
-.routeTitle .route, .autoComplete .item .route{
+.routeTitle .route{
 	width: 10%;
 	font-weight: 900;
 }
-.routeTitle .company, .autoComplete .item .company{
-	width: 10%;
+.routeTitle .company{
+	width: 20%;
 	float: left;
 }
-.routeTitle .origDest, .autoComplete .item .origDest{
+.routeTitle .origDest{
 	width: 80%;
 	float: left;
 }

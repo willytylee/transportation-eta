@@ -67,10 +67,10 @@ export const MTRs = ({ section }) => {
         return (
           <div key={i}>
             <div className="orig">{e.name}站</div>
-            {!e?.down?.dest && !e?.up?.dest ? "已停站" : null}
+            {!e?.down?.dest && !e?.up?.dest && "已停站"}
             <table className="mtrTable">
               <tbody>
-                {e?.down?.dest && e.direction.includes("down") ? (
+                {e?.down?.dest && e.direction.includes("down") && (
                   <tr>
                     <td>
                       → <span className="dest">{e.down.dest}</span> 到站時間:
@@ -83,12 +83,12 @@ export const MTRs = ({ section }) => {
                       ))
                       .slice(0, 3)}
                   </tr>
-                ) : null}
+                )}
               </tbody>
             </table>
             <table className="mtrTable">
               <tbody>
-                {e?.up?.dest && e.direction.includes("up") ? (
+                {e?.up?.dest && e.direction.includes("up") && (
                   <tr>
                     <td>
                       → <span className="dest">{e.up.dest}</span> 到站時間:
@@ -101,7 +101,7 @@ export const MTRs = ({ section }) => {
                       ))
                       .slice(0, 3)}
                   </tr>
-                ) : null}
+                )}
               </tbody>
             </table>
           </div>

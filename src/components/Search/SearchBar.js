@@ -1,18 +1,21 @@
-import { useContext, useState } from "react";
+import { useContext, useRef } from "react";
 import { TextField } from "@mui/material";
-import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
+import { Search as SearchIcon } from "@mui/icons-material";
 import { AppContext } from "../../context/AppContext";
 
 export const SearchBar = ({
   handleFormChange,
   searchValue,
+  anchorEl,
   setAnchorEl,
   divRef,
 }) => {
   const { dbVersion } = useContext(AppContext);
+  const textInput = useRef(null);
 
   const handleExpandIconOnClick = () => {
-    setAnchorEl(divRef.current);
+    setAnchorEl(!anchorEl && divRef.current);
+    !anchorEl && textInput.current.focus();
   };
 
   return (
@@ -20,16 +23,17 @@ export const SearchBar = ({
       <div>
         <TextField
           variant="standard"
-          placeholder="搜尋路線"
-          disabled={dbVersion == null}
+          placeholder="輸入路線"
+          disabled={dbVersion === null}
           inputProps={{ className: "searchBar" }}
           size="small"
           name="category"
           value={searchValue}
           onChange={(e) => handleFormChange(e)}
           autoComplete="off"
+          inputRef={textInput}
         />
-        <ExpandMoreIcon onClick={handleExpandIconOnClick} />
+        <SearchIcon onClick={handleExpandIconOnClick} />
       </div>
     </div>
   );
