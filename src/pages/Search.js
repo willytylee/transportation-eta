@@ -1,15 +1,19 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { Popper } from "@mui/material";
-import { SearchResult } from "../components/Search/SearchResult";
 import { SearchBar } from "../components/Search/SearchBar";
-import { AutoComplete } from "../components/Search/AutoComplete";
+import { AutoList } from "../components/Search/AutoList";
+import { RouteList } from "../components/Search/RouteList";
+import { StopList } from "../components/Search/StopList";
+import { AppContext } from "../context/AppContext";
 
 export const Search = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const [route, setRoute] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
+  const { updateCurrRoute } = useContext(AppContext);
 
   const handleFormChange = (e) => {
-    setSearchValue(e.target.value.toUpperCase());
+    setRoute(e.target.value.toUpperCase());
+    updateCurrRoute({});
   };
 
   const open = Boolean(anchorEl);
@@ -19,7 +23,7 @@ export const Search = () => {
     <div className="search">
       <SearchBar
         handleFormChange={handleFormChange}
-        searchValue={searchValue}
+        route={route}
         anchorEl={anchorEl}
         setAnchorEl={setAnchorEl}
         divRef={divRef}
@@ -39,14 +43,17 @@ export const Search = () => {
           placement="bottom"
           anchorEl={anchorEl}
         >
-          <AutoComplete
-            route={searchValue}
+          <AutoList
+            route={route}
             setAnchorEl={setAnchorEl}
-            setSearchValue={setSearchValue}
+            setRoute={setRoute}
           />
         </Popper>
       )}
-      <SearchResult route={searchValue} open={open} />
+      <div className="searchResult" style={{ opacity: open ? "20%" : "100%" }}>
+        <RouteList route={route} />
+        <StopList route={route} />
+      </div>
     </div>
   );
 };

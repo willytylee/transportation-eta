@@ -2,10 +2,12 @@ import { useContext, useState, useMemo, useEffect } from "react";
 import { getPreciseDistance } from "geolib";
 import { companyMap } from "../../constants/Bus";
 import { AppContext } from "../../context/AppContext";
-import { getLocalStorage } from "../../Utils";
+import { etaTimeConverter, getLocalStorage } from "../../Utils";
+import { fetchEtas } from "../../fetch/transports";
 
-export const AutoComplete = ({ route, setAnchorEl, setSearchValue }) => {
-  const [autoCompleteList, setAutoCompleteList] = useState([]);
+export const AutoList = ({ route, setAnchorEl, setRoute }) => {
+  const [autoList, setAutoList] = useState([]);
+  const [autoListEta, setAutoListEta] = useState([]);
   const [title, setTitle] = useState("");
   const {
     dbVersion,
@@ -23,7 +25,7 @@ export const AutoComplete = ({ route, setAnchorEl, setSearchValue }) => {
 
   const handleItemOnClick = (e) => {
     updateCurrRoute(e);
-    setSearchValue(e.route);
+    setRoute(e.route);
     setAnchorEl(null);
   };
 
@@ -41,7 +43,9 @@ export const AutoComplete = ({ route, setAnchorEl, setSearchValue }) => {
 
   useEffect(() => {
     if (route) {
-      setAutoCompleteList(
+      setTitle("搜尋路線");
+
+      setAutoList(
         Object.keys(gRouteList)
           .map((e) => gRouteList[e])
           .filter((e) => {
@@ -54,8 +58,12 @@ export const AutoComplete = ({ route, setAnchorEl, setSearchValue }) => {
           })
           .sort((a, b) => sortByRoute(a, b))
       );
-      setTitle("搜尋路線");
+
+      setAutoListEta([]);
     } else {
+      setTitle("附近路線");
+
+      // Set Auto Complete Route List
       const stopIdsNearBy = Object.keys(gStopList)
         .map((e) => {
           const obj = gStopList[e];
@@ -90,22 +98,41 @@ export const AutoComplete = ({ route, setAnchorEl, setSearchValue }) => {
         const res = arr1?.filter((item) => arr2.includes(item));
         if (res?.length > 0) {
           const obj = e;
-          e.stopIdNearBy = res[0];
+          e.stopId = res[0];
           _routeListNearBy.push(obj);
         }
       });
 
-      setTitle("附近路線");
+      const _autoList = _routeListNearBy.sort((a, b) => sortByRoute(a, b));
+      setAutoList(_autoList);
 
-      setAutoCompleteList(_routeListNearBy.sort((a, b) => sortByRoute(a, b)));
+      // Set Auto Complete Route List ETA
+      const intervalContent = async () => {
+        setAutoListEta(
+          await Promise.all(
+            _autoList.map(async (e) => {
+              return await fetchEtas({
+                ...e,
+                seq: null,
+              });
+            })
+          )
+        );
+      };
+      intervalContent();
+
+      const interval = setInterval(intervalContent, 5000);
+
+      return () => {
+        clearInterval(interval);
+      };
     }
-  }, [route]);
+  }, [route, currentLocation.lat, currentLocation.lng]);
 
-  console.log();
   return (
-    <div className="autoComplete">
+    <div className="autoList">
       <div className="title">{title}</div>
-      {autoCompleteList.map((e, i) => {
+      {autoList?.map((e, i) => {
         return (
           <div key={i} className="item" onClick={() => handleItemOnClick(e)}>
             <div className="routeCompany">
@@ -114,11 +141,9 @@ export const AutoComplete = ({ route, setAnchorEl, setSearchValue }) => {
                 {e.co.map((e) => companyMap[e]).join("+")}
               </div>
             </div>
-            <div className="NearStopOrigDest">
-              {e.stopIdNearBy && (
-                <div className="StopNearBy">
-                  {gStopList[e.stopIdNearBy].name.zh}
-                </div>
+            <div className="NearStopOrigDest" style={{ width: route && "85%" }}>
+              {e.stopId && (
+                <div className="StopNearBy">{gStopList[e.stopId].name.zh}</div>
               )}
               <div>
                 {e.orig.zh} → <span className="dest">{e.dest.zh}</span>
@@ -127,6 +152,16 @@ export const AutoComplete = ({ route, setAnchorEl, setSearchValue }) => {
                   {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
                 </span>
               </div>
+            </div>
+            <div className="eta" style={{ width: route && "0%" }}>
+              {!route &&
+                autoListEta[i]?.map((e, i) => {
+                  return (
+                    <div key={i}>
+                      {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
+                    </div>
+                  );
+                })}
             </div>
           </div>
         );

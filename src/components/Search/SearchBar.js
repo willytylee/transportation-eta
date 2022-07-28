@@ -5,7 +5,7 @@ import { AppContext } from "../../context/AppContext";
 
 export const SearchBar = ({
   handleFormChange,
-  searchValue,
+  route,
   anchorEl,
   setAnchorEl,
   divRef,
@@ -13,7 +13,7 @@ export const SearchBar = ({
   const { dbVersion } = useContext(AppContext);
   const textInput = useRef(null);
 
-  const handleExpandIconOnClick = () => {
+  const handleSearchIconOnClick = () => {
     setAnchorEl(!anchorEl && divRef.current);
     !anchorEl && textInput.current.focus();
   };
@@ -28,12 +28,12 @@ export const SearchBar = ({
           inputProps={{ className: "searchBar" }}
           size="small"
           name="category"
-          value={searchValue}
+          value={route}
           onChange={(e) => handleFormChange(e)}
           autoComplete="off"
           inputRef={textInput}
         />
-        <SearchIcon onClick={handleExpandIconOnClick} />
+        <SearchIcon onClick={handleSearchIconOnClick} />
       </div>
     </div>
   );

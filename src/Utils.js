@@ -1,5 +1,7 @@
+import { useContext, useMemo } from "react";
 import moment from "moment";
 import { decompress as decompressJson } from "lzutf8-light";
+import { AppContext } from "./context/AppContext";
 
 export const etaTimeConverter = (etaStr, remark) => {
   let etaIntervalStr, remarkStr;
@@ -88,4 +90,8 @@ export const getHeatIndex = (temperature, humidity) => {
     0.00085282 * F * humidity * humidity -
     0.00000199 * F * F * humidity * humidity;
   return (heatIndex - 32) / 1.8;
+};
+
+export const mergeMissingStops = ({ gRouteList, gtfsId, route }) => {
+  return Object.keys(gRouteList).map((e) => gRouteList[e]);
 };

@@ -45,7 +45,7 @@ export const Buses = ({ section, gStopList, gRouteList }) => {
     const interval = setInterval(intervalContent, 5000);
 
     return () => clearInterval(interval);
-  }, [section, gStopList]);
+  }, [section]);
 
   const switchView = () => {
     if (view === "list") {

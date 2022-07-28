@@ -16,7 +16,7 @@ export const StopEta = ({
 
   useEffect(() => {
     setEta([{ eta: "loading" }]);
-    const intervalContent = async () => {
+    const intervalContent = () => {
       fetchEtas({
         ...routeObj,
         seq: parseInt(seq, 10),

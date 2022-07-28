@@ -130,34 +130,39 @@ td{
 .searchBar{
 	text-align: center;
 }
-.autoComplete{
+.autoList{
 	overflow: auto;
 	margin: 8px;
 	font-size: 12px;
 }
-.autoComplete .title{
+.autoList .title{
 	text-align: center;
 	font-weight: 700;
 	padding-bottom: 2px;
 }
-.autoComplete .item{
+.autoList .item{
 	display: flex;
 	align-items: center;
 	padding: 4px;
   border-bottom: 1px solid lightgrey;
 }
-.autoComplete .item .routeCompany{
-	width: 20%;
+.autoList .item .routeCompany{
+	width: 15%;
 }
-.autoComplete .item .routeCompany .route{
+.autoList .item .routeCompany .route{
 	font-weight: 900;
 }
-.autoComplete .item .routeCompany .company{
+.autoList .item .routeCompany .company{
 	font-size: 10px;
 }
-.autoComplete .item .NearStopOrigDest{
-	width: 80%;
+.autoList .item .NearStopOrigDest{
+	width: 70%;
 	float: left;
+}
+.autoList .item .eta {
+	width: 15%;
+	float: left;
+	font-size: 10px;
 }
 .routeTitle{
 	padding: 4px;
@@ -228,6 +233,7 @@ padding-bottom: 4px;
 }
 .nineDaysTable .iconRow img{
 	width: 70%;
+	filter: drop-shadow(0px 0px 0px black);
 }
 .nineDaysTable .psrRow img{
 	width: 80%;

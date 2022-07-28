@@ -1,7 +1,14 @@
 import axios from "axios";
 import { getClosestStr } from "../../Utils";
 
-export const fetchEtas = async ({ co, stopId, route, bound, dest }) => {
+export const fetchNwfbCtbEtas = async ({
+  co,
+  stopId,
+  route,
+  bound,
+  dest,
+  gtfsId,
+}) => {
   const response = await axios.get(
     `https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/${co}/${stopId}/${route}`
   );
@@ -31,6 +38,8 @@ export const fetchEtas = async ({ co, stopId, route, bound, dest }) => {
         co,
         eta: e.eta,
         rmk_tc: e.rmk_tc,
+        gtfsId,
+        stopId,
       };
     });
 };
