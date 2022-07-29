@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { styled } from "@mui/material";
 import { etaTimeConverter } from "../../Utils";
 import { fetchEtas } from "../../fetch/transports";
 
@@ -33,29 +34,51 @@ export const StopEta = ({
   }, [routeObj, seq]);
 
   return (
-    <tr style={isClosestStop ? { backgroundColor: "lightblue" } : {}}>
-      <td>{seq}</td>
-      <td>
+    <StopEtaRoot className={isClosestStop ? "highlighted" : ""}>
+      <div className="seq">{seq}</div>
+      <div className="stop">
         <a
           href={`https://www.google.com.hk/maps/search/?api=1&query=${lat},${lng}`}
           title={stopId}
         >
           {name.zh}
         </a>
-      </td>
-      {eta.length !== 0 ? (
-        eta.map((e, i) => {
-          return (
-            <td key={i}>
-              {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
-              {/* <br />
+      </div>
+      <div className="etas">
+        {eta.length !== 0 ? (
+          eta.map((e, i) => {
+            return (
+              <div key={i} className="eta">
+                {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
+                {/* <br />
               {etaTimeConverter(e.eta, e.rmk_tc).remarkStr} */}
-            </td>
-          );
-        })
-      ) : (
-        <td>沒有班次</td>
-      )}
-    </tr>
+              </div>
+            );
+          })
+        ) : (
+          <div>沒有班次</div>
+        )}
+      </div>
+    </StopEtaRoot>
   );
 };
+
+const StopEtaRoot = styled("div")({
+  display: "flex",
+  padding: "3px",
+  "&.highlighted": { backgroundColor: "lightblue" },
+  ".seq": {
+    width: "5%",
+  },
+  ".stop": {
+    width: "55%",
+  },
+  ".etas": {
+    width: "40%",
+    display: "flex",
+    flexDirection: "row",
+    ".eta": {
+      width: "33.33%",
+    },
+  },
+});

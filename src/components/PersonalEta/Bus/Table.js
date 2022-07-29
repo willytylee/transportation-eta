@@ -1,3 +1,4 @@
+import { styled } from "@mui/material";
 import { etaTimeConverter } from "../../../Utils";
 
 export const Table = ({ sectionData }) => {
@@ -27,28 +28,42 @@ export const Table = ({ sectionData }) => {
   });
 
   return (
-    <>
-      <table className="tableView">
-        <tbody>
-          {result.map((e, i) => {
-            return (
-              <tr key={i}>
-                <td className="route">{e.route}</td>
-                <td className="stopName">
-                  <a href={e.latLngUrl}>{e.stopName}</a>
-                </td>
-                {e.etas.map((e, j) => {
-                  return (
-                    <td key={j} className="eta">
-                      {e}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </>
+    <TableView>
+      {result.map((e, i) => {
+        return (
+          <div key={i} className="etaWrapper">
+            <div className="route">{e.route}</div>
+            <div className="stopName">
+              <a href={e.latLngUrl}>{e.stopName}</a>
+            </div>
+            {e.etas.map((e, j) => {
+              return (
+                <div key={j} className="eta">
+                  {e}
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </TableView>
   );
 };
+
+const TableView = styled("div")({
+  fontSize: "12px",
+  width: "100%",
+  ".etaWrapper": {
+    display: "flex",
+    textAlign: "left",
+    margin: "4px 0",
+    ".route": {
+      width: "10%",
+      fontWeight: "900",
+    },
+    ".stopName": {
+      width: "45%",
+    },
+    ".eta": { width: "15%" },
+  },
+});

@@ -31,19 +31,22 @@ export const BottomNav = () => {
   );
 
   return (
-    <div className="bottomNav">
-      <BottomNavigation
-        sx={{ width: "100%", backgroundColor: "#f9f9f9" }}
-        showLabels
-        value={"abc"}
-        onChange={(e, value) => {
-          handleOnChange(value);
-        }}
-      >
-        <BottomNavigationAction label="路線搜尋" icon={<DirectionsBusIcon />} />
-        <BottomNavigationAction label="天氣" icon={<ThermostatIcon />} />
-        <BottomNavigationAction label="設定" icon={<SettingsIcon />} />
-      </BottomNavigation>
-    </div>
+    <BottomNavigation
+      sx={navigationSx}
+      showLabels
+      value={""}
+      onChange={(e, value) => {
+        handleOnChange(value);
+      }}
+    >
+      <BottomNavigationAction label="路線搜尋" icon={<DirectionsBusIcon />} />
+      <BottomNavigationAction label="天氣" icon={<ThermostatIcon />} />
+      <BottomNavigationAction label="設定" icon={<SettingsIcon />} />
+    </BottomNavigation>
   );
+};
+
+const navigationSx = {
+  width: "100%",
+  backgroundColor: "#f9f9f9",
 };

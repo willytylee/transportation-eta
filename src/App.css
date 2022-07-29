@@ -1,246 +1,71 @@
-*{
-	box-sizing:  border-box;
+* {
+  box-sizing: border-box;
 }
-html{
-	height: 100%;
+html {
+  height: 100%;
+  font-family: "Noto Sans", sans-serif;
 }
-body{
-	margin:  0;
-	height: 100%;
+body {
+  margin: 0;
+  height: 100%;
 }
-#root{
-	display: flex;
-	height: 100%;
-	flex-direction: column;
-	justify-content: space-between;
+#root {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
 }
-a{
-	color: initial;
-	text-decoration: initial;
+a {
+  color: initial;
+  text-decoration: initial;
 }
-.container{
-	font-size: 14px;
-	display: flex;
-	flex: 1 1 0%;
-	overflow: hidden;
-	flex-direction: column;
+.container {
+  font-size: 14px;
+  display: flex;
+  flex: 1 1 0%;
+  overflow: hidden;
+  flex-direction: column;
 }
-.nav{
-	background-color: #333;
-	color: white;
-	display:  flex;
-	justify-content: space-between;
-	align-items: stretch;
-	gap:  2rem;
-	padding:  0 1rem;
+
+.tabPanel {
+  overflow: auto;
+  padding: 8px;
 }
-.nav ul{
-	padding: 0;
-	margin: 0;
-	list-style: none;
-	display: flex;
-	gap: 1rem;
-	font-size: 20px;
+.currWeather img {
+  width: 60px;
 }
-.nav li{
-	color: inherit;
-	text-decoration: none;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	padding: .25rem;
+.weatherCard {
+  margin: 4px 0;
+  padding: 4px;
 }
-.nav li a{
-	color: white;
-}
-.nav li.active{
-	background-color: #555;
-}
-.nav .weather{
-	font-size: 14px;
-}
-.nav .weather img{
-	width: 20px;
-	margin-left: 8px;
-}
-.personalEta{
-	overflow: auto;
-}
-.section{
-	padding: 10px;
-  border-radius: 2px;
+.nineDaysTable {
+  width: 100%;
+  margin-bottom: 4px;
   border-bottom: 1px solid lightgrey;
+  padding-bottom: 4px;
 }
-.tableView, .listView, .mtrTable{
-	font-size: 12px;
-	width: 100%;
+.nineDaysTable .iconRow {
+  width: 20%;
+  text-align: center;
 }
-.route{
-	width: 10%;
-	font-weight: 900;
+.nineDaysTable .detailRow {
+  width: 70%;
+  text-align: left;
 }
-.stopName{
-	font-size:  12px;
-	width: 45%;
+.nineDaysTable .psrRow {
+  width: 10%;
+  text-align: center;
 }
-.tableView .eta{
-	text-align: left;
-	width:  15%;
-	font-size: 12px;
+.nineDaysTable .iconRow img {
+  width: 70%;
+  filter: drop-shadow(0px 0px 0px black);
 }
-.listView .eta{
-	text-align: left;
-	width:  45%;
-	font-size: 12px;
+.nineDaysTable .psrRow img {
+  width: 80%;
 }
-.mtrTable .ttntText{
-	width: 40%;
+.nineDaysTable th {
+  text-align: left;
 }
-.mtrTable .ttnt{
-	width: 20%;
-	font-size: 12px;
-}
-td{
-	vertical-align: baseline;
-}
-.orig{
-	font-size: 12px;
-}
-.dest{
-	font-weight: 900;
-}
-.refresh-wrapper{
-	margin: 12px 0;
-	text-align: center;
-}
-.search{
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	overflow: auto;
-}
-.searchBarWrapper{
-	width: 100%;
-	text-align: center;
-	margin: 10px 0;
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-}
-.searchBar{
-	text-align: center;
-}
-.autoList{
-	overflow: auto;
-	margin: 8px;
-	font-size: 12px;
-}
-.autoList .title{
-	text-align: center;
-	font-weight: 700;
-	padding-bottom: 2px;
-}
-.autoList .item{
-	display: flex;
-	align-items: center;
-	padding: 4px;
-  border-bottom: 1px solid lightgrey;
-}
-.autoList .item .routeCompany{
-	width: 15%;
-}
-.autoList .item .routeCompany .route{
-	font-weight: 900;
-}
-.autoList .item .routeCompany .company{
-	font-size: 10px;
-}
-.autoList .item .NearStopOrigDest{
-	width: 70%;
-	float: left;
-}
-.autoList .item .eta {
-	width: 15%;
-	float: left;
-	font-size: 10px;
-}
-.routeTitle{
-	padding: 4px;
-	font-size: 13px;
-	display: flex;
-}
-.searchResult{
-	font-size: 12px;
-	overflow: auto;
-}
-.routeTitle .route{
-	width: 10%;
-	font-weight: 900;
-}
-.routeTitle .company{
-	width: 20%;
-	float: left;
-}
-.routeTitle .origDest{
-	width: 80%;
-	float: left;
-}
-.origDest .dest{
-	font-weight: 900;
-}
-.special{
-	font-size: 10px;
-	font-weight: normal;
-}
-.searchResultTable{
-	width: 100%;
-}
-.searchResultCard{
-	margin: 2px;
-}
-.bottomNav{
-	display: flex;
-	justify-content: center;
-}
-.tabPanel{
-	overflow: auto;
-	padding: 8px;
-}
-.currWeather img{
-	width: 60px;
-}
-.weatherCard{
-	margin: 4px 0;
-	padding: 4px;
-}
-.nineDaysTable{
-	width: 100%;
-	margin-bottom: 4px;
-	border-bottom: 1px solid lightgrey;
-padding-bottom: 4px;
-}
-.nineDaysTable .iconRow{
-	width: 20%;
-	text-align: center;
-}
-.nineDaysTable .detailRow{
-	width: 70%;
-	text-align: left;
-}
-.nineDaysTable .psrRow{
-	width: 10%;
-	text-align: center;
-}
-.nineDaysTable .iconRow img{
-	width: 70%;
-	filter: drop-shadow(0px 0px 0px black);
-}
-.nineDaysTable .psrRow img{
-	width: 80%;
-}
-.nineDaysTable th{
-	text-align: left;
-}
-.nineDaysTable td{
-	vertical-align: middle;
+.nineDaysTable td {
+  vertical-align: middle;
 }

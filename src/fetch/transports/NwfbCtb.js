@@ -1,14 +1,7 @@
 import axios from "axios";
 import { getClosestStr } from "../../Utils";
 
-export const fetchNwfbCtbEtas = async ({
-  co,
-  stopId,
-  route,
-  bound,
-  dest,
-  gtfsId,
-}) => {
+export const fetchNwfbCtbEtas = async ({ co, stopId, route, bound, dest }) => {
   const response = await axios.get(
     `https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/${co}/${stopId}/${route}`
   );
@@ -26,6 +19,7 @@ export const fetchNwfbCtbEtas = async ({
   }, []);
 
   // Find the correct destination by geting the closest destination string
+  // TODO: if there is only one item in destList, it will retrun it only if it is wrong.
   const correctDest = getClosestStr(routeDest, destList);
 
   return data
@@ -38,7 +32,6 @@ export const fetchNwfbCtbEtas = async ({
         co,
         eta: e.eta,
         rmk_tc: e.rmk_tc,
-        gtfsId,
         stopId,
       };
     });

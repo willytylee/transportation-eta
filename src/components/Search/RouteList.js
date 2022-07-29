@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useMemo } from "react";
-import { Card } from "@mui/material";
-import { getLocalStorage, mergeMissingStops } from "../../Utils";
+import { Card, styled } from "@mui/material";
+import { getLocalStorage, getActualCoIds } from "../../Utils";
 import { companyMap } from "../../constants/Bus";
 import { AppContext } from "../../context/AppContext";
 
@@ -12,13 +12,20 @@ export const RouteList = ({ route }) => {
     return getLocalStorage("routeList");
   }, [dbVersion]);
 
-  const gStopMap = useMemo(() => {
-    return getLocalStorage("stopMap");
-  }, [dbVersion]);
-
   const handleCardOnClick = (i) => {
     const expandRoute = routeList[i];
     updateCurrRoute(expandRoute);
+  };
+
+  const isMatchCurrRoute = (a, b) => {
+    return (
+      JSON.stringify(a.bound) === JSON.stringify(b.bound) &&
+      JSON.stringify(a.co) === JSON.stringify(b.co) &&
+      JSON.stringify(a.orig) === JSON.stringify(b.orig) &&
+      JSON.stringify(a.dest) === JSON.stringify(b.dest) &&
+      JSON.stringify(a.route) === JSON.stringify(b.route) &&
+      JSON.stringify(a.seq) === JSON.stringify(b.seq)
+    );
   };
 
   // When the route number is changed, update RouteList
@@ -32,43 +39,11 @@ export const RouteList = ({ route }) => {
             (e.co.includes("kmb") ||
               e.co.includes("nwfb") ||
               e.co.includes("ctb"))
-            // &&
-            // Take kmb as base, if company include kmb, stoplist must have kmb to pass.
-            // If company have no kmb, just let it pass.
-            // (e.co.includes("kmb") ? Object.keys(e.stops).includes("kmb") : true)
           );
         })
         .sort(
           (a, b) => parseInt(a.serviceType, 10) - parseInt(b.serviceType, 10)
         );
-
-      // _routeList.map((e) => {
-      //   if (e.co.includes("nwfb") && !Object.keys(e.stops).includes("nwfb")) {
-      //     const nwfbStopList = e.stops.kmb.map((e) => {
-      //       if (gStopMap[e]) {
-      //         return gStopMap[e][0][1];
-      //       }
-      //       return "";
-      //     });
-      //     const obj = e;
-      //     obj.stops = { ...e.stops, nwfb: nwfbStopList };
-      //     return obj;
-      //   } else if (
-      //     e.co.includes("kmb") &&
-      //     !Object.keys(e.stops).includes("kmb")
-      //   ) {
-      //     const kmbStopList = e.stops.nwfb.map((e) => {
-      //       if (gStopMap[e]) {
-      //         return gStopMap[e][0][1];
-      //       }
-      //       return "";
-      //     });
-      //     const obj = e;
-      //     obj.stops = { ...e.stops, kmb: kmbStopList };
-      //     return obj;
-      //   }
-      //   return e;
-      // });
 
       setRouteList(_routeList);
     } else {
@@ -77,38 +52,64 @@ export const RouteList = ({ route }) => {
     }
   }, [route]);
 
-  console.log(routeList);
-  return (
-    <>
-      {routeList.map((e, i) => {
-        return (
-          <div key={i} onClick={() => handleCardOnClick(i)}>
-            <Card className={"searchResultCard"} variant="outlined">
-              <div
-                className="routeTitle"
-                style={
-                  JSON.stringify(currRoute) === JSON.stringify(e)
-                    ? { backgroundColor: "lightyellow" }
-                    : {}
-                }
-              >
-                <div className="company">
-                  {e.gtfsId}
-                  <br />
-                  {e.co.map((e) => companyMap[e]).join("+")}{" "}
-                </div>
-                <div className="origDest">
-                  {e.orig.zh} → <span className="dest">{e.dest.zh}</span>{" "}
-                  <span className="special">
-                    {" "}
-                    {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
-                  </span>
-                </div>
-              </div>
-            </Card>
+  return routeList.map((e, i) => {
+    return (
+      <Card
+        key={i}
+        onClick={() => handleCardOnClick(i)}
+        sx={CardSx}
+        variant="outlined"
+      >
+        <div
+          className="routeTitle"
+          style={
+            isMatchCurrRoute(currRoute, e)
+              ? { backgroundColor: "lightyellow" }
+              : {}
+          }
+        >
+          <div className="company">
+            {getActualCoIds(e)
+              .map((e) => companyMap[e])
+              .join("+")}{" "}
           </div>
-        );
-      })}
-    </>
-  );
+          <div className="origDest">
+            {e.orig.zh} → <span className="dest">{e.dest.zh}</span>{" "}
+            <span className="special">
+              {" "}
+              {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
+            </span>
+          </div>
+        </div>
+      </Card>
+    );
+  });
+};
+
+const CardSx = {
+  margin: "4px",
+  ".routeTitle": {
+    padding: "4px",
+    fontSize: "13px",
+    display: "flex",
+    float: "left",
+    width: "100%",
+    ".route": {
+      width: "10%",
+      fontWeight: "900",
+    },
+    ".company": {
+      width: "20%",
+    },
+    ".origDest": {
+      width: "80%",
+      ".dest": {
+        fontWeight: "900",
+      },
+      ".special": {
+        fontSize: "10px",
+        fontWeight: "normal",
+      },
+    },
+  },
 };

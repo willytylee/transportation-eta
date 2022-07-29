@@ -1,19 +1,22 @@
 import { useContext, useState, useMemo, useEffect } from "react";
 import { getPreciseDistance } from "geolib";
+import { styled } from "@mui/material";
 import { companyMap } from "../../constants/Bus";
 import { AppContext } from "../../context/AppContext";
-import { etaTimeConverter, getLocalStorage } from "../../Utils";
+import { etaTimeConverter, getLocalStorage, getActualCoIds } from "../../Utils";
 import { fetchEtas } from "../../fetch/transports";
 
-export const AutoList = ({ route, setAnchorEl, setRoute }) => {
+export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
   const [autoList, setAutoList] = useState([]);
   const [autoListEta, setAutoListEta] = useState([]);
   const [title, setTitle] = useState("");
-  const {
-    dbVersion,
-    location: currentLocation,
-    updateCurrRoute,
-  } = useContext(AppContext);
+  const { location: currentLocation, updateCurrRoute } = useContext(AppContext);
+
+  const handleItemOnClick = (e) => {
+    updateCurrRoute(e);
+    setRoute(e.route);
+    setAnchorEl(null);
+  };
 
   const gRouteList = useMemo(() => {
     return getLocalStorage("routeList");
@@ -23,22 +26,11 @@ export const AutoList = ({ route, setAnchorEl, setRoute }) => {
     return getLocalStorage("stopList");
   }, [dbVersion]);
 
-  const handleItemOnClick = (e) => {
-    updateCurrRoute(e);
-    setRoute(e.route);
-    setAnchorEl(null);
-  };
-
   const sortByRoute = (a, b) => {
     const routeA = parseInt(a.route.replace(/\D/g, ""));
     const routeB = parseInt(b.route.replace(/\D/g, ""));
-    if (routeA < routeB) {
-      return -1;
-    }
-    if (routeA > routeB) {
-      return 1;
-    }
-    return 0;
+
+    return a.distance - b.distance || routeA - routeB; // Sort by distance first and than sort by Route
   };
 
   useEffect(() => {
@@ -67,19 +59,30 @@ export const AutoList = ({ route, setAnchorEl, setRoute }) => {
       const stopIdsNearBy = Object.keys(gStopList)
         .map((e) => {
           const obj = gStopList[e];
+          const distance = getPreciseDistance(
+            { latitude: obj.location.lat, longitude: obj.location.lng },
+            { latitude: currentLocation.lat, longitude: currentLocation.lng }
+          );
           obj.stopId = e;
+          obj.distance = distance;
           return obj;
         })
         .filter((e) => {
-          const distance = getPreciseDistance(
-            { latitude: e.location.lat, longitude: e.location.lng },
-            { latitude: currentLocation.lat, longitude: currentLocation.lng }
-          );
           return (
-            distance < 200 && (e.stopId.length === 6 || e.stopId.length === 16)
+            e.distance < 120 &&
+            (e.stopId.length === 6 || e.stopId.length === 16)
           );
         })
-        .map((e) => e.stopId);
+        .map((e) => {
+          return { [e.stopId]: e.distance };
+        })
+        .reduce(
+          (prev, curr) => ({
+            ...prev,
+            [Object.keys(curr)]: Object.values(curr)[0],
+          }),
+          {}
+        );
 
       const routeList = Object.keys(gRouteList)
         .map((e) => gRouteList[e])
@@ -90,34 +93,42 @@ export const AutoList = ({ route, setAnchorEl, setRoute }) => {
             e.co.includes("ctb")
         );
 
-      const _routeListNearBy = [];
+      const routeListNearBy = [];
 
+      // // Find out the route which contains the near by Stops
       routeList.forEach((e) => {
-        const arr1 = e.stops[e.co[0]];
-        const arr2 = stopIdsNearBy;
-        const res = arr1?.filter((item) => arr2.includes(item));
-        if (res?.length > 0) {
+        const megredStpId = Object.values(e.stops)
+          .map((e) => Object.values(e))
+          .flat();
+
+        const filitedStpId = megredStpId?.filter((e) => {
+          return Object.keys(stopIdsNearBy).includes(e);
+        });
+        if (filitedStpId?.length > 0) {
           const obj = e;
-          e.stopId = res[0];
-          _routeListNearBy.push(obj);
+          const stopId = filitedStpId[0]; // Can choose the first element, should be the same
+          e.stopIdNearBy = stopId;
+          e.distance = stopIdsNearBy[stopId];
+          routeListNearBy.push(obj);
         }
       });
 
-      const _autoList = _routeListNearBy.sort((a, b) => sortByRoute(a, b));
+      const _autoList = routeListNearBy.sort((a, b) => sortByRoute(a, b));
+      // const { stopId, ...listWOStopId } = _autoList;
       setAutoList(_autoList);
 
       // Set Auto Complete Route List ETA
+      // TODO
       const intervalContent = async () => {
-        setAutoListEta(
-          await Promise.all(
-            _autoList.map(async (e) => {
-              return await fetchEtas({
-                ...e,
-                seq: null,
-              });
-            })
-          )
-        );
+        // setAutoListEta(
+        //   await Promise.all(
+        //     _autoList.map(async (e) => {
+        //       return await fetchEtas({
+        //         ...e,
+        //       });
+        //     })
+        //   )
+        // );
       };
       intervalContent();
 
@@ -127,10 +138,10 @@ export const AutoList = ({ route, setAnchorEl, setRoute }) => {
         clearInterval(interval);
       };
     }
-  }, [route, currentLocation.lat, currentLocation.lng]);
+  }, [route]);
 
   return (
-    <div className="autoList">
+    <AutoListRoot>
       <div className="title">{title}</div>
       {autoList?.map((e, i) => {
         return (
@@ -138,12 +149,16 @@ export const AutoList = ({ route, setAnchorEl, setRoute }) => {
             <div className="routeCompany">
               <div className="route">{e.route}</div>
               <div className="company">
-                {e.co.map((e) => companyMap[e]).join("+")}
+                {getActualCoIds(e)
+                  .map((e) => companyMap[e])
+                  .join("+")}{" "}
               </div>
             </div>
-            <div className="NearStopOrigDest" style={{ width: route && "85%" }}>
-              {e.stopId && (
-                <div className="StopNearBy">{gStopList[e.stopId].name.zh}</div>
+            <div className="NearStopOrigDest">
+              {e.stopIdNearBy && (
+                <div className="StopNearBy">
+                  {gStopList[e.stopIdNearBy].name.zh} - {e.distance}米
+                </div>
               )}
               <div>
                 {e.orig.zh} → <span className="dest">{e.dest.zh}</span>
@@ -153,19 +168,64 @@ export const AutoList = ({ route, setAnchorEl, setRoute }) => {
                 </span>
               </div>
             </div>
-            <div className="eta" style={{ width: route && "0%" }}>
-              {!route &&
-                autoListEta[i]?.map((e, i) => {
-                  return (
-                    <div key={i}>
-                      {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
-                    </div>
-                  );
-                })}
-            </div>
+            {/* <div className="eta" style={{ width: route && "0%" }}>
+              {!route ? (
+                autoListEta[i] && autoListEta[i]?.length !== 0 ? (
+                  autoListEta[i].map((e, i) => {
+                    return (
+                      <div key={i}>
+                        {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
+                      </div>
+                    );
+                  })
+                ) : (
+                  <>沒有班次</>
+                )
+              ) : (
+                <></>
+              )}
+            </div> */}
           </div>
         );
       })}
-    </div>
+    </AutoListRoot>
   );
 };
+
+const AutoListRoot = styled("div")({
+  overflow: "auto",
+  margin: "8px",
+  fontSize: "12px",
+  ".title": {
+    textAlign: "center",
+    fontWeight: "700",
+    paddingBottom: "2px",
+  },
+  ".item": {
+    display: "flex",
+    alignItems: "center",
+    padding: "4px",
+    borderBottom: "1px solid lightgrey",
+    ".routeCompany": {
+      width: "15%",
+      ".route": {
+        fontWeight: "900",
+      },
+      ".company": {
+        fontSize: "10px",
+      },
+    },
+    ".NearStopOrigDest": {
+      width: "70%",
+      float: "left",
+      ".dest": {
+        fontWeight: "900",
+      },
+    },
+    ".eta": {
+      width: "15%",
+      float: "left",
+      fontSize: "10px",
+    },
+  },
+});

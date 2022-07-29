@@ -1,5 +1,5 @@
 import { useContext, useRef } from "react";
-import { TextField } from "@mui/material";
+import { TextField, styled } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 import { AppContext } from "../../context/AppContext";
 
@@ -19,7 +19,7 @@ export const SearchBar = ({
   };
 
   return (
-    <div className="searchBarWrapper">
+    <SearchBarWraper>
       <div>
         <TextField
           variant="standard"
@@ -35,6 +35,18 @@ export const SearchBar = ({
         />
         <SearchIcon onClick={handleSearchIconOnClick} />
       </div>
-    </div>
+    </SearchBarWraper>
   );
 };
+
+const SearchBarWraper = styled("div")({
+  width: "100%",
+  textAlign: "center",
+  margin: "10px 0",
+  display: "flex",
+  justifyContent: "center",
+  flexDirection: "column",
+  ".searchBar": {
+    textAlign: "center",
+  },
+});

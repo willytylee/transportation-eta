@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { styled } from "@mui/material";
 import { Link } from "react-router-dom";
 import { dataSet } from "../data/DataSet";
 import { fetchCurrWeather, fetchWarningList } from "../fetch/Weather";
@@ -27,7 +28,7 @@ export const Navbar = () => {
   }
 
   return (
-    <nav className="nav">
+    <Nav>
       <ul>
         {dataSet
           .filter((e) => e.display)
@@ -48,6 +49,45 @@ export const Navbar = () => {
           ))}
         </li>
       </ul>
-    </nav>
+    </Nav>
   );
 };
+
+const Nav = styled("nav")({
+  backgroundColor: "#333",
+  color: "white",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "stretch",
+  gap: "2rem",
+  padding: "0 1rem",
+  ul: {
+    padding: "0",
+    margin: "0",
+    listStyle: "none",
+    display: "flex",
+    gap: "1rem",
+    fontSize: "20px",
+    li: {
+      color: "inherit",
+      textDecoration: "none",
+      height: "100%",
+      display: "flex",
+      alignItems: "center",
+      padding: "0.25rem",
+      "&.active": {
+        backgroundColor: "#555",
+      },
+      a: {
+        color: "white",
+      },
+    },
+    "&.weather": {
+      fontSize: "14px",
+      img: {
+        width: "20px",
+        marginLeft: "8px",
+      },
+    },
+  },
+});

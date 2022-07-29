@@ -1,9 +1,10 @@
+import { styled } from "@mui/material";
 import { Buses } from "./Bus/Buses.js";
 import { MTRs } from "./MTR/MTRs.js";
 
 export const Section = ({ category, gStopList, gRouteList }) => {
   return (
-    <div className="section">
+    <SectionRoot>
       <div>{category.title}</div>
       {category.data.map((e, i) => {
         const firstCo = e[0].co;
@@ -24,6 +25,12 @@ export const Section = ({ category, gStopList, gRouteList }) => {
         }
         return null;
       })}
-    </div>
+    </SectionRoot>
   );
 };
+
+const SectionRoot = styled("div")({
+  padding: "10px",
+  borderRadius: "2px",
+  borderBottom: "1px solid lightgrey",
+});

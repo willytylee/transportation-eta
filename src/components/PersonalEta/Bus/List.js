@@ -1,3 +1,4 @@
+import { styled } from "@mui/material";
 import { etaTimeConverter, sortEtaObj } from "../../../Utils";
 
 export const List = ({ sectionData }) => {
@@ -54,24 +55,38 @@ export const List = ({ sectionData }) => {
   }
 
   return (
-    <>
-      <table className="listView">
-        <tbody>
-          {result.map((e, i) => {
-            return (
-              <tr key={i}>
-                <td className="route">{e?.route}</td>
-                <td className="stopName">
-                  <a href={e?.latLngUrl} title={e?.stopId}>
-                    {e?.stopName}
-                  </a>
-                </td>
-                <td className="eta">{e?.eta}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </>
+    <ListView>
+      {result.map((e, i) => {
+        return (
+          <div key={i} className="etaWrapper">
+            <div className="route">{e?.route}</div>
+            <div className="stopName">
+              <a href={e?.latLngUrl} title={e?.stopId}>
+                {e?.stopName}
+              </a>
+            </div>
+            <div className="eta">{e?.eta}</div>
+          </div>
+        );
+      })}
+    </ListView>
   );
 };
+
+const ListView = styled("div")({
+  fontSize: "12px",
+  width: "100%",
+  ".etaWrapper": {
+    display: "flex",
+    textAlign: "left",
+    margin: "4px 0",
+    ".route": {
+      width: "10%",
+      fontWeight: "900",
+    },
+    ".stopName": {
+      width: "45%",
+    },
+    ".eta": { width: "45%" },
+  },
+});

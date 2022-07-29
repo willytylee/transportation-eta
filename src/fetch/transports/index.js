@@ -25,15 +25,9 @@ export const fetchEtas = async ({
           etas = etas.concat(
             await fetchKmbEtas({
               bound: bound[company_id],
-              gtfsId,
               route,
-              seq, // seq is not a must
               serviceType: serviceType ? serviceType : 1,
-              stopId: stopId
-                ? stopId
-                : seq && stops[company_id]
-                ? stops[company_id][seq - 1]
-                : "",
+              stopId: _stopId,
             })
           );
         }
@@ -47,7 +41,6 @@ export const fetchEtas = async ({
               bound: bound[company_id],
               co: company_id,
               dest,
-              gtfsId,
               route,
               stopId: _stopId,
             })

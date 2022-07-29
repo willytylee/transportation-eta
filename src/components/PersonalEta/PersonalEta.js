@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
+import { styled } from "@mui/material";
 import { dataSet } from "../../data/DataSet";
 import { getLocalStorage } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
@@ -21,7 +22,7 @@ export const PersonalEta = ({ name }) => {
   }, [name]);
 
   return (
-    <div className="personalEta">
+    <PersonalEtaRoot>
       {data?.transportData?.map((e, i) => (
         <Section
           key={i}
@@ -30,6 +31,10 @@ export const PersonalEta = ({ name }) => {
           gRouteList={gRouteList}
         />
       ))}
-    </div>
+    </PersonalEtaRoot>
   );
 };
+
+const PersonalEtaRoot = styled("div")({
+  overflow: "auto",
+});

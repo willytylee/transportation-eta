@@ -1,5 +1,5 @@
 import { useState, useRef, useContext } from "react";
-import { Popper } from "@mui/material";
+import { Popper, styled } from "@mui/material";
 import { SearchBar } from "../components/Search/SearchBar";
 import { AutoList } from "../components/Search/AutoList";
 import { RouteList } from "../components/Search/RouteList";
@@ -20,7 +20,7 @@ export const Search = () => {
   const divRef = useRef();
 
   return (
-    <div className="search">
+    <SearchRoot>
       <SearchBar
         handleFormChange={handleFormChange}
         route={route}
@@ -31,14 +31,7 @@ export const Search = () => {
       <div ref={divRef}></div>
       {open && (
         <Popper
-          sx={{
-            width: "95%",
-            height: "40%",
-            overflow: "auto",
-            border: "1px solid lightgrey",
-            borderRadius: "5px",
-            background: "white",
-          }}
+          sx={popperSx}
           open={open}
           placement="bottom"
           anchorEl={anchorEl}
@@ -50,10 +43,37 @@ export const Search = () => {
           />
         </Popper>
       )}
-      <div className="searchResult" style={{ opacity: open ? "20%" : "100%" }}>
+      <SearchResult className={open ? "open" : "close"}>
         <RouteList route={route} />
         <StopList route={route} />
-      </div>
-    </div>
+      </SearchResult>
+    </SearchRoot>
   );
 };
+
+const popperSx = {
+  width: "95%",
+  height: "40%",
+  overflow: "auto",
+  border: "1px solid lightgrey",
+  borderRadius: "5px",
+  background: "white",
+};
+
+const SearchRoot = styled("div")({
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  overflow: "auto",
+});
+
+const SearchResult = styled("div")({
+  fontSize: "12px",
+  overflow: "auto",
+  "&.open": {
+    opacity: "20%",
+  },
+  "&.close": {
+    opacity: "100%",
+  },
+});

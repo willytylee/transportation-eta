@@ -3,3 +3,5 @@ export const companyMap = {
   ctb: "城巴",
   nwfb: "新巴",
 };
+
+export const coPriority = ["kmb", "nwfb", "ctb"];

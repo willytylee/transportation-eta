@@ -34,7 +34,7 @@ import psr3 from "../assets/weatherIcon/PSR/PSRMedium_50_light.png";
 import psr4 from "../assets/weatherIcon/PSR/PSRMediumHigh_50_light.png";
 import psr5 from "../assets/weatherIcon/PSR/PSRHigh_50_light.png";
 
-import whot from "../assets/weatherIcon/Warning/whot.gif";
+import vhot from "../assets/weatherIcon/Warning/vhot.gif";
 import cold from "../assets/weatherIcon/Warning/cold.gif";
 import firer from "../assets/weatherIcon/Warning/firer.gif";
 import firey from "../assets/weatherIcon/Warning/firey.gif";
@@ -54,7 +54,7 @@ import tc8sw from "../assets/weatherIcon/Warning/tc8sw.gif";
 import tc9 from "../assets/weatherIcon/Warning/tc9.gif";
 import tc10 from "../assets/weatherIcon/Warning/tc10.gif";
 import ts from "../assets/weatherIcon/Warning/ts.gif";
-// import tsunami-warn from "../assets/weatherIcon/Warning/tsunami-warn.gif"
+import tsunami from "../assets/weatherIcon/Warning/tsunami-warn.gif";
 
 export const weatherIconMap = {
   50: p50,
@@ -97,17 +97,17 @@ export const psrIconMap = {
 };
 
 export const warningIconMap = {
-  WHOT: whot,
-  COLD: cold,
-  FIRER: firer,
-  FIREY: firey,
-  FROST: frost,
-  LANDSLIP: landslip,
-  NTFL: ntfl,
-  RAINA: raina,
-  RAINB: rainb,
-  RAINR: rainr,
-  SMS: sms,
+  WHOT: vhot,
+  WCOLD: cold,
+  WFIRER: firer,
+  WFIREY: firey,
+  WFROST: frost,
+  WL: landslip,
+  WFNTSA: ntfl,
+  WRAINA: raina,
+  WRAINB: rainb,
+  WRAINR: rainr,
+  WMSGNL: sms,
   TC1: tc1,
   TC3: tc3,
   TC8NE: tc8ne,
@@ -116,5 +116,6 @@ export const warningIconMap = {
   TC8SW: tc8sw,
   TC9: tc9,
   TC10: tc10,
-  TS: ts,
+  WTS: ts,
+  WTMW: tsunami,
 };

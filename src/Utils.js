@@ -1,12 +1,10 @@
-import { useContext, useMemo } from "react";
 import moment from "moment";
 import { decompress as decompressJson } from "lzutf8-light";
-import { AppContext } from "./context/AppContext";
 
 export const etaTimeConverter = (etaStr, remark) => {
   let etaIntervalStr, remarkStr;
 
-  if (moment(etaStr).isValid()) {
+  if (moment(etaStr, "YYYY-MM-DD HH:mm:ss").isValid()) {
     const mintuesLeft = moment(etaStr).diff(moment(), "minutes");
     if (mintuesLeft === 0) {
       etaIntervalStr = "準備埋站";
@@ -27,6 +25,7 @@ export const etaTimeConverter = (etaStr, remark) => {
   if (remark) {
     remarkStr = `${remark}`;
   }
+
   return { etaIntervalStr, remarkStr };
 };
 
@@ -92,6 +91,11 @@ export const getHeatIndex = (temperature, humidity) => {
   return (heatIndex - 32) / 1.8;
 };
 
-export const mergeMissingStops = ({ gRouteList, gtfsId, route }) => {
-  return Object.keys(gRouteList).map((e) => gRouteList[e]);
+export const getActualCoIds = (routeObj) => {
+  return routeObj.co.reduce((prev, curr) => {
+    if (Object.keys(routeObj.stops).includes(curr)) {
+      prev.push(curr);
+    }
+    return prev;
+  }, []);
 };
