@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Tabs, Tab, styled } from "@mui/material/";
 import { CurrentWeater } from "../components/Weather/CurrentWeater";
 import { NineDays } from "../components/Weather/NineDays";
-import { TabPanel } from "../components/Weather/TabPanel";
+import { TabPanel } from "../components/TabPanel";
 
 export const Weather = () => {
   const [tabIdx, setTabIdx] = useState(0);

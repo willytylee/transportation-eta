@@ -9,7 +9,7 @@ export const Table = ({ data, dir }) => {
           <div className="arriveText">
             → <span className="dest">{data[dir].dest}</span> 到站時間:
           </div>
-          <div class="ttntWrapper">
+          <div className="ttntWrapper">
             {data[dir].ttnts
               .map((e, j) => (
                 <div className="ttnt" key={j}>

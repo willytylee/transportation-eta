@@ -19,6 +19,10 @@ export const Navbar = () => {
     fetchWarningList().then((response) => setWarningMsg(response));
   }, []);
 
+  const handleOnLinkClick = (user) => {
+    localStorage.setItem("user", user);
+  };
+
   let avgTemp = 0;
   if (Object.keys(currWeather).length !== 0) {
     const tempArr = currWeather.temperature.data;
@@ -35,7 +39,12 @@ export const Navbar = () => {
           .map((e, i) => {
             return (
               <li key={i}>
-                <Link to={`/personalAsst/${e.user}`}>{e.name}</Link>
+                <Link
+                  to={`/personalAsst/${e.user}`}
+                  onClick={() => handleOnLinkClick(e.user)}
+                >
+                  {e.name}
+                </Link>
               </li>
             );
           })}

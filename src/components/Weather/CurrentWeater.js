@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { styled } from "@mui/material";
-import { TabPanel } from "./TabPanel";
 import { fetchLocalForecast, fetchCurrWeather } from "../../fetch/Weather";
 import { weatherIconMap } from "../../constants/Weather";
 

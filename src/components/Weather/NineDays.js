@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { styled } from "@mui/material";
-import { TabPanel } from "./TabPanel";
 import moment from "moment";
 import { fetch9DForecast } from "../../fetch/Weather";
 import { weatherIconMap, psrIconMap } from "../../constants/Weather";

@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo, useContext } from "react";
 import { styled } from "@mui/material";
 import { getPreciseDistance } from "geolib";
 import { getLocalStorage } from "../../Utils";
-import { Card } from "@mui/material";
 import { AppContext } from "../../context/AppContext";
 import { StopEta } from "./StopEta";
 import { coPriority } from "../../constants/Bus";
