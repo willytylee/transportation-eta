@@ -7,19 +7,21 @@ import {
 } from "@mui/material/";
 import { dataSet } from "../data/DataSet";
 
-export const SelectUserDialog = ({ onClose, open }) => {
-  const handleClose = (value) => {
-    onClose(value);
-  };
-
+export const SelectUserDialog = ({ handleDialogOnClose, dialogOpen }) => {
   return (
-    <Dialog onClose={() => handleClose()} open={open}>
+    <Dialog onClose={handleDialogOnClose} open={dialogOpen}>
       <DialogTitle>請選擇用戶:</DialogTitle>
       <List sx={{ pt: 0 }}>
         {dataSet
           .filter((e) => e.display)
           .map((e, i) => (
-            <ListItem button onClick={() => handleClose(e.user)} key={i}>
+            <ListItem
+              button
+              onClick={() =>
+                handleDialogOnClose({ user: e.user, name: e.name })
+              }
+              key={i}
+            >
               <ListItemText primary={e.name} />
             </ListItem>
           ))}

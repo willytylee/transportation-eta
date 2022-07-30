@@ -8,10 +8,13 @@ import {
   Favorite as FavoriteIcon,
 } from "@mui/icons-material";
 import { SelectUserDialog } from "../components/SelectUserDialog";
+import { SwitchUserSnackBar } from "../components/SwitchUserSnackBar";
 
 export const BottomNav = () => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [username, setUsername] = useState("");
   const handleOnChange = useCallback(
     (value) => {
       switch (value) {
@@ -21,7 +24,7 @@ export const BottomNav = () => {
         case 1:
           const user = localStorage.getItem("user");
           if (!user) {
-            setOpen(true);
+            setDialogOpen(true);
           } else {
             navigate(`/personalAsst/${user}`, { replace: true });
           }
@@ -39,13 +42,15 @@ export const BottomNav = () => {
     [navigate]
   );
 
-  const handleDialogClose = useCallback(
-    (value) => {
-      if (value) {
-        localStorage.setItem("user", value);
-        navigate(`/personalAsst/${value}`, { replace: true });
+  const handleDialogOnClose = useCallback(
+    ({ user, name }) => {
+      if (user) {
+        localStorage.setItem("user", user);
+        setUsername(name);
+        setSnackbarOpen(true);
+        navigate(`/personalAsst/${user}`, { replace: true });
       }
-      setOpen(false);
+      setDialogOpen(false);
     },
     [navigate]
   );
@@ -64,7 +69,15 @@ export const BottomNav = () => {
         <BottomNavigationAction label="天氣" icon={<ThermostatIcon />} />
         <BottomNavigationAction label="設定" icon={<SettingsIcon />} />
       </BottomNavigation>
-      <SelectUserDialog open={open} onClose={handleDialogClose} />
+      <SelectUserDialog
+        dialogOpen={dialogOpen}
+        handleDialogOnClose={handleDialogOnClose}
+      />
+      <SwitchUserSnackBar
+        snackbarOpen={snackbarOpen}
+        setSnackbarOpen={setSnackbarOpen}
+        username={username}
+      />
     </>
   );
 };
