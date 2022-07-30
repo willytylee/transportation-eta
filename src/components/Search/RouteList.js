@@ -54,19 +54,15 @@ export const RouteList = ({ route }) => {
 
   return routeList.map((e, i) => {
     return (
-      <Card
+      <RouteListRoot
         key={i}
         onClick={() => handleCardOnClick(i)}
-        sx={CardSx}
         variant="outlined"
       >
         <div
-          className="routeTitle"
-          style={
-            isMatchCurrRoute(currRoute, e)
-              ? { backgroundColor: "lightyellow" }
-              : {}
-          }
+          className={`routeTitle ${
+            isMatchCurrRoute(currRoute, e) ? "matched" : ""
+          }`}
         >
           <div className="company">
             {getActualCoIds(e)
@@ -81,12 +77,12 @@ export const RouteList = ({ route }) => {
             </span>
           </div>
         </div>
-      </Card>
+      </RouteListRoot>
     );
   });
 };
 
-const CardSx = {
+const RouteListRoot = styled(Card)({
   margin: "4px",
   ".routeTitle": {
     padding: "4px",
@@ -94,6 +90,9 @@ const CardSx = {
     display: "flex",
     float: "left",
     width: "100%",
+    "&.matched": {
+      backgroundColor: "lightyellow",
+    },
     ".route": {
       width: "10%",
       fontWeight: "900",
@@ -112,4 +111,4 @@ const CardSx = {
       },
     },
   },
-};
+});

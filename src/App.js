@@ -1,4 +1,5 @@
 import { useContext, useEffect } from "react";
+import { styled } from "@mui/material";
 import "./App.css";
 import { Navbar } from "./layouts/Navbar";
 import { BottomNav } from "./layouts/BottomNav";
@@ -21,7 +22,7 @@ const App = () => {
   return (
     <>
       <Navbar />
-      <div className="container">
+      <Container>
         <Routes>
           <Route path="/" element={<Search />} />
           <Route path="/search" element={<Search />} />
@@ -29,10 +30,18 @@ const App = () => {
           <Route path="/personalAsst/:name" element={<PersonalAsst />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
-      </div>
+      </Container>
       <BottomNav />
     </>
   );
 };
+
+const Container = styled("div")({
+  fontSize: "14px",
+  display: "flex",
+  flex: "1 1 0%",
+  overflow: "hidden",
+  flexDirection: "column",
+});
 
 export default App;

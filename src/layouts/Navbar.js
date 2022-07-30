@@ -44,9 +44,11 @@ export const Navbar = () => {
         <li>
           {avgTemp?.toFixed(1)}°C / {currWeather?.humidity?.data[0]?.value}%
           <img src={weatherIconMap[currWeather.icon]} alt="" />
-          {Object.keys(warningMsg).map((e, i) => (
-            <img key={i} src={warningIconMap[e]} alt="" />
-          ))}
+          {Object.keys(warningMsg).map((e, i) => {
+            return (
+              <img key={i} src={warningIconMap[warningMsg[e].code]} alt="" />
+            );
+          })}
         </li>
       </ul>
     </Nav>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { styled } from "@mui/material";
 import { TabPanel } from "./TabPanel";
 import { fetchLocalForecast, fetchCurrWeather } from "../../fetch/Weather";
 import { weatherIconMap } from "../../constants/Weather";
@@ -13,18 +14,19 @@ export const CurrentWeater = ({ tabIdx }) => {
   }, []);
 
   return (
-    <TabPanel value={tabIdx} index={0} className="tabPanel currWeather">
+    <CurrentWeatherRoot>
       <img src={weatherIconMap[currWeather.icon]} alt="" />
       <p>{currWeather.warningMessage}</p>
       <p>{localForecast.generalSituation}</p>
       <p>{localForecast.forecastPeriod}</p>
       <p>{localForecast.forecastDesc}</p>
       <p>展望: {localForecast.outlook}</p>
-    </TabPanel>
+    </CurrentWeatherRoot>
   );
 };
 
-const TabpanelSx = {
-  overflow: "auto",
-  padding: "8px",
-};
+const CurrentWeatherRoot = styled("div")({
+  img: {
+    width: "60px",
+  },
+});
