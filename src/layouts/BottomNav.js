@@ -7,7 +7,7 @@ import {
   Thermostat as ThermostatIcon,
   Favorite as FavoriteIcon,
 } from "@mui/icons-material";
-import { SimpleDialog } from "../components/SimpleDialog";
+import { SelectUserDialog } from "../components/SelectUserDialog";
 
 export const BottomNav = () => {
   const navigate = useNavigate();
@@ -64,7 +64,7 @@ export const BottomNav = () => {
         <BottomNavigationAction label="天氣" icon={<ThermostatIcon />} />
         <BottomNavigationAction label="設定" icon={<SettingsIcon />} />
       </BottomNavigation>
-      <SimpleDialog open={open} onClose={handleDialogClose} />
+      <SelectUserDialog open={open} onClose={handleDialogClose} />
     </>
   );
 };

@@ -5,7 +5,7 @@ import { fetch9DForecast } from "../../fetch/Weather";
 import { weatherIconMap, psrIconMap } from "../../constants/Weather";
 import { getHeatIndex } from "../../Utils";
 
-export const NineDays = ({ tabIdx }) => {
+export const NineDays = () => {
   const [nineDForecast, setNineDForecast] = useState({});
 
   useEffect(() => {

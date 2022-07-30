@@ -150,8 +150,14 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
               <div className="route">{e.route}</div>
               <div className="company">
                 {getActualCoIds(e)
-                  .map((e) => companyMap[e])
-                  .join("+")}{" "}
+                  .map((e, i) => {
+                    return (
+                      <span key={i} className={e}>
+                        {companyMap[e]}
+                      </span>
+                    );
+                  })
+                  .reduce((a, b) => [a, " + ", b])}
               </div>
             </div>
             <div className="NearStopOrigDest">
@@ -207,16 +213,25 @@ const AutoListRoot = styled("div")({
     padding: "4px",
     borderBottom: "1px solid lightgrey",
     ".routeCompany": {
-      width: "15%",
+      width: "20%",
       ".route": {
         fontWeight: "900",
       },
       ".company": {
         fontSize: "10px",
+        ".kmb": {
+          color: "#DD1E2F",
+        },
+        ".nwfb": {
+          color: "#857700",
+        },
+        ".ctb": {
+          color: "#6A42A7",
+        },
       },
     },
     ".NearStopOrigDest": {
-      width: "70%",
+      width: "80%",
       float: "left",
       ".dest": {
         fontWeight: "900",

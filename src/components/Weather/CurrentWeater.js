@@ -3,7 +3,7 @@ import { styled } from "@mui/material";
 import { fetchLocalForecast, fetchCurrWeather } from "../../fetch/Weather";
 import { weatherIconMap } from "../../constants/Weather";
 
-export const CurrentWeater = ({ tabIdx }) => {
+export const CurrentWeater = () => {
   const [localForecast, setLocalForecast] = useState({});
   const [currWeather, setCurrWeather] = useState({});
 

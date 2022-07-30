@@ -66,8 +66,14 @@ export const RouteList = ({ route }) => {
         >
           <div className="company">
             {getActualCoIds(e)
-              .map((e) => companyMap[e])
-              .join("+")}{" "}
+              .map((e, i) => {
+                return (
+                  <span key={i} className={e}>
+                    {companyMap[e]}
+                  </span>
+                );
+              })
+              .reduce((a, b) => [a, " + ", b])}
           </div>
           <div className="origDest">
             {e.orig.zh} → <span className="dest">{e.dest.zh}</span>{" "}
@@ -99,6 +105,15 @@ const RouteListRoot = styled(Card)({
     },
     ".company": {
       width: "20%",
+      ".kmb": {
+        color: "#DD1E2F",
+      },
+      ".nwfb": {
+        color: "#857700",
+      },
+      ".ctb": {
+        color: "#6A42A7",
+      },
     },
     ".origDest": {
       width: "80%",
