@@ -1,20 +1,18 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 import { BottomNavigation, BottomNavigationAction } from "@mui/material/";
 import {
   DirectionsBus as DirectionsBusIcon,
   Settings as SettingsIcon,
   Thermostat as ThermostatIcon,
   Favorite as FavoriteIcon,
+  Announcement as AnnouncementIcon,
 } from "@mui/icons-material";
-import { SelectUserDialog } from "../components/SelectUserDialog";
-import { SwitchUserSnackBar } from "../components/SwitchUserSnackBar";
 
 export const BottomNav = () => {
   const navigate = useNavigate();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [username, setUsername] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
   const handleOnChange = useCallback(
     (value) => {
       switch (value) {
@@ -22,35 +20,29 @@ export const BottomNav = () => {
           navigate("/search", { replace: true });
           break;
         case 1:
-          const user = localStorage.getItem("user");
-          if (!user) {
-            setDialogOpen(true);
-          } else {
-            navigate(`/personalAsst/${user}`, { replace: true });
-          }
+          navigate("/news", { replace: true });
           break;
         case 2:
-          navigate("/weather", { replace: true });
+          let userId;
+          try {
+            userId = JSON.parse(localStorage.getItem("user")).userId;
+            navigate(`/personalAsst/${userId}`, { replace: true });
+          } catch (error) {
+            enqueueSnackbar("請選擇用戶", {
+              variant: "warning",
+            });
+            navigate("/settings", { replace: true });
+          }
           break;
         case 3:
+          navigate("/weather", { replace: true });
+          break;
+        case 4:
           navigate("/settings", { replace: true });
           break;
         default:
           break;
       }
-    },
-    [navigate]
-  );
-
-  const handleDialogOnClose = useCallback(
-    ({ user, name }) => {
-      if (user) {
-        localStorage.setItem("user", user);
-        setUsername(name);
-        setSnackbarOpen(true);
-        navigate(`/personalAsst/${user}`, { replace: true });
-      }
-      setDialogOpen(false);
     },
     [navigate]
   );
@@ -65,19 +57,11 @@ export const BottomNav = () => {
         }}
       >
         <BottomNavigationAction label="路線搜尋" icon={<DirectionsBusIcon />} />
+        <BottomNavigationAction label="交通消息" icon={<AnnouncementIcon />} />
         <BottomNavigationAction label="收藏" icon={<FavoriteIcon />} />
         <BottomNavigationAction label="天氣" icon={<ThermostatIcon />} />
         <BottomNavigationAction label="設定" icon={<SettingsIcon />} />
       </BottomNavigation>
-      <SelectUserDialog
-        dialogOpen={dialogOpen}
-        handleDialogOnClose={handleDialogOnClose}
-      />
-      <SwitchUserSnackBar
-        snackbarOpen={snackbarOpen}
-        setSnackbarOpen={setSnackbarOpen}
-        username={username}
-      />
     </>
   );
 };

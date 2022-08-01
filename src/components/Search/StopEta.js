@@ -72,6 +72,7 @@ const StopEtaRoot = styled("div")({
   },
   ".stop": {
     width: "55%",
+    textDecoration: "underline",
   },
   ".etas": {
     width: "40%",

@@ -38,7 +38,8 @@ export const RouteList = ({ route }) => {
             e.route === route &&
             (e.co.includes("kmb") ||
               e.co.includes("nwfb") ||
-              e.co.includes("ctb"))
+              e.co.includes("ctb") ||
+              e.co.includes("mtr"))
           );
         })
         .sort(

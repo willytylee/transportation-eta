@@ -5,7 +5,7 @@ import { getLocalStorage } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
 import { Section } from "./Section";
 
-export const PersonalEta = ({ name }) => {
+export const PersonalEta = ({ userId }) => {
   const [data, setData] = useState([]);
   const { dbVersion } = useContext(AppContext);
 
@@ -18,8 +18,8 @@ export const PersonalEta = ({ name }) => {
   }, [dbVersion]);
 
   useEffect(() => {
-    setData(dataSet.find((o) => o.user === name));
-  }, [name]);
+    setData(dataSet.find((o) => o.userId === userId));
+  }, [userId]);
 
   return (
     <PersonalEtaRoot>

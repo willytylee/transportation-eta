@@ -9,6 +9,10 @@ import { AppContext } from "./context/AppContext";
 import { Settings } from "./pages/Settings";
 import { Weather } from "./pages/Weather";
 import { PersonalAsst } from "./pages/PersonalAsst";
+import { About } from "./pages/Settings/About";
+// import { Tutorial } from "./pages/Settings/Tutorial";
+import { Install } from "./pages/Settings/Install";
+import { News } from "./pages/News";
 
 const App = () => {
   const { initDb } = useContext(AppContext);
@@ -26,9 +30,12 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Search />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/news" element={<News />} />
           <Route path="/weather" element={<Weather />} />
-          <Route path="/personalAsst/:name" element={<PersonalAsst />} />
+          <Route path="/personalAsst/:userId" element={<PersonalAsst />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/settings/about" element={<About />} />
+          <Route path="/settings/install" element={<Install />} />
         </Routes>
       </Container>
       <BottomNav />

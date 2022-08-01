@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { styled } from "@mui/material";
 import { Table } from "./Table.js";
 import { List } from "./List.js";
 import { fetchEtas } from "../../../fetch/transports";
@@ -56,7 +57,7 @@ export const Buses = ({ section, gStopList, gRouteList }) => {
   };
 
   return (
-    <>
+    <BusesRoot>
       <button onClick={() => switchView(view)}>
         {view === "list" ? "顯示所有班次" : "以到站時間排列"}
       </button>
@@ -65,6 +66,17 @@ export const Buses = ({ section, gStopList, gRouteList }) => {
       ) : (
         <Table sectionData={sectionData} />
       )}
-    </>
+    </BusesRoot>
   );
 };
+
+const BusesRoot = styled("div")({
+  button: {
+    borderRadius: "22px",
+    color: "#136ac1",
+    borderWidth: "0",
+    padding: "2px 15px",
+    fontSize: "12px",
+    margin: "2px 0",
+  },
+});

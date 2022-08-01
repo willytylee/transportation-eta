@@ -10,7 +10,7 @@ export const Section = ({ category, gStopList, gRouteList }) => {
         const firstCo = e[0].co;
         if (
           gStopList &&
-          (firstCo === "citybus" || firstCo === "kmb" || firstCo === "nwfb")
+          (firstCo === "ctb" || firstCo === "kmb" || firstCo === "nwfb")
         ) {
           return (
             <Buses
