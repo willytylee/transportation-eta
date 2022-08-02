@@ -1,16 +1,45 @@
 import axios from "axios";
-import { getClosestStr } from "../../Utils";
 
-export const fetchNwfbCtbEtas = async ({ co, stopId, route, bound, dest }) => {
+export const fetchNwfbCtbEtas = async ({
+  co,
+  stopId,
+  route,
+  bound,
+  dest,
+  orig,
+}) => {
   const response = await axios.get(
     `https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/${co}/${stopId}/${route}`
   );
 
-  const routeDest = dest.zh;
-
   const { data } = response.data;
 
-  // Find the destination list if different eta using in same stop
+  // console.log(data);
+
+  const getMatchCount = (str1, str2) => {
+    let count = 0;
+    const obj = str2.split("");
+    for (const str of str1) {
+      let idx = obj.findIndex((s) => s === str);
+      if (idx >= 0) {
+        count++;
+        obj.splice(idx, 1);
+      }
+    }
+    return count;
+  };
+
+  const getClosestStr = (str, strArr) => {
+    const countArr = [];
+    strArr.forEach((e, i) => {
+      countArr[i] = getMatchCount(str, e);
+    });
+    const max = Math.max(...countArr);
+    const idx = countArr.indexOf(max);
+    return strArr[idx];
+  };
+
+  // Take the destination list if one stop have multi direction eta
   const destList = data.reduce((prev, curr) => {
     if (!prev.includes(curr.dest_tc)) {
       prev.push(curr.dest_tc);
@@ -18,9 +47,22 @@ export const fetchNwfbCtbEtas = async ({ co, stopId, route, bound, dest }) => {
     return prev;
   }, []);
 
-  // Find the correct destination by geting the closest destination string
-  // TODO: if there is only one item in destList, it will retrun it only if it is wrong.
-  const correctDest = getClosestStr(routeDest, destList);
+  // Compare the destination list item to the Route Orig and Dest:
+  // Filter out the correct destination by the matchCount of dest >= the matchCount orig
+  // Some of the route dest = orig, they have the same matchCount, need to use >= instead of >
+  const correctDestList = destList.filter(
+    (e) =>
+      getMatchCount(e, dest.zh) >= getMatchCount(e, orig.zh) &&
+      getMatchCount(e, dest.zh) > 0
+  );
+
+  const correctDest = getClosestStr(dest.zh, correctDestList);
+
+  // console.log(destList);
+  // console.log(correctDestList);
+  // console.log(correctDest);
+
+  stopId === "002918" && console.log(data);
 
   return data
     .filter(
@@ -33,6 +75,7 @@ export const fetchNwfbCtbEtas = async ({ co, stopId, route, bound, dest }) => {
         eta: e.eta,
         rmk_tc: e.rmk_tc,
         stopId,
+        seq: e.seq,
       };
     });
 };

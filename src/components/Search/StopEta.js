@@ -48,7 +48,7 @@ export const StopEta = ({
         {eta.length !== 0 ? (
           eta.map((e, i) => {
             return (
-              <div key={i} className="eta">
+              <div key={i} className="eta" title={e.seq}>
                 {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
                 {/* <br />
               {etaTimeConverter(e.eta, e.rmk_tc).remarkStr} */}

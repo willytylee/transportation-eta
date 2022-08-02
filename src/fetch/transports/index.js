@@ -6,7 +6,7 @@ export const fetchEtas = async ({
   bound,
   co,
   dest,
-  gtfsId,
+  orig,
   route,
   serviceType,
   seq,
@@ -26,6 +26,7 @@ export const fetchEtas = async ({
             await fetchKmbEtas({
               bound: bound[company_id],
               route,
+              seq,
               serviceType: serviceType ? serviceType : 1,
               stopId: _stopId,
             })
@@ -41,7 +42,9 @@ export const fetchEtas = async ({
               bound: bound[company_id],
               co: company_id,
               dest,
+              orig,
               route,
+              seq,
               stopId: _stopId,
             })
           );

@@ -29,9 +29,16 @@ export const News = () => {
               >
                 <ListItemText
                   primary={e.title}
-                  secondary={moment
-                    .unix(e.display_ts)
-                    .format("YYYY年MM月DD日 HH:mm")}
+                  secondary={
+                    <>
+                      <div className="date">
+                        {moment.unix(e.display_ts).format("MM月DD日 HH:mm")}
+                      </div>
+                      <div className="content">
+                        {e.preview_content.replace(/【(.*?)】/g, "")}
+                      </div>
+                    </>
+                  }
                 />
               </ListItemButton>
             </ListItem>
@@ -51,7 +58,12 @@ const ListRoot = styled(List)({
       fontSize: "14px",
     },
     ".MuiListItemText-secondary": {
-      fontSize: "12px",
+      ".date": {
+        fontSize: "10px",
+      },
+      ".content": {
+        fontSize: "12px",
+      },
     },
   },
 });

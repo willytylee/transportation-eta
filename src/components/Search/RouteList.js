@@ -61,6 +61,7 @@ export const RouteList = ({ route }) => {
         variant="outlined"
       >
         <div
+          title={JSON.stringify(e.bound)}
           className={`routeTitle ${
             isMatchCurrRoute(currRoute, e) ? "matched" : ""
           }`}

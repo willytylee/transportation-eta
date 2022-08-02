@@ -46,14 +46,6 @@ export const StopList = ({ route }) => {
       setStopList(
         expandStopIdList.map((e) => ({ ...gStopList[e], stopId: e }))
       );
-    }
-  }, [currRoute]);
-
-  // When the route list is clicked and location is changed
-  useEffect(() => {
-    if (Object.keys(currRoute).length !== 0) {
-      const companyId = getCoPriorityId(currRoute);
-      const expandStopIdList = currRoute.stops[companyId];
 
       setClosestStopId(
         expandStopIdList.reduce((prev, curr) => {
@@ -79,7 +71,7 @@ export const StopList = ({ route }) => {
         })
       );
     }
-  }, [currRoute, currentLocation.lat, currentLocation.lng]);
+  }, [currRoute]);
 
   return (
     <StopListRoot>

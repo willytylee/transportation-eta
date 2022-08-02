@@ -39,29 +39,6 @@ export const getLocalStorage = (key) => {
   }
 };
 
-const getMatchCount = (str1, str2) => {
-  let count = 0;
-  const obj = str2.split("");
-  for (const str of str1) {
-    let idx = obj.findIndex((s) => s === str);
-    if (idx >= 0) {
-      count++;
-      obj.splice(idx, 1);
-    }
-  }
-  return count;
-};
-
-export const getClosestStr = (str, strArr) => {
-  const countArr = [];
-  strArr.forEach((e, i) => {
-    countArr[i] = getMatchCount(str, e);
-  });
-  const max = Math.max(...countArr);
-  const idx = countArr.indexOf(max);
-  return strArr[idx];
-};
-
 export const sortEtaObj = (etaObjArr) => {
   etaObjArr.sort((a, b) => {
     if (a.eta === "" || a.eta === null) {
@@ -74,6 +51,36 @@ export const sortEtaObj = (etaObjArr) => {
   });
 
   return etaObjArr;
+};
+
+export const isValEqualInArr = (arr, key) => {
+  return arr.every((e) => {
+    if (e[key] === arr[0][key]) {
+      return true;
+    }
+  });
+};
+
+export const findNearestNum = (target, arr) => {
+  return arr.reduce((a, b) => {
+    let aDiff = Math.abs(a - target);
+    let bDiff = Math.abs(b - target);
+
+    if (aDiff == bDiff) {
+      return a > b ? a : b;
+    } else {
+      return bDiff < aDiff ? b : a;
+    }
+  });
+};
+
+export const getUniqueValFromArr = (arr, key) => {
+  return arr.reduce((prev, curr) => {
+    if (!prev.includes(curr[key])) {
+      prev.push(curr[key]);
+    }
+    return prev;
+  }, []);
 };
 
 export const getHeatIndex = (temperature, humidity) => {
