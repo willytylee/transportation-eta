@@ -1,14 +1,7 @@
 import { useState, useEffect } from "react";
 import moment from "moment";
 import { fetchNews } from "../fetch/News";
-import {
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Divider,
-  styled,
-} from "@mui/material/";
+import { List, ListItem, ListItemText, Divider, styled } from "@mui/material/";
 
 export const News = () => {
   const [news, setNews] = useState([]);
@@ -16,31 +9,44 @@ export const News = () => {
     fetchNews().then((response) => setNews(response));
   }, []);
 
+  const timeFromNowConverter = (display) => {
+    moment.updateLocale("en", {
+      relativeTime: {
+        past: "%s前",
+        s: "幾秒",
+        ss: "%d秒",
+        m: "1分鐘",
+        mm: "%d分鐘",
+        h: "1小時",
+        hh: "%d小時",
+        d: "1日",
+        dd: "%d日",
+      },
+    });
+
+    return moment.unix(display).fromNow();
+  };
+
   return (
     <ListRoot>
       {news.map((e) => {
+        console.log();
         return (
           <div key={e.content_id}>
             <ListItem disablePadding>
-              <ListItemButton
-                component={"a"}
-                href={`https://www.881903.com/news/traffic/${e.item_id}`}
-                target="_blank"
-              >
-                <ListItemText
-                  primary={e.title}
-                  secondary={
-                    <>
-                      <div className="date">
-                        {moment.unix(e.display_ts).format("MM月DD日 HH:mm")}
-                      </div>
-                      <div className="content">
-                        {e.preview_content.replace(/【(.*?)】/g, "")}
-                      </div>
-                    </>
-                  }
-                />
-              </ListItemButton>
+              <ListItemText
+                primary={e.title}
+                secondary={
+                  <span className="secondary">
+                    <span className="date">
+                      {timeFromNowConverter(e.display_ts)}
+                    </span>
+                    <span className="content">
+                      {e.preview_content.replace(/【(.*?)】/g, "")}
+                    </span>
+                  </span>
+                }
+              />
             </ListItem>
             <Divider />
           </div>
@@ -54,10 +60,13 @@ const ListRoot = styled(List)({
   overflow: "auto",
   ".MuiListItemText-root": {
     margin: 0,
+    padding: "8px 16px",
     ".MuiListItemText-primary": {
       fontSize: "14px",
     },
-    ".MuiListItemText-secondary": {
+    ".secondary": {
+      display: "flex",
+      flexDirection: "column",
       ".date": {
         fontSize: "10px",
       },

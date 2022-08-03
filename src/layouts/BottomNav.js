@@ -1,16 +1,24 @@
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
-import { BottomNavigation, BottomNavigationAction } from "@mui/material/";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Badge,
+  IconButton,
+} from "@mui/material/";
 import {
   DirectionsBus as DirectionsBusIcon,
   Settings as SettingsIcon,
   Thermostat as ThermostatIcon,
   Favorite as FavoriteIcon,
   Announcement as AnnouncementIcon,
+  Close as CloseIcon,
 } from "@mui/icons-material";
+import { AppContext } from "../context/AppContext";
 
 export const BottomNav = () => {
+  const { appVersion, serVersion } = useContext(AppContext);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const handleOnChange = useCallback(
@@ -60,7 +68,19 @@ export const BottomNav = () => {
         <BottomNavigationAction label="交通消息" icon={<AnnouncementIcon />} />
         <BottomNavigationAction label="收藏" icon={<FavoriteIcon />} />
         <BottomNavigationAction label="天氣" icon={<ThermostatIcon />} />
-        <BottomNavigationAction label="設定" icon={<SettingsIcon />} />
+        <BottomNavigationAction
+          label="設定"
+          icon={
+            <Badge
+              color="primary"
+              variant="dot"
+              overlap="circular"
+              invisible={appVersion === serVersion}
+            >
+              <SettingsIcon />
+            </Badge>
+          }
+        />
       </BottomNavigation>
     </>
   );

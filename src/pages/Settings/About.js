@@ -7,17 +7,20 @@ import {
   Avatar,
   Divider,
   styled,
+  ListSubheader,
 } from "@mui/material/";
 import {
   DepartureBoard as DepartureBoardIcon,
   WbSunny as WbSunnyIcon,
   RampRight as RampRightIcon,
+  Announcement as AnnouncementIcon,
 } from "@mui/icons-material";
 import AppIcon from "../../assets/icons/publicTransport.png";
 
 export const About = () => {
   return (
     <ListRoot>
+      <ListSubheader>第三方資料來源</ListSubheader>
       <ListItem disablePadding className="listItemAppIcon">
         <ListItemButton
           component={"a"}
@@ -88,11 +91,32 @@ export const About = () => {
           />
         </ListItemButton>
       </ListItem>
+      <ListItem disablePadding>
+        <ListItemButton
+          component={"a"}
+          href={`https://www.881903.com/news/traffic`}
+          target="_blank"
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <AnnouncementIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary="交通消息來源"
+            secondary={"商業電台 881903  https://www.881903.com/"}
+          />
+        </ListItemButton>
+      </ListItem>
     </ListRoot>
   );
 };
 
 const ListRoot = styled(List)({
+  ".MuiListSubheader-root": {
+    lineHeight: "18px",
+    paddingTop: "20px",
+  },
   ".listItemAppIcon": {
     ".MuiAvatar-root": {
       background: "#ffef41",

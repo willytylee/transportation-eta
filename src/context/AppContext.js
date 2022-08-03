@@ -1,6 +1,7 @@
 import { createContext, useState, useMemo, useCallback } from "react";
 import { compress as compressJson } from "lzutf8-light";
 import axios from "axios";
+import { fetchVersion } from "../fetch/Version";
 
 export const AppContext = createContext();
 
@@ -12,6 +13,8 @@ export const AppProvider = ({ children }) => {
     lng: 114.186484,
   });
   const [currRoute, setCurrRoute] = useState({});
+  const [appVersion, setAppVersion] = useState("");
+  const [serVersion, setSerVersion] = useState("");
 
   const getGeoLocation = useCallback(() => {
     const success = (position) => {
@@ -26,6 +29,21 @@ export const AppProvider = ({ children }) => {
 
   const updateCurrRoute = useCallback((route) => {
     setCurrRoute(route);
+  });
+
+  const initAppVersion = useCallback(() => {
+    fetchVersion().then((version) => {
+      setAppVersion(version);
+    });
+
+    const intervalContent = async () => {
+      fetchVersion().then((version) => {
+        setSerVersion(version);
+      });
+    };
+
+    intervalContent();
+    setInterval(intervalContent, 10000);
   });
 
   const initDb = useCallback(() => {
@@ -68,8 +86,21 @@ export const AppProvider = ({ children }) => {
       getGeoLocation,
       currRoute,
       updateCurrRoute,
+      initAppVersion,
+      appVersion,
+      serVersion,
     }),
-    [dbVersion, location, initDb, getGeoLocation, currRoute, updateCurrRoute]
+    [
+      dbVersion,
+      location,
+      initDb,
+      getGeoLocation,
+      currRoute,
+      updateCurrRoute,
+      initAppVersion,
+      appVersion,
+      serVersion,
+    ]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -4,14 +4,20 @@
 html {
   height: 100%;
   font-family: "Noto Sans", sans-serif;
+  overscroll-behavior-y: contain;
+  overflow-x: hidden;
 }
 body {
   margin: 0;
   height: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 #root {
   display: flex;
   height: 100%;
+  width: 100%;
   flex-direction: column;
   justify-content: space-between;
 }

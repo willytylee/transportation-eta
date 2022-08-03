@@ -62,8 +62,6 @@ export const fetchNwfbCtbEtas = async ({
   // console.log(correctDestList);
   // console.log(correctDest);
 
-  stopId === "002918" && console.log(data);
-
   return data
     .filter(
       (e) =>

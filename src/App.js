@@ -13,14 +13,15 @@ import { About } from "./pages/Settings/About";
 // import { Tutorial } from "./pages/Settings/Tutorial";
 import { Install } from "./pages/Settings/Install";
 import { News } from "./pages/News";
+import { Map } from "./pages/Map";
 
 const App = () => {
-  const { initDb } = useContext(AppContext);
-  const { getGeoLocation } = useContext(AppContext);
+  const { initDb, getGeoLocation, initAppVersion } = useContext(AppContext);
 
   useEffect(() => {
     getGeoLocation();
     initDb();
+    initAppVersion();
   }, []);
 
   return (
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/settings" element={<Settings />} />
           <Route path="/settings/about" element={<About />} />
           <Route path="/settings/install" element={<Install />} />
+          <Route path="/map" element={<Map />} />
         </Routes>
       </Container>
       <BottomNav />

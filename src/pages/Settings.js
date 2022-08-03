@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   List,
   ListItem,
@@ -7,6 +7,7 @@ import {
   ListItemAvatar,
   Avatar,
   Divider,
+  Badge,
 } from "@mui/material/";
 import { useNavigate } from "react-router-dom";
 import {
@@ -18,8 +19,11 @@ import {
   Source as SourceIcon,
 } from "@mui/icons-material";
 import { SelectUserDialog } from "../components/SelectUserDialog";
+import { fetchVersion } from "../fetch/Version";
+import { AppContext } from "../context/AppContext";
 
 export const Settings = () => {
+  const { appVersion, serVersion } = useContext(AppContext);
   const [slctUsrDialogOpen, setslctUsrDialogOpen] = useState(false);
   const navigate = useNavigate();
   const handleslctUsrDialogOnClose = ({ userId, username }) => {
@@ -55,11 +59,38 @@ export const Settings = () => {
         <ListItem disablePadding>
           <ListItemButton onClick={() => window.location.reload()}>
             <ListItemAvatar>
-              <Avatar>
-                <UpdateIcon />
-              </Avatar>
+              <Badge
+                color="primary"
+                badgeContent=" "
+                overlap="circular"
+                invisible={appVersion === serVersion}
+                sx={{
+                  [".MuiBadge-badge "]: {
+                    minWidth: "14px",
+                    height: "14px",
+                  },
+                }}
+              >
+                <Avatar>
+                  <UpdateIcon />
+                </Avatar>
+              </Badge>
             </ListItemAvatar>
-            <ListItemText primary="更新應用程式" />
+            <ListItemText
+              primary={"更新應用程式"}
+              secondary={
+                <span>
+                  {appVersion === serVersion ? (
+                    <span>目前為最新版本: {appVersion}</span>
+                  ) : (
+                    <span>
+                      目前版本: {appVersion} <br />
+                      最新版本: {serVersion}
+                    </span>
+                  )}
+                </span>
+              }
+            />
           </ListItemButton>
         </ListItem>
         <Divider />
