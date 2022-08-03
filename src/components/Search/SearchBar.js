@@ -11,7 +11,7 @@ export const SearchBar = ({
   setAnchorEl,
   divRef,
 }) => {
-  const { dbVersion } = useContext(AppContext);
+  const { dbVersion, currRoute } = useContext(AppContext);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const textInput = useRef(null);
 
@@ -43,8 +43,10 @@ export const SearchBar = ({
           <SearchIcon />
         </IconButton>
       </div>
-      {/* <IconButton
-        className="mapIconButton"
+      <IconButton
+        className={`mapIconButton ${
+          Object.keys(currRoute).length === 0 ? "hide" : ""
+        }`}
         onClick={() => setMapDialogOpen(true)}
       >
         <MapIcon />
@@ -53,7 +55,7 @@ export const SearchBar = ({
         fullWidth
         mapDialogOpen={mapDialogOpen}
         handleMapDialogOnClose={handleMapDialogOnClose}
-      /> */}
+      />
     </SearchBarWraper>
   );
 };
@@ -76,5 +78,8 @@ const SearchBarWraper = styled("div")({
   ".mapIconButton": {
     position: "absolute",
     right: 0,
+    "&.hide": {
+      display: "none",
+    },
   },
 });

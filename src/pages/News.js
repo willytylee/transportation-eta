@@ -30,7 +30,6 @@ export const News = () => {
   return (
     <ListRoot>
       {news.map((e) => {
-        console.log();
         return (
           <div key={e.content_id}>
             <ListItem disablePadding>

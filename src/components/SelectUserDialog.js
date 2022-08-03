@@ -1,5 +1,15 @@
 import { useState } from "react";
-import { Dialog, List, ListItem, ListItemText, styled } from "@mui/material/";
+import {
+  Dialog,
+  List,
+  ListItem,
+  ListItemText,
+  styled,
+  Grid,
+  IconButton,
+  DialogTitle,
+} from "@mui/material/";
+import { Close as CloseIcon } from "@mui/icons-material";
 import PinInput from "react-pin-input";
 import { dataSet } from "../data/DataSet";
 
@@ -56,7 +66,15 @@ export const SelectUserDialog = ({
     >
       {Object.keys(selectedUser).length === 0 ? (
         <>
-          <div className="title">請選擇用戶:</div>
+          <DialogTitle className="dialogTitle">
+            <Grid>
+              <div className="title">請選擇用戶:</div>
+              <IconButton onClick={() => handleDialogOnClose()}>
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+          </DialogTitle>
+
           <List sx={{ pt: 0 }}>
             {dataSet
               .filter((e) => e.display)
@@ -97,10 +115,18 @@ export const SelectUserDialog = ({
 const DialogRoot = styled(Dialog, {
   shouldForwardProp: (prop) => prop !== "isPinValid",
 })(({ isPinValid }) => ({
-  ".title": {
-    padding: "16px",
-    fontWeight: "900",
-    fontSize: "18px",
+  ".dialogTitle": {
+    padding: "0",
+    ".MuiGrid-root": {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      ".title": {
+        padding: "16px",
+        fontWeight: "900",
+        fontSize: "18px",
+      },
+    },
   },
   ".pincode-input-container": {
     display: "flex",

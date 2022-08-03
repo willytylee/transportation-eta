@@ -8,11 +8,12 @@ import { coPriority } from "../../constants/Bus";
 
 export const StopList = ({ route }) => {
   const [stopList, setStopList] = useState([]);
-  const [closestStopId, setClosestStopId] = useState("");
   const {
     dbVersion,
     location: currentLocation,
     currRoute,
+    closestStopId,
+    updateClosestStopId,
   } = useContext(AppContext);
 
   const gStopList = useMemo(() => {
@@ -47,29 +48,29 @@ export const StopList = ({ route }) => {
         expandStopIdList.map((e) => ({ ...gStopList[e], stopId: e }))
       );
 
-      setClosestStopId(
-        expandStopIdList.reduce((prev, curr) => {
-          const prevDistance = getPreciseDistance(
-            {
-              latitude: gStopList[prev].location.lat,
-              longitude: gStopList[prev].location.lng,
-            },
-            { latitude: currentLocation.lat, longitude: currentLocation.lng }
-          );
-          const currDistance = getPreciseDistance(
-            {
-              latitude: gStopList[curr].location.lat,
-              longitude: gStopList[curr].location.lng,
-            },
-            { latitude: currentLocation.lat, longitude: currentLocation.lng }
-          );
+      const _closestStopId = expandStopIdList.reduce((prev, curr) => {
+        const prevDistance = getPreciseDistance(
+          {
+            latitude: gStopList[prev].location.lat,
+            longitude: gStopList[prev].location.lng,
+          },
+          { latitude: currentLocation.lat, longitude: currentLocation.lng }
+        );
+        const currDistance = getPreciseDistance(
+          {
+            latitude: gStopList[curr].location.lat,
+            longitude: gStopList[curr].location.lng,
+          },
+          { latitude: currentLocation.lat, longitude: currentLocation.lng }
+        );
 
-          if (prevDistance < currDistance) {
-            return prev;
-          }
-          return curr;
-        })
-      );
+        if (prevDistance < currDistance) {
+          return prev;
+        }
+        return curr;
+      });
+
+      updateClosestStopId(_closestStopId);
     }
   }, [currRoute]);
 

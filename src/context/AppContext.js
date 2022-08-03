@@ -15,6 +15,7 @@ export const AppProvider = ({ children }) => {
   const [currRoute, setCurrRoute] = useState({});
   const [appVersion, setAppVersion] = useState("");
   const [serVersion, setSerVersion] = useState("");
+  const [closestStopId, setClosestStopId] = useState("");
 
   const getGeoLocation = useCallback(() => {
     const success = (position) => {
@@ -31,6 +32,10 @@ export const AppProvider = ({ children }) => {
     setCurrRoute(route);
   });
 
+  const updateClosestStopId = useCallback((closestStopId) => {
+    setClosestStopId(closestStopId);
+  });
+
   const initAppVersion = useCallback(() => {
     fetchVersion().then((version) => {
       setAppVersion(version);
@@ -43,7 +48,7 @@ export const AppProvider = ({ children }) => {
     };
 
     intervalContent();
-    setInterval(intervalContent, 10000);
+    setInterval(intervalContent, 60000);
   });
 
   const initDb = useCallback(() => {
@@ -89,6 +94,8 @@ export const AppProvider = ({ children }) => {
       initAppVersion,
       appVersion,
       serVersion,
+      closestStopId,
+      updateClosestStopId,
     }),
     [
       dbVersion,
@@ -100,6 +107,8 @@ export const AppProvider = ({ children }) => {
       initAppVersion,
       appVersion,
       serVersion,
+      closestStopId,
+      updateClosestStopId,
     ]
   );
 

@@ -6,6 +6,7 @@ import {
   BottomNavigationAction,
   Badge,
   IconButton,
+  styled,
 } from "@mui/material/";
 import {
   DirectionsBus as DirectionsBusIcon,
@@ -56,37 +57,37 @@ export const BottomNav = () => {
   );
 
   return (
-    <>
-      <BottomNavigation
-        sx={navigationSx}
-        showLabels
-        onChange={(e, value) => {
-          handleOnChange(value);
-        }}
-      >
-        <BottomNavigationAction label="路線搜尋" icon={<DirectionsBusIcon />} />
-        <BottomNavigationAction label="交通消息" icon={<AnnouncementIcon />} />
-        <BottomNavigationAction label="收藏" icon={<FavoriteIcon />} />
-        <BottomNavigationAction label="天氣" icon={<ThermostatIcon />} />
-        <BottomNavigationAction
-          label="設定"
-          icon={
-            <Badge
-              color="primary"
-              variant="dot"
-              overlap="circular"
-              invisible={appVersion === serVersion}
-            >
-              <SettingsIcon />
-            </Badge>
-          }
-        />
-      </BottomNavigation>
-    </>
+    <BottomNavigationRoot
+      showLabels
+      onChange={(e, value) => {
+        handleOnChange(value);
+      }}
+    >
+      <BottomNavigationAction label="路線搜尋" icon={<DirectionsBusIcon />} />
+      <BottomNavigationAction label="交通消息" icon={<AnnouncementIcon />} />
+      <BottomNavigationAction label="收藏" icon={<FavoriteIcon />} />
+      <BottomNavigationAction label="天氣" icon={<ThermostatIcon />} />
+      <BottomNavigationAction
+        label="設定"
+        icon={
+          <Badge
+            color="primary"
+            variant="dot"
+            overlap="circular"
+            invisible={appVersion === serVersion}
+          >
+            <SettingsIcon />
+          </Badge>
+        }
+      />
+    </BottomNavigationRoot>
   );
 };
 
-const navigationSx = {
+const BottomNavigationRoot = styled(BottomNavigation)({
   width: "100%",
   backgroundColor: "#f9f9f9",
-};
+  ".MuiButtonBase-root": {
+    padding: 0,
+  },
+});
