@@ -16,9 +16,7 @@ export const StopList = ({ route }) => {
     updateClosestStopId,
   } = useContext(AppContext);
 
-  const gStopList = useMemo(() => {
-    return getLocalStorage("stopList");
-  }, [dbVersion]);
+  const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
 
   const getCoPriorityId = (currRoute) => {
     let companyId = "";

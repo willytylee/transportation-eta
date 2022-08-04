@@ -8,9 +8,7 @@ export const RouteList = ({ route }) => {
   const [routeList, setRouteList] = useState([]);
   const { dbVersion, updateCurrRoute, currRoute } = useContext(AppContext);
 
-  const gRouteList = useMemo(() => {
-    return getLocalStorage("routeList");
-  }, [dbVersion]);
+  const gRouteList = useMemo(() => getLocalStorage("routeList"), [dbVersion]);
 
   const handleCardOnClick = (i) => {
     const expandRoute = routeList[i];

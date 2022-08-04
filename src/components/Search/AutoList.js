@@ -18,13 +18,8 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
     setAnchorEl(null);
   };
 
-  const gRouteList = useMemo(() => {
-    return getLocalStorage("routeList");
-  }, [dbVersion]);
-
-  const gStopList = useMemo(() => {
-    return getLocalStorage("stopList");
-  }, [dbVersion]);
+  const gRouteList = useMemo(() => getLocalStorage("routeList"), [dbVersion]);
+  const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
 
   const sortByRoute = (a, b) => {
     const routeA = parseInt(a.route.replace(/\D/g, ""));

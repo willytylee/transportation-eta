@@ -9,13 +9,8 @@ export const PersonalEta = ({ userId }) => {
   const [data, setData] = useState([]);
   const { dbVersion } = useContext(AppContext);
 
-  const gStopList = useMemo(() => {
-    return getLocalStorage("stopList");
-  }, [dbVersion]);
-
-  const gRouteList = useMemo(() => {
-    return getLocalStorage("routeList");
-  }, [dbVersion]);
+  const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
+  const gRouteList = useMemo(() => getLocalStorage("routeList"), [dbVersion]);
 
   useEffect(() => {
     setData(dataSet.find((o) => o.userId === userId));
