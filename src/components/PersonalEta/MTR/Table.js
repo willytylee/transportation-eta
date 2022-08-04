@@ -3,11 +3,11 @@ import { styled } from "@mui/material";
 
 export const Table = ({ data, dir }) => {
   return (
-    <MTRTable>
+    <>
       {data[dir]?.dest && data.direction.includes(dir) && (
-        <div className="etaWrapper">
+        <MTRTable>
           <div className="arriveText">
-            → <span className="dest">{data[dir].dest}</span> 到站時間:
+            → <span className="dest">{data[dir].dest}</span>
           </div>
           <div className="ttntWrapper">
             {data[dir].ttnts
@@ -18,9 +18,9 @@ export const Table = ({ data, dir }) => {
               ))
               .slice(0, 3)}
           </div>
-        </div>
+        </MTRTable>
       )}
-    </MTRTable>
+    </>
   );
 };
 
@@ -28,23 +28,22 @@ const MTRTable = styled("div")({
   fontSize: "12px",
   width: "100%",
   padding: "2px 0",
-  ".etaWrapper": {
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "space-between",
+  ".arriveText": {
+    width: "20%",
+    ".dest": {
+      fontWeight: "900",
+    },
+  },
+  ".ttntWrapper": {
+    width: "60%",
     display: "flex",
     flexDirection: "row",
-    ".arriveText": {
-      width: "40%",
-      ".dest": {
-        fontWeight: "900",
-      },
-    },
-    ".ttntWrapper": {
-      width: "60%",
-      display: "flex",
-      flexDirection: "row",
-      ".ttnt": {
-        width: "33.33%",
-        fontSize: "12px",
-      },
+    ".ttnt": {
+      width: "33.33%",
+      fontSize: "12px",
     },
   },
 });

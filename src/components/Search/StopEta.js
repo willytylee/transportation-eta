@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
 import { styled } from "@mui/material";
 import { etaTimeConverter } from "../../Utils";
-import { fetchEtas } from "../../fetch/transports";
+import { useEtas } from "../../hooks/Etas";
 
 export const StopEta = ({
   seq,
@@ -13,25 +12,8 @@ export const StopEta = ({
   routeObj,
   isClosestStop,
 }) => {
-  const [eta, setEta] = useState([{ eta: "loading" }]);
-
-  useEffect(() => {
-    setEta([{ eta: "loading" }]);
-    const intervalContent = () => {
-      fetchEtas({
-        ...routeObj,
-        seq: parseInt(seq, 10),
-      }).then((response) => setEta(response.slice(0, 3)));
-    };
-
-    intervalContent();
-
-    const interval = setInterval(intervalContent, 5000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [routeObj, seq]);
+  // const [eta, setEta] = useState([{ eta: "loading" }]);
+  const eta = useEtas({ seq, routeObj });
 
   return (
     <StopEtaRoot className={isClosestStop ? "highlighted" : ""}>

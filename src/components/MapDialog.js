@@ -1,10 +1,11 @@
-import { useContext, useMemo, useEffect, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import L from "leaflet";
 import {
   Close as CloseIcon,
   MyLocation as MyLocationIcon,
   ArrowForwardIos as ArrowForwardIosIcon,
   ArrowBackIosNew as ArrowBackIosNewIcon,
+  PersonPinCircle as PersonPinCircleIcon,
 } from "@mui/icons-material";
 import {
   DialogTitle,
@@ -16,8 +17,9 @@ import {
 } from "@mui/material";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { AppContext } from "../context/AppContext";
-import { getActualCoIds, getLocalStorage } from "../Utils";
+import { etaTimeConverter, getActualCoIds, getLocalStorage } from "../Utils";
 import { companyMap } from "../constants/Bus";
+import { useEtas } from "../hooks/Etas";
 
 export const MapDialog = ({
   mapDialogOpen,
@@ -31,6 +33,7 @@ export const MapDialog = ({
     location: currentLocation,
   } = useContext(AppContext);
   const [selectedStopIdx, setSelectedStopIdx] = useState(-1);
+  const eta = useEtas({ seq: selectedStopIdx + 1, routeObj: currRoute });
 
   const handleDialogOnClose = () => {
     setSelectedStopIdx(-1);
@@ -47,11 +50,11 @@ export const MapDialog = ({
     (e) => e === closestStopId
   );
 
-  const NavigationButton = () => {
+  const NavigationBtn = () => {
     const map = useMap();
 
     return (
-      <Avatar className="navButtonAvatar">
+      <Avatar className="navBtnAvatar">
         <IconButton
           onClick={() => {
             map.flyTo([currentLocation.lat, currentLocation.lng], 18);
@@ -63,7 +66,29 @@ export const MapDialog = ({
     );
   };
 
-  const PrevStopButton = () => {
+  const ClosestStopBtn = () => {
+    const map = useMap();
+
+    const handleIconOnClick = () => {
+      const closestStop = gStopList[currRouteStopList[closestStopIdx]];
+      map.flyTo([closestStop.location.lat, closestStop.location.lng], 18);
+      setSelectedStopIdx(closestStopIdx);
+    };
+
+    return (
+      <Avatar className="closestStopBtnAvatar">
+        <IconButton
+          onClick={() => {
+            handleIconOnClick();
+          }}
+        >
+          <PersonPinCircleIcon />
+        </IconButton>
+      </Avatar>
+    );
+  };
+
+  const PrevStopBtn = () => {
     const map = useMap();
 
     const handleIconOnClick = () => {
@@ -74,7 +99,9 @@ export const MapDialog = ({
     };
 
     return (
-      <Avatar className="prevButtonAvatar">
+      <Avatar
+        className={`prevBtnAvatar ${selectedStopIdx === 0 ? "disabled" : ""}`}
+      >
         <IconButton
           disabled={selectedStopIdx === 0}
           onClick={() => {
@@ -87,7 +114,7 @@ export const MapDialog = ({
     );
   };
 
-  const NextStopButton = () => {
+  const NextStopBtn = () => {
     const map = useMap();
 
     const handleIconOnClick = () => {
@@ -98,7 +125,11 @@ export const MapDialog = ({
     };
 
     return (
-      <Avatar className="nextButtonAvatar">
+      <Avatar
+        className={`nextBtnAvatar ${
+          selectedStopIdx === currRouteStopList.length - 1 ? "disabled" : ""
+        }`}
+      >
         <IconButton
           disabled={selectedStopIdx === currRouteStopList.length - 1}
           onClick={() => {
@@ -123,8 +154,6 @@ export const MapDialog = ({
     className: "currLocationMarker",
   });
 
-  console.log(selectedStopIdx);
-
   return (
     <DialogRoot
       onClose={() => {
@@ -138,8 +167,8 @@ export const MapDialog = ({
         <>
           <DialogTitle className="dialogTitle">
             <Grid>
-              <div>
-                <div className="title">
+              <div className="headerWrapper">
+                <div className="coRoute">
                   {getActualCoIds(currRoute)
                     .map((e, i) => {
                       return (
@@ -151,7 +180,7 @@ export const MapDialog = ({
                     .reduce((a, b) => [a, " + ", b])}{" "}
                   <span className="route">{currRoute.route}</span>
                 </div>
-                <div>
+                <div className="destSpecial">
                   {currRoute.orig?.zh} →{" "}
                   <span className="dest">{currRoute.dest?.zh}</span>{" "}
                   <span className="special">
@@ -159,8 +188,33 @@ export const MapDialog = ({
                     {parseInt(currRoute.serviceType, 10) !== 1 && "特別班次"}
                   </span>
                 </div>
+                {selectedStopIdx !== -1 && (
+                  <div className="stopDetail">
+                    <div className="stopName">
+                      {selectedStopIdx + 1}.{" "}
+                      {gStopList[currRouteStopList[selectedStopIdx]]?.name.zh}
+                    </div>
+                    <div className="etas">
+                      {eta.length !== 0 ? (
+                        eta.map((e, i) => {
+                          return (
+                            <div key={i} className="eta" title={e.seq}>
+                              {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
+                              {/* <br />{etaTimeConverter(e.eta, e.rmk_tc).remarkStr} */}
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div>沒有班次</div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
-              <IconButton onClick={() => handleDialogOnClose()}>
+              <IconButton
+                className="closeBtn"
+                onClick={() => handleDialogOnClose()}
+              >
                 <CloseIcon />
               </IconButton>
             </Grid>
@@ -197,13 +251,12 @@ export const MapDialog = ({
             <Marker
               position={[currentLocation.lat, currentLocation.lng]}
               icon={myIcon}
-            >
-              <Popup>You are here</Popup>
-            </Marker>
+            ></Marker>
 
-            <PrevStopButton />
-            <NextStopButton />
-            <NavigationButton />
+            <PrevStopBtn />
+            <NextStopBtn />
+            <NavigationBtn />
+            <ClosestStopBtn />
           </MapContainer>
         </>
       )}
@@ -218,77 +271,106 @@ const DialogRoot = styled(Dialog)({
     width: "calc(100% - 32px)",
     margin: 0,
     ".dialogTitle": {
-      padding: "4px 0 4px 8px",
+      padding: "4px 8px",
       ".MuiGrid-root": {
         display: "flex",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "space-between",
         fontSize: "14px",
-        ".route": {
-          fontWeight: "900",
+        ".closeBtn": {
+          position: "absolute",
+          right: 0,
         },
-        ".kmb": {
-          color: "#DD1E2F",
-        },
-        ".nwfb": {
-          color: "#857700",
-        },
-        ".ctb": {
-          color: "#6A42A7",
-        },
-        ".dest": {
-          fontWeight: 900,
-        },
-        ".special": {
-          fontSize: "12px",
+        ".headerWrapper": {
+          width: "100%",
+          ".coRoute": {
+            ".route": {
+              fontWeight: "900",
+            },
+            ".kmb": {
+              color: "#DD1E2F",
+            },
+            ".nwfb": {
+              color: "#857700",
+            },
+            ".ctb": {
+              color: "#6A42A7",
+            },
+          },
+          ".destSpecial": {
+            ".dest": {
+              fontWeight: 900,
+            },
+            ".special": {
+              fontSize: "12px",
+            },
+          },
+          ".stopDetail": {
+            display: "flex",
+            width: "100%",
+            alignItem: "center",
+            ".etas": {
+              display: "inline-flex",
+              flexWrap: "wrap",
+              gap: "12px",
+              flexGrow: "1",
+              justifyContent: "flex-end",
+            },
+          },
         },
       },
     },
     ".mapContainer": {
       height: "100%",
-      ".navButtonAvatar": {
+      ".leaflet-control-container": {
+        ".leaflet-top, .leaflet-bottom": {
+          willChange: "transform",
+          transform: "translate3d(0px, 0px, 0px)",
+        },
+      },
+      ".MuiAvatar-root": {
         position: "absolute",
         zIndex: "1001",
-        right: "10px",
-        bottom: "40px",
         backgroundColor: "white",
         border: "2px solid rgba(0,0,0,0.2)",
+        willChange: "transform",
+        transform: "translate3d(0px, 0px, 0px)",
+        "&.disabled": {
+          backgroundColor: "#f4f4f4",
+          ".MuiButtonBase-root": {
+            color: "#bbb",
+          },
+        },
         ".MuiButtonBase-root": {
           color: "black",
+        },
+        "&.navBtnAvatar": {
+          right: "10px",
+          bottom: "40px",
+        },
+        "&.prevBtnAvatar": {
+          top: "50%",
+          width: "35px",
+          height: "35px",
+          marginTop: "-35px", // equal to width and height
+          left: "10px",
+        },
+        "&.nextBtnAvatar": {
+          top: "50%",
+          width: "35px",
+          height: "35px",
+          marginTop: "-35px", // equal to width and height
+          right: "0",
+          right: "10px",
+        },
+        "&.closestStopBtnAvatar": {
+          right: "10px",
+          bottom: "90px",
         },
       },
       ".currLocationMarker": {
         border: "none",
         background: "none",
-      },
-      ".prevButtonAvatar": {
-        position: "absolute",
-        zIndex: "1001",
-        top: "50%",
-        width: "35px",
-        height: "35px",
-        marginTop: "-35px", // equal to width and height
-        backgroundColor: "white",
-        border: "2px solid rgba(0,0,0,0.2)",
-        left: "10px",
-        ".MuiButtonBase-root": {
-          color: "black",
-        },
-      },
-      ".nextButtonAvatar": {
-        position: "absolute",
-        zIndex: "1001",
-        top: "50%",
-        width: "35px",
-        height: "35px",
-        marginTop: "-35px", // equal to width and height
-        right: "0",
-        backgroundColor: "white",
-        border: "2px solid rgba(0,0,0,0.2)",
-        right: "10px",
-        ".MuiButtonBase-root": {
-          color: "black",
-        },
       },
     },
   },

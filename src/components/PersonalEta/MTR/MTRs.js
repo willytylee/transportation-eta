@@ -65,16 +65,28 @@ export const MTRs = ({ section }) => {
 
   return sectionData.map((e, i) => {
     return (
-      <div key={i}>
-        <Dest>{e.name}站</Dest>
-        {!e?.down?.dest && !e?.up?.dest && "已停站"}
-        <Table data={e} dir="down" />
-        <Table data={e} dir="up" />
-      </div>
+      <MTRRoot key={i}>
+        <div className="dest">{e.name}站</div>
+        <div className="etaGroupWrapper">
+          {!e?.down?.dest && !e?.up?.dest && "已停站"}
+          <Table data={e} dir="down" />
+          <Table data={e} dir="up" />
+        </div>
+      </MTRRoot>
     );
   });
 };
 
-const Dest = styled("div")({
-  fontSize: "12px",
+const MTRRoot = styled("div")({
+  display: "flex",
+  alignItems: "center",
+  ".dest": {
+    fontSize: "12px",
+    width: "15%",
+  },
+  ".etaGroupWrapper": {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: 1,
+  },
 });
