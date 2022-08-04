@@ -29,7 +29,7 @@ export const fetchNwfbCtbEtas = async ({
     return count;
   };
 
-  const getClosestStr = (str, strArr) => {
+  const getNearestStr = (str, strArr) => {
     const countArr = [];
     strArr.forEach((e, i) => {
       countArr[i] = getMatchCount(str, e);
@@ -56,7 +56,7 @@ export const fetchNwfbCtbEtas = async ({
       getMatchCount(e, dest.zh) > 0
   );
 
-  const correctDest = getClosestStr(dest.zh, correctDestList);
+  const correctDest = getNearestStr(dest.zh, correctDestList);
 
   // console.log(destList);
   // console.log(correctDestList);

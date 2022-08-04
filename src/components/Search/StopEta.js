@@ -10,13 +10,13 @@ export const StopEta = ({
     location: { lat, lng },
   },
   routeObj,
-  isClosestStop,
+  isNearestStop,
 }) => {
   // const [eta, setEta] = useState([{ eta: "loading" }]);
   const eta = useEtas({ seq, routeObj });
 
   return (
-    <StopEtaRoot className={isClosestStop ? "highlighted" : ""}>
+    <StopEtaRoot className={isNearestStop ? "highlighted" : ""}>
       <div className="seq">{seq}</div>
       <div className="stop">
         <a

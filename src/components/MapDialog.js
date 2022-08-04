@@ -29,7 +29,7 @@ export const MapDialog = ({
   const {
     dbVersion,
     currRoute,
-    closestStopId,
+    nearestStopId,
     location: currentLocation,
   } = useContext(AppContext);
   const [selectedStopIdx, setSelectedStopIdx] = useState(-1);
@@ -46,8 +46,8 @@ export const MapDialog = ({
     () => currRoute.stops && currRoute.stops[Object.keys(currRoute.stops)[0]],
     [currRoute]
   );
-  const closestStopIdx = currRouteStopList?.findIndex(
-    (e) => e === closestStopId
+  const nearestStopIdx = currRouteStopList?.findIndex(
+    (e) => e === nearestStopId
   );
 
   const NavigationBtn = () => {
@@ -66,17 +66,17 @@ export const MapDialog = ({
     );
   };
 
-  const ClosestStopBtn = () => {
+  const NearestStopBtn = () => {
     const map = useMap();
 
     const handleIconOnClick = () => {
-      const closestStop = gStopList[currRouteStopList[closestStopIdx]];
-      map.flyTo([closestStop.location.lat, closestStop.location.lng], 18);
-      setSelectedStopIdx(closestStopIdx);
+      const nearestStop = gStopList[currRouteStopList[nearestStopIdx]];
+      map.flyTo([nearestStop.location.lat, nearestStop.location.lng], 18);
+      setSelectedStopIdx(nearestStopIdx);
     };
 
     return (
-      <Avatar className="closestStopBtnAvatar">
+      <Avatar className="nearestStopBtnAvatar">
         <IconButton
           onClick={() => {
             handleIconOnClick();
@@ -92,7 +92,7 @@ export const MapDialog = ({
     const map = useMap();
 
     const handleIconOnClick = () => {
-      const idx = selectedStopIdx === -1 ? closestStopIdx + 1 : selectedStopIdx;
+      const idx = selectedStopIdx === -1 ? nearestStopIdx + 1 : selectedStopIdx;
       const prevStop = gStopList[currRouteStopList[idx - 1]];
       map.flyTo([prevStop.location.lat, prevStop.location.lng], 18);
       setSelectedStopIdx(idx - 1);
@@ -118,7 +118,7 @@ export const MapDialog = ({
     const map = useMap();
 
     const handleIconOnClick = () => {
-      const idx = selectedStopIdx === -1 ? closestStopIdx - 1 : selectedStopIdx;
+      const idx = selectedStopIdx === -1 ? nearestStopIdx - 1 : selectedStopIdx;
       const nextStop = gStopList[currRouteStopList[idx + 1]];
       map.flyTo([nextStop.location.lat, nextStop.location.lng], 18);
       setSelectedStopIdx(idx + 1);
@@ -256,7 +256,7 @@ export const MapDialog = ({
             <PrevStopBtn />
             <NextStopBtn />
             <NavigationBtn />
-            <ClosestStopBtn />
+            <NearestStopBtn />
           </MapContainer>
         </>
       )}
@@ -363,7 +363,7 @@ const DialogRoot = styled(Dialog)({
           right: "0",
           right: "10px",
         },
-        "&.closestStopBtnAvatar": {
+        "&.nearestStopBtnAvatar": {
           right: "10px",
           bottom: "90px",
         },

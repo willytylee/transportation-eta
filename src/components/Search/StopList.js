@@ -12,8 +12,8 @@ export const StopList = ({ route }) => {
     dbVersion,
     location: currentLocation,
     currRoute,
-    closestStopId,
-    updateClosestStopId,
+    nearestStopId,
+    updateNearestStopId,
   } = useContext(AppContext);
 
   const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
@@ -46,7 +46,7 @@ export const StopList = ({ route }) => {
         expandStopIdList.map((e) => ({ ...gStopList[e], stopId: e }))
       );
 
-      const _closestStopId = expandStopIdList.reduce((prev, curr) => {
+      const _nearestStopId = expandStopIdList.reduce((prev, curr) => {
         const prevDistance = getPreciseDistance(
           {
             latitude: gStopList[prev].location.lat,
@@ -68,7 +68,7 @@ export const StopList = ({ route }) => {
         return curr;
       });
 
-      updateClosestStopId(_closestStopId);
+      updateNearestStopId(_nearestStopId);
     }
   }, [currRoute]);
 
@@ -76,14 +76,14 @@ export const StopList = ({ route }) => {
     <StopListRoot>
       {Object.keys(currRoute).length !== 0 &&
         stopList?.map((e, i) => {
-          const isClosestStop = gStopList[closestStopId]?.name === e.name;
+          const isNearestStop = gStopList[nearestStopId]?.name === e.name;
           return (
             <StopEta
               key={i}
               seq={i + 1}
               routeObj={currRoute}
               stopObj={e}
-              isClosestStop={isClosestStop}
+              isNearestStop={isNearestStop}
             />
           );
         })}

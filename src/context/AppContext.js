@@ -15,7 +15,7 @@ export const AppProvider = ({ children }) => {
   const [currRoute, setCurrRoute] = useState({});
   const [appVersion, setAppVersion] = useState("");
   const [serVersion, setSerVersion] = useState("");
-  const [closestStopId, setClosestStopId] = useState("");
+  const [nearestStopId, setNearestStopId] = useState("");
 
   const getGeoLocation = useCallback(() => {
     const success = (position) => {
@@ -32,8 +32,8 @@ export const AppProvider = ({ children }) => {
     setCurrRoute(route);
   });
 
-  const updateClosestStopId = useCallback((closestStopId) => {
-    setClosestStopId(closestStopId);
+  const updateNearestStopId = useCallback((nearestStopId) => {
+    setNearestStopId(nearestStopId);
   });
 
   const initAppVersion = useCallback(() => {
@@ -94,8 +94,8 @@ export const AppProvider = ({ children }) => {
       initAppVersion,
       appVersion,
       serVersion,
-      closestStopId,
-      updateClosestStopId,
+      nearestStopId,
+      updateNearestStopId,
     }),
     [
       dbVersion,
@@ -107,8 +107,8 @@ export const AppProvider = ({ children }) => {
       initAppVersion,
       appVersion,
       serVersion,
-      closestStopId,
-      updateClosestStopId,
+      nearestStopId,
+      updateNearestStopId,
     ]
   );
 
