@@ -41,6 +41,7 @@ export const MapDialog = ({
     location: currentLocation,
   } = useContext(AppContext);
   const [selectedStopIdx, setSelectedStopIdx] = useState(-1);
+  // TODO: Not pass correct route to useEtas yet
   const eta = useEtas({ seq: selectedStopIdx + 1, routeObj: currRoute });
 
   const handleDialogOnClose = () => {

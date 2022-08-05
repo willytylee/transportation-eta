@@ -1,13 +1,15 @@
 import { useState, useEffect, useMemo, useContext } from "react";
 import { styled } from "@mui/material";
 import { getPreciseDistance } from "geolib";
-import { getLocalStorage } from "../../Utils";
+import { findCorrectBound, getLocalStorage } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
 import { StopEta } from "./StopEta";
 import { coPriority } from "../../constants/Bus";
+import { fetchNwfbCtbRouteStop } from "../../fetch/transports/NwfbCtb";
 
 export const StopList = ({ route }) => {
   const [stopList, setStopList] = useState([]);
+  const [correctBound, setCorrectBound] = useState("");
   const {
     dbVersion,
     location: currentLocation,
@@ -36,39 +38,66 @@ export const StopList = ({ route }) => {
 
   // When the currRoute in AppContext changed
   useEffect(() => {
+    setCorrectBound("");
+
     if (Object.keys(currRoute).length !== 0) {
       // Find the company Id which appear in currRoute.stops
 
-      const companyId = getCoPriorityId(currRoute);
-      const expandStopIdList = currRoute.stops[companyId];
+      const functionWrap = async () => {
+        const companyId = getCoPriorityId(currRoute);
+        const expandStopIdArr = currRoute.stops[companyId];
 
-      setStopList(
-        expandStopIdList.map((e) => ({ ...gStopList[e], stopId: e }))
-      );
+        if (
+          currRoute.bound[Object.keys(currRoute.bound)[0]].length > 1 &&
+          (Object.keys(currRoute.stops)[0] === "nwfb" ||
+            Object.keys(currRoute.stops)[0] === "ctb")
+        ) {
+          const result = await findCorrectBound({
+            expandStopIdArr,
+            currRoute,
+            companyId,
+          });
 
-      const _nearestStopId = expandStopIdList.reduce((prev, curr) => {
-        const prevDistance = getPreciseDistance(
-          {
-            latitude: gStopList[prev].location.lat,
-            longitude: gStopList[prev].location.lng,
-          },
-          { latitude: currentLocation.lat, longitude: currentLocation.lng }
-        );
-        const currDistance = getPreciseDistance(
-          {
-            latitude: gStopList[curr].location.lat,
-            longitude: gStopList[curr].location.lng,
-          },
-          { latitude: currentLocation.lat, longitude: currentLocation.lng }
-        );
-
-        if (prevDistance < currDistance) {
-          return prev;
+          console.log([result.scoreI, result.scoreO]);
+          setCorrectBound(result.scoreI > result.scoreO ? "I" : "O");
         }
-        return curr;
-      });
 
-      updateNearestStopId(_nearestStopId);
+        setStopList(
+          expandStopIdArr.map((e) => ({ ...gStopList[e], stopId: e }))
+        );
+
+        updateNearestStopId(
+          expandStopIdArr.reduce((prev, curr) => {
+            const prevDistance = getPreciseDistance(
+              {
+                latitude: gStopList[prev].location.lat,
+                longitude: gStopList[prev].location.lng,
+              },
+              {
+                latitude: currentLocation.lat,
+                longitude: currentLocation.lng,
+              }
+            );
+            const currDistance = getPreciseDistance(
+              {
+                latitude: gStopList[curr].location.lat,
+                longitude: gStopList[curr].location.lng,
+              },
+              {
+                latitude: currentLocation.lat,
+                longitude: currentLocation.lng,
+              }
+            );
+
+            if (prevDistance < currDistance) {
+              return prev;
+            }
+            return curr;
+          })
+        );
+      };
+
+      functionWrap();
     }
   }, [currRoute]);
 
@@ -84,6 +113,7 @@ export const StopList = ({ route }) => {
               routeObj={currRoute}
               stopObj={e}
               isNearestStop={isNearestStop}
+              bound={correctBound}
             />
           );
         })}

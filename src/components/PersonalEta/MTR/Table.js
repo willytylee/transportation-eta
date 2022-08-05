@@ -42,7 +42,7 @@ const MTRTable = styled("div")({
     },
   },
   ".ttntWrapper": {
-    width: "60%",
+    width: "53%",
     display: "flex",
     flexDirection: "row",
     ".ttnt": {

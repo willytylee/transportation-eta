@@ -29,22 +29,24 @@ export const RouteList = ({ route }) => {
   // When the route number is changed, update RouteList
   useEffect(() => {
     if (route) {
-      const _routeList = Object.keys(gRouteList)
-        .map((e) => gRouteList[e])
-        .filter((e) => {
-          return (
-            e.route === route &&
-            (e.co.includes("kmb") ||
-              e.co.includes("nwfb") ||
-              e.co.includes("ctb") ||
-              e.co.includes("mtr"))
-          );
-        })
-        .sort(
-          (a, b) => parseInt(a.serviceType, 10) - parseInt(b.serviceType, 10)
-        );
-
-      setRouteList(_routeList);
+      setRouteList(
+        Object.keys(gRouteList)
+          .map((e) => gRouteList[e])
+          .filter((e) => {
+            return (
+              (e.co.includes("kmb") ||
+                e.co.includes("nwfb") ||
+                e.co.includes("ctb") ||
+                e.co.includes("mtr")) &&
+              e.route === route &&
+              e.dest.en !== e.orig.en &&
+              e.dest.zh !== e.orig.zh
+            );
+          })
+          .sort(
+            (a, b) => parseInt(a.serviceType, 10) - parseInt(b.serviceType, 10)
+          )
+      );
     } else {
       setRouteList([]);
       updateCurrRoute({});

@@ -11,9 +11,9 @@ export const StopEta = ({
   },
   routeObj,
   isNearestStop,
+  bound,
 }) => {
-  // const [eta, setEta] = useState([{ eta: "loading" }]);
-  const eta = useEtas({ seq, routeObj });
+  const eta = useEtas({ seq, bound, routeObj });
 
   return (
     <StopEtaRoot className={isNearestStop ? "highlighted" : ""}>

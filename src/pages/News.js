@@ -6,7 +6,14 @@ import { List, ListItem, ListItemText, Divider, styled } from "@mui/material/";
 export const News = () => {
   const [news, setNews] = useState([]);
   useEffect(() => {
-    fetchNews().then((response) => setNews(response));
+    const intervalContent = () => {
+      fetchNews().then((response) => setNews(response));
+    };
+
+    intervalContent();
+    const interval = setInterval(intervalContent, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const timeFromNowConverter = (display) => {

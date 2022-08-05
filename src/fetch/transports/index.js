@@ -36,10 +36,16 @@ export const fetchEtas = async ({
         const _stopId = stopId
           ? stopId
           : seq && stops[company_id] && stops[company_id][seq - 1];
+
+        const _bound =
+          typeof bound === "string" || bound instanceof String
+            ? bound
+            : bound[company_id];
+
         if (_stopId) {
           etas = etas.concat(
             await fetchNwfbCtbEtas({
-              bound: bound[company_id],
+              bound: _bound,
               co: company_id,
               dest,
               orig,

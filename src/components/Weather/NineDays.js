@@ -16,7 +16,7 @@ export const NineDays = () => {
     };
 
     intervalContent();
-    const interval = setInterval(intervalContent, 60000);
+    const interval = setInterval(intervalContent, 120000);
 
     return () => clearInterval(interval);
   }, []);
