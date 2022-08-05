@@ -16,8 +16,19 @@ export const Navbar = () => {
   };
 
   useEffect(() => {
-    fetchCurrWeather().then((response) => setCurrWeather(response));
-    fetchWarningList().then((response) => setWarningMsg(response));
+    const intervalContent = () => {
+      fetchCurrWeather().then(
+        (response) => response && setCurrWeather(response)
+      );
+      fetchWarningList().then(
+        (response) => response && setWarningMsg(response)
+      );
+    };
+
+    intervalContent();
+    const interval = setInterval(intervalContent, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   let avgTemp = 0;
@@ -70,6 +81,7 @@ export const Navbar = () => {
 };
 
 const AppBarRoot = styled(AppBar)({
+  backgroundColor: "#2f305c",
   ".MuiToolbar-root": {
     display: "flex",
     justifyContent: "space-between",

@@ -21,23 +21,6 @@ export const About = () => {
   return (
     <ListRoot>
       <ListSubheader>第三方資料來源</ListSubheader>
-      <ListItem disablePadding className="listItemAppIcon">
-        <ListItemButton
-          component={"a"}
-          href={`https://www.flaticon.com/free-icons/transport`}
-          target="_blank"
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <img src={AppIcon} alt="" />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary="圖標來源"
-            secondary={"Transport icons created by Freepik - Flaticon"}
-          />
-        </ListItemButton>
-      </ListItem>
       <ListItem disablePadding>
         <ListItemButton
           component={"a"}

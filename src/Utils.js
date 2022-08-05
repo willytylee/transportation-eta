@@ -53,9 +53,17 @@ export const sortEtaObj = (etaObjArr) => {
   return etaObjArr;
 };
 
-export const isValEqualInArr = (arr, key) => {
+export const isValofObjEqualInArr = (arr, key) => {
   return arr.every((e) => {
     if (e[key] === arr[0][key]) {
+      return true;
+    }
+  });
+};
+
+export const isValEqualInArr = (arr) => {
+  return arr.every((e) => {
+    if (e === arr[0]) {
       return true;
     }
   });

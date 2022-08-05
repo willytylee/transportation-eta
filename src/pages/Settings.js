@@ -19,19 +19,17 @@ import {
   Source as SourceIcon,
 } from "@mui/icons-material";
 import { SelectUserDialog } from "../components/SelectUserDialog";
-import { fetchVersion } from "../fetch/Version";
 import { AppContext } from "../context/AppContext";
 
 export const Settings = () => {
-  const { appVersion, serVersion } = useContext(AppContext);
+  const { appVersion, serVersion, updateCurrentUserId } =
+    useContext(AppContext);
   const [slctUsrDialogOpen, setslctUsrDialogOpen] = useState(false);
   const navigate = useNavigate();
   const handleslctUsrDialogOnClose = ({ userId, username }) => {
     if (userId) {
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ userId: userId, username: username })
-      );
+      localStorage.setItem("user", JSON.stringify({ userId, username }));
+      updateCurrentUserId(userId);
     }
     setslctUsrDialogOpen(false);
   };

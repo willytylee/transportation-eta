@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "@mui/material";
+import { isValEqualInArr } from "../../../Utils";
 
 export const Table = ({ data, dir }) => {
   return (
@@ -10,13 +11,16 @@ export const Table = ({ data, dir }) => {
             → <span className="dest">{data[dir].dest}</span>
           </div>
           <div className="ttntWrapper">
-            {data[dir].ttnts
-              .map((e, j) => (
-                <div className="ttnt" key={j}>
-                  {e}
-                </div>
-              ))
-              .slice(0, 3)}
+            {isValEqualInArr(data[dir].ttnts) &&
+            data[dir].ttnts[0] == "沒有班次"
+              ? "已停站"
+              : data[dir].ttnts
+                  .map((e, j) => (
+                    <div className="ttnt" key={j}>
+                      {e}
+                    </div>
+                  ))
+                  .slice(0, 3)}
           </div>
         </MTRTable>
       )}

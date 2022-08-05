@@ -9,7 +9,16 @@ export const NineDays = () => {
   const [nineDForecast, setNineDForecast] = useState({});
 
   useEffect(() => {
-    fetch9DForecast().then((response) => setNineDForecast(response));
+    const intervalContent = () => {
+      fetch9DForecast().then(
+        (response) => response && setNineDForecast(response)
+      );
+    };
+
+    intervalContent();
+    const interval = setInterval(intervalContent, 60000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const getPsrIdx = (PSR) => {

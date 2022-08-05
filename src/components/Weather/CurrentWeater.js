@@ -9,8 +9,19 @@ export const CurrentWeater = () => {
   const [currWeather, setCurrWeather] = useState({});
 
   useEffect(() => {
-    fetchCurrWeather().then((response) => setCurrWeather(response));
-    fetchLocalForecast().then((response) => setLocalForecast(response));
+    const intervalContent = () => {
+      fetchCurrWeather().then(
+        (response) => response && setCurrWeather(response)
+      );
+      fetchLocalForecast().then(
+        (response) => response && setLocalForecast(response)
+      );
+    };
+
+    intervalContent();
+    const interval = setInterval(intervalContent, 60000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (

@@ -7,6 +7,13 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const dbVersionLocal = localStorage.getItem("dbVersion");
+  let userIdLocal;
+  try {
+    userIdLocal = JSON.parse(localStorage.getItem("user")).userId;
+  } catch (error) {
+    userIdLocal = -1;
+  }
+
   const [dbVersion, setDbVersion] = useState(dbVersionLocal);
   const [location, setLocation] = useState({
     lat: 22.313879,
@@ -16,6 +23,7 @@ export const AppProvider = ({ children }) => {
   const [appVersion, setAppVersion] = useState("");
   const [serVersion, setSerVersion] = useState("");
   const [nearestStopId, setNearestStopId] = useState("");
+  const [currentUserId, setCurrentUserId] = useState(userIdLocal);
 
   const getGeoLocation = useCallback(() => {
     const success = (position) => {
@@ -30,6 +38,10 @@ export const AppProvider = ({ children }) => {
 
   const updateCurrRoute = useCallback((route) => {
     setCurrRoute(route);
+  });
+
+  const updateCurrentUserId = useCallback((userId) => {
+    setCurrentUserId(userId);
   });
 
   const updateNearestStopId = useCallback((nearestStopId) => {
@@ -96,6 +108,8 @@ export const AppProvider = ({ children }) => {
       serVersion,
       nearestStopId,
       updateNearestStopId,
+      currentUserId,
+      updateCurrentUserId,
     }),
     [
       dbVersion,
@@ -109,6 +123,8 @@ export const AppProvider = ({ children }) => {
       serVersion,
       nearestStopId,
       updateNearestStopId,
+      currentUserId,
+      updateCurrentUserId,
     ]
   );
 

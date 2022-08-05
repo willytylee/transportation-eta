@@ -6,6 +6,7 @@ import {
   ArrowForwardIos as ArrowForwardIosIcon,
   ArrowBackIosNew as ArrowBackIosNewIcon,
   PersonPinCircle as PersonPinCircleIcon,
+  Route as RouteIcon,
 } from "@mui/icons-material";
 import {
   DialogTitle,
@@ -15,7 +16,14 @@ import {
   styled,
   Avatar,
 } from "@mui/material";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  Polyline,
+} from "react-leaflet";
 import { AppContext } from "../context/AppContext";
 import { etaTimeConverter, getActualCoIds, getLocalStorage } from "../Utils";
 import { companyMap } from "../constants/Bus";
@@ -42,58 +50,41 @@ export const MapDialog = ({
 
   const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
 
-  const currRouteStopList = useMemo(
+  const currRouteStopIdList = useMemo(
     () => currRoute.stops && currRoute.stops[Object.keys(currRoute.stops)[0]],
     [currRoute]
   );
-  const nearestStopIdx = currRouteStopList?.findIndex(
+  const nearestStopIdx = currRouteStopIdList?.findIndex(
     (e) => e === nearestStopId
   );
+  const currRouteStopList = useMemo(
+    () => currRouteStopIdList?.map((e) => gStopList[e]),
+    [currRoute]
+  );
 
-  const NavigationBtn = () => {
-    const map = useMap();
+  const routeLine = currRouteStopList?.map((e) => [
+    e.location.lat,
+    e.location.lng,
+  ]);
 
-    return (
-      <Avatar className="navBtnAvatar">
-        <IconButton
-          onClick={() => {
-            map.flyTo([currentLocation.lat, currentLocation.lng], 18);
-          }}
-        >
-          <MyLocationIcon />
-        </IconButton>
-      </Avatar>
-    );
-  };
-
-  const NearestStopBtn = () => {
-    const map = useMap();
-
-    const handleIconOnClick = () => {
-      const nearestStop = gStopList[currRouteStopList[nearestStopIdx]];
-      map.flyTo([nearestStop.location.lat, nearestStop.location.lng], 18);
-      setSelectedStopIdx(nearestStopIdx);
-    };
-
-    return (
-      <Avatar className="nearestStopBtnAvatar">
-        <IconButton
-          onClick={() => {
-            handleIconOnClick();
-          }}
-        >
-          <PersonPinCircleIcon />
-        </IconButton>
-      </Avatar>
-    );
-  };
+  const myIcon = new L.Icon({
+    iconUrl: require("../assets/icons/currentLocation.png"),
+    iconRetinaUrl: require("../assets/icons/currentLocation.png"),
+    iconAnchor: null,
+    popupAnchor: null,
+    shadowUrl: null,
+    shadowSize: null,
+    shadowAnchor: null,
+    iconSize: new L.Point(20, 20),
+    className: "currLocationMarker",
+  });
 
   const PrevStopBtn = () => {
     const map = useMap();
 
     const handleIconOnClick = () => {
       const idx = selectedStopIdx === -1 ? nearestStopIdx + 1 : selectedStopIdx;
-      const prevStop = gStopList[currRouteStopList[idx - 1]];
+      const prevStop = currRouteStopList[idx - 1];
       map.flyTo([prevStop.location.lat, prevStop.location.lng], 18);
       setSelectedStopIdx(idx - 1);
     };
@@ -119,7 +110,7 @@ export const MapDialog = ({
 
     const handleIconOnClick = () => {
       const idx = selectedStopIdx === -1 ? nearestStopIdx - 1 : selectedStopIdx;
-      const nextStop = gStopList[currRouteStopList[idx + 1]];
+      const nextStop = currRouteStopList[idx + 1];
       map.flyTo([nextStop.location.lat, nextStop.location.lng], 18);
       setSelectedStopIdx(idx + 1);
     };
@@ -127,11 +118,11 @@ export const MapDialog = ({
     return (
       <Avatar
         className={`nextBtnAvatar ${
-          selectedStopIdx === currRouteStopList.length - 1 ? "disabled" : ""
+          selectedStopIdx === currRouteStopIdList.length - 1 ? "disabled" : ""
         }`}
       >
         <IconButton
-          disabled={selectedStopIdx === currRouteStopList.length - 1}
+          disabled={selectedStopIdx === currRouteStopIdList.length - 1}
           onClick={() => {
             handleIconOnClick();
           }}
@@ -142,17 +133,68 @@ export const MapDialog = ({
     );
   };
 
-  const myIcon = new L.Icon({
-    iconUrl: require("../assets/icons/currentLocation.png"),
-    iconRetinaUrl: require("../assets/icons/currentLocation.png"),
-    iconAnchor: null,
-    popupAnchor: null,
-    shadowUrl: null,
-    shadowSize: null,
-    shadowAnchor: null,
-    iconSize: new L.Point(20, 20),
-    className: "currLocationMarker",
-  });
+  const NavigationBtn = () => {
+    const map = useMap();
+
+    return (
+      <Avatar className="navBtnAvatar">
+        <IconButton
+          onClick={() => {
+            map.flyTo([currentLocation.lat, currentLocation.lng], 18);
+          }}
+        >
+          <MyLocationIcon />
+        </IconButton>
+      </Avatar>
+    );
+  };
+
+  const NearestStopBtn = () => {
+    const map = useMap();
+
+    const handleIconOnClick = () => {
+      const nearestStop = currRouteStopList[nearestStopIdx];
+      map.flyTo([nearestStop.location.lat, nearestStop.location.lng], 18);
+      setSelectedStopIdx(nearestStopIdx);
+    };
+
+    return (
+      <Avatar className="nearestStopBtnAvatar">
+        <IconButton
+          onClick={() => {
+            handleIconOnClick();
+          }}
+        >
+          <PersonPinCircleIcon />
+        </IconButton>
+      </Avatar>
+    );
+  };
+
+  const RouteBoundBtn = () => {
+    const map = useMap();
+
+    const innerHandlers = () => {
+      map.fitBounds(routeLine);
+    };
+
+    return (
+      <Avatar
+        className={`routeBoundBtnAvatar ${
+          selectedStopIdx === 0 ? "disabled" : ""
+        }`}
+      >
+        <IconButton
+          disabled={selectedStopIdx === 0}
+          onClick={() => {
+            innerHandlers();
+          }}
+        >
+          <RouteIcon />
+        </IconButton>
+      </Avatar>
+    );
+  };
 
   return (
     <DialogRoot
@@ -192,7 +234,7 @@ export const MapDialog = ({
                   <div className="stopDetail">
                     <div className="stopName">
                       {selectedStopIdx + 1}.{" "}
-                      {gStopList[currRouteStopList[selectedStopIdx]]?.name.zh}
+                      {currRouteStopList[selectedStopIdx]?.name.zh}
                     </div>
                     <div className="etas">
                       {eta.length !== 0 ? (
@@ -231,7 +273,7 @@ export const MapDialog = ({
               url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
             />
             {currRoute.stops &&
-              currRouteStopList.map((e, i) => {
+              currRouteStopIdList.map((e, i) => {
                 const currStop = gStopList[e];
                 return (
                   <Marker
@@ -253,10 +295,16 @@ export const MapDialog = ({
               icon={myIcon}
             ></Marker>
 
+            <Polyline
+              pathOptions={{ color: "blue", opacity: 0.3 }}
+              positions={routeLine}
+            />
+
             <PrevStopBtn />
             <NextStopBtn />
-            <NavigationBtn />
+            <RouteBoundBtn />
             <NearestStopBtn />
+            <NavigationBtn />
           </MapContainer>
         </>
       )}
@@ -366,6 +414,10 @@ const DialogRoot = styled(Dialog)({
         "&.nearestStopBtnAvatar": {
           right: "10px",
           bottom: "90px",
+        },
+        "&.routeBoundBtnAvatar": {
+          right: "10px",
+          bottom: "140px",
         },
       },
       ".currLocationMarker": {

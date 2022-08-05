@@ -35,7 +35,7 @@ export const MTRs = ({ section }) => {
             parseInt(e.ttnt) === 0
               ? "準備埋站"
               : parseInt(e.ttnt) >= 60
-              ? "已停站"
+              ? "沒有班次"
               : `${e.ttnt}分鐘`
           ),
         };
@@ -48,7 +48,7 @@ export const MTRs = ({ section }) => {
             parseInt(e.ttnt) === 0
               ? "準備埋站"
               : parseInt(e.ttnt) >= 60
-              ? "已停站"
+              ? "沒有班次"
               : `${e.ttnt}分鐘`
           ),
         };
@@ -68,7 +68,6 @@ export const MTRs = ({ section }) => {
       <MTRRoot key={i}>
         <div className="dest">{e.name}站</div>
         <div className="etaGroupWrapper">
-          {!e?.down?.dest && !e?.up?.dest && "已停站"}
           <Table data={e} dir="down" />
           <Table data={e} dir="up" />
         </div>
@@ -80,6 +79,7 @@ export const MTRs = ({ section }) => {
 const MTRRoot = styled("div")({
   display: "flex",
   alignItems: "center",
+  padding: "4px 0",
   ".dest": {
     fontSize: "12px",
     width: "15%",
