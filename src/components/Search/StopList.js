@@ -9,7 +9,7 @@ import { fetchNwfbCtbRouteStop } from "../../fetch/transports/NwfbCtb";
 
 export const StopList = ({ route }) => {
   const [stopList, setStopList] = useState([]);
-  const [correctBound, setCorrectBound] = useState("");
+  const [correctBound, setCorrectBound] = useState(undefined);
   const {
     dbVersion,
     location: currentLocation,
@@ -38,7 +38,7 @@ export const StopList = ({ route }) => {
 
   // When the currRoute in AppContext changed
   useEffect(() => {
-    setCorrectBound("");
+    setCorrectBound(undefined);
 
     if (Object.keys(currRoute).length !== 0) {
       // Find the company Id which appear in currRoute.stops

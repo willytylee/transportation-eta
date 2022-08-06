@@ -7,15 +7,15 @@ export const useEtas = ({ seq, routeObj, bound }) => {
   useEffect(() => {
     setEta([{ eta: "loading" }]);
     const intervalContent = () => {
-      bound === ""
+      bound
         ? fetchEtas({
             ...routeObj,
             seq: parseInt(seq, 10),
+            bound,
           }).then((response) => setEta(response.slice(0, 3)))
         : fetchEtas({
             ...routeObj,
             seq: parseInt(seq, 10),
-            bound,
           }).then((response) => setEta(response.slice(0, 3)));
     };
 
