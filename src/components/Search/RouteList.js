@@ -16,13 +16,15 @@ export const RouteList = ({ route }) => {
   };
 
   const isMatchCurrRoute = (a, b) => {
+    // There may have nearestStopId in one of the currRoute
     return (
       JSON.stringify(a.bound) === JSON.stringify(b.bound) &&
       JSON.stringify(a.co) === JSON.stringify(b.co) &&
       JSON.stringify(a.orig) === JSON.stringify(b.orig) &&
       JSON.stringify(a.dest) === JSON.stringify(b.dest) &&
       JSON.stringify(a.route) === JSON.stringify(b.route) &&
-      JSON.stringify(a.seq) === JSON.stringify(b.seq)
+      JSON.stringify(a.seq) === JSON.stringify(b.seq) &&
+      JSON.stringify(a.serviceType) === JSON.stringify(b.serviceType)
     );
   };
 

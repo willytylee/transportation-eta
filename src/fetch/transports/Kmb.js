@@ -19,7 +19,8 @@ export const fetchKmbEtas = async ({
     return (
       e.eta !== null &&
       e.dir === bound &&
-      (seq >= e.seq - ACCEPT_RANGE || seq <= e.seq + ACCEPT_RANGE) // Only accept the seq +- 1 in order
+      ((seq >= e.seq - ACCEPT_RANGE && seq <= e.seq + ACCEPT_RANGE) ||
+        seq === e.seq) // Only accept the seq +- 1 in order
     );
   });
 
