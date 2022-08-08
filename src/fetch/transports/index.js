@@ -60,7 +60,6 @@ export const fetchEtas = async ({
 
     return sortEtaObj(etas);
   } catch (err) {
-    // console.error(err);
     return [];
   }
 };

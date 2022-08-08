@@ -61,7 +61,7 @@ export const BottomNav = () => {
       ) : (
         <BottomNavigationAction
           component={NavLink}
-          to={`/personalAsst/${currentUserId}`}
+          to={`/bookmark/${currentUserId}`}
           style={({ isActive }) => (isActive ? activeStyle : undefined)}
           label="收藏"
           icon={<FavoriteIcon />}

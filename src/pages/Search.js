@@ -4,12 +4,12 @@ import { SearchBar } from "../components/Search/SearchBar";
 import { AutoList } from "../components/Search/AutoList";
 import { RouteList } from "../components/Search/RouteList";
 import { StopList } from "../components/Search/StopList";
-import { AppContext } from "../context/AppContext";
+import { EtaContext } from "../context/EtaContext";
 
 export const Search = () => {
   const [route, setRoute] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const { updateCurrRoute } = useContext(AppContext);
+  const { updateCurrRoute } = useContext(EtaContext);
 
   const handleFormChange = (e) => {
     setRoute(e.target.value.toUpperCase());

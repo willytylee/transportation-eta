@@ -5,6 +5,7 @@ import { List, ListItem, ListItemText, Divider, styled } from "@mui/material/";
 
 export const News = () => {
   const [news, setNews] = useState([]);
+
   useEffect(() => {
     const intervalContent = () => {
       fetchNews().then((response) => setNews(response));

@@ -8,12 +8,12 @@ import { Search } from "./pages/Search";
 import { AppContext } from "./context/AppContext";
 import { Settings } from "./pages/Settings";
 import { Weather } from "./pages/Weather";
-import { PersonalAsst } from "./pages/PersonalAsst";
+import { Bookmark } from "./pages/Bookmark";
 import { About } from "./pages/Settings/About";
-// import { Tutorial } from "./pages/Settings/Tutorial";
 import { Install } from "./pages/Settings/Install";
 import { News } from "./pages/News";
 import { Map } from "./pages/Map";
+import { Update } from "./pages/Settings/Update";
 
 const App = () => {
   const { initDb, getGeoLocation, initAppVersion } = useContext(AppContext);
@@ -33,10 +33,11 @@ const App = () => {
           <Route path="/search" element={<Search />} />
           <Route path="/news" element={<News />} />
           <Route path="/weather" element={<Weather />} />
-          <Route path="/personalAsst/:userId" element={<PersonalAsst />} />
+          <Route path="/bookmark/:userId" element={<Bookmark />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/settings/about" element={<About />} />
           <Route path="/settings/install" element={<Install />} />
+          <Route path="/settings/update" element={<Update />} />
           <Route path="/map" element={<Map />} />
         </Routes>
       </Container>

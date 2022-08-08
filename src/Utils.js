@@ -1,6 +1,5 @@
 import moment from "moment";
 import { decompress as decompressJson } from "lzutf8-light";
-import { fetchNwfbCtbRouteStop } from "./fetch/transports/NwfbCtb";
 
 export const etaTimeConverter = (etaStr, remark) => {
   let etaIntervalStr, remarkStr;
@@ -14,8 +13,6 @@ export const etaTimeConverter = (etaStr, remark) => {
     } else {
       etaIntervalStr = `${mintuesLeft}分鐘`;
     }
-  } else if (etaStr === "loading") {
-    etaIntervalStr = "載入中...";
   } else if (etaStr === "") {
     if (remark) {
       etaIntervalStr = `${remark}`;
@@ -81,50 +78,6 @@ export const findNearestNum = (target, arr) => {
       return bDiff < aDiff ? b : a;
     }
   });
-};
-
-export const findCorrectBound = async ({
-  expandStopIdArr,
-  currRoute,
-  companyId,
-}) => {
-  const StopsI = await fetchNwfbCtbRouteStop({
-    ...currRoute,
-    co: companyId,
-    bound: "I",
-  });
-
-  const StopsO = await fetchNwfbCtbRouteStop({
-    ...currRoute,
-    co: companyId,
-    bound: "O",
-  });
-
-  const arrI = StopsI.map((e) => e.stop);
-  const arrO = StopsO.map((e) => e.stop);
-
-  let scoreI = 0;
-  let scoreO = 0;
-
-  for (let i = 1; i < expandStopIdArr.length - 1; i++) {
-    for (let j = 0; j < arrI.length - 1; j++) {
-      if (
-        expandStopIdArr[i - 1] === arrI[j - 1] &&
-        expandStopIdArr[i] === arrI[j]
-      ) {
-        scoreI++;
-      }
-    }
-    for (let k = 0; k < arrO.length - 1; k++) {
-      if (
-        expandStopIdArr[i - 1] === arrO[k - 1] &&
-        expandStopIdArr[i] === arrO[k]
-      ) {
-        scoreO++;
-      }
-    }
-  }
-  return { scoreI, scoreO };
 };
 
 export const getUniqueValFromArr = (arr, key) => {

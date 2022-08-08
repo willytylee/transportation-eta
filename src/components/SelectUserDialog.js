@@ -69,7 +69,7 @@ export const SelectUserDialog = ({
           <DialogTitle className="dialogTitle">
             <Grid>
               <div className="title">請選擇用戶:</div>
-              <IconButton onClick={() => handleDialogOnClose()}>
+              <IconButton onClick={handleDialogOnClose}>
                 <CloseIcon />
               </IconButton>
             </Grid>
@@ -93,7 +93,15 @@ export const SelectUserDialog = ({
         </>
       ) : (
         <>
-          <div className="title">請輸入Pin碼:</div>
+          <DialogTitle className="dialogTitle">
+            <Grid>
+              <div className="title">請輸入Pin碼:</div>
+              <IconButton onClick={handleDialogOnClose}>
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+          </DialogTitle>
+
           <PinInput
             length={4}
             focus
@@ -127,6 +135,9 @@ const DialogRoot = styled(Dialog, {
         fontSize: "18px",
       },
     },
+  },
+  ".MuiList-root": {
+    overflow: "auto",
   },
   ".pincode-input-container": {
     display: "flex",

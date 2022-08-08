@@ -28,23 +28,23 @@ import { AppContext } from "../context/AppContext";
 import { etaTimeConverter, getActualCoIds, getLocalStorage } from "../Utils";
 import { companyMap } from "../constants/Bus";
 import { useEtas } from "../hooks/Etas";
+import { useCorrectBound } from "../hooks/Bound";
+import { EtaContext } from "../context/EtaContext";
 
 export const MapDialog = ({
   mapDialogOpen,
   handleMapDialogOnClose,
   fullWidth,
 }) => {
-  const {
-    dbVersion,
-    currRoute,
-    nearestStopId,
-    location: currentLocation,
-  } = useContext(AppContext);
+  const { dbVersion, location: currentLocation } = useContext(AppContext);
+  const { currRoute, nearestStopId } = useContext(EtaContext);
   const [selectedStopIdx, setSelectedStopIdx] = useState(-1);
-  // TODO: Not pass correct route to useEtas yet
-  const eta = useEtas({
+  const { correctBound, isBoundLoading } = useCorrectBound({ currRoute });
+  const { eta, isEtaLoading } = useEtas({
     seq: selectedStopIdx + 1,
     routeObj: currRoute,
+    bound: correctBound,
+    isBoundLoading,
   });
 
   const handleDialogOnClose = () => {
@@ -99,9 +99,7 @@ export const MapDialog = ({
       >
         <IconButton
           disabled={selectedStopIdx === 0}
-          onClick={() => {
-            handleIconOnClick();
-          }}
+          onClick={handleIconOnClick}
         >
           <ArrowBackIosNewIcon sx={{ fontSize: 15 }} />
         </IconButton>
@@ -127,9 +125,7 @@ export const MapDialog = ({
       >
         <IconButton
           disabled={selectedStopIdx === currRouteStopIdList.length - 1}
-          onClick={() => {
-            handleIconOnClick();
-          }}
+          onClick={handleIconOnClick}
         >
           <ArrowForwardIosIcon sx={{ fontSize: 15 }} />
         </IconButton>
@@ -164,11 +160,7 @@ export const MapDialog = ({
 
     return (
       <Avatar className="nearestStopBtnAvatar">
-        <IconButton
-          onClick={() => {
-            handleIconOnClick();
-          }}
-        >
+        <IconButton onClick={handleIconOnClick}>
           <PersonPinCircleIcon />
         </IconButton>
       </Avatar>
@@ -178,7 +170,7 @@ export const MapDialog = ({
   const RouteBoundBtn = () => {
     const map = useMap();
 
-    const innerHandlers = () => {
+    const handleIconOnClick = () => {
       map.fitBounds(routeLine);
     };
 
@@ -190,9 +182,7 @@ export const MapDialog = ({
       >
         <IconButton
           disabled={selectedStopIdx === 0}
-          onClick={() => {
-            innerHandlers();
-          }}
+          onClick={handleIconOnClick}
         >
           <RouteIcon />
         </IconButton>
@@ -202,9 +192,7 @@ export const MapDialog = ({
 
   return (
     <DialogRoot
-      onClose={() => {
-        handleDialogOnClose();
-      }}
+      onClose={handleDialogOnClose}
       open={mapDialogOpen}
       fullWidth={fullWidth}
       className="dialogRoot"
@@ -241,12 +229,13 @@ export const MapDialog = ({
                       {currRouteStopList[selectedStopIdx]?.name.zh}
                     </div>
                     <div className="etas">
-                      {eta.length !== 0 ? (
+                      {isEtaLoading || isBoundLoading ? (
+                        <div className="eta">載入中</div>
+                      ) : eta.length !== 0 ? (
                         eta.map((e, i) => {
                           return (
                             <div key={i} className="eta" title={e.seq}>
                               {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
-                              {/* <br />{etaTimeConverter(e.eta, e.rmk_tc).remarkStr} */}
                             </div>
                           );
                         })
@@ -257,10 +246,7 @@ export const MapDialog = ({
                   </div>
                 )}
               </div>
-              <IconButton
-                className="closeBtn"
-                onClick={() => handleDialogOnClose()}
-              >
+              <IconButton className="closeBtn" onClick={handleDialogOnClose}>
                 <CloseIcon />
               </IconButton>
             </Grid>

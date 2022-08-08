@@ -16,6 +16,8 @@ export const Buses = ({ section, gStopList, gRouteList }) => {
         const { co, route, stopId, serviceType, seq } = section[i];
         const stopName = gStopList[stopId].name.zh;
         const { location } = gStopList[stopId];
+
+        // Required field: route, company, seq and stopID
         const routeObj = Object.keys(gRouteList)
           .map((e) => gRouteList[e])
           .filter((e) => {
@@ -25,7 +27,7 @@ export const Buses = ({ section, gStopList, gRouteList }) => {
               e.co.includes(co) &&
               e.stops[co][seq - 1] === stopId
             );
-          })[0];
+          })[0]; // Most likely, only one route will be found, so [0] is applied here
 
         if (routeObj) {
           const res = await fetchEtas({ ...routeObj, seq: parseInt(seq, 10) });

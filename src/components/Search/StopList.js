@@ -1,22 +1,19 @@
 import { useState, useEffect, useMemo, useContext } from "react";
 import { styled } from "@mui/material";
 import { getPreciseDistance } from "geolib";
-import { findCorrectBound, getLocalStorage } from "../../Utils";
+import { getLocalStorage } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
 import { StopEta } from "./StopEta";
 import { coPriority } from "../../constants/Bus";
-import { fetchNwfbCtbRouteStop } from "../../fetch/transports/NwfbCtb";
+import { useCorrectBound } from "../../hooks/Bound";
+import { EtaContext } from "../../context/EtaContext";
 
 export const StopList = ({ route }) => {
   const [stopList, setStopList] = useState([]);
-  const [correctBound, setCorrectBound] = useState(undefined);
-  const {
-    dbVersion,
-    location: currentLocation,
-    currRoute,
-    nearestStopId,
-    updateNearestStopId,
-  } = useContext(AppContext);
+  const { dbVersion, location: currentLocation } = useContext(AppContext);
+  const { currRoute, nearestStopId, updateNearestStopId } =
+    useContext(EtaContext);
+  const { correctBound, isBoundLoading } = useCorrectBound({ currRoute });
 
   const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
 
@@ -38,66 +35,43 @@ export const StopList = ({ route }) => {
 
   // When the currRoute in AppContext changed
   useEffect(() => {
-    setCorrectBound(undefined);
-
     if (Object.keys(currRoute).length !== 0) {
       // Find the company Id which appear in currRoute.stops
 
-      const functionWrap = async () => {
-        const companyId = getCoPriorityId(currRoute);
-        const expandStopIdArr = currRoute.stops[companyId];
+      const companyId = getCoPriorityId(currRoute);
+      const expandStopIdArr = currRoute.stops[companyId];
 
-        if (
-          currRoute.bound[Object.keys(currRoute.bound)[0]].length > 1 &&
-          (Object.keys(currRoute.stops)[0] === "nwfb" ||
-            Object.keys(currRoute.stops)[0] === "ctb")
-        ) {
-          const result = await findCorrectBound({
-            expandStopIdArr,
-            currRoute,
-            companyId,
-          });
+      setStopList(expandStopIdArr.map((e) => ({ ...gStopList[e], stopId: e })));
 
-          console.log([result.scoreI, result.scoreO]);
-          setCorrectBound(result.scoreI > result.scoreO ? "I" : "O");
-        }
-
-        setStopList(
-          expandStopIdArr.map((e) => ({ ...gStopList[e], stopId: e }))
-        );
-
-        updateNearestStopId(
-          expandStopIdArr.reduce((prev, curr) => {
-            const prevDistance = getPreciseDistance(
-              {
-                latitude: gStopList[prev].location.lat,
-                longitude: gStopList[prev].location.lng,
-              },
-              {
-                latitude: currentLocation.lat,
-                longitude: currentLocation.lng,
-              }
-            );
-            const currDistance = getPreciseDistance(
-              {
-                latitude: gStopList[curr].location.lat,
-                longitude: gStopList[curr].location.lng,
-              },
-              {
-                latitude: currentLocation.lat,
-                longitude: currentLocation.lng,
-              }
-            );
-
-            if (prevDistance < currDistance) {
-              return prev;
+      updateNearestStopId(
+        expandStopIdArr.reduce((prev, curr) => {
+          const prevDistance = getPreciseDistance(
+            {
+              latitude: gStopList[prev].location.lat,
+              longitude: gStopList[prev].location.lng,
+            },
+            {
+              latitude: currentLocation.lat,
+              longitude: currentLocation.lng,
             }
-            return curr;
-          })
-        );
-      };
+          );
+          const currDistance = getPreciseDistance(
+            {
+              latitude: gStopList[curr].location.lat,
+              longitude: gStopList[curr].location.lng,
+            },
+            {
+              latitude: currentLocation.lat,
+              longitude: currentLocation.lng,
+            }
+          );
 
-      functionWrap();
+          if (prevDistance < currDistance) {
+            return prev;
+          }
+          return curr;
+        })
+      );
     }
   }, [currRoute]);
 
@@ -114,6 +88,7 @@ export const StopList = ({ route }) => {
               stopObj={e}
               isNearestStop={isNearestStop}
               bound={correctBound}
+              isBoundLoading={isBoundLoading}
             />
           );
         })}

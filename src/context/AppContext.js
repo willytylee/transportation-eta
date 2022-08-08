@@ -19,10 +19,8 @@ export const AppProvider = ({ children }) => {
     lat: 22.313879,
     lng: 114.186484,
   });
-  const [currRoute, setCurrRoute] = useState({});
   const [appVersion, setAppVersion] = useState("");
   const [serVersion, setSerVersion] = useState("");
-  const [nearestStopId, setNearestStopId] = useState("");
   const [currentUserId, setCurrentUserId] = useState(userIdLocal);
 
   const getGeoLocation = useCallback(() => {
@@ -36,16 +34,8 @@ export const AppProvider = ({ children }) => {
     navigator.geolocation.watchPosition(success);
   }, []);
 
-  const updateCurrRoute = useCallback((route) => {
-    setCurrRoute(route);
-  });
-
   const updateCurrentUserId = useCallback((userId) => {
     setCurrentUserId(userId);
-  });
-
-  const updateNearestStopId = useCallback((nearestStopId) => {
-    setNearestStopId(nearestStopId);
   });
 
   const initAppVersion = useCallback(() => {
@@ -65,9 +55,21 @@ export const AppProvider = ({ children }) => {
 
   const initDb = useCallback(() => {
     const dbVersionLocal = localStorage.getItem("dbVersion");
+    const stopMapLocal = localStorage.getItem("stopMap");
+    const routeListLocal = localStorage.getItem("routeList");
+    const stopListLocal = localStorage.getItem("stopList");
 
-    if (!dbVersionLocal || dbVersionLocal !== "0.0.1") {
-      localStorage.clear();
+    if (
+      !dbVersionLocal ||
+      !stopMapLocal ||
+      !routeListLocal ||
+      !stopListLocal ||
+      dbVersionLocal !== "0.0.1"
+    ) {
+      localStorage.removeItem("dbVersion");
+      localStorage.removeItem("stopMap");
+      localStorage.removeItem("routeList");
+      localStorage.removeItem("stopList");
       localStorage.setItem("dbVersion", "0.0.1");
       axios
         .get("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json")
@@ -101,13 +103,9 @@ export const AppProvider = ({ children }) => {
       location,
       initDb,
       getGeoLocation,
-      currRoute,
-      updateCurrRoute,
       initAppVersion,
       appVersion,
       serVersion,
-      nearestStopId,
-      updateNearestStopId,
       currentUserId,
       updateCurrentUserId,
     }),
@@ -116,13 +114,9 @@ export const AppProvider = ({ children }) => {
       location,
       initDb,
       getGeoLocation,
-      currRoute,
-      updateCurrRoute,
       initAppVersion,
       appVersion,
       serVersion,
-      nearestStopId,
-      updateNearestStopId,
       currentUserId,
       updateCurrentUserId,
     ]

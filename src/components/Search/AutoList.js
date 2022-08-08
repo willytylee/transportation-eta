@@ -3,14 +3,15 @@ import { getPreciseDistance } from "geolib";
 import { styled } from "@mui/material";
 import { companyMap } from "../../constants/Bus";
 import { AppContext } from "../../context/AppContext";
+import { EtaContext } from "../../context/EtaContext";
 import { etaTimeConverter, getLocalStorage, getActualCoIds } from "../../Utils";
 import { fetchEtas } from "../../fetch/transports";
 
 export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
   const [autoList, setAutoList] = useState([]);
-  const [autoListEta, setAutoListEta] = useState([]);
   const [title, setTitle] = useState("");
-  const { location: currentLocation, updateCurrRoute } = useContext(AppContext);
+  const { location: currentLocation } = useContext(AppContext);
+  const { updateCurrRoute } = useContext(EtaContext);
 
   const handleItemOnClick = (e) => {
     updateCurrRoute(e);
@@ -37,16 +38,16 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
           .map((e) => gRouteList[e])
           .filter((e) => {
             return (
-              route === e.route.substring(0, route.length) &&
               (e.co.includes("kmb") ||
                 e.co.includes("nwfb") ||
-                e.co.includes("ctb"))
+                e.co.includes("ctb")) &&
+              route === e.route.substring(0, route.length) &&
+              e.dest.en !== e.orig.en &&
+              e.dest.zh !== e.orig.zh
             );
           })
           .sort((a, b) => sortByRoute(a, b))
       );
-
-      setAutoListEta([]);
     } else {
       setTitle("附近路線");
 
@@ -108,30 +109,7 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
         }
       });
 
-      const _autoList = routeListNearBy.sort((a, b) => sortByRoute(a, b));
-      // const { stopId, ...listWOStopId } = _autoList;
-      setAutoList(_autoList);
-
-      // Set Auto Complete Route List ETA
-      // TODO
-      const intervalContent = async () => {
-        // setAutoListEta(
-        //   await Promise.all(
-        //     _autoList.map(async (e) => {
-        //       return await fetchEtas({
-        //         ...e,
-        //       });
-        //     })
-        //   )
-        // );
-      };
-      intervalContent();
-
-      const interval = setInterval(intervalContent, 5000);
-
-      return () => {
-        clearInterval(interval);
-      };
+      setAutoList(routeListNearBy.sort((a, b) => sortByRoute(a, b)));
     }
   }, [route]);
 
@@ -169,23 +147,6 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
                 </span>
               </div>
             </div>
-            {/* <div className="eta" style={{ width: route && "0%" }}>
-              {!route ? (
-                autoListEta[i] && autoListEta[i]?.length !== 0 ? (
-                  autoListEta[i].map((e, i) => {
-                    return (
-                      <div key={i}>
-                        {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
-                      </div>
-                    );
-                  })
-                ) : (
-                  <>沒有班次</>
-                )
-              ) : (
-                <></>
-              )}
-            </div> */}
           </div>
         );
       })}

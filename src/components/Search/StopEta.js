@@ -12,8 +12,14 @@ export const StopEta = ({
   routeObj,
   isNearestStop,
   bound,
+  isBoundLoading,
 }) => {
-  const eta = useEtas({ seq, bound, routeObj });
+  const { eta, isEtaLoading } = useEtas({
+    seq,
+    bound,
+    routeObj,
+    isBoundLoading,
+  });
 
   return (
     <StopEtaRoot className={isNearestStop ? "highlighted" : ""}>
@@ -27,16 +33,14 @@ export const StopEta = ({
         </a>
       </div>
       <div className="etas">
-        {eta.length !== 0 ? (
-          eta.map((e, i) => {
-            return (
-              <div key={i} className="eta" title={e.seq}>
-                {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
-                {/* <br />
-              {etaTimeConverter(e.eta, e.rmk_tc).remarkStr} */}
-              </div>
-            );
-          })
+        {isEtaLoading || isBoundLoading ? (
+          <div className="eta">載入中</div>
+        ) : eta.length !== 0 ? (
+          eta.map((e, i) => (
+            <div key={i} className="eta" title={e.seq}>
+              {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
+            </div>
+          ))
         ) : (
           <div>沒有班次</div>
         )}

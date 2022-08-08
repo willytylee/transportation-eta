@@ -5,6 +5,7 @@ import { SnackbarProvider } from "notistack";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { AppProvider } from "./context/AppContext";
+import { EtaProvider } from "./context/EtaContext";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { IconButton } from "@mui/material/";
 
@@ -14,24 +15,26 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <AppProvider>
-        <SnackbarProvider
-          maxSnack={1}
-          autoHideDuration={2000}
-          action={(snackbarId) => {
-            const { closeSnackbar } = useSnackbar();
-            return (
-              <IconButton
-                onClick={() => {
-                  closeSnackbar(snackbarId);
-                }}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            );
-          }}
-        >
-          <App />
-        </SnackbarProvider>
+        <EtaProvider>
+          <SnackbarProvider
+            maxSnack={1}
+            autoHideDuration={2000}
+            action={(snackbarId) => {
+              const { closeSnackbar } = useSnackbar();
+              return (
+                <IconButton
+                  onClick={() => {
+                    closeSnackbar(snackbarId);
+                  }}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              );
+            }}
+          >
+            <App />
+          </SnackbarProvider>
+        </EtaProvider>
       </AppProvider>
     </BrowserRouter>
   </React.StrictMode>

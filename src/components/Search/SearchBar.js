@@ -3,6 +3,7 @@ import { TextField, styled, IconButton } from "@mui/material";
 import { Search as SearchIcon, Map as MapIcon } from "@mui/icons-material";
 import { AppContext } from "../../context/AppContext";
 import { MapDialog } from "../MapDialog";
+import { EtaContext } from "../../context/EtaContext";
 
 export const SearchBar = ({
   handleFormChange,
@@ -11,7 +12,8 @@ export const SearchBar = ({
   setAnchorEl,
   divRef,
 }) => {
-  const { dbVersion, currRoute } = useContext(AppContext);
+  const { dbVersion } = useContext(AppContext);
+  const { currRoute } = useContext(EtaContext);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const textInput = useRef(null);
 

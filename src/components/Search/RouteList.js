@@ -3,10 +3,12 @@ import { Card, styled } from "@mui/material";
 import { getLocalStorage, getActualCoIds } from "../../Utils";
 import { companyMap } from "../../constants/Bus";
 import { AppContext } from "../../context/AppContext";
+import { EtaContext } from "../../context/EtaContext";
 
 export const RouteList = ({ route }) => {
   const [routeList, setRouteList] = useState([]);
-  const { dbVersion, updateCurrRoute, currRoute } = useContext(AppContext);
+  const { dbVersion } = useContext(AppContext);
+  const { updateCurrRoute, currRoute } = useContext(EtaContext);
 
   const gRouteList = useMemo(() => getLocalStorage("routeList"), [dbVersion]);
 
@@ -30,7 +32,7 @@ export const RouteList = ({ route }) => {
 
   // When the route number is changed, update RouteList
   useEffect(() => {
-    if (route) {
+    gRouteList &&
       setRouteList(
         Object.keys(gRouteList)
           .map((e) => gRouteList[e])
@@ -49,10 +51,6 @@ export const RouteList = ({ route }) => {
             (a, b) => parseInt(a.serviceType, 10) - parseInt(b.serviceType, 10)
           )
       );
-    } else {
-      setRouteList([]);
-      updateCurrRoute({});
-    }
   }, [route]);
 
   return routeList.map((e, i) => {

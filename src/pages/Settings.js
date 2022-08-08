@@ -26,6 +26,7 @@ export const Settings = () => {
     useContext(AppContext);
   const [slctUsrDialogOpen, setslctUsrDialogOpen] = useState(false);
   const navigate = useNavigate();
+
   const handleslctUsrDialogOnClose = ({ userId, username }) => {
     if (userId) {
       localStorage.setItem("user", JSON.stringify({ userId, username }));
@@ -55,7 +56,9 @@ export const Settings = () => {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => window.location.reload()}>
+          <ListItemButton
+            onClick={() => navigate("/settings/update", { replace: true })}
+          >
             <ListItemAvatar>
               <Badge
                 color="primary"
@@ -74,21 +77,7 @@ export const Settings = () => {
                 </Avatar>
               </Badge>
             </ListItemAvatar>
-            <ListItemText
-              primary={"更新應用程式"}
-              secondary={
-                <span>
-                  {appVersion === serVersion ? (
-                    <span>目前為最新版本: {appVersion}</span>
-                  ) : (
-                    <span>
-                      目前版本: {appVersion} <br />
-                      最新版本: {serVersion}
-                    </span>
-                  )}
-                </span>
-              }
-            />
+            <ListItemText primary="更新" />
           </ListItemButton>
         </ListItem>
         <Divider />
