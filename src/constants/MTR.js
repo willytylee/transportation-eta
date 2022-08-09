@@ -63,3 +63,9 @@ export const stationMap = {
   LOW: "羅武",
   LMC: "落馬洲",
 };
+
+export const mtrLineColor = {
+  ".TML": {
+    color: "#9c2e00",
+  },
+};

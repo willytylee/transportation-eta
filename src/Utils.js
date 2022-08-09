@@ -72,7 +72,7 @@ export const findNearestNum = (target, arr) => {
     let aDiff = Math.abs(a - target);
     let bDiff = Math.abs(b - target);
 
-    if (aDiff == bDiff) {
+    if (aDiff === bDiff) {
       return a > b ? a : b;
     } else {
       return bDiff < aDiff ? b : a;

@@ -5,7 +5,6 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
-  Divider,
   styled,
   ListSubheader,
 } from "@mui/material/";
@@ -15,7 +14,6 @@ import {
   RampRight as RampRightIcon,
   Announcement as AnnouncementIcon,
 } from "@mui/icons-material";
-import AppIcon from "../../assets/icons/publicTransport.png";
 
 export const About = () => {
   return (

@@ -1,11 +1,10 @@
 import { useContext, useState, useMemo, useEffect } from "react";
 import { getPreciseDistance } from "geolib";
 import { styled } from "@mui/material";
-import { companyMap } from "../../constants/Bus";
 import { AppContext } from "../../context/AppContext";
 import { EtaContext } from "../../context/EtaContext";
-import { etaTimeConverter, getLocalStorage, getActualCoIds } from "../../Utils";
-import { fetchEtas } from "../../fetch/transports";
+import { getLocalStorage, getActualCoIds } from "../../Utils";
+import { companyColor, companyMap } from "../../constants/Constants";
 
 export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
   const [autoList, setAutoList] = useState([]);
@@ -65,7 +64,7 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
         })
         .filter((e) => {
           return (
-            e.distance < 120 &&
+            e.distance < 200 &&
             (e.stopId.length === 6 || e.stopId.length === 16)
           );
         })
@@ -174,16 +173,8 @@ const AutoListRoot = styled("div")({
         fontWeight: "900",
       },
       ".company": {
+        ...companyColor,
         fontSize: "10px",
-        ".kmb": {
-          color: "#DD1E2F",
-        },
-        ".nwfb": {
-          color: "#857700",
-        },
-        ".ctb": {
-          color: "#6A42A7",
-        },
       },
     },
     ".NearStopOrigDest": {

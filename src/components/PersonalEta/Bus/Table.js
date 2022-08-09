@@ -1,18 +1,23 @@
+import { useContext } from "react";
 import { styled } from "@mui/material";
+import { EtaContext } from "../../../context/EtaContext";
 import { etaTimeConverter } from "../../../Utils";
+import { companyColor } from "../../../constants/Constants";
 
 export const Table = ({ sectionData }) => {
-  const result = [];
+  const { sectionCompareMode } = useContext(EtaContext);
 
-  sectionData.forEach((e, i) => {
+  const result = sectionData.map((e) => {
     const {
+      co,
       etas,
       route,
       stopName,
       location: { lat, lng },
     } = e;
 
-    result.push({
+    return {
+      co,
       route,
       etas:
         etas.length === 0
@@ -24,7 +29,7 @@ export const Table = ({ sectionData }) => {
               .slice(0, 3),
       stopName,
       latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${lat},${lng}`,
-    });
+    };
   });
 
   return (
@@ -32,7 +37,9 @@ export const Table = ({ sectionData }) => {
       {result.map((e, i) => {
         return (
           <div key={i} className="etaWrapper">
-            <div className="route">{e.route}</div>
+            <div className="route">
+              <span className={`${e.co}`}>{e.route}</span>
+            </div>
             <div className="stopName">
               <a href={e.latLngUrl}>{e.stopName}</a>
             </div>
@@ -58,6 +65,7 @@ const TableView = styled("div")({
     textAlign: "left",
     margin: "4px 0",
     ".route": {
+      ...companyColor,
       width: "10%",
       fontWeight: "900",
     },

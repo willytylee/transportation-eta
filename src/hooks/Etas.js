@@ -8,23 +8,21 @@ export const useEtas = ({ seq, routeObj, bound, isBoundLoading }) => {
   useEffect(() => {
     setIsEtaLoading(true);
     const intervalContent = () => {
+      const dataObj = bound
+        ? {
+            ...routeObj,
+            seq: parseInt(seq, 10),
+            bound,
+          }
+        : {
+            ...routeObj,
+            seq: parseInt(seq, 10),
+          };
       !isBoundLoading && // FetchEtas after finding correct bound!
-        (bound
-          ? fetchEtas({
-              ...routeObj,
-              seq: parseInt(seq, 10),
-              bound,
-            }).then((response) => {
-              setIsEtaLoading(false);
-              setEta(response.slice(0, 3));
-            })
-          : fetchEtas({
-              ...routeObj,
-              seq: parseInt(seq, 10),
-            }).then((response) => {
-              setIsEtaLoading(false);
-              setEta(response.slice(0, 3));
-            }));
+        fetchEtas(dataObj).then((response) => {
+          setIsEtaLoading(false);
+          setEta(response.slice(0, 3));
+        });
     };
 
     intervalContent();

@@ -15,20 +15,20 @@ export const fetchKmbEtas = async ({
 
   const ACCEPT_RANGE = 1;
 
-  data = data.filter((e) => {
-    return (
-      e.eta !== null &&
-      e.dir === bound &&
-      ((seq >= e.seq - ACCEPT_RANGE && seq <= e.seq + ACCEPT_RANGE) ||
-        seq === e.seq) // Only accept the seq +- 1 in order
-    );
-  });
-
-  return data.map((e) => ({
-    co: "kmb",
-    eta: e.eta,
-    seq: e.seq,
-    rmk_tc: e.rmk_tc,
-    stopId,
-  }));
+  return data
+    .filter((e) => {
+      return (
+        e.eta !== null &&
+        e.dir === bound &&
+        ((seq >= e.seq - ACCEPT_RANGE && seq <= e.seq + ACCEPT_RANGE) ||
+          seq === e.seq) // Only accept the seq +- 1 in order
+      );
+    })
+    .map((e) => ({
+      co: "kmb",
+      eta: e.eta,
+      seq: e.seq,
+      rmk_tc: e.rmk_tc,
+      stopId,
+    }));
 };

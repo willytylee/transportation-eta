@@ -1,60 +1,66 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { styled } from "@mui/material";
 import axios from "axios";
-import { stationMap } from "../../../constants/MTR";
+import { mtrLineColor, stationMap } from "../../../constants/Mtr";
 import { Table } from "./Table";
 
-export const MTRs = ({ section }) => {
+export const Mtrs = ({ section }) => {
   const [sectionData, setSectionData] = useState([]);
 
   useEffect(() => {
     setSectionData([]);
 
     const intervalContent = async () => {
-      const result = [];
+      const allPromises = [];
 
       for (let i = 0; i < section.length; i++) {
-        const sectionData = {};
-        const api = section[i];
-        const url = new URL(api.url);
-        const station = `${url.searchParams.get("sta")}`;
-        const lineSta = `${url.searchParams.get("line")}-${url.searchParams.get(
-          "sta"
-        )}`;
-        const apiReturn = await axios.get(api.url);
-        const stationData = apiReturn.data.data[lineSta];
-
-        sectionData.name = stationMap[station];
-        sectionData.direction = api.direction;
-        sectionData.down = {
-          dest:
-            stationData?.DOWN?.length > 1
-              ? stationMap[stationData.DOWN[0].dest]
-              : "",
-          ttnts: stationData?.DOWN?.map((e) =>
-            parseInt(e.ttnt) === 0
-              ? "準備埋站"
-              : parseInt(e.ttnt) >= 60
-              ? "沒有班次"
-              : `${e.ttnt}分鐘`
-          ),
-        };
-        sectionData.up = {
-          dest:
-            stationData?.UP?.length > 1
-              ? stationMap[stationData.UP[0].dest]
-              : "",
-          ttnts: stationData?.UP?.map((e) =>
-            parseInt(e.ttnt) === 0
-              ? "準備埋站"
-              : parseInt(e.ttnt) >= 60
-              ? "沒有班次"
-              : `${e.ttnt}分鐘`
-          ),
-        };
-        result.push(sectionData);
+        const { line, station } = section[i];
+        const promise = axios.get(
+          `https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${line}&sta=${station}`
+        );
+        allPromises.push(promise);
       }
-      setSectionData(result);
+
+      const stationRes = await Promise.all(allPromises);
+
+      setSectionData(
+        stationRes.map((e, i) => {
+          const { line, station, direction } = section[i];
+          const lineSta = `${line}-${station}`;
+          const stationData = e.data.data[lineSta];
+          const _sectionData = {};
+          _sectionData.name = stationMap[station];
+          _sectionData.direction = direction;
+          _sectionData.line = line;
+          _sectionData.down = {
+            dest:
+              stationData?.DOWN?.length > 1
+                ? stationMap[stationData.DOWN[0].dest]
+                : "",
+            ttnts: stationData?.DOWN?.map((e) =>
+              parseInt(e.ttnt) === 0
+                ? "準備埋站"
+                : parseInt(e.ttnt) >= 60
+                ? "沒有班次"
+                : `${e.ttnt}分鐘`
+            ),
+          };
+          _sectionData.up = {
+            dest:
+              stationData?.UP?.length > 1
+                ? stationMap[stationData.UP[0].dest]
+                : "",
+            ttnts: stationData?.UP?.map((e) =>
+              parseInt(e.ttnt) === 0
+                ? "準備埋站"
+                : parseInt(e.ttnt) >= 60
+                ? "沒有班次"
+                : `${e.ttnt}分鐘`
+            ),
+          };
+          return _sectionData;
+        })
+      );
     };
 
     intervalContent();
@@ -66,7 +72,9 @@ export const MTRs = ({ section }) => {
   return sectionData.map((e, i) => {
     return (
       <MTRRoot key={i}>
-        <div className="dest">{e.name}站</div>
+        <div className="dest">
+          <span className={`${e.line}`}>{e.name}站</span>
+        </div>
         <div className="etaGroupWrapper">
           <Table data={e} dir="down" />
           <Table data={e} dir="up" />
@@ -83,6 +91,7 @@ const MTRRoot = styled("div")({
   ".dest": {
     fontSize: "12px",
     width: "15%",
+    ...mtrLineColor,
   },
   ".etaGroupWrapper": {
     display: "flex",

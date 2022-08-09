@@ -1,15 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { AppBar, Toolbar, styled } from "@mui/material";
-import { Settings as SettingsIcon } from "@mui/icons-material";
+import {
+  Settings as SettingsIcon,
+  FormatListBulleted as FormatListBulletedIcon,
+} from "@mui/icons-material";
 import { fetchCurrWeather, fetchWarningList } from "../fetch/Weather";
 import { warningIconMap, weatherIconMap } from "../constants/Weather";
 import { SelectUserMenu } from "../components/SelectUserMenu";
+import { EtaContext } from "../context/EtaContext";
 
 export const Navbar = () => {
   const [currWeather, setCurrWeather] = useState({});
   const [warningMsg, setWarningMsg] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
+  const { updateSectionCompareMode } = useContext(EtaContext);
   const open = Boolean(anchorEl);
   const handleClose = () => {
     setAnchorEl(null);
@@ -48,7 +53,7 @@ export const Navbar = () => {
           </ul>
           <ul className="right">
             <li className="weather">
-              <Link to={"/weather"}>
+              <Link to="/weather">
                 {avgTemp?.toFixed(1)}°C /{" "}
                 {currWeather?.humidity?.data[0]?.value}%
                 <img src={weatherIconMap[currWeather.icon]} alt="" />
@@ -63,8 +68,16 @@ export const Navbar = () => {
                 })}
               </Link>
             </li>
+            {/* <li className="compareList">
+              <Link
+                to="/compare"
+                onClick={() => updateSectionCompareMode(true)}
+              >
+                <FormatListBulletedIcon />
+              </Link>
+            </li> */}
             <li className="settings">
-              <Link to={"/settings"}>
+              <Link to="/settings">
                 <SettingsIcon />
               </Link>
             </li>

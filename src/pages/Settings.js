@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import {
   List,
   ListItem,
@@ -66,7 +66,7 @@ export const Settings = () => {
                 overlap="circular"
                 invisible={appVersion === serVersion}
                 sx={{
-                  [".MuiBadge-badge "]: {
+                  ".MuiBadge-badge": {
                     minWidth: "14px",
                     height: "14px",
                   },

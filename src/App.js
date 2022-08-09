@@ -14,6 +14,7 @@ import { Install } from "./pages/Settings/Install";
 import { News } from "./pages/News";
 import { Map } from "./pages/Map";
 import { Update } from "./pages/Settings/Update";
+import { Compare } from "./pages/Compare";
 
 const App = () => {
   const { initDb, getGeoLocation, initAppVersion } = useContext(AppContext);
@@ -39,6 +40,7 @@ const App = () => {
           <Route path="/settings/install" element={<Install />} />
           <Route path="/settings/update" element={<Update />} />
           <Route path="/map" element={<Map />} />
+          <Route path="/compare" element={<Compare />} />
         </Routes>
       </Container>
       <BottomNav />

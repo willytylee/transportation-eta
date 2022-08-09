@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 import { Buses } from "./Bus/Buses.js";
-import { MTRs } from "./MTR/MTRs.js";
+import { Mtrs } from "./Mtr/Mtrs.js";
 
 export const Section = ({ category, gStopList, gRouteList }) => {
   return (
@@ -10,7 +10,10 @@ export const Section = ({ category, gStopList, gRouteList }) => {
         const firstCo = e[0].co;
         if (
           gStopList &&
-          (firstCo === "ctb" || firstCo === "kmb" || firstCo === "nwfb")
+          (firstCo === "ctb" ||
+            firstCo === "kmb" ||
+            firstCo === "nwfb" ||
+            firstCo === "gmb")
         ) {
           return (
             <Buses
@@ -21,7 +24,7 @@ export const Section = ({ category, gStopList, gRouteList }) => {
             />
           );
         } else if (firstCo === "mtr") {
-          return <MTRs key={i} section={e} />;
+          return <Mtrs key={i} section={e} />;
         }
         return null;
       })}

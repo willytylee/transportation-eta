@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext, useMemo } from "react";
 import { Card, styled } from "@mui/material";
 import { getLocalStorage, getActualCoIds } from "../../Utils";
-import { companyMap } from "../../constants/Bus";
 import { AppContext } from "../../context/AppContext";
 import { EtaContext } from "../../context/EtaContext";
+import { companyMap, companyColor } from "../../constants/Constants";
 
 export const RouteList = ({ route }) => {
   const [routeList, setRouteList] = useState([]);
@@ -106,16 +106,8 @@ const RouteListRoot = styled(Card)({
       fontWeight: "900",
     },
     ".company": {
+      ...companyColor,
       width: "20%",
-      ".kmb": {
-        color: "#DD1E2F",
-      },
-      ".nwfb": {
-        color: "#857700",
-      },
-      ".ctb": {
-        color: "#6A42A7",
-      },
     },
     ".origDest": {
       width: "80%",

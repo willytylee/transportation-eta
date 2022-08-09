@@ -1,4 +1,5 @@
 import { sortEtaObj } from "../../Utils";
+import { fetchGmbEtas } from "./Gmb";
 import { fetchKmbEtas } from "./Kmb";
 import { fetchNwfbCtbEtas } from "./NwfbCtb";
 
@@ -6,6 +7,7 @@ export const fetchEtas = async ({
   bound,
   co,
   dest,
+  gtfsId,
   orig,
   route,
   serviceType,
@@ -55,6 +57,16 @@ export const fetchEtas = async ({
             })
           );
         }
+      } else if (company_id === "gmb") {
+        etas = etas.concat(
+          await fetchGmbEtas({
+            co: company_id,
+            gtfsId,
+            seq,
+            route,
+            stopId: stops[company_id][seq - 1],
+          })
+        );
       }
     }
 

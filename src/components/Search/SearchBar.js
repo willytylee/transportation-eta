@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 import { TextField, styled, IconButton } from "@mui/material";
 import { Search as SearchIcon, Map as MapIcon } from "@mui/icons-material";
 import { AppContext } from "../../context/AppContext";
@@ -13,7 +13,7 @@ export const SearchBar = ({
   divRef,
 }) => {
   const { dbVersion } = useContext(AppContext);
-  const { currRoute } = useContext(EtaContext);
+  const { currRoute, updateCurrRoute } = useContext(EtaContext);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const textInput = useRef(null);
 
@@ -25,6 +25,12 @@ export const SearchBar = ({
   const handleMapDialogOnClose = () => {
     setMapDialogOpen(false);
   };
+
+  useEffect(() => {
+    if (!route) {
+      updateCurrRoute({});
+    }
+  }, [route]);
 
   return (
     <SearchBarWraper>

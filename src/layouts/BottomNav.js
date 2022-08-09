@@ -1,4 +1,4 @@
-import { useMemo, useContext, forwardRef } from "react";
+import { useContext } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import {
@@ -15,9 +15,11 @@ import {
   Announcement as AnnouncementIcon,
 } from "@mui/icons-material";
 import { AppContext } from "../context/AppContext";
+import { EtaContext } from "../context/EtaContext";
 
 export const BottomNav = () => {
   const { appVersion, serVersion, currentUserId } = useContext(AppContext);
+  const { updateSectionCompareMode } = useContext(EtaContext);
   const { enqueueSnackbar } = useSnackbar();
   const { pathname } = useLocation();
 
@@ -65,6 +67,9 @@ export const BottomNav = () => {
           style={({ isActive }) => (isActive ? activeStyle : undefined)}
           label="收藏"
           icon={<FavoriteIcon />}
+          onClick={() => {
+            updateSectionCompareMode(false);
+          }}
         />
       )}
       <BottomNavigationAction

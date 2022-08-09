@@ -35,7 +35,7 @@ export const Update = () => {
                 overlap="circular"
                 invisible={appVersion === serVersion}
                 sx={{
-                  [".MuiBadge-badge "]: {
+                  ".MuiBadge-badge": {
                     minWidth: "14px",
                     height: "14px",
                   },

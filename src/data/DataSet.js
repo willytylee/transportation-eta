@@ -142,6 +142,15 @@ export const dataSet = [
           [
             {
               seq: 1,
+              co: "gmb",
+              route: "1A",
+              gtfsId: "2002355",
+              stopId: "20001118",
+            },
+          ],
+          [
+            {
+              seq: 1,
               co: "kmb",
               route: "96R",
               stopId: "D7132C4D6287B688",
@@ -154,16 +163,14 @@ export const dataSet = [
           [
             {
               co: "mtr",
-              url: [
-                "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=TML&sta=TKW",
-              ],
+              line: "TML",
+              station: "TKW",
               direction: ["up", "down"],
             },
             {
               co: "mtr",
-              url: [
-                "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=TML&sta=SIH",
-              ],
+              line: "TML",
+              station: "SIH",
               direction: ["up", "down"],
             },
           ],
@@ -180,15 +187,6 @@ export const dataSet = [
       {
         title: "上班",
         data: [
-          [
-            {
-              co: "mtr",
-              url: [
-                "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=TML&sta=TKW",
-              ],
-              direction: ["up"],
-            },
-          ],
           [
             {
               seq: 13,
@@ -268,6 +266,18 @@ export const dataSet = [
               co: "kmb",
               route: "215X",
               stopId: "B7A8F179CD71B22E",
+            },
+          ],
+        ],
+      },
+      {
+        data: [
+          [
+            {
+              co: "mtr",
+              line: "TML",
+              station: "TKW",
+              direction: ["up", "down"],
             },
           ],
         ],
@@ -512,6 +522,15 @@ export const dataSet = [
               stopId: "701AC3250BF77D0E",
             },
           ],
+          [
+            {
+              seq: 1,
+              co: "gmb",
+              gtfsId: "2001006",
+              route: "29A",
+              stopId: "20003363",
+            },
+          ],
         ],
       },
       {
@@ -539,6 +558,15 @@ export const dataSet = [
               stopId: "05391B53044E30A8",
             },
           ],
+          [
+            {
+              seq: 1,
+              co: "gmb",
+              gtfsId: "2007266",
+              route: "99",
+              stopId: "20015279",
+            },
+          ],
         ],
       },
     ],
@@ -549,14 +577,23 @@ export const dataSet = [
     display: false,
     transportData: [
       {
-        title: "上班",
+        title: "九龍灣去西貢",
         data: [
           [
             {
               seq: 1,
+              route: "1",
+              co: "gmb",
+              gtfsId: "2002337",
+              stopId: "20001115",
+            },
+          ],
+          [
+            {
+              seq: 11,
               co: "kmb",
-              route: "96R",
-              stopId: "D7132C4D6287B688",
+              route: "13X",
+              stopId: "AA97FFC49AE957A5",
             },
           ],
         ],
@@ -569,25 +606,20 @@ export const dataSet = [
     display: false,
     transportData: [
       {
+        title: "九龍灣去西貢",
         data: [
           [
             {
-              seq: 1,
-              co: "kmb",
-              route: "N216",
-              stopId: "0D8135B0D81F29A1",
-            },
-            {
-              seq: 1,
-              co: "nwfb",
-              route: "N796",
-              stopId: "003329",
-            },
-            {
               seq: 11,
               co: "kmb",
-              route: "S1",
-              stopId: "89A83934270E9BFB",
+              route: "13X",
+              stopId: "AA97FFC49AE957A5",
+            },
+            {
+              seq: 3,
+              co: "kmb",
+              route: "238M",
+              stopId: "05391B53044E30A8",
             },
           ],
         ],

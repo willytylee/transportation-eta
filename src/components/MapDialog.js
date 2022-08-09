@@ -26,7 +26,7 @@ import {
 } from "react-leaflet";
 import { AppContext } from "../context/AppContext";
 import { etaTimeConverter, getActualCoIds, getLocalStorage } from "../Utils";
-import { companyMap } from "../constants/Bus";
+import { companyMap, companyColor } from "../constants/Constants";
 import { useEtas } from "../hooks/Etas";
 import { useCorrectBound } from "../hooks/Bound";
 import { EtaContext } from "../context/EtaContext";
@@ -39,6 +39,7 @@ export const MapDialog = ({
   const { dbVersion, location: currentLocation } = useContext(AppContext);
   const { currRoute, nearestStopId } = useContext(EtaContext);
   const [selectedStopIdx, setSelectedStopIdx] = useState(-1);
+  const [navBtnType, setNavBtnType] = useState("myLocation");
   const { correctBound, isBoundLoading } = useCorrectBound({ currRoute });
   const { eta, isEtaLoading } = useEtas({
     seq: selectedStopIdx + 1,
@@ -133,40 +134,6 @@ export const MapDialog = ({
     );
   };
 
-  const NavigationBtn = () => {
-    const map = useMap();
-
-    return (
-      <Avatar className="navBtnAvatar">
-        <IconButton
-          onClick={() => {
-            map.flyTo([currentLocation.lat, currentLocation.lng], 18);
-          }}
-        >
-          <MyLocationIcon />
-        </IconButton>
-      </Avatar>
-    );
-  };
-
-  const NearestStopBtn = () => {
-    const map = useMap();
-
-    const handleIconOnClick = () => {
-      const nearestStop = currRouteStopList[nearestStopIdx];
-      map.flyTo([nearestStop.location.lat, nearestStop.location.lng], 18);
-      setSelectedStopIdx(nearestStopIdx);
-    };
-
-    return (
-      <Avatar className="nearestStopBtnAvatar">
-        <IconButton onClick={handleIconOnClick}>
-          <PersonPinCircleIcon />
-        </IconButton>
-      </Avatar>
-    );
-  };
-
   const RouteBoundBtn = () => {
     const map = useMap();
 
@@ -185,6 +152,60 @@ export const MapDialog = ({
           onClick={handleIconOnClick}
         >
           <RouteIcon />
+        </IconButton>
+      </Avatar>
+    );
+  };
+
+  const NavBtn = () => {
+    const map = useMap();
+
+    map.on("drag", () => {
+      setNavBtnType("normal");
+    });
+
+    map.on("unload", () => {
+      setNavBtnType("myLocation");
+    });
+
+    if (navBtnType === "myLocation") {
+      const handleIconOnClick = () => {
+        const nearestStop = currRouteStopList[nearestStopIdx];
+        map.flyTo([nearestStop.location.lat, nearestStop.location.lng], 18);
+        setSelectedStopIdx(nearestStopIdx);
+        setNavBtnType("nearestStop");
+      };
+
+      return (
+        <Avatar className="navBtnAvatar">
+          <IconButton onClick={handleIconOnClick}>
+            <MyLocationIcon />
+          </IconButton>
+        </Avatar>
+      );
+    } else if (navBtnType === "nearestStop") {
+      const handleIconOnClick = () => {
+        map.flyTo([currentLocation.lat, currentLocation.lng], 18);
+        setNavBtnType("myLocation");
+      };
+
+      return (
+        <Avatar className="nearestStopBtnAvatar">
+          <IconButton onClick={handleIconOnClick}>
+            <PersonPinCircleIcon />
+          </IconButton>
+        </Avatar>
+      );
+    }
+    const handleIconOnClick = () => {
+      map.flyTo([currentLocation.lat, currentLocation.lng], 18);
+      setNavBtnType("myLocation");
+    };
+
+    return (
+      <Avatar className="navBtnAvatar normal">
+        <IconButton onClick={handleIconOnClick}>
+          <MyLocationIcon />
         </IconButton>
       </Avatar>
     );
@@ -286,15 +307,16 @@ export const MapDialog = ({
             ></Marker>
 
             <Polyline
-              pathOptions={{ color: "blue", opacity: 0.3 }}
+              pathOptions={{ color: "#2f305c", opacity: 0.3 }}
               positions={routeLine}
             />
 
             <PrevStopBtn />
             <NextStopBtn />
             <RouteBoundBtn />
-            <NearestStopBtn />
-            <NavigationBtn />
+            <NavBtn />
+            {/* <NearestStopBtn />
+            <NavigationBtn /> */}
           </MapContainer>
         </>
       )}
@@ -322,17 +344,9 @@ const DialogRoot = styled(Dialog)({
         ".headerWrapper": {
           width: "100%",
           ".coRoute": {
+            ...companyColor,
             ".route": {
               fontWeight: "900",
-            },
-            ".kmb": {
-              color: "#DD1E2F",
-            },
-            ".nwfb": {
-              color: "#857700",
-            },
-            ".ctb": {
-              color: "#6A42A7",
             },
           },
           ".destSpecial": {
@@ -382,9 +396,12 @@ const DialogRoot = styled(Dialog)({
         ".MuiButtonBase-root": {
           color: "black",
         },
-        "&.navBtnAvatar": {
+        "&.navBtnAvatar, &.nearestStopBtnAvatar": {
           right: "10px",
           bottom: "40px",
+          "&.normal button": {
+            color: "#777777",
+          },
         },
         "&.prevBtnAvatar": {
           top: "50%",
@@ -398,16 +415,11 @@ const DialogRoot = styled(Dialog)({
           width: "35px",
           height: "35px",
           marginTop: "-35px", // equal to width and height
-          right: "0",
           right: "10px",
-        },
-        "&.nearestStopBtnAvatar": {
-          right: "10px",
-          bottom: "90px",
         },
         "&.routeBoundBtnAvatar": {
           right: "10px",
-          bottom: "140px",
+          bottom: "90px",
         },
       },
       ".currLocationMarker": {
