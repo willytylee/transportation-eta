@@ -41,7 +41,7 @@ export const RouteList = ({ route }) => {
               (e.co.includes("kmb") ||
                 e.co.includes("nwfb") ||
                 e.co.includes("ctb") ||
-                e.co.includes("mtr")) &&
+                e.co.includes("gmb")) &&
               e.route === route &&
               e.dest.en !== e.orig.en &&
               e.dest.zh !== e.orig.zh

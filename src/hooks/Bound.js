@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { coPriority } from "../constants/Bus";
 import { fetchNwfbCtbRouteStop } from "../fetch/transports/NwfbCtb";
+import { getCoPriorityId } from "../Utils";
 
 export const useCorrectBound = ({ currRoute }) => {
   const [scoreI, setScoreI] = useState(-1);
@@ -12,17 +12,6 @@ export const useCorrectBound = ({ currRoute }) => {
     setScoreO(-1);
     const fetchRouteStop = async () => {
       if (Object.keys(currRoute).length !== 0) {
-        const getCoPriorityId = (currRoute) => {
-          let companyId = "";
-          for (let e of coPriority) {
-            if (Object.keys(currRoute.stops).includes(e)) {
-              companyId = e;
-              break;
-            }
-          }
-          return companyId;
-        };
-
         const companyId = getCoPriorityId(currRoute);
         const expandStopIdArr = currRoute.stops[companyId];
 

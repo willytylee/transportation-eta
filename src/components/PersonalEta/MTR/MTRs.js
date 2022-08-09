@@ -20,7 +20,7 @@ export const Mtrs = ({ section }) => {
 
       for (let i = 0; i < section.length; i++) {
         const { route, stopId, bound } = section[i];
-        const promise = fetchEtas({ co: ["mtr"], route, stopId, bound });
+        const promise = fetchEtas({ co: ["mtr"], route, stopId });
         allPromises.push(promise);
       }
 
@@ -28,7 +28,6 @@ export const Mtrs = ({ section }) => {
 
       setSectionData(
         result.map((e, i) => {
-          console.log(e);
           const { route, stopId, bound } = section[i];
           const stationData = e[0];
           const _sectionData = {};

@@ -39,7 +39,8 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
             return (
               (e.co.includes("kmb") ||
                 e.co.includes("nwfb") ||
-                e.co.includes("ctb")) &&
+                e.co.includes("ctb") ||
+                e.co.includes("gmb")) &&
               route === e.route.substring(0, route.length) &&
               e.dest.en !== e.orig.en &&
               e.dest.zh !== e.orig.zh

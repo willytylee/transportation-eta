@@ -3,6 +3,7 @@ export const companyMap = {
   ctb: "城巴",
   nwfb: "新巴",
   mtr: "港鐵",
+  gmb: "小巴",
 };
 
 export const companyColor = {
@@ -14,8 +15,8 @@ export const companyColor = {
   },
   ".ctb": {
     color: "#6A42A7",
-  }, 
-	".gmb":{  
-		color: "#1c7136"
-	}
+  },
+  ".gmb": {
+    color: "#1c7136",
+  },
 };

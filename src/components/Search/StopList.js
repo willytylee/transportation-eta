@@ -1,10 +1,9 @@
 import { useState, useEffect, useMemo, useContext } from "react";
 import { styled } from "@mui/material";
 import { getPreciseDistance } from "geolib";
-import { getLocalStorage } from "../../Utils";
+import { getCoPriorityId, getLocalStorage } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
 import { StopEta } from "./StopEta";
-import { coPriority } from "../../constants/Bus";
 import { useCorrectBound } from "../../hooks/Bound";
 import { EtaContext } from "../../context/EtaContext";
 
@@ -16,17 +15,6 @@ export const StopList = ({ route }) => {
   const { correctBound, isBoundLoading } = useCorrectBound({ currRoute });
 
   const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
-
-  const getCoPriorityId = (currRoute) => {
-    let companyId = "";
-    for (let e of coPriority) {
-      if (Object.keys(currRoute.stops).includes(e)) {
-        companyId = e;
-        break;
-      }
-    }
-    return companyId;
-  };
 
   // When the route number is changed
   useEffect(() => {

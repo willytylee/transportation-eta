@@ -1,5 +1,6 @@
 import moment from "moment";
 import { decompress as decompressJson } from "lzutf8-light";
+import { coPriority } from "./constants/Bus";
 
 export const etaTimeConverter = (etaStr, remark) => {
   let etaIntervalStr, remarkStr;
@@ -111,4 +112,15 @@ export const getActualCoIds = (routeObj) => {
     }
     return prev;
   }, []);
+};
+
+export const getCoPriorityId = (currRoute) => {
+  let companyId = "";
+  for (let e of coPriority) {
+    if (Object.keys(currRoute.stops).includes(e)) {
+      companyId = e;
+      break;
+    }
+  }
+  return companyId;
 };

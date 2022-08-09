@@ -59,14 +59,20 @@ export const fetchEtas = async ({
           );
         }
       } else if (company_id === "gmb") {
-        etas = etas.concat(
-          await fetchGmbEtas({
-            gtfsId,
-            seq,
-            route,
-            stopId: stops[company_id][seq - 1],
-          })
-        );
+        const _stopId = stopId
+          ? stopId
+          : seq && stops[company_id] && stops[company_id][seq - 1];
+
+        if (_stopId) {
+          etas = etas.concat(
+            await fetchGmbEtas({
+              gtfsId,
+              seq,
+              route,
+              stopId: _stopId,
+            })
+          );
+        }
       } else if (company_id === "mtr") {
         etas = etas.concat(
           await fetchMtrEtas({

@@ -1,1 +1,1 @@
-export const coPriority = ["kmb", "nwfb", "ctb"];
+export const coPriority = ["kmb", "nwfb", "ctb", "gmb"];
