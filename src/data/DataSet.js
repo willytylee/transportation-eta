@@ -163,16 +163,22 @@ export const dataSet = [
           [
             {
               co: "mtr",
-              line: "TML",
-              station: "TKW",
-              direction: ["up", "down"],
+              route: "TML",
+              stopId: "TKW",
+              bound: ["up", "down"],
             },
-            {
-              co: "mtr",
-              line: "TML",
-              station: "SIH",
-              direction: ["up", "down"],
-            },
+            // {
+            //   co: "mtr",
+            //   route: "TML",
+            //   stopId: "SIH",
+            //   bound: ["up"],
+            // },
+            // {
+            //   co: "mtr",
+            //   route: "TML",
+            //   stopId: "SIH",
+            //   bound: ["down"],
+            // },
           ],
         ],
       },
@@ -275,9 +281,9 @@ export const dataSet = [
           [
             {
               co: "mtr",
-              line: "TML",
-              station: "TKW",
-              direction: ["up", "down"],
+              route: "TML",
+              stopId: "TKW",
+              bound: ["up", "down"],
             },
           ],
         ],

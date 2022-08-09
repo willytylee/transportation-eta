@@ -2,17 +2,17 @@ import React from "react";
 import { styled } from "@mui/material";
 import { isValEqualInArr } from "../../../Utils";
 
-export const Table = ({ data, dir }) => {
-  const detail = data[dir];
+export const Table = ({ data, bound }) => {
+  const detail = data[bound];
   return (
     <>
-      {detail?.dest && data.direction.includes(dir) && (
+      {detail?.dest && data.bound.includes(bound) && (
         <MtrTable>
           <div className="arriveText">
             → <span className="dest">{detail.dest}</span>
           </div>
           <div className="ttntWrapper">
-            {isValEqualInArr(detail.ttnts) && detail.ttnts[0] == "沒有班次"
+            {detail.ttnts === "沒有班次"
               ? "已停站"
               : detail.ttnts
                   .map((e, j) => (

@@ -48,7 +48,7 @@ export const About = () => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary="交通路線 Crawling"
+            primary="交通路線整合"
             secondary={
               "HK Bus Crawling@2021, https://github.com/hkbus/hk-bus-crawling"
             }

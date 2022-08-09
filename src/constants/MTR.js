@@ -6,7 +6,7 @@ export const stationMap = {
   EAL: "東鐵線",
   HOK: "香港",
   KOW: "九龍",
-  AIR: "飛機場",
+  AIR: "機場",
   AWE: "亞洲國際博覽館",
   OLY: "奧林匹克",
   LAK: "麗景",
@@ -67,5 +67,12 @@ export const stationMap = {
 export const mtrLineColor = {
   ".TML": {
     color: "#9c2e00",
+  },
+};
+
+export const stationDestMap = {
+  TML: {
+    UP: stationMap.TUM,
+    DOWN: stationMap.WKS,
   },
 };
