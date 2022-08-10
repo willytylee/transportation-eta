@@ -20,34 +20,33 @@ export const Mtrs = ({ section }) => {
 
       for (let i = 0; i < section.length; i++) {
         const { route, stopId, bound } = section[i];
-        const promise = fetchEtas({ co: ["mtr"], route, stopId });
+        const promise = fetchEtas({ co: ["mtr"], route, stopId, bound });
         allPromises.push(promise);
       }
 
       const result = await Promise.all(allPromises);
 
       setSectionData(
-        result.map((e, i) => {
+        result.map((stationData, i) => {
           const { route, stopId, bound } = section[i];
-          const stationData = e[0];
           const _sectionData = {};
           _sectionData.name = stationMap[stopId];
           _sectionData.bound = bound;
           _sectionData.route = route;
           bound.forEach((e) => {
             const boundKey = e.toUpperCase();
+            const stationDataFiltered = stationData.filter(
+              (f) => e === f.bound
+            );
             _sectionData[e] = {
-              dest:
-                stationData[boundKey].length > 1
-                  ? stationMap[stationData[boundKey][0].dest]
-                  : stationDestMap[route][boundKey],
+              dest: stationDestMap[route][boundKey],
               ttnts:
-                stationData[boundKey].length > 1
-                  ? stationData[boundKey].map((e) =>
+                stationDataFiltered.length > 1
+                  ? stationDataFiltered.map((e) =>
                       parseInt(e.ttnt) === 0
                         ? "準備埋站"
                         : parseInt(e.ttnt) >= 60
-                        ? moment(e.time, "YYYY-MM-DD HH:mm:ss").format("HH:ss")
+                        ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:ss")
                         : `${e.ttnt}分鐘`
                     )
                   : "",
@@ -70,8 +69,8 @@ export const Mtrs = ({ section }) => {
         <span className={`${e.route}`}>{e.name}站</span>
       </div>
       <div className="etaGroupWrapper">
-        {e.bound.map((f) => (
-          <Table data={e} bound={f} />
+        {e.bound.map((f, i) => (
+          <Table key={i} data={e} bound={f} />
         ))}
       </div>
     </MTRRoot>

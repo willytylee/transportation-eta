@@ -20,10 +20,11 @@ export const fetchEtas = async ({
     let etas = [];
 
     for (const company_id of co) {
+      const _stopId = stopId
+        ? stopId
+        : seq && stops[company_id] && stops[company_id][seq - 1];
+
       if (company_id === "kmb") {
-        const _stopId = stopId
-          ? stopId
-          : seq && stops[company_id] && stops[company_id][seq - 1];
         if (_stopId) {
           etas = etas.concat(
             await fetchKmbEtas({
@@ -36,10 +37,6 @@ export const fetchEtas = async ({
           );
         }
       } else if (company_id === "nwfb" || company_id === "ctb") {
-        const _stopId = stopId
-          ? stopId
-          : seq && stops[company_id] && stops[company_id][seq - 1];
-
         const _bound =
           typeof bound === "string" || bound instanceof String
             ? bound
@@ -59,10 +56,6 @@ export const fetchEtas = async ({
           );
         }
       } else if (company_id === "gmb") {
-        const _stopId = stopId
-          ? stopId
-          : seq && stops[company_id] && stops[company_id][seq - 1];
-
         if (_stopId) {
           etas = etas.concat(
             await fetchGmbEtas({
@@ -74,10 +67,12 @@ export const fetchEtas = async ({
           );
         }
       } else if (company_id === "mtr") {
+        const _bound = Array.isArray(bound) ? bound : [bound[company_id]];
         etas = etas.concat(
           await fetchMtrEtas({
+            bound: _bound,
             route,
-            stopId,
+            stopId: _stopId,
           })
         );
       }

@@ -24,7 +24,7 @@ export const StopList = ({ route }) => {
 
   const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
 
-  const handleChange = (panel) => (event, isExpanded) => {
+  const handleChange = (panel) => (e, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
   // When the route number is changed

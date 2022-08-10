@@ -21,4 +21,4 @@ export const companyColor = {
   },
 };
 
-export const coPriority = ["kmb", "nwfb", "ctb", "gmb"];
+export const coPriority = ["kmb", "nwfb", "ctb", "gmb", "mtr"];
