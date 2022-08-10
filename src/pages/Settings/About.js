@@ -7,7 +7,6 @@ import {
   Avatar,
   styled,
   ListSubheader,
-  Typography,
 } from "@mui/material/";
 import {
   DepartureBoard as DepartureBoardIcon,

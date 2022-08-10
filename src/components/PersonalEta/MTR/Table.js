@@ -1,6 +1,5 @@
 import React from "react";
 import { styled } from "@mui/material";
-import { isValEqualInArr } from "../../../Utils";
 
 export const Table = ({ data, bound }) => {
   const detail = data[bound];

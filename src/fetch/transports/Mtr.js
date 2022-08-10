@@ -6,11 +6,12 @@ export const fetchMtrEtas = async ({ stopId, route, bound }) => {
   );
 
   const _bound = bound.map((e) => {
-    if (e === "up" || e === "UT") {
+    if (e === "up" || e.includes("UT")) {
       return "up";
-    } else if (e === "down" || e === "DT") {
+    } else if (e === "down" || e.includes("DT")) {
       return "down";
     }
+    return "";
   });
 
   const { data } = response.data;
