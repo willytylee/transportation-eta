@@ -1,5 +1,4 @@
 import { styled } from "@mui/material";
-import moment from "moment";
 import { etaTimeConverter, parseMtrEtas } from "../../Utils";
 import { useEtas } from "../../hooks/Etas";
 
@@ -39,7 +38,9 @@ export const StopEta = ({
             )
           )
         ) : (
-          <div>沒有班次</div>
+          <div>
+            {routeObj.co[0] === "mtr" ? "沒有相關班次資料" : "沒有班次"}
+          </div>
         )}
       </div>
     </StopEtaRoot>

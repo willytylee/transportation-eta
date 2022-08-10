@@ -153,6 +153,6 @@ export const parseMtrEtas = (e) => {
   return parseInt(e.ttnt) === 0
     ? "準備埋站"
     : parseInt(e.ttnt) >= 60
-    ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:ss")
+    ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:mm")
     : `${e.ttnt}分鐘`;
 };

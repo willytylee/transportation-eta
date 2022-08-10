@@ -33,7 +33,6 @@ export const ChangeLog = () => {
           >
             加入最新交通消息功能。
           </li>
-          <li>加入用戶pin碼功能。</li>
           <li
             className="underline"
             onClick={() => navigate("/settings/update", { replace: true })}
@@ -50,7 +49,7 @@ export const ChangeLog = () => {
             className="underline"
             onClick={() => navigate("/settings", { replace: true })}
           >
-            加入選擇用戶功能。
+            加入選擇用戶及用戶pin碼功能。
           </li>
           <li
             className="underline"

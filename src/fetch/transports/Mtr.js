@@ -17,13 +17,17 @@ export const fetchMtrEtas = async ({ stopId, route, bound }) => {
 
   const upDownEtas = data[Object.keys(data)[0]];
 
-  const downArr = upDownEtas.DOWN.map((e) => {
-    return { ...e, bound: "down" };
-  });
+  const downArr = upDownEtas.DOWN
+    ? upDownEtas.DOWN.map((e) => {
+        return { ...e, bound: "down" };
+      })
+    : [];
 
-  const upArr = upDownEtas.UP.map((e) => {
-    return { ...e, bound: "up" };
-  });
+  const upArr = upDownEtas.UP
+    ? upDownEtas.UP.map((e) => {
+        return { ...e, bound: "up" };
+      })
+    : [];
 
   const fullArr = downArr.concat(upArr);
 
