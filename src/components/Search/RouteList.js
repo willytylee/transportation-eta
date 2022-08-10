@@ -69,7 +69,7 @@ export const RouteList = ({ route }) => {
                 {getCoByStopObj(e)
                   .map((coCode, i) => {
                     return (
-                      <div key={i}>
+                      <span key={i}>
                         <span className={coCode}>
                           {coCode !== "mtr" && companyMap[coCode]}
                           {coCode === "mtr" && (
@@ -79,7 +79,7 @@ export const RouteList = ({ route }) => {
                             </span>
                           )}
                         </span>
-                      </div>
+                      </span>
                     );
                   })
                   .reduce((a, b) => [a, " + ", b])}

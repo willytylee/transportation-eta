@@ -25,11 +25,17 @@ import {
   Polyline,
 } from "react-leaflet";
 import { AppContext } from "../context/AppContext";
-import { etaTimeConverter, getCoByStopObj, getLocalStorage } from "../Utils";
+import {
+  etaTimeConverter,
+  getCoByStopObj,
+  getLocalStorage,
+  parseMtrEtas,
+} from "../Utils";
 import { companyMap, companyColor } from "../constants/Constants";
 import { useEtas } from "../hooks/Etas";
 import { useCorrectBound } from "../hooks/Bound";
 import { EtaContext } from "../context/EtaContext";
+import { stationMap } from "../constants/Mtr";
 
 export const MapDialog = ({
   mapDialogOpen,
@@ -227,13 +233,18 @@ export const MapDialog = ({
                   {getCoByStopObj(currRoute)
                     .map((e, i) => {
                       return (
-                        <span key={i} className={e}>
-                          {companyMap[e]}
+                        <span key={i}>
+                          <span className={e}>
+                            {companyMap[e]}
+                            <span className={`${currRoute.route}`}>
+                              {" "}
+                              {stationMap[currRoute.route]}
+                            </span>
+                          </span>
                         </span>
                       );
                     })
                     .reduce((a, b) => [a, " + ", b])}{" "}
-                  <span className="route">{currRoute.route}</span>
                 </div>
                 <div className="destSpecial">
                   {currRoute.orig?.zh} →{" "}
@@ -253,13 +264,17 @@ export const MapDialog = ({
                       {isEtaLoading || isBoundLoading ? (
                         <div className="eta">載入中</div>
                       ) : eta.length !== 0 ? (
-                        eta.map((e, i) => {
-                          return (
+                        eta.map((e, i) =>
+                          e.co === "mtr" ? (
+                            <div key={i} className="eta" title={e.seq}>
+                              {parseMtrEtas(e)}
+                            </div>
+                          ) : (
                             <div key={i} className="eta" title={e.seq}>
                               {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
                             </div>
-                          );
-                        })
+                          )
+                        )
                       ) : (
                         <div>沒有班次</div>
                       )}
