@@ -24,8 +24,8 @@ export const fetchEtas = async ({
         ? stopId
         : seq && stops[company_id] && stops[company_id][seq - 1];
 
-      if (company_id === "kmb") {
-        if (_stopId) {
+      if (_stopId) {
+        if (company_id === "kmb") {
           etas = etas.concat(
             await fetchKmbEtas({
               bound: bound[company_id],
@@ -35,14 +35,12 @@ export const fetchEtas = async ({
               stopId: _stopId,
             })
           );
-        }
-      } else if (company_id === "nwfb" || company_id === "ctb") {
-        const _bound =
-          typeof bound === "string" || bound instanceof String
-            ? bound
-            : bound[company_id];
+        } else if (company_id === "nwfb" || company_id === "ctb") {
+          const _bound =
+            typeof bound === "string" || bound instanceof String
+              ? bound
+              : bound[company_id];
 
-        if (_stopId) {
           etas = etas.concat(
             await fetchNwfbCtbEtas({
               bound: _bound,
@@ -54,9 +52,7 @@ export const fetchEtas = async ({
               stopId: _stopId,
             })
           );
-        }
-      } else if (company_id === "gmb") {
-        if (_stopId) {
+        } else if (company_id === "gmb") {
           etas = etas.concat(
             await fetchGmbEtas({
               gtfsId,
@@ -65,16 +61,16 @@ export const fetchEtas = async ({
               stopId: _stopId,
             })
           );
+        } else if (company_id === "mtr") {
+          const _bound = Array.isArray(bound) ? bound : [bound[company_id]];
+          etas = etas.concat(
+            await fetchMtrEtas({
+              bound: _bound,
+              route,
+              stopId: _stopId,
+            })
+          );
         }
-      } else if (company_id === "mtr") {
-        const _bound = Array.isArray(bound) ? bound : [bound[company_id]];
-        etas = etas.concat(
-          await fetchMtrEtas({
-            bound: _bound,
-            route,
-            stopId: _stopId,
-          })
-        );
       }
     }
 
