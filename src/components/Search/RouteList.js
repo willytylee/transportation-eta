@@ -1,6 +1,11 @@
 import { useState, useEffect, useContext, useMemo } from "react";
 import { Card, styled } from "@mui/material";
-import { getLocalStorage, getActualCoIds } from "../../Utils";
+import {
+  getLocalStorage,
+  getCoByStopObj,
+  basicFiltering,
+  sortByCompany,
+} from "../../Utils";
 import { AppContext } from "../../context/AppContext";
 import { EtaContext } from "../../context/EtaContext";
 import { companyMap, companyColor } from "../../constants/Constants";
@@ -36,87 +41,81 @@ export const RouteList = ({ route }) => {
       setRouteList(
         Object.keys(gRouteList)
           .map((e) => gRouteList[e])
-          .filter((e) => {
-            return (
-              (e.co.includes("kmb") ||
-                e.co.includes("nwfb") ||
-                e.co.includes("ctb") ||
-                e.co.includes("gmb")) &&
-              e.route === route &&
-              e.dest.en !== e.orig.en &&
-              e.dest.zh !== e.orig.zh
-            );
-          })
-          .sort(
-            (a, b) => parseInt(a.serviceType, 10) - parseInt(b.serviceType, 10)
-          )
+          .filter((e) => basicFiltering(e))
+          .filter((e) => e.route === route)
+          .sort((a, b) => sortByCompany(a, b))
       );
   }, [route]);
 
-  return routeList.map((e, i) => {
-    return (
-      <RouteListRoot
-        key={i}
-        onClick={() => handleCardOnClick(i)}
-        variant="outlined"
-      >
-        <div
-          title={JSON.stringify(e.bound)}
-          className={`routeTitle ${
-            isMatchCurrRoute(currRoute, e) ? "matched" : ""
-          }`}
-        >
-          <div className="company">
-            {getActualCoIds(e)
-              .map((e, i) => {
-                return (
-                  <span key={i} className={e}>
-                    {companyMap[e]}
-                  </span>
-                );
-              })
-              .reduce((a, b) => [a, " + ", b])}
-          </div>
-          <div className="origDest">
-            {e.orig.zh} → <span className="dest">{e.dest.zh}</span>{" "}
-            <span className="special">
-              {" "}
-              {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
-            </span>
-          </div>
-        </div>
-      </RouteListRoot>
-    );
-  });
+  return (
+    <RouteListRoot>
+      {routeList.map((e, i) => {
+        return (
+          <Card key={i} onClick={() => handleCardOnClick(i)}>
+            <div
+              title={JSON.stringify(e.bound)}
+              className={`routeTitle ${
+                isMatchCurrRoute(currRoute, e) ? "matched" : ""
+              }`}
+            >
+              <div className="company">
+                {getCoByStopObj(e)
+                  .map((e, i) => {
+                    return (
+                      <span key={i} className={e}>
+                        {companyMap[e]}
+                      </span>
+                    );
+                  })
+                  .reduce((a, b) => [a, " + ", b])}
+              </div>
+              <div className="origDest">
+                {e.orig.zh} → <span className="dest">{e.dest.zh}</span>{" "}
+                <span className="special">
+                  {" "}
+                  {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
+                </span>
+              </div>
+            </div>
+          </Card>
+        );
+      })}
+    </RouteListRoot>
+  );
 };
 
-const RouteListRoot = styled(Card)({
-  margin: "4px",
-  ".routeTitle": {
-    padding: "4px",
-    fontSize: "13px",
-    display: "flex",
-    float: "left",
-    width: "100%",
-    "&.matched": {
-      backgroundColor: "lightyellow",
-    },
-    ".route": {
-      width: "10%",
-      fontWeight: "900",
-    },
-    ".company": {
-      ...companyColor,
-      width: "20%",
-    },
-    ".origDest": {
-      width: "80%",
-      ".dest": {
+const RouteListRoot = styled("div")({
+  marginBottom: "14px",
+  ".MuiPaper-root": {
+    margin: "2px 4px",
+    boxShadow: "unset",
+    border: "0.5px solid lightgrey",
+    ".routeTitle": {
+      padding: "4px",
+      fontSize: "13px",
+      display: "flex",
+      float: "left",
+      width: "100%",
+      "&.matched": {
+        backgroundColor: "lightyellow",
+      },
+      ".route": {
+        width: "10%",
         fontWeight: "900",
       },
-      ".special": {
-        fontSize: "10px",
-        fontWeight: "normal",
+      ".company": {
+        ...companyColor,
+        width: "20%",
+      },
+      ".origDest": {
+        width: "80%",
+        ".dest": {
+          fontWeight: "900",
+        },
+        ".special": {
+          fontSize: "10px",
+          fontWeight: "normal",
+        },
       },
     },
   },

@@ -26,7 +26,7 @@ export const useCorrectBound = ({ currRoute }) => {
           const StopsIPromise = fetchNwfbCtbRouteStop({
             ...currRoute,
             co: companyId,
-            bound: "O",
+            bound: "I",
           });
 
           const StopsOPromise = fetchNwfbCtbRouteStop({
@@ -45,13 +45,16 @@ export const useCorrectBound = ({ currRoute }) => {
           const arrI = StopsI.map((e) => e.stop);
           const arrO = StopsO.map((e) => e.stop);
 
+          let _scoreI = 0;
+          let _scoreO = 0;
+
           for (let i = 1; i < Math.round(expandStopIdArr.length / 2); i++) {
             for (let j = 0; j < arrI.length - 1; j++) {
               if (
                 expandStopIdArr[i - 1] === arrI[j - 1] &&
                 expandStopIdArr[i] === arrI[j]
               ) {
-                setScoreI((prev) => prev + 1);
+                _scoreI++;
               }
             }
             for (let k = 0; k < arrO.length - 1; k++) {
@@ -59,10 +62,12 @@ export const useCorrectBound = ({ currRoute }) => {
                 expandStopIdArr[i - 1] === arrO[k - 1] &&
                 expandStopIdArr[i] === arrO[k]
               ) {
-                setScoreO((prev) => prev + 1);
+                _scoreO++;
               }
             }
           }
+          setScoreI(_scoreI);
+          setScoreO(_scoreO);
         } else {
           setBoundLoading(false);
         }
@@ -75,6 +80,6 @@ export const useCorrectBound = ({ currRoute }) => {
   return {
     isBoundLoading,
     correctBound:
-      scoreI && scoreO === -1 ? undefined : scoreI > scoreO ? "I" : "O",
+      scoreI === -1 && scoreO === -1 ? undefined : scoreI > scoreO ? "I" : "O",
   };
 };

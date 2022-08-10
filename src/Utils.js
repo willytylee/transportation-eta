@@ -1,6 +1,6 @@
 import moment from "moment";
 import { decompress as decompressJson } from "lzutf8-light";
-import { coPriority } from "./constants/Bus";
+import { coPriority } from "./constants/Constants";
 
 export const etaTimeConverter = (etaStr, remark) => {
   let etaIntervalStr, remarkStr;
@@ -105,7 +105,7 @@ export const getHeatIndex = (temperature, humidity) => {
   return (heatIndex - 32) / 1.8;
 };
 
-export const getActualCoIds = (routeObj) => {
+export const getCoByStopObj = (routeObj) => {
   return routeObj.co.reduce((prev, curr) => {
     if (Object.keys(routeObj.stops).includes(curr)) {
       prev.push(curr);
@@ -123,4 +123,28 @@ export const getCoPriorityId = (currRoute) => {
     }
   }
   return companyId;
+};
+
+export const basicFiltering = (e) => {
+  return (
+    (e.co.includes("kmb") ||
+      e.co.includes("nwfb") ||
+      e.co.includes("ctb") ||
+      e.co.includes("gmb") ||
+      e.co.includes("mtr")) &&
+    e.dest.en !== e.orig.en &&
+    e.dest.zh !== e.orig.zh
+  );
+};
+
+export const sortByCompany = (a, b) => {
+  const coA = coPriority.indexOf(getCoByStopObj(a)[0]);
+  const coB = coPriority.indexOf(getCoByStopObj(b)[0]);
+  if (coA < coB) {
+    return -1;
+  }
+  if (coA > coB) {
+    return 1;
+  }
+  return 0;
 };

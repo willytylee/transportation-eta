@@ -25,7 +25,7 @@ import {
   Polyline,
 } from "react-leaflet";
 import { AppContext } from "../context/AppContext";
-import { etaTimeConverter, getActualCoIds, getLocalStorage } from "../Utils";
+import { etaTimeConverter, getCoByStopObj, getLocalStorage } from "../Utils";
 import { companyMap, companyColor } from "../constants/Constants";
 import { useEtas } from "../hooks/Etas";
 import { useCorrectBound } from "../hooks/Bound";
@@ -224,7 +224,7 @@ export const MapDialog = ({
             <Grid>
               <div className="headerWrapper">
                 <div className="coRoute">
-                  {getActualCoIds(currRoute)
+                  {getCoByStopObj(currRoute)
                     .map((e, i) => {
                       return (
                         <span key={i} className={e}>

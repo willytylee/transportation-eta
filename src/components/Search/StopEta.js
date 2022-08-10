@@ -4,13 +4,8 @@ import { useEtas } from "../../hooks/Etas";
 
 export const StopEta = ({
   seq,
-  stopObj: {
-    name,
-    stopId,
-    location: { lat, lng },
-  },
+  stopObj: { name, stopId },
   routeObj,
-  isNearestStop,
   bound,
   isBoundLoading,
 }) => {
@@ -22,15 +17,10 @@ export const StopEta = ({
   });
 
   return (
-    <StopEtaRoot className={isNearestStop ? "highlighted" : ""}>
+    <StopEtaRoot>
       <div className="seq">{seq}</div>
-      <div className="stop">
-        <a
-          href={`https://www.google.com.hk/maps/search/?api=1&query=${lat},${lng}`}
-          title={stopId}
-        >
-          {name.zh}
-        </a>
+      <div className="stop" title={stopId}>
+        {name.zh}
       </div>
       <div className="etas">
         {isEtaLoading || isBoundLoading ? (
@@ -51,14 +41,13 @@ export const StopEta = ({
 
 const StopEtaRoot = styled("div")({
   display: "flex",
-  padding: "3px",
-  "&.highlighted": { backgroundColor: "lightblue" },
+  padding: "3px 0",
+  width: "100%",
   ".seq": {
     width: "5%",
   },
   ".stop": {
     width: "55%",
-    textDecoration: "underline",
   },
   ".etas": {
     width: "40%",

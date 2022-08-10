@@ -3,7 +3,12 @@ import { getPreciseDistance } from "geolib";
 import { styled } from "@mui/material";
 import { AppContext } from "../../context/AppContext";
 import { EtaContext } from "../../context/EtaContext";
-import { getLocalStorage, getActualCoIds } from "../../Utils";
+import {
+  getLocalStorage,
+  getCoByStopObj,
+  basicFiltering,
+  sortByCompany,
+} from "../../Utils";
 import { companyColor, companyMap } from "../../constants/Constants";
 
 export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
@@ -21,7 +26,19 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
   const gRouteList = useMemo(() => getLocalStorage("routeList"), [dbVersion]);
   const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
 
-  const sortByRoute = (a, b) => {
+  const sortByRouteThenCo = (a, b) => {
+    let routeReturn = 0;
+    if (a.route < b.route) {
+      routeReturn = -1;
+    }
+    if (a.route > b.route) {
+      routeReturn = 1;
+    }
+
+    return routeReturn || sortByCompany(a, b); // Sort by Route first and than sort by company
+  };
+
+  const sortByDistThenRoute = (a, b) => {
     const routeA = parseInt(a.route.replace(/\D/g, ""));
     const routeB = parseInt(b.route.replace(/\D/g, ""));
 
@@ -35,18 +52,9 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
       setAutoList(
         Object.keys(gRouteList)
           .map((e) => gRouteList[e])
-          .filter((e) => {
-            return (
-              (e.co.includes("kmb") ||
-                e.co.includes("nwfb") ||
-                e.co.includes("ctb") ||
-                e.co.includes("gmb")) &&
-              route === e.route.substring(0, route.length) &&
-              e.dest.en !== e.orig.en &&
-              e.dest.zh !== e.orig.zh
-            );
-          })
-          .sort((a, b) => sortByRoute(a, b))
+          .filter((e) => basicFiltering(e))
+          .filter((e) => route === e.route.substring(0, route.length))
+          .sort((a, b) => sortByRouteThenCo(a, b))
       );
     } else {
       setTitle("附近路線");
@@ -82,12 +90,7 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
 
       const routeList = Object.keys(gRouteList)
         .map((e) => gRouteList[e])
-        .filter(
-          (e) =>
-            e.co.includes("kmb") ||
-            e.co.includes("nwfb") ||
-            e.co.includes("ctb")
-        );
+        .filter((e) => basicFiltering(e));
 
       const routeListNearBy = [];
 
@@ -109,7 +112,7 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
         }
       });
 
-      setAutoList(routeListNearBy.sort((a, b) => sortByRoute(a, b)));
+      setAutoList(routeListNearBy.sort((a, b) => sortByDistThenRoute(a, b)));
     }
   }, [route]);
 
@@ -122,7 +125,7 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
             <div className="routeCompany">
               <div className="route">{e.route}</div>
               <div className="company">
-                {getActualCoIds(e)
+                {getCoByStopObj(e)
                   .map((e, i) => {
                     return (
                       <span key={i} className={e}>
@@ -134,18 +137,27 @@ export const AutoList = ({ route, setAnchorEl, setRoute, dbVersion }) => {
               </div>
             </div>
             <div className="NearStopOrigDest">
-              {e.stopIdNearBy && (
-                <div className="StopNearBy">
-                  {gStopList[e.stopIdNearBy].name.zh} - {e.distance}米
+              {e.stopIdNearBy ? (
+                <>
+                  <div className="StopNearBy">{e.distance}米</div>
+                  <div>
+                    {gStopList[e.stopIdNearBy].name.zh} →{" "}
+                    <span className="dest">{e.dest.zh}</span>
+                    <span className="special">
+                      {" "}
+                      {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <div>
+                  {e.orig.zh} → <span className="dest">{e.dest.zh}</span>
+                  <span className="special">
+                    {" "}
+                    {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
+                  </span>
                 </div>
               )}
-              <div>
-                {e.orig.zh} → <span className="dest">{e.dest.zh}</span>
-                <span className="special">
-                  {" "}
-                  {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
-                </span>
-              </div>
             </div>
           </div>
         );

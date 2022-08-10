@@ -1,13 +1,6 @@
 import axios from "axios";
 
-export const fetchNwfbCtbEtas = async ({
-  co,
-  stopId,
-  route,
-  bound,
-  dest,
-  orig,
-}) => {
+export const fetchNwfbCtbEtas = async ({ co, stopId, route, bound }) => {
   const response = await axios.get(
     `https://rt.data.gov.hk/v1.1/transport/citybus-nwfb/eta/${co}/${stopId}/${route}`
   );
