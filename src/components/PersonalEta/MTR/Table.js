@@ -12,8 +12,8 @@ export const Table = ({ data, bound }) => {
             → <span className="dest">{detail.dest}</span>
           </div>
           <div className="ttntWrapper">
-            {detail.ttnts === "沒有班次"
-              ? "已停站"
+            {detail.ttnts === ""
+              ? "已停駛"
               : detail.ttnts
                   .map((e, j) => (
                     <div className="ttnt" key={j}>

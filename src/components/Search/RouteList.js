@@ -9,6 +9,7 @@ import {
 import { AppContext } from "../../context/AppContext";
 import { EtaContext } from "../../context/EtaContext";
 import { companyMap, companyColor } from "../../constants/Constants";
+import { etaExcluded, stationMap } from "../../constants/Mtr";
 
 export const RouteList = ({ route }) => {
   const [routeList, setRouteList] = useState([]);
@@ -38,13 +39,19 @@ export const RouteList = ({ route }) => {
   // When the route number is changed, update RouteList
   useEffect(() => {
     gRouteList &&
-      setRouteList(
-        Object.keys(gRouteList)
-          .map((e) => gRouteList[e])
-          .filter((e) => basicFiltering(e))
-          .filter((e) => e.route === route)
-          .sort((a, b) => sortByCompany(a, b))
-      );
+      (route === "MTR"
+        ? setRouteList(
+            Object.keys(gRouteList)
+              .map((e) => gRouteList[e])
+              .filter((e) => e.co.includes("mtr"))
+          )
+        : setRouteList(
+            Object.keys(gRouteList)
+              .map((e) => gRouteList[e])
+              .filter((e) => basicFiltering(e))
+              .filter((e) => e.route === route)
+              .sort((a, b) => sortByCompany(a, b))
+          ));
   }, [route]);
 
   return (
@@ -60,11 +67,20 @@ export const RouteList = ({ route }) => {
             >
               <div className="company">
                 {getCoByStopObj(e)
-                  .map((e, i) => {
+                  .map((coCode, i) => {
+                    console.log(e);
                     return (
-                      <span key={i} className={e}>
-                        {companyMap[e]}
-                      </span>
+                      <div key={i}>
+                        <span className={coCode}>
+                          {companyMap[coCode]}
+                          {coCode === "mtr" && (
+                            <span className={`${e.route}`}>
+                              {" "}
+                              {stationMap[e.route]}
+                            </span>
+                          )}
+                        </span>
+                      </div>
                     );
                   })
                   .reduce((a, b) => [a, " + ", b])}
@@ -74,6 +90,7 @@ export const RouteList = ({ route }) => {
                 <span className="special">
                   {" "}
                   {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
+                  {etaExcluded.includes(e.route) && <>*</>}
                 </span>
               </div>
             </div>

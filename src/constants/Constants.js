@@ -1,3 +1,4 @@
+import { mtrLineColor } from "./Mtr";
 export const companyMap = {
   kmb: "九巴",
   ctb: "城巴",
@@ -18,6 +19,10 @@ export const companyColor = {
   },
   ".gmb": {
     color: "#1c7136",
+  },
+  ".mtr": {
+    color: "#767676",
+    ...mtrLineColor,
   },
 };
 
