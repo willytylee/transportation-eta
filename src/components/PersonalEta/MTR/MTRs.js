@@ -8,6 +8,7 @@ import {
 } from "../../../constants/Mtr";
 import { Table } from "./Table";
 import { fetchEtas } from "../../../fetch/transports";
+import { parseMtrEtas } from "../../../Utils";
 
 export const Mtrs = ({ section }) => {
   const [sectionData, setSectionData] = useState([]);
@@ -42,13 +43,7 @@ export const Mtrs = ({ section }) => {
               dest: stationDestMap[route][boundKey],
               ttnts:
                 stationDataFiltered.length > 1
-                  ? stationDataFiltered.map((e) =>
-                      parseInt(e.ttnt) === 0
-                        ? "準備埋站"
-                        : parseInt(e.ttnt) >= 60
-                        ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:ss")
-                        : `${e.ttnt}分鐘`
-                    )
+                  ? stationDataFiltered.map((e) => parseMtrEtas(e))
                   : "",
             };
           });

@@ -1,5 +1,6 @@
 import { styled } from "@mui/material";
-import { etaTimeConverter } from "../../Utils";
+import moment from "moment";
+import { etaTimeConverter, parseMtrEtas } from "../../Utils";
 import { useEtas } from "../../hooks/Etas";
 
 export const StopEta = ({
@@ -26,11 +27,17 @@ export const StopEta = ({
         {isEtaLoading || isBoundLoading ? (
           <div className="eta">載入中</div>
         ) : eta.length !== 0 ? (
-          eta.map((e, i) => (
-            <div key={i} className="eta" title={e.seq}>
-              {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
-            </div>
-          ))
+          eta.map((e, i) =>
+            e.co === "mtr" ? (
+              <div key={i} className="eta" title={e.seq}>
+                {parseMtrEtas(e)}
+              </div>
+            ) : (
+              <div key={i} className="eta" title={e.seq}>
+                {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
+              </div>
+            )
+          )
         ) : (
           <div>沒有班次</div>
         )}

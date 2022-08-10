@@ -7,6 +7,7 @@ import {
   Avatar,
   styled,
   ListSubheader,
+  Typography,
 } from "@mui/material/";
 import {
   DepartureBoard as DepartureBoardIcon,
@@ -24,14 +25,27 @@ export const About = () => {
       <ListSubheader>最新資訊</ListSubheader>
       <ListItem disablePadding>
         <ListItemButton
-          onClick={() => navigate("/settings/about/news", { replace: true })}
+          onClick={() =>
+            navigate("/settings/about/changeLog", { replace: true })
+          }
         >
           <ListItemAvatar>
             <Avatar>
               <InfoIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary="最新功能" secondary={"一覽所有最新功能"} />
+          <ListItemText
+            className="newsText"
+            primary="最新功能"
+            secondary={
+              <span>
+                加入港鐵搜索功能, 輸入MTR即可顯示所有港鐵路線
+                <br />
+                加入綠色小巴搜索, 收藏及到站時間排位功能
+                <br />
+              </span>
+            }
+          />
         </ListItemButton>
       </ListItem>
       <ListSubheader>第三方資料來源</ListSubheader>
@@ -120,6 +134,11 @@ const ListRoot = styled(List)({
       img: {
         width: "70%",
       },
+    },
+  },
+  ".newsText": {
+    ".MuiListItemText-secondary": {
+      fontSize: "12px",
     },
   },
 });

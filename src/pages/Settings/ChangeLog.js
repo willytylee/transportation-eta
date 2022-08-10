@@ -1,7 +1,7 @@
 import { styled, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-export const News = () => {
+export const ChangeLog = () => {
   const navigate = useNavigate();
   return (
     <NewsRoot>
@@ -13,13 +13,7 @@ export const News = () => {
             className="underline"
             onClick={() => navigate("/search", { replace: true })}
           >
-            加入港鐵搜索功能
-          </li>
-          <li
-            className="underline"
-            onClick={() => navigate("/search", { replace: true })}
-          >
-            輸入MTR即可顯示所有港鐵路線
+            加入港鐵搜索功能, 輸入MTR即可顯示所有港鐵路線
           </li>
           <li
             className="underline"
