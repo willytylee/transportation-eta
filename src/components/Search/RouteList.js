@@ -68,11 +68,10 @@ export const RouteList = ({ route }) => {
               <div className="company">
                 {getCoByStopObj(e)
                   .map((coCode, i) => {
-                    console.log(e);
                     return (
                       <div key={i}>
                         <span className={coCode}>
-                          {companyMap[coCode]}
+                          {coCode !== "mtr" && companyMap[coCode]}
                           {coCode === "mtr" && (
                             <span className={`${e.route}`}>
                               {" "}
@@ -90,7 +89,9 @@ export const RouteList = ({ route }) => {
                 <span className="special">
                   {" "}
                   {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
-                  {etaExcluded.includes(e.route) && <>*</>}
+                  {etaExcluded.includes(e.route) && (
+                    <span className="star">*</span>
+                  )}
                 </span>
               </div>
             </div>
@@ -132,6 +133,9 @@ const RouteListRoot = styled("div")({
         ".special": {
           fontSize: "10px",
           fontWeight: "normal",
+          ".star": {
+            fontWeight: "normal",
+          },
         },
       },
     },

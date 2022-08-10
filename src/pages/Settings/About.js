@@ -13,11 +13,27 @@ import {
   WbSunny as WbSunnyIcon,
   RampRight as RampRightIcon,
   Announcement as AnnouncementIcon,
+  Info as InfoIcon,
 } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 export const About = () => {
+  const navigate = useNavigate();
   return (
     <ListRoot>
+      <ListSubheader>最新資訊</ListSubheader>
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={() => navigate("/settings/about/news", { replace: true })}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <InfoIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="最新功能" secondary={"一覽所有最新功能"} />
+        </ListItemButton>
+      </ListItem>
       <ListSubheader>第三方資料來源</ListSubheader>
       <ListItem disablePadding>
         <ListItemButton

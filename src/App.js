@@ -12,6 +12,7 @@ import { Bookmark } from "./pages/Bookmark";
 import { About } from "./pages/Settings/About";
 import { Install } from "./pages/Settings/Install";
 import { News } from "./pages/News";
+import { News as AppNews } from "./pages/Settings/News";
 import { Map } from "./pages/Map";
 import { Update } from "./pages/Settings/Update";
 import { Compare } from "./pages/Compare";
@@ -37,6 +38,7 @@ const App = () => {
           <Route path="/bookmark/:userId" element={<Bookmark />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/settings/about" element={<About />} />
+          <Route path="/settings/about/news" element={<AppNews />} />
           <Route path="/settings/install" element={<Install />} />
           <Route path="/settings/update" element={<Update />} />
           <Route path="/map" element={<Map />} />
