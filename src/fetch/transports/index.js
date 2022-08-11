@@ -62,10 +62,8 @@ export const fetchEtas = async ({
             })
           );
         } else if (company_id === "mtr") {
-          const _bound = Array.isArray(bound) ? bound : [bound[company_id]];
           etas = etas.concat(
             await fetchMtrEtas({
-              bound: _bound,
               route,
               stopId: _stopId,
             })

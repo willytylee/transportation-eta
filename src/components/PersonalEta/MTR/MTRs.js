@@ -19,8 +19,8 @@ export const Mtrs = ({ section }) => {
       const allPromises = [];
 
       for (let i = 0; i < section.length; i++) {
-        const { route, stopId, bound } = section[i];
-        const promise = fetchEtas({ co: ["mtr"], route, stopId, bound });
+        const { route, stopId } = section[i];
+        const promise = fetchEtas({ co: ["mtr"], route, stopId });
         allPromises.push(promise);
       }
 

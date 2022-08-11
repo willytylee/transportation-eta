@@ -26,21 +26,15 @@ export const StopEta = ({
         {isEtaLoading || isBoundLoading ? (
           <div className="eta">載入中</div>
         ) : eta.length !== 0 ? (
-          eta.map((e, i) =>
-            e.co === "mtr" ? (
-              <div key={i} className="eta" title={e.seq}>
-                {parseMtrEtas(e)}
-              </div>
-            ) : (
+          eta
+            .map((e, i) => (
               <div key={i} className="eta" title={e.seq}>
                 {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
               </div>
-            )
-          )
+            ))
+            .slice(0, 3)
         ) : (
-          <div>
-            {routeObj.co[0] === "mtr" ? "沒有相關班次資料" : "沒有班次"}
-          </div>
+          <div>沒有班次</div>
         )}
       </div>
     </StopEtaRoot>

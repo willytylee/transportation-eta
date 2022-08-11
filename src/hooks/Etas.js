@@ -21,7 +21,7 @@ export const useEtas = ({ seq, routeObj, bound, isBoundLoading }) => {
       !isBoundLoading && // FetchEtas after finding correct bound!
         fetchEtas(dataObj).then((response) => {
           setIsEtaLoading(false);
-          setEta(response.slice(0, 3));
+          setEta(response);
         });
     };
 

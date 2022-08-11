@@ -9,14 +9,15 @@ export const stationMap = {
   KTL: "觀塘線",
   SIL: "南港島線",
   TWL: "荃灣線",
+  DIS: "迪士尼",
   HOK: "香港",
   KOW: "九龍",
   AIR: "機場",
-  AWE: "亞洲國際博覽館",
-  OLY: "奧林匹克",
+  AWE: "博覽館",
+  OLY: "奧運",
   LAK: "麗景",
   TSY: "青衣",
-  SUN: "欣灣",
+  SUN: "欣澳",
   TUC: "東涌",
   WKS: "烏溪沙",
   MOS: "馬鞍山",
@@ -67,6 +68,12 @@ export const stationMap = {
   SHS: "上水",
   LOW: "羅湖",
   LMC: "落馬洲",
+  TSW: "荃灣",
+  CEN: "中環",
+  SOH: "海怡半島",
+  WHA: "黃埔",
+  KET: "堅尼地城",
+  CHW: "柴灣",
 };
 
 export const mtrLineColor = {
@@ -103,9 +110,49 @@ export const mtrLineColor = {
 };
 
 export const stationDestMap = {
+  AEL: {
+    UP: stationMap.AWE,
+    DOWN: stationMap.HOK,
+  },
+  DRL: {
+    UP: stationMap.DIS,
+    DOWN: stationMap.SUN,
+  },
   TML: {
     UP: stationMap.TUM,
     DOWN: stationMap.WKS,
+  },
+  TCL: {
+    UP: stationMap.TUC,
+    DOWN: stationMap.HOK,
+  },
+  TKL: {
+    UP: stationMap.POA,
+    DOWN: stationMap.NOP,
+    TKS_UP: stationMap.LHP,
+    TKS_DOWN: stationMap.TIK,
+  },
+  EAL: {
+    UP: stationMap.LOW,
+    DOWN: stationMap.ADM,
+    LMC_UP: stationMap.LMC,
+    LMC_DOWN: stationMap.ADM,
+  },
+  ISL: {
+    UP: stationMap.CHW,
+    DOWN: stationMap.KET,
+  },
+  KTL: {
+    UP: stationMap.TIK,
+    DOWN: stationMap.WHA,
+  },
+  SIL: {
+    UP: stationMap.ADM,
+    DOWN: stationMap.SOH,
+  },
+  TWL: {
+    UP: stationMap.CEN,
+    DOWN: stationMap.TSW,
   },
 };
 

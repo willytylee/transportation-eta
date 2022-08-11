@@ -11,8 +11,10 @@ import { getPreciseDistance } from "geolib";
 import { getCoPriorityId, getLocalStorage } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
 import { StopEta } from "./StopEta";
+import { MtrStopEta } from "./MtrStopEta";
 import { useCorrectBound } from "../../hooks/Bound";
 import { EtaContext } from "../../context/EtaContext";
+import { etaExcluded } from "../../constants/Mtr";
 
 export const StopList = ({ route }) => {
   const [stopList, setStopList] = useState([]);
@@ -90,13 +92,31 @@ export const StopList = ({ route }) => {
               className={isNearestStop ? "highlighted" : ""}
             >
               <AccordionSummary className="accordionSummary">
-                <StopEta
-                  seq={i + 1}
-                  routeObj={currRoute}
-                  stopObj={e}
-                  bound={correctBound}
-                  isBoundLoading={isBoundLoading}
-                />
+                {currRoute.co[0] === "mtr" ? (
+                  <>
+                    <div className="seq">{i + 1}</div>
+                    <div className="stop" title={e.stopId}>
+                      {e.name.zh}
+                    </div>
+                    {etaExcluded.includes(currRoute.route) ? (
+                      <div className="noEta">沒有相關班次資料</div>
+                    ) : (
+                      <MtrStopEta
+                        seq={i + 1}
+                        routeObj={currRoute}
+                        stopObj={e}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <StopEta
+                    seq={i + 1}
+                    routeObj={currRoute}
+                    stopObj={e}
+                    bound={correctBound}
+                    isBoundLoading={isBoundLoading}
+                  />
+                )}
               </AccordionSummary>
               <AccordionDetails>
                 <a
@@ -133,7 +153,21 @@ const StopListRoot = styled("div")({
       minHeight: "unset",
       padding: "0",
       ".MuiAccordionSummary-content": {
+        display: "flex",
+        padding: "3px 0",
+        width: "100%",
+        alignItems: "center",
         margin: 0,
+        ".seq": {
+          width: "5%",
+        },
+        ".stop": {
+          width: "15%",
+        },
+        ".noEta": {
+          textAlign: "center",
+          width: "80%",
+        },
       },
     },
     ".MuiCollapse-root": {

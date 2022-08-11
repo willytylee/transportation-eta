@@ -46,8 +46,8 @@ export const NineDays = () => {
     return psrIdx;
   };
 
-  const getWarning = (maxTemp, minRh, maxRh) => {
-    const heatIndex = getHeatIndex(maxTemp, (minRh + maxRh) / 2).toFixed(1);
+  const getWarning = (minTemp, maxTemp, minRh, maxRh) => {
+    const heatIndex = getHeatIndex((maxTemp + minTemp) / 2, (minRh + maxRh) / 2).toFixed(1);
 
     let heatWarning = "";
     let warningColor = "";
@@ -93,7 +93,7 @@ export const NineDays = () => {
                   酷熱指標:{" "}
                   <span
                     style={{
-                      color: getWarning(maxTemp, minRh, maxRh).warningColor,
+                      color: getWarning( minTemp, maxTemp, minRh, maxRh).warningColor,
                     }}
                   >
                     {getWarning(maxTemp, minRh, maxRh).heatWarning}

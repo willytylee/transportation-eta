@@ -5,6 +5,7 @@ import {
   getCoByStopObj,
   basicFiltering,
   sortByCompany,
+  isValEqualInArr,
 } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
 import { EtaContext } from "../../context/EtaContext";
@@ -44,6 +45,15 @@ export const RouteList = ({ route }) => {
             Object.keys(gRouteList)
               .map((e) => gRouteList[e])
               .filter((e) => e.co.includes("mtr"))
+              .filter(
+                (e, idx, self) =>
+                  idx ===
+                  self.findIndex((t) => {
+                    const eStop = JSON.stringify([...e.stops.mtr].sort());
+                    const tStop = JSON.stringify([...t.stops.mtr].sort());
+                    return eStop === tStop;
+                  })
+              )
           )
         : setRouteList(
             Object.keys(gRouteList)
@@ -60,7 +70,7 @@ export const RouteList = ({ route }) => {
         return (
           <Card key={i} onClick={() => handleCardOnClick(i)}>
             <div
-              title={JSON.stringify(e.bound)}
+              title={JSON.stringify(e.route) + JSON.stringify(e.bound)}
               className={`routeTitle ${
                 isMatchCurrRoute(currRoute, e) ? "matched" : ""
               }`}
@@ -85,12 +95,13 @@ export const RouteList = ({ route }) => {
                   .reduce((a, b) => [a, " + ", b])}
               </div>
               <div className="origDest">
-                {e.orig.zh} → <span className="dest">{e.dest.zh}</span>{" "}
+                {e.orig.zh} {e.co[0] === "mtr" ? "←→" : "→"}{" "}
+                <span className="dest">{e.dest.zh}</span>{" "}
                 <span className="special">
                   {" "}
                   {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
                   {etaExcluded.includes(e.route) && (
-                    <span className="star">*</span>
+                    <span className="star">沒有相關班次資料</span>
                   )}
                 </span>
               </div>

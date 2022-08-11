@@ -1,18 +1,9 @@
 import axios from "axios";
 
-export const fetchMtrEtas = async ({ stopId, route, bound }) => {
+export const fetchMtrEtas = async ({ stopId, route }) => {
   const response = await axios.get(
     `https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${route}&sta=${stopId}`
   );
-
-  const _bound = bound.map((e) => {
-    if (e === "up" || e.includes("UT")) {
-      return "up";
-    } else if (e === "down" || e.includes("DT")) {
-      return "down";
-    }
-    return "";
-  });
 
   const { data } = response.data;
 
@@ -32,17 +23,15 @@ export const fetchMtrEtas = async ({ stopId, route, bound }) => {
 
   const fullArr = downArr.concat(upArr);
 
-  return fullArr
-    .filter((e) => _bound.includes(e.bound))
-    .map((e) => ({
-      co: "mtr",
-      eta: e.time,
-      seq: e.seq,
-      dest: e.dest,
-      ttnt: e.ttnt,
-      bound: e.bound,
-      stopId,
-    }));
+  return fullArr.map((e) => ({
+    co: "mtr",
+    eta: e.time,
+    seq: e.seq,
+    dest: e.dest,
+    ttnt: e.ttnt,
+    bound: e.bound,
+    stopId,
+  }));
 };
 
 // export const fetchMtrEtas = async ({ stopId, route }) => {
