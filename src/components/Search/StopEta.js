@@ -1,5 +1,4 @@
-import { styled } from "@mui/material";
-import { etaTimeConverter, parseMtrEtas } from "../../Utils";
+import { etaTimeConverter } from "../../Utils";
 import { useEtas } from "../../hooks/Etas";
 
 export const StopEta = ({
@@ -8,6 +7,7 @@ export const StopEta = ({
   routeObj,
   bound,
   isBoundLoading,
+  StopEtaRoot,
 }) => {
   const { eta, isEtaLoading } = useEtas({
     seq,
@@ -18,7 +18,7 @@ export const StopEta = ({
 
   return (
     <StopEtaRoot>
-      <div className="seq">{seq}</div>
+      <div className="seq">{seq}.</div>
       <div className="stop" title={stopId}>
         {name.zh}
       </div>
@@ -34,29 +34,9 @@ export const StopEta = ({
             ))
             .slice(0, 3)
         ) : (
-          <div>沒有班次</div>
+          <div>沒有班次2</div>
         )}
       </div>
     </StopEtaRoot>
   );
 };
-
-const StopEtaRoot = styled("div")({
-  display: "flex",
-  padding: "3px 0",
-  width: "100%",
-  ".seq": {
-    width: "5%",
-  },
-  ".stop": {
-    width: "55%",
-  },
-  ".etas": {
-    width: "40%",
-    display: "flex",
-    flexDirection: "row",
-    ".eta": {
-      width: "33.33%",
-    },
-  },
-});

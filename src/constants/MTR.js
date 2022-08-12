@@ -1,4 +1,4 @@
-export const stationMap = {
+export const routeMap = {
   AEL: "機場快線",
   TCL: "東涌線",
   TML: "屯馬線",
@@ -9,6 +9,9 @@ export const stationMap = {
   KTL: "觀塘線",
   SIL: "南港島線",
   TWL: "荃灣線",
+};
+
+export const stationMap = {
   DIS: "迪士尼",
   HOK: "香港",
   KOW: "九龍",

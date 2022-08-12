@@ -184,6 +184,7 @@ const AutoListRoot = styled("div")({
       width: "20%",
       ".route": {
         fontWeight: "900",
+        letterSpacing: "-0.5px",
       },
       ".company": {
         ...companyColor,

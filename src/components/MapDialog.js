@@ -25,17 +25,14 @@ import {
   Polyline,
 } from "react-leaflet";
 import { AppContext } from "../context/AppContext";
-import {
-  etaTimeConverter,
-  getCoByStopObj,
-  getLocalStorage,
-  parseMtrEtas,
-} from "../Utils";
+import { getCoByStopObj, getLocalStorage } from "../Utils";
 import { companyMap, companyColor } from "../constants/Constants";
 import { useEtas } from "../hooks/Etas";
 import { useCorrectBound } from "../hooks/Bound";
 import { EtaContext } from "../context/EtaContext";
-import { stationMap } from "../constants/Mtr";
+import { etaExcluded, routeMap } from "../constants/Mtr";
+import { StopEta } from "./Search/StopEta";
+import { MtrStopEta } from "./Search/MtrStopEta";
 
 export const MapDialog = ({
   mapDialogOpen,
@@ -47,12 +44,6 @@ export const MapDialog = ({
   const [selectedStopIdx, setSelectedStopIdx] = useState(-1);
   const [navBtnType, setNavBtnType] = useState("myLocation");
   const { correctBound, isBoundLoading } = useCorrectBound({ currRoute });
-  const { eta, isEtaLoading } = useEtas({
-    seq: selectedStopIdx + 1,
-    routeObj: currRoute,
-    bound: correctBound,
-    isBoundLoading,
-  });
 
   const handleDialogOnClose = () => {
     setSelectedStopIdx(-1);
@@ -90,13 +81,43 @@ export const MapDialog = ({
     className: "currLocationMarker",
   });
 
+  const CustomMarker = ({ currStop, i }) => {
+    const map = useMap();
+
+    const eventHandlers = useMemo(
+      () => ({
+        click: () => {
+          setSelectedStopIdx(i);
+          map.flyTo([currStop.location.lat, currStop.location.lng], 16, {
+            animate: true,
+            duration: 0.5,
+          });
+        },
+      }),
+      []
+    );
+
+    return (
+      <Marker
+        key={i}
+        position={[currStop.location.lat, currStop.location.lng]}
+        eventHandlers={eventHandlers}
+      >
+        <Popup>{`${i + 1}. ${currStop.name.zh}`}</Popup>
+      </Marker>
+    );
+  };
+
   const PrevStopBtn = () => {
     const map = useMap();
 
     const handleIconOnClick = () => {
       const idx = selectedStopIdx === -1 ? nearestStopIdx + 1 : selectedStopIdx;
       const prevStop = currRouteStopList[idx - 1];
-      map.flyTo([prevStop.location.lat, prevStop.location.lng], 18);
+      map.flyTo([prevStop.location.lat, prevStop.location.lng], 16, {
+        animate: true,
+        duration: 0.5,
+      });
       setSelectedStopIdx(idx - 1);
     };
 
@@ -120,7 +141,10 @@ export const MapDialog = ({
     const handleIconOnClick = () => {
       const idx = selectedStopIdx === -1 ? nearestStopIdx - 1 : selectedStopIdx;
       const nextStop = currRouteStopList[idx + 1];
-      map.flyTo([nextStop.location.lat, nextStop.location.lng], 18);
+      map.flyTo([nextStop.location.lat, nextStop.location.lng], 16, {
+        animate: true,
+        duration: 0.5,
+      });
       setSelectedStopIdx(idx + 1);
     };
 
@@ -177,7 +201,10 @@ export const MapDialog = ({
     if (navBtnType === "myLocation") {
       const handleIconOnClick = () => {
         const nearestStop = currRouteStopList[nearestStopIdx];
-        map.flyTo([nearestStop.location.lat, nearestStop.location.lng], 18);
+        map.flyTo([nearestStop.location.lat, nearestStop.location.lng], 16, {
+          animate: true,
+          duration: 0.5,
+        });
         setSelectedStopIdx(nearestStopIdx);
         setNavBtnType("nearestStop");
       };
@@ -191,7 +218,10 @@ export const MapDialog = ({
       );
     } else if (navBtnType === "nearestStop") {
       const handleIconOnClick = () => {
-        map.flyTo([currentLocation.lat, currentLocation.lng], 18);
+        map.flyTo([currentLocation.lat, currentLocation.lng], 18, {
+          animate: true,
+          duration: 0.5,
+        });
         setNavBtnType("myLocation");
       };
 
@@ -204,7 +234,10 @@ export const MapDialog = ({
       );
     }
     const handleIconOnClick = () => {
-      map.flyTo([currentLocation.lat, currentLocation.lng], 18);
+      map.flyTo([currentLocation.lat, currentLocation.lng], 18, {
+        animate: true,
+        duration: 0.5,
+      });
       setNavBtnType("myLocation");
     };
 
@@ -238,7 +271,7 @@ export const MapDialog = ({
                             {companyMap[e]}
                             <span className={`${currRoute.route}`}>
                               {" "}
-                              {stationMap[currRoute.route]}
+                              {routeMap[currRoute.route]}
                             </span>
                           </span>
                         </span>
@@ -247,40 +280,50 @@ export const MapDialog = ({
                     .reduce((a, b) => [a, " + ", b])}{" "}
                 </div>
                 <div className="destSpecial">
-                  {currRoute.orig?.zh} →{" "}
-                  <span className="dest">{currRoute.dest?.zh}</span>{" "}
+                  {currRoute.orig?.zh}{" "}
+                  {currRoute.co[0] === "mtr" ? (
+                    <> ←→ {currRoute.dest?.zh}</>
+                  ) : (
+                    <>
+                      → <span className="dest">{currRoute.dest?.zh}</span>
+                    </>
+                  )}
+                  {etaExcluded.includes(currRoute.route) && (
+                    <span className="star">沒有相關班次資料</span>
+                  )}
                   <span className="special">
                     {" "}
                     {parseInt(currRoute.serviceType, 10) !== 1 && "特別班次"}
                   </span>
                 </div>
-                {selectedStopIdx !== -1 && (
-                  <div className="stopDetail">
-                    <div className="stopName">
-                      {selectedStopIdx + 1}.{" "}
-                      {currRouteStopList[selectedStopIdx]?.name.zh}
-                    </div>
-                    <div className="etas">
-                      {isEtaLoading || isBoundLoading ? (
-                        <div className="eta">載入中</div>
-                      ) : eta.length !== 0 ? (
-                        eta.map((e, i) =>
-                          e.co === "mtr" ? (
-                            <div key={i} className="eta" title={e.seq}>
-                              {parseMtrEtas(e)}
-                            </div>
-                          ) : (
-                            <div key={i} className="eta" title={e.seq}>
-                              {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
-                            </div>
-                          )
-                        )
+                {selectedStopIdx !== -1 &&
+                  (currRoute.co[0] === "mtr" ? (
+                    <div className="mtrStopEtaWrapper">
+                      <div className="seq">{selectedStopIdx + 1}.</div>
+                      <div className="stop">
+                        {currRouteStopList[selectedStopIdx]?.name.zh}
+                      </div>
+                      {etaExcluded.includes(currRoute.route) ? (
+                        <div className="noEta">沒有相關班次資料</div>
                       ) : (
-                        <div>沒有班次</div>
+                        <MtrStopEta
+                          seq={selectedStopIdx + 1}
+                          routeObj={currRoute}
+                          stopObj={currRouteStopList[selectedStopIdx]}
+                          MtrStopEtaRoot={MtrStopEtaRoot}
+                        />
                       )}
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <StopEta
+                      seq={selectedStopIdx + 1}
+                      routeObj={currRoute}
+                      stopObj={currRouteStopList[selectedStopIdx]}
+                      bound={correctBound}
+                      isBoundLoading={isBoundLoading}
+                      StopEtaRoot={StopEtaRoot}
+                    />
+                  ))}
               </div>
               <IconButton className="closeBtn" onClick={handleDialogOnClose}>
                 <CloseIcon />
@@ -296,24 +339,12 @@ export const MapDialog = ({
           >
             <TileLayer
               attribution=""
-              url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {currRoute.stops &&
               currRouteStopIdList.map((e, i) => {
                 const currStop = gStopList[e];
-                return (
-                  <Marker
-                    key={i}
-                    position={[currStop.location.lat, currStop.location.lng]}
-                    eventHandlers={{
-                      click: () => {
-                        setSelectedStopIdx(i);
-                      },
-                    }}
-                  >
-                    <Popup>{`${i + 1}. ${currStop.name.zh}`}</Popup>
-                  </Marker>
-                );
+                return <CustomMarker currStop={currStop} key={i} i={i} />;
               })}
 
             <Marker
@@ -362,6 +393,7 @@ const DialogRoot = styled(Dialog)({
             ...companyColor,
             ".route": {
               fontWeight: "900",
+              letterSpacing: "-0.5px",
             },
           },
           ".destSpecial": {
@@ -372,16 +404,21 @@ const DialogRoot = styled(Dialog)({
               fontSize: "12px",
             },
           },
-          ".stopDetail": {
+          ".mtrStopEtaWrapper": {
             display: "flex",
             width: "100%",
-            alignItem: "center",
-            ".etas": {
-              display: "inline-flex",
-              flexWrap: "wrap",
-              gap: "12px",
-              flexGrow: "1",
-              justifyContent: "flex-end",
+            alignItems: "center",
+            margin: 0,
+            ".seq": {
+              width: "5%",
+            },
+            ".stop": {
+              paddingRight: "8px",
+            },
+            ".noEta": {
+              textAlign: "center",
+              width: "80%",
+              padding: "4px 0",
             },
           },
         },
@@ -441,6 +478,50 @@ const DialogRoot = styled(Dialog)({
         border: "none",
         background: "none",
       },
+    },
+  },
+});
+
+const MtrStopEtaRoot = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  flexGrow: "1",
+  ".etaWrapper": {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    ".arriveText": {
+      width: "25%",
+    },
+    ".ttntWrapper": {
+      width: "65%",
+      display: "flex",
+      flexDirection: "row",
+      ".ttnt": {
+        width: "33.33%",
+      },
+    },
+  },
+});
+
+const StopEtaRoot = styled("div")({
+  display: "flex",
+  padding: "4px 0",
+  width: "100%",
+  ".seq": {
+    width: "8%",
+  },
+  ".stop": {
+    display: "flex",
+    flexGrow: "1",
+  },
+  ".etas": {
+    width: "50%",
+    display: "flex",
+    flexDirection: "row",
+    ".eta": {
+      width: "33.33%",
     },
   },
 });

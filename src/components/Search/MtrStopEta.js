@@ -1,9 +1,8 @@
-import { styled } from "@mui/material";
 import { parseMtrEtas } from "../../Utils";
 import { useEtas } from "../../hooks/Etas";
 import { stationDestMap } from "../../constants/Mtr";
 
-export const MtrStopEta = ({ seq, stopObj: { name, stopId }, routeObj }) => {
+export const MtrStopEta = ({ seq, routeObj, MtrStopEtaRoot }) => {
   const { eta, isEtaLoading } = useEtas({
     seq,
     routeObj,
@@ -61,31 +60,3 @@ export const MtrStopEta = ({ seq, stopObj: { name, stopId }, routeObj }) => {
     </MtrStopEtaRoot>
   );
 };
-
-const MtrStopEtaRoot = styled("div")({
-  display: "flex",
-  flexDirection: "column",
-  flexGrow: "1",
-  ".etaWrapper": {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: "2px 0",
-    ".arriveText": {
-      width: "20%",
-      ".dest": {
-        fontWeight: "900",
-      },
-    },
-    ".ttntWrapper": {
-      width: "60%",
-      display: "flex",
-      flexDirection: "row",
-      ".ttnt": {
-        width: "33.33%",
-        fontSize: "12px",
-      },
-    },
-  },
-});

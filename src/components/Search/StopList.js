@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useContext } from "react";
+import { useState, useEffect, useMemo, useContext, useRef } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -23,6 +23,7 @@ export const StopList = ({ route }) => {
   const { currRoute, nearestStopId, updateNearestStopId } =
     useContext(EtaContext);
   const { correctBound, isBoundLoading } = useCorrectBound({ currRoute });
+  const stopListRef = useRef(null);
 
   const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
 
@@ -76,6 +77,16 @@ export const StopList = ({ route }) => {
     }
   }, [currRoute]);
 
+  useEffect(() => {
+    if (stopList.length > 0) {
+      stopListRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    }
+  }, [stopList]);
+
   return (
     <StopListRoot>
       {Object.keys(currRoute).length !== 0 &&
@@ -90,11 +101,12 @@ export const StopList = ({ route }) => {
               onChange={handleChange(`panel${i}`)}
               key={i}
               className={isNearestStop ? "highlighted" : ""}
+              ref={isNearestStop ? stopListRef : null}
             >
               <AccordionSummary className="accordionSummary">
                 {currRoute.co[0] === "mtr" ? (
                   <>
-                    <div className="seq">{i + 1}</div>
+                    <div className="seq">{i + 1}.</div>
                     <div className="stop" title={e.stopId}>
                       {e.name.zh}
                     </div>
@@ -105,6 +117,7 @@ export const StopList = ({ route }) => {
                         seq={i + 1}
                         routeObj={currRoute}
                         stopObj={e}
+                        MtrStopEtaRoot={MtrStopEtaRoot}
                       />
                     )}
                   </>
@@ -115,6 +128,7 @@ export const StopList = ({ route }) => {
                     stopObj={e}
                     bound={correctBound}
                     isBoundLoading={isBoundLoading}
+                    StopEtaRoot={StopEtaRoot}
                   />
                 )}
               </AccordionSummary>
@@ -154,7 +168,6 @@ const StopListRoot = styled("div")({
       padding: "0",
       ".MuiAccordionSummary-content": {
         display: "flex",
-        padding: "3px 0",
         width: "100%",
         alignItems: "center",
         margin: 0,
@@ -167,6 +180,7 @@ const StopListRoot = styled("div")({
         ".noEta": {
           textAlign: "center",
           width: "80%",
+          padding: "4px 0",
         },
       },
     },
@@ -177,6 +191,52 @@ const StopListRoot = styled("div")({
           background: "white",
         },
       },
+    },
+  },
+});
+
+const MtrStopEtaRoot = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  flexGrow: "1",
+  ".etaWrapper": {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: "4px 0",
+    ".arriveText": {
+      width: "20%",
+    },
+    ".ttntWrapper": {
+      width: "65%",
+      display: "flex",
+      flexDirection: "row",
+      ".ttnt": {
+        width: "33.33%",
+        fontSize: "12px",
+      },
+    },
+  },
+});
+
+const StopEtaRoot = styled("div")({
+  display: "flex",
+  padding: "4px 0",
+  width: "100%",
+  ".seq": {
+    width: "5%",
+  },
+  ".stop": {
+    display: "flex",
+    flexGrow: "1",
+  },
+  ".etas": {
+    width: "40%",
+    display: "flex",
+    flexDirection: "row",
+    ".eta": {
+      width: "33.33%",
     },
   },
 });

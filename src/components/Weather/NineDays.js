@@ -47,18 +47,21 @@ export const NineDays = () => {
   };
 
   const getWarning = (minTemp, maxTemp, minRh, maxRh) => {
-    const heatIndex = getHeatIndex((maxTemp + minTemp) / 2, (minRh + maxRh) / 2).toFixed(1);
+    const heatIndex = getHeatIndex(
+      (maxTemp + minTemp) / 2,
+      (minRh + maxRh) / 2
+    ).toFixed(1);
 
     let heatWarning = "";
     let warningColor = "";
     if (heatIndex > 55) {
-      heatWarning = "非常危險 - 隨時出現中暑";
+      heatWarning = "酷熱指標: 非常危險 - 隨時出現中暑";
       warningColor = "#AA0100";
     } else if (heatIndex > 40) {
-      heatWarning = "危險 - 可能出現熱衰竭";
+      heatWarning = "酷熱指標: 危險 - 可能出現熱衰竭";
       warningColor = "#FF4D00";
     } else if (heatIndex > 30) {
-      heatWarning = "加倍小心 - 有機會出現抽筋及熱衰竭";
+      heatWarning = "酷熱指標: 加倍小心 - 有機會出現抽筋及熱衰竭";
       warningColor = "#FFCC01";
     }
     return { heatWarning, warningColor };
@@ -89,15 +92,13 @@ export const NineDays = () => {
                 </div>
                 <div>{e.forecastWeather}</div>
                 <div>{e.forecastWind}</div>
-                <div>
-                  酷熱指標:{" "}
-                  <span
-                    style={{
-                      color: getWarning( minTemp, maxTemp, minRh, maxRh).warningColor,
-                    }}
-                  >
-                    {getWarning(maxTemp, minRh, maxRh).heatWarning}
-                  </span>
+                <div
+                  style={{
+                    color: getWarning(minTemp, maxTemp, minRh, maxRh)
+                      .warningColor,
+                  }}
+                >
+                  {getWarning(maxTemp, minRh, maxRh).heatWarning}
                 </div>
               </div>
               <div className="psrRow">

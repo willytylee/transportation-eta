@@ -5,12 +5,11 @@ import {
   getCoByStopObj,
   basicFiltering,
   sortByCompany,
-  isValEqualInArr,
 } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
 import { EtaContext } from "../../context/EtaContext";
 import { companyMap, companyColor } from "../../constants/Constants";
-import { etaExcluded, stationMap } from "../../constants/Mtr";
+import { etaExcluded, routeMap } from "../../constants/Mtr";
 
 export const RouteList = ({ route }) => {
   const [routeList, setRouteList] = useState([]);
@@ -85,7 +84,7 @@ export const RouteList = ({ route }) => {
                           {coCode === "mtr" && (
                             <span className={`${e.route}`}>
                               {" "}
-                              {stationMap[e.route]}
+                              {routeMap[e.route]}
                             </span>
                           )}
                         </span>
@@ -95,8 +94,14 @@ export const RouteList = ({ route }) => {
                   .reduce((a, b) => [a, " + ", b])}
               </div>
               <div className="origDest">
-                {e.orig.zh} {e.co[0] === "mtr" ? "←→" : "→"}{" "}
-                <span className="dest">{e.dest.zh}</span>{" "}
+                {e.orig.zh}{" "}
+                {e.co[0] === "mtr" ? (
+                  <> ←→ {e.dest.zh}</>
+                ) : (
+                  <>
+                    → <span className="dest">{e.dest.zh}</span>
+                  </>
+                )}
                 <span className="special">
                   {" "}
                   {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
@@ -131,6 +136,7 @@ const RouteListRoot = styled("div")({
       ".route": {
         width: "10%",
         fontWeight: "900",
+        letterSpacing: "-0.5px",
       },
       ".company": {
         ...companyColor,

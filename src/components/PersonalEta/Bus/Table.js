@@ -68,6 +68,7 @@ const TableView = styled("div")({
       ...companyColor,
       width: "10%",
       fontWeight: "900",
+      letterSpacing: "-0.5px",
     },
     ".stopName": {
       width: "45%",
