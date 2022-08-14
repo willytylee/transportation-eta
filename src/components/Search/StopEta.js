@@ -34,7 +34,7 @@ export const StopEta = ({
             ))
             .slice(0, 3)
         ) : (
-          <div>沒有班次2</div>
+          <div>沒有班次</div>
         )}
       </div>
     </StopEtaRoot>

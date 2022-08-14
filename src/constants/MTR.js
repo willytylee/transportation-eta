@@ -82,33 +82,43 @@ export const stationMap = {
 export const mtrLineColor = {
   ".TML": {
     color: "#9c2e00",
+    stroke: "#9c2e00",
   },
   ".AEL": {
     color: "#00888e",
+    stroke: "#00888e",
   },
   ".DRL": {
     color: "#eb6ea5",
+    stroke: "#eb6ea5",
   },
   ".EAL": {
     color: "#5eb7e8",
+    stroke: "#5eb7e8",
   },
   ".ISL": {
     color: "#0075c3",
+    stroke: "#0075c3",
   },
   ".KTL": {
     color: "#00a040",
+    stroke: "#00a040",
   },
   ".SIL": {
     color: "#cbd401",
+    stroke: "#cbd401",
   },
   ".TCL": {
     color: "#f3992d",
+    stroke: "#f3992d",
   },
   ".TKL": {
     color: "#7e3c93",
+    stroke: "#7e3c93",
   },
   ".TWL": {
     color: "#e70011",
+    stroke: "#e70011",
   },
 };
 

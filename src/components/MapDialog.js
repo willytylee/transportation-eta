@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState, useEffect } from "react";
 import L from "leaflet";
 import {
   Close as CloseIcon,
@@ -7,6 +7,7 @@ import {
   ArrowBackIosNew as ArrowBackIosNewIcon,
   PersonPinCircle as PersonPinCircleIcon,
   Route as RouteIcon,
+  Navigation as NavigationIcon,
 } from "@mui/icons-material";
 import {
   DialogTitle,
@@ -27,10 +28,9 @@ import {
 import { AppContext } from "../context/AppContext";
 import { getCoByStopObj, getLocalStorage } from "../Utils";
 import { companyMap, companyColor } from "../constants/Constants";
-import { useEtas } from "../hooks/Etas";
 import { useCorrectBound } from "../hooks/Bound";
 import { EtaContext } from "../context/EtaContext";
-import { etaExcluded, routeMap } from "../constants/Mtr";
+import { etaExcluded, mtrLineColor, routeMap } from "../constants/Mtr";
 import { StopEta } from "./Search/StopEta";
 import { MtrStopEta } from "./Search/MtrStopEta";
 
@@ -42,7 +42,7 @@ export const MapDialog = ({
   const { dbVersion, location: currentLocation } = useContext(AppContext);
   const { currRoute, nearestStopId } = useContext(EtaContext);
   const [selectedStopIdx, setSelectedStopIdx] = useState(-1);
-  const [navBtnType, setNavBtnType] = useState("myLocation");
+  const [navBtnType, setNavBtnType] = useState("normal");
   const { correctBound, isBoundLoading } = useCorrectBound({ currRoute });
 
   const handleDialogOnClose = () => {
@@ -88,7 +88,7 @@ export const MapDialog = ({
       () => ({
         click: () => {
           setSelectedStopIdx(i);
-          map.flyTo([currStop.location.lat, currStop.location.lng], 16, {
+          map.panTo([currStop.location.lat, currStop.location.lng], {
             animate: true,
             duration: 0.5,
           });
@@ -114,11 +114,12 @@ export const MapDialog = ({
     const handleIconOnClick = () => {
       const idx = selectedStopIdx === -1 ? nearestStopIdx + 1 : selectedStopIdx;
       const prevStop = currRouteStopList[idx - 1];
-      map.flyTo([prevStop.location.lat, prevStop.location.lng], 16, {
+      map.panTo([prevStop.location.lat, prevStop.location.lng], {
         animate: true,
         duration: 0.5,
       });
       setSelectedStopIdx(idx - 1);
+      setNavBtnType("normal");
     };
 
     return (
@@ -141,11 +142,12 @@ export const MapDialog = ({
     const handleIconOnClick = () => {
       const idx = selectedStopIdx === -1 ? nearestStopIdx - 1 : selectedStopIdx;
       const nextStop = currRouteStopList[idx + 1];
-      map.flyTo([nextStop.location.lat, nextStop.location.lng], 16, {
+      map.panTo([nextStop.location.lat, nextStop.location.lng], {
         animate: true,
         duration: 0.5,
       });
       setSelectedStopIdx(idx + 1);
+      setNavBtnType("normal");
     };
 
     return (
@@ -169,6 +171,7 @@ export const MapDialog = ({
 
     const handleIconOnClick = () => {
       map.fitBounds(routeLine);
+      setNavBtnType("normal");
     };
 
     return (
@@ -187,6 +190,28 @@ export const MapDialog = ({
     );
   };
 
+  const NearestStopBtn = () => {
+    const map = useMap();
+
+    const handleIconOnClick = () => {
+      const nearestStop = currRouteStopList[nearestStopIdx];
+      map.panTo([nearestStop.location.lat, nearestStop.location.lng], {
+        animate: true,
+        duration: 0.5,
+      });
+      setSelectedStopIdx(nearestStopIdx);
+      setNavBtnType("normal");
+    };
+
+    return (
+      <Avatar className="nearestStopBtnAvatar">
+        <IconButton onClick={handleIconOnClick}>
+          <PersonPinCircleIcon />
+        </IconButton>
+      </Avatar>
+    );
+  };
+
   const NavBtn = () => {
     const map = useMap();
 
@@ -194,57 +219,27 @@ export const MapDialog = ({
       setNavBtnType("normal");
     });
 
-    map.on("unload", () => {
-      setNavBtnType("myLocation");
-    });
-
-    if (navBtnType === "myLocation") {
-      const handleIconOnClick = () => {
-        const nearestStop = currRouteStopList[nearestStopIdx];
-        map.flyTo([nearestStop.location.lat, nearestStop.location.lng], 16, {
+    useEffect(() => {
+      if (navBtnType === "navigation") {
+        map.panTo([currentLocation.lat, currentLocation.lng], {
           animate: true,
           duration: 0.5,
         });
-        setSelectedStopIdx(nearestStopIdx);
-        setNavBtnType("nearestStop");
-      };
+      }
+    }, [currentLocation.lat, currentLocation.lng, navBtnType]);
 
-      return (
-        <Avatar className="navBtnAvatar">
-          <IconButton onClick={handleIconOnClick}>
-            <MyLocationIcon />
-          </IconButton>
-        </Avatar>
-      );
-    } else if (navBtnType === "nearestStop") {
-      const handleIconOnClick = () => {
-        map.flyTo([currentLocation.lat, currentLocation.lng], 18, {
-          animate: true,
-          duration: 0.5,
-        });
-        setNavBtnType("myLocation");
-      };
-
-      return (
-        <Avatar className="nearestStopBtnAvatar">
-          <IconButton onClick={handleIconOnClick}>
-            <PersonPinCircleIcon />
-          </IconButton>
-        </Avatar>
-      );
-    }
     const handleIconOnClick = () => {
       map.flyTo([currentLocation.lat, currentLocation.lng], 18, {
         animate: true,
         duration: 0.5,
       });
-      setNavBtnType("myLocation");
+      setNavBtnType("navigation");
     };
 
     return (
-      <Avatar className="navBtnAvatar normal">
+      <Avatar className={`navBtnAvatar ${navBtnType === "normal" && "normal"}`}>
         <IconButton onClick={handleIconOnClick}>
-          <MyLocationIcon />
+          <NavigationIcon />
         </IconButton>
       </Avatar>
     );
@@ -266,18 +261,21 @@ export const MapDialog = ({
                   {getCoByStopObj(currRoute)
                     .map((e, i) => {
                       return (
-                        <span key={i}>
-                          <span className={e}>
-                            {companyMap[e]}
+                        <span className={e} key={i}>
+                          {companyMap[e]}
+                          {currRoute.co[0] === "mtr" && (
                             <span className={`${currRoute.route}`}>
                               {" "}
                               {routeMap[currRoute.route]}
                             </span>
-                          </span>
+                          )}
                         </span>
                       );
                     })
                     .reduce((a, b) => [a, " + ", b])}{" "}
+                  <span className="route">
+                    {currRoute.co[0] !== "mtr" && currRoute.route}
+                  </span>
                 </div>
                 <div className="destSpecial">
                   {currRoute.orig?.zh}{" "}
@@ -353,16 +351,22 @@ export const MapDialog = ({
             ></Marker>
 
             <Polyline
-              pathOptions={{ color: "#2f305c", opacity: 0.3 }}
+              pathOptions={{
+                className: `${
+                  currRoute.co[0] === "mtr"
+                    ? currRoute.route
+                    : getCoByStopObj(currRoute)[0]
+                }`,
+                opacity: "0.75",
+              }}
               positions={routeLine}
             />
 
             <PrevStopBtn />
             <NextStopBtn />
             <RouteBoundBtn />
+            <NearestStopBtn />
             <NavBtn />
-            {/* <NearestStopBtn />
-            <NavigationBtn /> */}
           </MapContainer>
         </>
       )}
@@ -432,6 +436,12 @@ const DialogRoot = styled(Dialog)({
           transform: "translate3d(0px, 0px, 0px)",
         },
       },
+      ".leaflet-map-pane": {
+        ".leaflet-overlay-pane": {
+          ...companyColor,
+          ...mtrLineColor,
+        },
+      },
       ".MuiAvatar-root": {
         position: "absolute",
         zIndex: "1001",
@@ -447,13 +457,6 @@ const DialogRoot = styled(Dialog)({
         },
         ".MuiButtonBase-root": {
           color: "black",
-        },
-        "&.navBtnAvatar, &.nearestStopBtnAvatar": {
-          right: "10px",
-          bottom: "40px",
-          "&.normal button": {
-            color: "#777777",
-          },
         },
         "&.prevBtnAvatar": {
           top: "50%",
@@ -471,7 +474,18 @@ const DialogRoot = styled(Dialog)({
         },
         "&.routeBoundBtnAvatar": {
           right: "10px",
+          bottom: "140px",
+        },
+        "&.nearestStopBtnAvatar": {
+          right: "10px",
           bottom: "90px",
+        },
+        "&.navBtnAvatar,": {
+          right: "10px",
+          bottom: "40px",
+          "&.normal button": {
+            color: "#777777",
+          },
         },
       },
       ".currLocationMarker": {
@@ -507,7 +521,6 @@ const MtrStopEtaRoot = styled("div")({
 
 const StopEtaRoot = styled("div")({
   display: "flex",
-  padding: "4px 0",
   width: "100%",
   ".seq": {
     width: "8%",
@@ -517,11 +530,9 @@ const StopEtaRoot = styled("div")({
     flexGrow: "1",
   },
   ".etas": {
-    width: "50%",
     display: "flex",
     flexDirection: "row",
-    ".eta": {
-      width: "33.33%",
-    },
+    justifyContent: "flex-end",
+    gap: "8px",
   },
 });

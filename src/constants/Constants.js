@@ -11,18 +11,23 @@ export const companyMap = {
 export const companyColor = {
   ".kmb": {
     color: "#DD1E2F",
+    stroke: "#DD1E2F",
   },
   ".nwfb": {
     color: "#857700",
+    stroke: "#857700",
   },
   ".ctb": {
     color: "#6A42A7",
+    stroke: "#6A42A7",
   },
   ".gmb": {
     color: "#1c7136",
+    stroke: "#1c7136",
   },
   ".mtr": {
     color: "#767676",
+    stroke: "#767676",
     ...mtrLineColor,
   },
 };
