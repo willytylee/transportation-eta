@@ -1,25 +1,53 @@
-# Getting Started with Create React App
+# Transportation Estimated Time of Arrival
+[![React](https://badges.aleen42.com/src/react.svg)](http://reactjs.org/) 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Transportation ETA is a web application written by React, an alternative to Mobile App service like [App1933 - KMB ‧ LWB](https://apps.apple.com/us/app/app1933-kmb-lwb/id1170003707), [新巴城巴 CitybusNWFB](https://apps.apple.com/hk/app/%E6%96%B0%E5%B7%B4%E5%9F%8E%E5%B7%B4-citybusnwfb/id472242340) in Hong Kong.
 
-## Available Scripts
+Inspired by [香港 - 獨立巴士預報 HK Bus ETA](https://github.com/hkbus/hk-independent-bus-eta)
 
-In the project directory, you can run:
+<img src="https://user-images.githubusercontent.com/8532630/184681243-e6aaa766-5163-4948-80e9-552544a9de87.jpeg" width="300">    <img src="https://user-images.githubusercontent.com/8532630/184660319-bce54607-959b-49ff-b5bf-b79faf61e0fb.png" width="300">
 
-### `npm start`
+## 👇 What is Transportation ETA?
 
-Runs the app in the development mode.\
+Transportation ETA is a web application that can allow you to search the ETA from KMB, CTB, NWFB, GMB and MTR.\
+\
+It also allows you to bookmark and group the route based on your preference and sort by the arrival time, so that you will know which transport will arrive earliest.
+
+## ⭐️ Features
+
+- Routes include KMB, CTB, NWFB, Green Minibus and MTR
+- Combined Route from joint operation Buses
+- Sort by arrival time in bookmark
+- Real time transportation news
+
+## 🚀 Getting Started
+[Live Product](https://eta.willytylee.com)
+
+### Install to IOS
+1. Allow Location Service in iPhone Safari
+2. Open [Transportation ETA](https://eta.willytylee.com) in Safari
+3. Open Safari Settings, allow Location for https://eta.willytylee.com
+4. Press Share button
+5. Add to Desktop
+
+
+### Development
+
+Clone the project and runs the app in the react development mode.
+
+```sh
+npm install
+npm start
+```
+
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
-You may also see any lint errors in the console.
+You may also see any lint errors in the console
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
+```sh
+npm run build
+```
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -29,42 +57,21 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## 🤝 Credits
+[HK Bus Crawling@2021](https://github.com/hkbus/hk-bus-crawling) for fetch the route information of KMB, NWFB, CTB, GMB and MTR into one single JSON.\
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+[DATA.GOV.HK](https://data.gov.hk/) for the data source of the ETA
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 👨🏿‍💻 About Me
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+► Website <https://www.willytylee.com>
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+► GitHub <https://github.com/willytylee/>
 
-## Learn More
+► Email <willytylee@gmail.com>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+► Facebook <https://www.facebook.com/willytylee>
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+► Youtube <https://www.youtube.com/c/willyufo>
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+► Instagram <https://www.instagram.com/willytylee/>
