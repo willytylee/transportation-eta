@@ -6,7 +6,11 @@ import {
   styled,
   IconButton,
 } from "@mui/material";
-import { Directions as DirectionsIcon } from "@mui/icons-material";
+import {
+  Directions as DirectionsIcon,
+  NoteAdd as NoteAddIcon,
+  Map as MapIcon,
+} from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
 import { getCoPriorityId, getLocalStorage } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
@@ -15,21 +19,39 @@ import { MtrStopEta } from "./MtrStopEta";
 import { useCorrectBound } from "../../hooks/Bound";
 import { EtaContext } from "../../context/EtaContext";
 import { etaExcluded } from "../../constants/Mtr";
+import { MapDialog } from "../MapDialog/MapDialog";
 
 export const StopList = ({ route }) => {
   const [stopList, setStopList] = useState([]);
   const [expanded, setExpanded] = useState(false);
+  const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const { dbVersion, location: currentLocation } = useContext(AppContext);
-  const { currRoute, nearestStopId, updateNearestStopId } =
-    useContext(EtaContext);
+  const {
+    currRoute,
+    nearestStopId,
+    updateNearestStopId,
+    updateMapLocation,
+    updateMapStopIdx,
+  } = useContext(EtaContext);
   const { correctBound, isBoundLoading } = useCorrectBound({ currRoute });
   const stopListRef = useRef(null);
 
   const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
 
+  const handleMapDialogOnClose = () => {
+    setMapDialogOpen(false);
+  };
+
+  const handleMapIconOnClick = ({ mapLocation, mapStopIdx }) => {
+    setMapDialogOpen(true);
+    updateMapLocation(mapLocation);
+    updateMapStopIdx(mapStopIdx);
+  };
+
   const handleChange = (panel) => (e, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
   // When the route number is changed
   useEffect(() => {
     setStopList([]);
@@ -133,17 +155,34 @@ export const StopList = ({ route }) => {
                 )}
               </AccordionSummary>
               <AccordionDetails>
-                <a
+                <IconButton
+                  className="directionIconBtn"
+                  component={"a"}
                   href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
+                  target="_blank"
                 >
-                  <IconButton className="directionIconBtn">
-                    <DirectionsIcon />
-                  </IconButton>
-                </a>
+                  <DirectionsIcon />
+                </IconButton>
+                <IconButton
+                  className="mapIconBtn"
+                  onClick={() =>
+                    handleMapIconOnClick({
+                      mapLocation: { lat, lng },
+                      mapStopIdx: i,
+                    })
+                  }
+                >
+                  <MapIcon />
+                </IconButton>
               </AccordionDetails>
             </Accordion>
           );
         })}
+      <MapDialog
+        fullWidth
+        mapDialogOpen={mapDialogOpen}
+        handleMapDialogOnClose={handleMapDialogOnClose}
+      />
     </StopListRoot>
   );
 };
@@ -186,9 +225,10 @@ const StopListRoot = styled("div")({
     },
     ".MuiCollapse-root": {
       ".MuiAccordionDetails-root": {
-        padding: "0px 16px 0px 4.5%",
+        padding: "0px 16px 0px 5%",
+        display: "flex",
         ".directionIconBtn": {
-          background: "white",
+          marginLeft: "-8px",
         },
       },
     },

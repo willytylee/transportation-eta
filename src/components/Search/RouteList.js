@@ -45,6 +45,7 @@ export const RouteList = ({ route }) => {
               .map((e) => gRouteList[e])
               .filter((e) => e.co.includes("mtr"))
               .filter(
+                // Combine same route
                 (e, idx, self) =>
                   idx ===
                   self.findIndex((t) => {

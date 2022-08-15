@@ -52,44 +52,6 @@ export const sortEtaObj = (etaObjArr) => {
   return etaObjArr;
 };
 
-export const isValofObjEqualInArr = (arr, key) => {
-  return arr.every((e) => {
-    if (e[key] === arr[0][key]) {
-      return true;
-    }
-  });
-};
-
-export const isValEqualInArr = (arr) => {
-  return arr.every((e) => {
-    if (e === arr[0]) {
-      return true;
-    }
-  });
-};
-
-export const findNearestNum = (target, arr) => {
-  return arr.reduce((a, b) => {
-    let aDiff = Math.abs(a - target);
-    let bDiff = Math.abs(b - target);
-
-    if (aDiff === bDiff) {
-      return a > b ? a : b;
-    } else {
-      return bDiff < aDiff ? b : a;
-    }
-  });
-};
-
-export const getUniqueValFromArr = (arr, key) => {
-  return arr.reduce((prev, curr) => {
-    if (!prev.includes(curr[key])) {
-      prev.push(curr[key]);
-    }
-    return prev;
-  }, []);
-};
-
 export const getHeatIndex = (temperature, humidity) => {
   const F = temperature * 1.8 + 32;
   const heatIndex =

@@ -6,6 +6,7 @@ export const companyMap = {
   nwfb: "新巴",
   mtr: "港鐵",
   gmb: "小巴",
+  nlb: "嶼巴",
 };
 
 export const companyColor = {
@@ -25,6 +26,10 @@ export const companyColor = {
     color: "#1c7136",
     stroke: "#1c7136",
   },
+  ".nlb": {
+    color: "#106b78",
+    stroke: "#106b78",
+  },
   ".mtr": {
     color: "#767676",
     stroke: "#767676",
@@ -32,4 +37,4 @@ export const companyColor = {
   },
 };
 
-export const coPriority = ["kmb", "nwfb", "ctb", "gmb", "mtr"];
+export const coPriority = ["kmb", "nwfb", "ctb", "gmb", "mtr", "nlb"];

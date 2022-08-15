@@ -1,11 +1,20 @@
-import { useContext } from "react";
-import { styled } from "@mui/material";
-import { EtaContext } from "../../../context/EtaContext";
+import { useState } from "react";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  styled,
+  IconButton,
+} from "@mui/material";
+import {
+  Directions as DirectionsIcon,
+  Map as MapIcon,
+} from "@mui/icons-material";
 import { etaTimeConverter } from "../../../Utils";
 import { companyColor } from "../../../constants/Constants";
 
 export const Table = ({ sectionData }) => {
-  const { sectionCompareMode } = useContext(EtaContext);
+  const [expanded, setExpanded] = useState(false);
 
   const result = sectionData.map((e) => {
     const {
@@ -28,29 +37,60 @@ export const Table = ({ sectionData }) => {
               })
               .slice(0, 3),
       stopName,
-      latLngUrl: `https://www.google.com.hk/maps/search/?api=1&query=${lat},${lng}`,
+      latLngUrl: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
     };
   });
+
+  const handleChange = (panel) => (e, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   return (
     <TableView>
       {result.map((e, i) => {
         return (
-          <div key={i} className="etaWrapper">
-            <div className="route">
-              <span className={`${e.co}`}>{e.route}</span>
-            </div>
-            <div className="stopName">
-              <a href={e.latLngUrl}>{e.stopName}</a>
-            </div>
-            {e.etas.map((e, j) => {
-              return (
-                <div key={j} className="eta">
-                  {e}
-                </div>
-              );
-            })}
-          </div>
+          <Accordion
+            key={i}
+            expanded={expanded === `panel${i}`}
+            onChange={handleChange(`panel${i}`)}
+          >
+            <AccordionSummary className="accordionSummary">
+              <div className="route">
+                <span className={`${e.co}`}>{e.route}</span>
+              </div>
+              <div className="stopName" title={e?.stopId}>
+                {e.stopName}
+              </div>
+              {e.etas.map((e, j) => {
+                return (
+                  <div key={j} className="eta">
+                    {e}
+                  </div>
+                );
+              })}
+            </AccordionSummary>
+            <AccordionDetails>
+              <IconButton
+                className="directionIconBtn"
+                component={"a"}
+                href={e.latLngUrl}
+                target="_blank"
+              >
+                <DirectionsIcon />
+              </IconButton>
+              {/* <IconButton
+                className="mapIconBtn"
+                onClick={() =>
+                  handleMapIconOnClick({
+                    mapLocation: { lat, lng },
+                    mapStopIdx: i,
+                  })
+                }
+              >
+                <MapIcon />
+              </IconButton> */}
+            </AccordionDetails>
+          </Accordion>
         );
       })}
     </TableView>
@@ -60,19 +100,50 @@ export const Table = ({ sectionData }) => {
 const TableView = styled("div")({
   fontSize: "12px",
   width: "100%",
-  ".etaWrapper": {
+  ".MuiPaper-root": {
+    "&:before": {
+      backgroundColor: "unset",
+    },
+    "&.Mui-expanded": {
+      backgroundColor: "#2f305c17",
+      paddingTop: "4px",
+      paddingBottom: "4px",
+      margin: 0,
+    },
     display: "flex",
+    flexDirection: "column",
     textAlign: "left",
-    margin: "4px 0",
-    ".route": {
-      ...companyColor,
-      width: "10%",
-      fontWeight: "900",
-      letterSpacing: "-0.5px",
+    boxShadow: "unset",
+    padding: "2px 6px",
+    ".accordionSummary": {
+      minHeight: "unset",
+      padding: "0",
+      ".MuiAccordionSummary-content": {
+        display: "flex",
+        width: "100%",
+        alignItems: "center",
+        margin: 0,
+        ".route": {
+          ...companyColor,
+          width: "10%",
+          fontWeight: "900",
+          letterSpacing: "-0.5px",
+        },
+        ".stopName": {
+          width: "45%",
+        },
+        ".eta": { width: "15%" },
+      },
     },
-    ".stopName": {
-      width: "45%",
+  },
+  ".MuiCollapse-root": {
+    ".MuiAccordionDetails-root": {
+      padding: "0px 16px 0px 10%",
+      display: "flex",
+      paddingTop: "6px",
+      ".directionIconBtn": {
+        marginLeft: "-10px",
+      },
     },
-    ".eta": { width: "15%" },
   },
 });

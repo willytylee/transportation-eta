@@ -167,18 +167,6 @@ export const dataSet = [
               stopId: "TKW",
               bound: ["up", "down"],
             },
-            // {
-            //   co: "mtr",
-            //   route: "TML",
-            //   stopId: "SIH",
-            //   bound: ["up"],
-            // },
-            // {
-            //   co: "mtr",
-            //   route: "TML",
-            //   stopId: "SIH",
-            //   bound: ["down"],
-            // },
           ],
         ],
       },
