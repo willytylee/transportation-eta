@@ -58,7 +58,7 @@ Your app is ready to be deployed!
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 ## 🤝 Credits
-[HK Bus Crawling@2021](https://github.com/hkbus/hk-bus-crawling) for fetch the route information of KMB, NWFB, CTB, GMB and MTR into one single JSON.\
+[HK Bus Crawling@2021](https://github.com/hkbus/hk-bus-crawling) for fetch the route information of KMB, NWFB, CTB, GMB and MTR into one single JSON.
 
 [DATA.GOV.HK](https://data.gov.hk/) for the data source of the ETA
 
