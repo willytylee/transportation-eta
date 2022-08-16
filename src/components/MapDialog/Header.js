@@ -8,9 +8,11 @@ import { EtaContext } from "../../context/EtaContext";
 import { etaExcluded, routeMap } from "../../constants/Mtr";
 import { StopEta } from "../Search/StopEta";
 import { MtrStopEta } from "../Search/MtrStopEta";
+import { DbContext } from "../../context/DbContext";
 
-export const Header = ({ handleDialogOnClose, gStopList }) => {
+export const Header = ({ handleDialogOnClose }) => {
   const { currRoute, mapStopIdx } = useContext(EtaContext);
+  const { gStopList } = useContext(DbContext);
   const { correctBound, isBoundLoading } = useCorrectBound({ currRoute });
 
   const currRouteStopIdList = useMemo(
@@ -67,9 +69,8 @@ export const Header = ({ handleDialogOnClose, gStopList }) => {
           {mapStopIdx !== -1 &&
             (currRoute.co[0] === "mtr" ? (
               <div className="mtrStopEtaWrapper">
-                <div className="seq">{mapStopIdx + 1}.</div>
-                <div className="stop">
-                  {currRouteStopList[mapStopIdx]?.name.zh}
+                <div className="seqStop">
+                  {mapStopIdx + 1}. {currRouteStopList[mapStopIdx]?.name.zh}
                 </div>
                 {etaExcluded.includes(currRoute.route) ? (
                   <div className="noEta">沒有相關班次資料</div>
@@ -134,14 +135,12 @@ const DialogTitleRoot = styled(DialogTitle)({
         width: "100%",
         alignItems: "center",
         margin: 0,
-        ".seq": {
-          width: "5%",
-        },
-        ".stop": {
-          paddingRight: "8px",
+        ".seqStop": {
+          width: "90px",
+          paddingRight: "10px",
         },
         ".noEta": {
-          textAlign: "center",
+          textAlign: "right",
           width: "80%",
           padding: "4px 0",
         },

@@ -21,8 +21,9 @@ import { getCoByStopObj } from "../../Utils";
 import { companyColor } from "../../constants/Constants";
 import { EtaContext } from "../../context/EtaContext";
 import { mtrLineColor } from "../../constants/Mtr";
+import { DbContext } from "../../context/DbContext";
 
-export const Content = ({ gStopList }) => {
+export const Content = () => {
   const { location: currentLocation } = useContext(AppContext);
   const {
     currRoute,
@@ -31,6 +32,7 @@ export const Content = ({ gStopList }) => {
     mapLocation,
     updateMapStopIdx,
   } = useContext(EtaContext);
+  const { gStopList } = useContext(DbContext);
   const [navBtnType, setNavBtnType] = useState("normal");
 
   const location = mapLocation ? mapLocation : currentLocation;

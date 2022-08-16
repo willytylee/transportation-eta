@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { styled } from "@mui/material";
 import { Table } from "./Table.js";
 import { List } from "./List.js";
 import { fetchEtas } from "../../../fetch/transports";
+import { DbContext } from "../../../context/DbContext.js";
 
 // Works for KMB, NWFB, CTB and GMB
-export const Buses = ({ section, gStopList, gRouteList }) => {
+export const Buses = ({ section }) => {
+  const { gStopList, gRouteList } = useContext(DbContext);
   const [sectionData, setSectionData] = useState([]);
   const [view, setView] = useState("list");
 

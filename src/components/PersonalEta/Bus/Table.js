@@ -6,10 +6,7 @@ import {
   styled,
   IconButton,
 } from "@mui/material";
-import {
-  Directions as DirectionsIcon,
-  Map as MapIcon,
-} from "@mui/icons-material";
+import { Directions as DirectionsIcon } from "@mui/icons-material";
 import { etaTimeConverter } from "../../../Utils";
 import { companyColor } from "../../../constants/Constants";
 
@@ -78,17 +75,6 @@ export const Table = ({ sectionData }) => {
               >
                 <DirectionsIcon />
               </IconButton>
-              {/* <IconButton
-                className="mapIconBtn"
-                onClick={() =>
-                  handleMapIconOnClick({
-                    mapLocation: { lat, lng },
-                    mapStopIdx: i,
-                  })
-                }
-              >
-                <MapIcon />
-              </IconButton> */}
             </AccordionDetails>
           </Accordion>
         );

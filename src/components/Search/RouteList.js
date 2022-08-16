@@ -1,22 +1,15 @@
-import { useState, useEffect, useContext, useMemo } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Card, styled } from "@mui/material";
-import {
-  getLocalStorage,
-  getCoByStopObj,
-  basicFiltering,
-  sortByCompany,
-} from "../../Utils";
-import { AppContext } from "../../context/AppContext";
+import { getCoByStopObj, basicFiltering, sortByCompany } from "../../Utils";
 import { EtaContext } from "../../context/EtaContext";
 import { companyMap, companyColor } from "../../constants/Constants";
 import { etaExcluded, routeMap } from "../../constants/Mtr";
+import { DbContext } from "../../context/DbContext";
 
 export const RouteList = ({ route }) => {
   const [routeList, setRouteList] = useState([]);
-  const { dbVersion } = useContext(AppContext);
   const { updateCurrRoute, currRoute } = useContext(EtaContext);
-
-  const gRouteList = useMemo(() => getLocalStorage("routeList"), [dbVersion]);
+  const { gRouteList } = useContext(DbContext);
 
   const handleCardOnClick = (i) => {
     const expandRoute = routeList[i];

@@ -6,7 +6,7 @@ import {
   ListItemAvatar,
   Avatar,
   styled,
-  ListSubheader,
+  Divider,
 } from "@mui/material/";
 import {
   DepartureBoard as DepartureBoardIcon,
@@ -21,7 +21,6 @@ export const About = () => {
   const navigate = useNavigate();
   return (
     <ListRoot>
-      <ListSubheader>最新資訊</ListSubheader>
       <ListItem disablePadding>
         <ListItemButton
           onClick={() =>
@@ -47,7 +46,25 @@ export const About = () => {
           />
         </ListItemButton>
       </ListItem>
-      <ListSubheader>第三方資料來源</ListSubheader>
+      <Divider />
+      <ListItem disablePadding>
+        <ListItemButton
+          component={"a"}
+          href={`https://github.com/willytylee/Transportation-ETA`}
+          target="_blank"
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <InfoIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary="原始碼"
+            secondary="https://github.com/willytylee/Transportation-ETA"
+          />
+        </ListItemButton>
+      </ListItem>
+      <Divider />
       <ListItem disablePadding>
         <ListItemButton
           component={"a"}

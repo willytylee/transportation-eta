@@ -1,7 +1,7 @@
 import { useState, useRef, useContext } from "react";
 import { Popper, styled } from "@mui/material";
 import { SearchBar } from "../components/Search/SearchBar";
-import { AutoList } from "../components/Search/AutoList";
+import { AutoList } from "../components/Search/AutoList/AutoList";
 import { RouteList } from "../components/Search/RouteList";
 import { StopList } from "../components/Search/StopList";
 import { EtaContext } from "../context/EtaContext";

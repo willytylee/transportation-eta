@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -12,7 +12,7 @@ import {
   Map as MapIcon,
 } from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
-import { getCoPriorityId, getLocalStorage } from "../../Utils";
+import { getCoPriorityId } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
 import { StopEta } from "./StopEta";
 import { MtrStopEta } from "./MtrStopEta";
@@ -20,12 +20,14 @@ import { useCorrectBound } from "../../hooks/Bound";
 import { EtaContext } from "../../context/EtaContext";
 import { etaExcluded } from "../../constants/Mtr";
 import { MapDialog } from "../MapDialog/MapDialog";
+import { DbContext } from "../../context/DbContext";
 
 export const StopList = ({ route }) => {
   const [stopList, setStopList] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
-  const { dbVersion, location: currentLocation } = useContext(AppContext);
+  const { location: currentLocation } = useContext(AppContext);
+  const { gStopList } = useContext(DbContext);
   const {
     currRoute,
     nearestStopId,
@@ -35,8 +37,6 @@ export const StopList = ({ route }) => {
   } = useContext(EtaContext);
   const { correctBound, isBoundLoading } = useCorrectBound({ currRoute });
   const stopListRef = useRef(null);
-
-  const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
 
   const handleMapDialogOnClose = () => {
     setMapDialogOpen(false);

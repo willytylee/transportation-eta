@@ -1,10 +1,8 @@
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import { Dialog, styled } from "@mui/material";
 import { EtaContext } from "../../context/EtaContext";
 import { Header } from "./Header";
 import { Content } from "./Content";
-import { AppContext } from "../../context/AppContext";
-import { getLocalStorage } from "../../Utils";
 
 export const MapDialog = ({
   mapDialogOpen,
@@ -13,9 +11,6 @@ export const MapDialog = ({
 }) => {
   const { currRoute, updateMapStopIdx, updateMapLocation } =
     useContext(EtaContext);
-  const { dbVersion } = useContext(AppContext);
-
-  const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
 
   const handleDialogOnClose = () => {
     updateMapStopIdx(-1);
@@ -31,11 +26,8 @@ export const MapDialog = ({
     >
       {Object.keys(currRoute).length !== 0 && (
         <>
-          <Header
-            gStopList={gStopList}
-            handleDialogOnClose={handleDialogOnClose}
-          />
-          <Content gStopList={gStopList} />
+          <Header handleDialogOnClose={handleDialogOnClose} />
+          <Content />
         </>
       )}
     </DialogRoot>

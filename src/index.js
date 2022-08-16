@@ -8,6 +8,7 @@ import { AppProvider } from "./context/AppContext";
 import { EtaProvider } from "./context/EtaContext";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { IconButton } from "@mui/material/";
+import { DbProvider } from "./context/DbContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -16,24 +17,26 @@ root.render(
     <BrowserRouter>
       <AppProvider>
         <EtaProvider>
-          <SnackbarProvider
-            maxSnack={1}
-            autoHideDuration={2000}
-            action={(snackbarId) => {
-              const { closeSnackbar } = useSnackbar();
-              return (
-                <IconButton
-                  onClick={() => {
-                    closeSnackbar(snackbarId);
-                  }}
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              );
-            }}
-          >
-            <App />
-          </SnackbarProvider>
+          <DbProvider>
+            <SnackbarProvider
+              maxSnack={1}
+              autoHideDuration={2000}
+              action={(snackbarId) => {
+                const { closeSnackbar } = useSnackbar();
+                return (
+                  <IconButton
+                    onClick={() => {
+                      closeSnackbar(snackbarId);
+                    }}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                );
+              }}
+            >
+              <App />
+            </SnackbarProvider>
+          </DbProvider>
         </EtaProvider>
       </AppProvider>
     </BrowserRouter>
