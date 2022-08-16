@@ -15,15 +15,16 @@ It also allows you to bookmark and group the route based on your preference and 
 
 ## ⭐️ Features
 
-- Routes include KMB, CTB, NWFB, Green Minibus and MTR
-- Combined Route from joint operation Buses
-- Sort by arrival time in bookmark
-- Real time transportation news
+- Show the transportation with ETA include KMB, CTB, NWFB, Green Minibus and MTR.
+- Combined Route from joint operation Buses.
+- Show the nearby Stops's transportation.
+- Sort by arrival time in bookmark.
+- Real time transportation news.
 
 ## 🚀 Getting Started
 [Live Product](https://eta.willytylee.com)
 
-### Install to IOS
+### Installation in IOS
 1. Allow Location Service in iPhone Safari
 2. Open [Transportation ETA](https://eta.willytylee.com) in Safari
 3. Open Safari Settings, allow Location for https://eta.willytylee.com
