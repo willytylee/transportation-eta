@@ -53,7 +53,7 @@ export const Search = () => {
 
 const popperSx = {
   width: "95%",
-  height: "40%",
+  height: "calc(100% - 160px)",
   overflow: "auto",
   border: "1px solid lightgrey",
   borderRadius: "5px",

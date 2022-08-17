@@ -19,7 +19,6 @@ export const SearchBar = ({
 
   const handleSearchIconOnClick = () => {
     setAnchorEl(!anchorEl && divRef.current);
-    !anchorEl && textInput.current.focus();
   };
 
   const handleMapDialogOnClose = () => {
