@@ -9,10 +9,11 @@ export const DbProvider = ({ children }) => {
 
   const gStopList = useMemo(() => getLocalStorage("stopList"), [dbVersion]);
   const gRouteList = useMemo(() => getLocalStorage("routeList"), [dbVersion]);
+  const gStopMap = useMemo(() => getLocalStorage("stopMap"), [dbVersion]);
 
   const value = useMemo(
-    () => ({ gStopList, gRouteList }),
-    [gStopList, gRouteList]
+    () => ({ gStopList, gRouteList, gStopMap }),
+    [gStopList, gRouteList, gStopMap]
   );
 
   return <DbContext.Provider value={value}>{children}</DbContext.Provider>;

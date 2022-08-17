@@ -7,9 +7,7 @@ import { fetchNwfbCtbEtas } from "./NwfbCtb";
 export const fetchEtas = async ({
   bound,
   co,
-  dest,
   gtfsId,
-  orig,
   route,
   serviceType,
   seq,
@@ -45,10 +43,7 @@ export const fetchEtas = async ({
             await fetchNwfbCtbEtas({
               bound: _bound,
               co: company_id,
-              dest,
-              orig,
               route,
-              seq,
               stopId: _stopId,
             })
           );

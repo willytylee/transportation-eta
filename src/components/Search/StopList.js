@@ -35,7 +35,9 @@ export const StopList = ({ route }) => {
     updateMapLocation,
     updateMapStopIdx,
   } = useContext(EtaContext);
-  const { correctBound, isBoundLoading } = useCorrectBound({ currRoute });
+  const { correctBound, isBoundLoading } = useCorrectBound({
+    routeObj: currRoute,
+  });
   const stopListRef = useRef(null);
 
   const handleMapDialogOnClose = () => {

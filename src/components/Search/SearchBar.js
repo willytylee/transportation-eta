@@ -55,6 +55,7 @@ export const SearchBar = ({
         className={`mapIconButton ${
           Object.keys(currRoute).length === 0 ? "hide" : ""
         }`}
+        disabled={dbVersion === null}
         onClick={() => setMapDialogOpen(true)}
       >
         <MapIcon />

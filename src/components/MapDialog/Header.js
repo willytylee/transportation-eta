@@ -13,7 +13,9 @@ import { DbContext } from "../../context/DbContext";
 export const Header = ({ handleDialogOnClose }) => {
   const { currRoute, mapStopIdx } = useContext(EtaContext);
   const { gStopList } = useContext(DbContext);
-  const { correctBound, isBoundLoading } = useCorrectBound({ currRoute });
+  const { correctBound, isBoundLoading } = useCorrectBound({
+    routeObj: currRoute,
+  });
 
   const currRouteStopIdList = useMemo(
     () => currRoute.stops && currRoute.stops[Object.keys(currRoute.stops)[0]],

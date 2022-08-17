@@ -3,21 +3,19 @@ import _ from "lodash";
 import { getPreciseDistance } from "geolib";
 import { styled } from "@mui/material";
 import { AppContext } from "../../../context/AppContext";
-import { getCoByStopObj, basicFiltering } from "../../../Utils";
+import {
+  getCoByStopObj,
+  basicFiltering,
+  getCoPriorityId,
+} from "../../../Utils";
 import { DbContext } from "../../../context/DbContext";
 import { companyColor, companyMap } from "../../../constants/Constants";
+import { Eta } from "./Eta";
 
 export const AutoDistance = ({ route, handleItemOnClick }) => {
   const [autoList, setAutoList] = useState([]);
   const { location: currentLocation } = useContext(AppContext);
-  const { gRouteList, gStopList } = useContext(DbContext);
-
-  const sortByDistThenRoute = (a, b) => {
-    const routeA = parseInt(a.route.replace(/\D/g, ""));
-    const routeB = parseInt(b.route.replace(/\D/g, ""));
-
-    return a.distance - b.distance || routeA - routeB; // Sort by distance first and than sort by Route
-  };
+  const { gRouteList, gStopList, gStopMap } = useContext(DbContext);
 
   useEffect(() => {
     // Set Auto Complete Route List
@@ -28,22 +26,23 @@ export const AutoDistance = ({ route, handleItemOnClick }) => {
           { latitude: obj.location.lat, longitude: obj.location.lng },
           { latitude: currentLocation.lat, longitude: currentLocation.lng }
         );
-        obj.stopId = e;
-        obj.distance = distance;
-        return obj;
+        return { [e]: { distance: distance, stopMap: gStopMap[e] } };
       })
       .filter((e) => {
+        const value = Object.values(e)[0];
         return (
-          e.distance < 500 && (e.stopId.length === 6 || e.stopId.length === 16)
+          value.distance < 500 &&
+          (value.stopMap === undefined ||
+            (value.stopMap // For those CTB/NWFB route's stopMap includes 'kmb', filter away. we need kmb stop only
+              ? value.stopMap[0].includes("ctb") ||
+                value.stopMap[0].includes("nwfb")
+              : true))
         );
-      })
-      .map((e) => {
-        return { [e.stopId]: e.distance };
       })
       .reduce(
         (prev, curr) => ({
           ...prev,
-          [Object.keys(curr)]: Object.values(curr)[0],
+          [Object.keys(curr)]: Object.values(curr)[0].distance,
         }),
         {}
       );
@@ -56,31 +55,33 @@ export const AutoDistance = ({ route, handleItemOnClick }) => {
 
     // // Find out the route which contains the near by Stops
     routeList.forEach((e) => {
-      const megredStpId = Object.values(e.stops)
-        .map((e) => Object.values(e))
-        .flat();
+      const company = getCoPriorityId(e);
 
-      const filitedStpId = megredStpId?.filter((e) => {
-        return Object.keys(stopIdsNearBy).includes(e);
-      });
-      if (filitedStpId?.length > 0) {
-        const obj = e;
-        const stopId = filitedStpId[0]; // Can choose the first element, should be the same
-        e.stopIdNearBy = stopId;
-        e.distance = stopIdsNearBy[stopId];
-        routeListNearBy.push(obj);
+      const filitedStopId = Object.values(e.stops[company]).filter((e) =>
+        Object.keys(stopIdsNearBy).includes(e)
+      );
+
+      if (filitedStopId?.length > 0) {
+        // There may have more than one stopIdsNearBy in a route, find the nearest stop in the route stop List
+        const _stopId = filitedStopId.reduce((prev, curr) =>
+          stopIdsNearBy[prev] < stopIdsNearBy[curr] ? prev : curr
+        );
+        e.nearByStopId = _stopId;
+        e.nearByStopSeq = e.stops[company].findIndex((f) => f === _stopId) + 1;
+        e.distance = stopIdsNearBy[_stopId];
+        routeListNearBy.push(e);
       }
     });
 
-    const sortedRouteListNearBy = routeListNearBy.sort((a, b) =>
-      sortByDistThenRoute(a, b)
-    );
-
     setAutoList(
-      _(sortedRouteListNearBy)
-        .groupBy((x) => x.stopIdNearBy)
-        .map((value, key) => ({ stopId: key, routes: value }))
+      _(routeListNearBy)
+        .groupBy((x) => x.nearByStopId)
+        .map((value, key) => ({
+          stopId: key,
+          routes: value,
+        }))
         .value()
+        .sort((a, b) => a.routes[0].distance - b.routes[0].distance)
     );
   }, [route]);
 
@@ -88,46 +89,51 @@ export const AutoDistance = ({ route, handleItemOnClick }) => {
     <>
       {autoList.length > 0 &&
         autoList.map((e, i) => {
-          const name = gStopList[e.stopId].name.zh;
-          const lat = gStopList[e.stopId].location.lat;
-          const lng = gStopList[e.stopId].location.lng;
+          const stop = gStopList[e.stopId];
+          const name = stop.name.zh;
+          const { lat, lng } = stop.location;
           return (
             <AutoDistanceRoot key={i}>
               <div className="stop">
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
+                  title={e.stopId}
                 >
                   {name} - {e.routes[0].distance}米
                 </a>
               </div>
               <div className="routes">
-                {e.routes.map((e, i) => {
+                {e.routes.map((routeObj, i) => {
                   return (
                     <div
                       key={i}
                       className="routeItems"
-                      onClick={() => handleItemOnClick(e)}
+                      onClick={() => handleItemOnClick(routeObj)}
                     >
                       <div className="company">
-                        {getCoByStopObj(e)
-                          .map((f, j) => {
+                        {getCoByStopObj(routeObj)
+                          .map((companyId, j) => {
                             return (
-                              <span key={j} className={f}>
-                                {companyMap[f]}
+                              <span key={j} className={companyId}>
+                                {companyMap[companyId]}
                               </span>
                             );
                           })
                           .reduce((a, b) => [a, " + ", b])}
                       </div>
-                      <div className="route">{e.route}</div>
+                      <div className="route">{routeObj.route}</div>
                       <div className="nearStopDest">
                         <div>
-                          <span className="dest">{e.dest.zh}</span>
+                          <span className="dest">{routeObj.dest.zh}</span>
                           <span className="special">
                             {" "}
-                            {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
+                            {parseInt(routeObj.serviceType, 10) !== 1 &&
+                              "特別班次"}
                           </span>
                         </div>
+                      </div>
+                      <div className="eta">
+                        <Eta routeObj={routeObj} />
                       </div>
                     </div>
                   );
@@ -165,18 +171,14 @@ const AutoDistanceRoot = styled("div")({
         width: "15%",
       },
       ".nearStopDest": {
-        width: "65%",
-        ".dest": {
-          fontWeight: "900",
-        },
+        width: "60%",
         ".special": {
           fontSize: "10px",
         },
       },
       ".eta": {
-        width: "15%",
+        width: "20%",
         float: "left",
-        fontSize: "10px",
       },
     },
   },
