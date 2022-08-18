@@ -1,5 +1,7 @@
 # Transportation Estimated Time of Arrival
 [![React](https://badges.aleen42.com/src/react.svg)](http://reactjs.org/) 
+[![Test](https://github.com/willytylee/Transportation-ETA/actions/workflows/deploy.yml/badge.svg)](https://eta.willytylee.com)
+
 
 Transportation ETA is a web application written by React, an alternative to Mobile App service like [App1933 - KMB ‧ LWB](https://apps.apple.com/us/app/app1933-kmb-lwb/id1170003707), [新巴城巴 CitybusNWFB](https://apps.apple.com/hk/app/%E6%96%B0%E5%B7%B4%E5%9F%8E%E5%B7%B4-citybusnwfb/id472242340) in Hong Kong.
 
