@@ -1,5 +1,4 @@
 import { useContext, useState, useEffect } from "react";
-import _ from "lodash";
 import { styled } from "@mui/material";
 import { getCoByStopObj, basicFiltering, sortByCompany } from "../../../Utils";
 import { DbContext } from "../../../context/DbContext";
@@ -29,6 +28,7 @@ export const AutoSearch = ({ route, handleItemOnClick }) => {
         .filter((e) => route === e.route.substring(0, route.length))
         .sort((a, b) => sortByRouteThenCo(a, b))
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
 
   return (

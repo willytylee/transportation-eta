@@ -83,6 +83,7 @@ export const AutoDistance = ({ route, handleItemOnClick }) => {
         .value()
         .sort((a, b) => a.routes[0].distance - b.routes[0].distance)
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
 
   return (
@@ -163,12 +164,12 @@ const AutoDistanceRoot = styled("div")({
       borderBottom: "1px solid lightgrey",
       ".company": {
         ...companyColor,
-        width: "20%",
+        width: "22.5%",
       },
       ".route": {
         fontWeight: "900",
         letterSpacing: "-0.5px",
-        width: "15%",
+        width: "12.5%",
       },
       ".nearStopDest": {
         width: "60%",

@@ -24,6 +24,7 @@ export const Header = ({ handleDialogOnClose }) => {
 
   const currRouteStopList = useMemo(
     () => currRouteStopIdList?.map((e) => gStopList[e]),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [currRoute]
   );
 

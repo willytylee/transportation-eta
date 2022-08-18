@@ -32,6 +32,7 @@ export const AppProvider = ({ children }) => {
     };
 
     navigator.geolocation.watchPosition(success);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateCurrentUserId = useCallback((userId) => {

@@ -61,6 +61,7 @@ export const Buses = ({ section }) => {
     const interval = setInterval(intervalContent, 5000);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [section]);
 
   const switchView = () => {

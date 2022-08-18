@@ -29,6 +29,7 @@ export const SearchBar = ({
     if (!route) {
       updateCurrRoute({});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
 
   return (

@@ -46,6 +46,7 @@ export const Content = () => {
   );
   const currRouteStopList = useMemo(
     () => currRouteStopIdList?.map((e) => gStopList[e]),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [currRoute]
   );
 
@@ -79,6 +80,7 @@ export const Content = () => {
           });
         },
       }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       []
     );
 

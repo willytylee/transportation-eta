@@ -32,7 +32,7 @@ export const useEtas = ({ seq, routeObj, bound, stopId, isBoundLoading }) => {
     return () => {
       clearInterval(interval);
     };
-  }, [routeObj, seq, bound, isBoundLoading]);
+  }, [routeObj, seq, bound, isBoundLoading, stopId]);
 
   return { eta, isEtaLoading };
 };

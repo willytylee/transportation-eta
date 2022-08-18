@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import {
   Directions as DirectionsIcon,
-  NoteAdd as NoteAddIcon,
   Map as MapIcon,
 } from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
@@ -99,6 +98,7 @@ export const StopList = ({ route }) => {
         })
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currRoute]);
 
   useEffect(() => {

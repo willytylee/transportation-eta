@@ -55,6 +55,7 @@ export const RouteList = ({ route }) => {
               .filter((e) => e.route === route)
               .sort((a, b) => sortByCompany(a, b))
           ));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
 
   return (
