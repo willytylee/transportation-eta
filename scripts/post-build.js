@@ -1,4 +1,4 @@
-import { writeFile } from "fs";
+const fs = require("fs");
 
 const d = new Date();
 const year = d.getFullYear().toString();
@@ -13,7 +13,7 @@ const version = `${year.slice(-1)}.${month}${date}.${hour}${minutes.slice(
   -1
 )}`;
 
-writeFile("./build/version.json", version, (err) => {
+fs.writeFile("./build/version.json", version, (err) => {
   if (err) {
     console.error(err);
   }
