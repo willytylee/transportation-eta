@@ -3,15 +3,15 @@
 [![Test](https://github.com/willytylee/Transportation-ETA/actions/workflows/deploy.yml/badge.svg)](https://eta.willytylee.com)
 
 
-Transportation ETA is a web application written by React, an alternative to Mobile App service like [App1933 - KMB ‧ LWB](https://apps.apple.com/us/app/app1933-kmb-lwb/id1170003707), [新巴城巴 CitybusNWFB](https://apps.apple.com/hk/app/%E6%96%B0%E5%B7%B4%E5%9F%8E%E5%B7%B4-citybusnwfb/id472242340) in Hong Kong.
+HK Transportation ETA is a web application written by React, an alternative to Mobile App service like [App1933 - KMB ‧ LWB](https://apps.apple.com/us/app/app1933-kmb-lwb/id1170003707), [新巴城巴 CitybusNWFB](https://apps.apple.com/hk/app/%E6%96%B0%E5%B7%B4%E5%9F%8E%E5%B7%B4-citybusnwfb/id472242340) in Hong Kong.
 
 Inspired by [香港 - 獨立巴士預報 HK Bus ETA](https://github.com/hkbus/hk-independent-bus-eta)
 
 <img src="https://user-images.githubusercontent.com/8532630/184686112-6142456c-d239-4c0c-8dd8-bc77da9ac50c.jpeg" width="250"> <img src="https://user-images.githubusercontent.com/8532630/184681243-e6aaa766-5163-4948-80e9-552544a9de87.jpeg" width="250">  <img src="https://user-images.githubusercontent.com/8532630/184660319-bce54607-959b-49ff-b5bf-b79faf61e0fb.png" width="250">
 
-## 👇 What is Transportation ETA?
+## 👇 What is HK Transportation ETA?
 
-Transportation ETA is a web application that can allow you to search the ETA from KMB, CTB, NWFB, GMB and MTR.\
+HK Transportation ETA is a web application that can allow you to search the ETA from KMB, CTB, NWFB, GMB and MTR.\
 \
 It also allows you to bookmark and group the route based on your preference and sort by the arrival time, so that you will know which transport will arrive earliest.
 
@@ -26,13 +26,22 @@ It also allows you to bookmark and group the route based on your preference and 
 ## 🚀 Getting Started
 [Live Product](https://eta.willytylee.com)
 
-### Installation in IOS
-1. Allow Location Service in iPhone Safari
-2. Open [Transportation ETA](https://eta.willytylee.com) in Safari
-3. Open Safari Settings, allow Location for https://eta.willytylee.com
+### Installation on IOS
+1. Allow Location Service on iPhone Safari
+2. Open [HK Transportation ETA](https://eta.willytylee.com) in Safari
+3. Open Safari Settings, allow Location Service for https://eta.willytylee.com
 4. Press Share button
-5. Add to Desktop
+5. Add to Home Screen
 
+### Installation on Android
+1. Allow Location Service on iPhone Chrome
+2. Open [HK Transportation ETA](https://eta.willytylee.com) in Chrome
+3. Allow Location Service for https://eta.willytylee.com
+4. Go to Settings in Chrome
+5. Add to Home Screen
+
+### Adding custom bookmark
+Please contact the owner: willytylee@gmail.com
 
 ### Development
 
