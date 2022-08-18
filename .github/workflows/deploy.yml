@@ -28,4 +28,4 @@ jobs:
           server: ftp.willytylee.com
           username: willytylee
           password: ${{ secrets.ftp_password }}
-          server-dir: /domains/eta.willytylee.com/public_html/
+          server-dir: /domains/eta.willytylee.com/build
