@@ -23,6 +23,7 @@ export const AppProvider = ({ children }) => {
   const [serVersion, setSerVersion] = useState("");
   const [currentUserId, setCurrentUserId] = useState(userIdLocal);
 
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
   const getGeoLocation = useCallback(() => {
     const success = (position) => {
       setLocation({
@@ -32,12 +33,11 @@ export const AppProvider = ({ children }) => {
     };
 
     navigator.geolocation.watchPosition(success);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateCurrentUserId = useCallback((userId) => {
     setCurrentUserId(userId);
-  });
+  }, []);
 
   const initAppVersion = useCallback(() => {
     fetchVersion().then((version) => {
@@ -52,7 +52,7 @@ export const AppProvider = ({ children }) => {
 
     intervalContent();
     setInterval(intervalContent, 60000);
-  });
+  }, []);
 
   const initDb = useCallback(() => {
     const dbVersionLocal = localStorage.getItem("dbVersion");
@@ -96,7 +96,9 @@ export const AppProvider = ({ children }) => {
           );
         });
     }
-  });
+  }, []);
+
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
 
   const value = useMemo(
     () => ({

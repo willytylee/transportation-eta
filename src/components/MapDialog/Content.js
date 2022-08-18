@@ -203,6 +203,7 @@ export const Content = () => {
           duration: 0.5,
         });
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentLocation.lat, currentLocation.lng, navBtnType]);
 
     const handleIconOnClick = () => {
