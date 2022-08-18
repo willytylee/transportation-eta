@@ -66,19 +66,25 @@ export const Content = () => {
     className: "currLocationMarker",
   });
 
-  const currStopIcon = new L.Icon({
-    iconUrl: require("../../assets/icons/marker-red-icon.png"),
-    iconRetinaUrl: require("../../assets/icons/marker-red-icon.png"),
-    iconAnchor: [20, 40],
-    popupAnchor: null,
-    shadowUrl: null,
-    shadowSize: null,
-    shadowAnchor: null,
-    iconSize: new L.Point(40, 40),
-    className: "currStop",
-  });
-
   const CustomMarker = ({ stop, i }) => {
+    const stopIcon = useMemo(
+      () =>
+        new L.Icon({
+          iconUrl: require("../../assets/icons/marker-icon-2x.png"),
+          iconRetinaUrl: require("../../assets/icons/marker-icon-2x.png"),
+          iconAnchor: [20, 40],
+          popupAnchor: null,
+          shadowUrl: null,
+          shadowSize: null,
+          shadowAnchor: null,
+          iconSize: new L.Point(40, 40),
+          className: `currStopMarker ${i === mapStopIdx && "selected"} ${
+            mapStopIdx > -1 && i > mapStopIdx && "forward"
+          }`,
+        }),
+      []
+    );
+
     const map = useMap();
 
     const eventHandlers = useMemo(
@@ -95,21 +101,12 @@ export const Content = () => {
       []
     );
 
-    if (mapStopIdx === i) {
-      return (
-        <Marker
-          key={i}
-          position={[stop.location.lat, stop.location.lng]}
-          eventHandlers={eventHandlers}
-          icon={currStopIcon}
-        />
-      );
-    }
     return (
       <Marker
         key={i}
         position={[stop.location.lat, stop.location.lng]}
         eventHandlers={eventHandlers}
+        icon={stopIcon}
       />
     );
   };
@@ -344,8 +341,18 @@ const MapContainerRoot = styled(MapContainer)({
       },
     },
   },
-  ".currLocationMarker": {
-    border: "none",
-    background: "none",
+  ".leaflet-marker-pane": {
+    ".currLocationMarker": {
+      border: "none",
+      background: "none",
+    },
+    ".currStopMarker": {
+      "&.selected": {
+        filter: "hue-rotate(150deg)",
+      },
+      "&.forward": {
+        filter: "opacity(0.5)",
+      },
+    },
   },
 });
