@@ -82,6 +82,7 @@ export const Content = () => {
             mapStopIdx > -1 && i > mapStopIdx && "forward"
           }`,
         }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       []
     );
 
