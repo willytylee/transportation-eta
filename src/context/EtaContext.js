@@ -9,7 +9,7 @@ export const EtaProvider = ({ children }) => {
   const [mapLocation, setMapLocation] = useState(undefined);
   const [mapStopIdx, setMapStopIdx] = useState(-1);
 
-  /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  /* eslint-disable react-hooks/exhaustive-deps */
   const updateCurrRoute = useCallback((route) => {
     setCurrRoute(route);
   }, []);
@@ -31,7 +31,7 @@ export const EtaProvider = ({ children }) => {
       setMapStopIdx(idx);
     }, 500);
   }, []);
-  /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  /* eslint-disable react-hooks/exhaustive-deps */
 
   const value = useMemo(
     () => ({

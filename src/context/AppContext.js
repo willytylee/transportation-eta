@@ -23,7 +23,7 @@ export const AppProvider = ({ children }) => {
   const [serVersion, setSerVersion] = useState("");
   const [currentUserId, setCurrentUserId] = useState(userIdLocal);
 
-  /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  /* eslint-disable react-hooks/exhaustive-deps */
   const getGeoLocation = useCallback(() => {
     const success = (position) => {
       setLocation({
@@ -98,7 +98,7 @@ export const AppProvider = ({ children }) => {
     }
   }, []);
 
-  /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  /* eslint-disable react-hooks/exhaustive-deps */
 
   const value = useMemo(
     () => ({
