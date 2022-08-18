@@ -12,7 +12,6 @@ import {
   MapContainer,
   TileLayer,
   Marker,
-  Popup,
   useMap,
   Polyline,
 } from "react-leaflet";
@@ -55,7 +54,7 @@ export const Content = () => {
     e.location.lng,
   ]);
 
-  const myIcon = new L.Icon({
+  const currLocationIcon = new L.Icon({
     iconUrl: require("../../assets/icons/currentLocation.png"),
     iconRetinaUrl: require("../../assets/icons/currentLocation.png"),
     iconAnchor: null,
@@ -67,14 +66,26 @@ export const Content = () => {
     className: "currLocationMarker",
   });
 
-  const CustomMarker = ({ currStop, i }) => {
+  const currStopIcon = new L.Icon({
+    iconUrl: require("../../assets/icons/marker-red-icon.png"),
+    iconRetinaUrl: require("../../assets/icons/marker-red-icon.png"),
+    iconAnchor: [20, 40],
+    popupAnchor: null,
+    shadowUrl: null,
+    shadowSize: null,
+    shadowAnchor: null,
+    iconSize: new L.Point(40, 40),
+    className: "currStop",
+  });
+
+  const CustomMarker = ({ stop, i }) => {
     const map = useMap();
 
     const eventHandlers = useMemo(
       () => ({
         click: () => {
           updateMapStopIdx(i);
-          map.panTo([currStop.location.lat, currStop.location.lng], {
+          map.panTo([stop.location.lat, stop.location.lng], {
             animate: true,
             duration: 0.5,
           });
@@ -84,14 +95,22 @@ export const Content = () => {
       []
     );
 
+    if (mapStopIdx === i) {
+      return (
+        <Marker
+          key={i}
+          position={[stop.location.lat, stop.location.lng]}
+          eventHandlers={eventHandlers}
+          icon={currStopIcon}
+        />
+      );
+    }
     return (
       <Marker
         key={i}
-        position={[currStop.location.lat, currStop.location.lng]}
+        position={[stop.location.lat, stop.location.lng]}
         eventHandlers={eventHandlers}
-      >
-        <Popup>{`${i + 1}. ${currStop.name.zh}`}</Popup>
-      </Marker>
+      />
     );
   };
 
@@ -235,13 +254,13 @@ export const Content = () => {
       />
       {currRoute.stops &&
         currRouteStopIdList.map((e, i) => {
-          const currStop = gStopList[e];
-          return <CustomMarker currStop={currStop} key={i} i={i} />;
+          const stop = gStopList[e];
+          return <CustomMarker stop={stop} key={i} i={i} />;
         })}
 
       <Marker
         position={[currentLocation.lat, currentLocation.lng]}
-        icon={myIcon}
+        icon={currLocationIcon}
       ></Marker>
 
       <Polyline
