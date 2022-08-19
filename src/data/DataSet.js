@@ -81,14 +81,6 @@ export const dataSet = [
           ],
           [
             {
-              seq: 10,
-              co: "kmb",
-              route: "215X",
-              stopId: "BE27F066CF40DF7D",
-            },
-          ],
-          [
-            {
               seq: 11,
               co: "kmb",
               route: "297",
@@ -114,6 +106,14 @@ export const dataSet = [
       {
         title: "藍田",
         data: [
+          [
+            {
+              seq: 10,
+              co: "kmb",
+              route: "215X",
+              stopId: "BE27F066CF40DF7D",
+            },
+          ],
           [
             {
               seq: 11,
