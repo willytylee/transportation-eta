@@ -28,6 +28,38 @@ export const dataSet = [
               stopId: "AA97FFC49AE957A5",
             },
           ],
+          [
+            {
+              seq: 21,
+              co: "kmb",
+              route: "14X",
+              stopId: "AA97FFC49AE957A5",
+            },
+            {
+              seq: 9,
+              co: "kmb",
+              route: "215X",
+              stopId: "AA97FFC49AE957A5",
+            },
+            {
+              seq: 14,
+              co: "kmb",
+              route: "219X",
+              stopId: "AA97FFC49AE957A5",
+            },
+            {
+              seq: 12,
+              co: "kmb",
+              route: "296D",
+              stopId: "33033960343A57A8",
+            },
+            {
+              seq: 10,
+              co: "kmb",
+              route: "98D",
+              stopId: "33033960343A57A8",
+            },
+          ],
         ],
       },
       {
@@ -45,6 +77,14 @@ export const dataSet = [
               co: "kmb",
               route: "297",
               stopId: "F90ED764C7A95649",
+            },
+          ],
+          [
+            {
+              seq: 10,
+              co: "kmb",
+              route: "215X",
+              stopId: "BE27F066CF40DF7D",
             },
           ],
           [
