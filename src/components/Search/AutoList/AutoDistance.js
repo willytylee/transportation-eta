@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import _ from "lodash";
 import { getPreciseDistance } from "geolib";
 import { styled } from "@mui/material";
@@ -12,79 +12,73 @@ import { DbContext } from "../../../context/DbContext";
 import { companyColor, companyMap } from "../../../constants/Constants";
 import { Eta } from "./Eta";
 
-export const AutoDistance = ({ route, handleItemOnClick }) => {
-  const [autoList, setAutoList] = useState([]);
+export const AutoDistance = ({ handleItemOnClick }) => {
   const { location: currentLocation } = useContext(AppContext);
   const { gRouteList, gStopList, gStopMap } = useContext(DbContext);
 
-  useEffect(() => {
-    // Set Auto Complete Route List
-    const stopIdsNearBy = Object.keys(gStopList)
-      .map((e) => {
-        const obj = gStopList[e];
-        const distance = getPreciseDistance(
-          { latitude: obj.location.lat, longitude: obj.location.lng },
-          { latitude: currentLocation.lat, longitude: currentLocation.lng }
-        );
-        return { [e]: { distance: distance, stopMap: gStopMap[e] } };
-      })
-      .filter((e) => {
-        const value = Object.values(e)[0];
-        return (
-          value.distance < 500 &&
-          (value.stopMap === undefined ||
-            (value.stopMap // For those CTB/NWFB route's stopMap includes 'kmb', filter away. we need kmb stop only
-              ? value.stopMap[0].includes("ctb") ||
-                value.stopMap[0].includes("nwfb")
-              : true))
-        );
-      })
-      .reduce(
-        (prev, curr) => ({
-          ...prev,
-          [Object.keys(curr)]: Object.values(curr)[0].distance,
-        }),
-        {}
+  // Set Auto Complete Route List
+  const stopIdsNearBy = Object.keys(gStopList)
+    .map((e) => {
+      const obj = gStopList[e];
+      const distance = getPreciseDistance(
+        { latitude: obj.location.lat, longitude: obj.location.lng },
+        { latitude: currentLocation.lat, longitude: currentLocation.lng }
       );
-
-    const routeList = Object.keys(gRouteList)
-      .map((e) => gRouteList[e])
-      .filter((e) => basicFiltering(e));
-
-    const routeListNearBy = [];
-
-    // // Find out the route which contains the near by Stops
-    routeList.forEach((e) => {
-      const company = getCoPriorityId(e);
-
-      const filitedStopId = Object.values(e.stops[company]).filter((e) =>
-        Object.keys(stopIdsNearBy).includes(e)
+      return { [e]: { distance: distance, stopMap: gStopMap[e] } };
+    })
+    .filter((e) => {
+      const value = Object.values(e)[0];
+      return (
+        value.distance < 500 &&
+        (value.stopMap === undefined ||
+          (value.stopMap // For those CTB/NWFB route's stopMap includes 'kmb', filter away. we need kmb stop only
+            ? value.stopMap[0].includes("ctb") ||
+              value.stopMap[0].includes("nwfb")
+            : true))
       );
-
-      if (filitedStopId?.length > 0) {
-        // There may have more than one stopIdsNearBy in a route, find the nearest stop in the route stop List
-        const _stopId = filitedStopId.reduce((prev, curr) =>
-          stopIdsNearBy[prev] < stopIdsNearBy[curr] ? prev : curr
-        );
-        e.nearByStopId = _stopId;
-        e.nearByStopSeq = e.stops[company].findIndex((f) => f === _stopId) + 1;
-        e.distance = stopIdsNearBy[_stopId];
-        routeListNearBy.push(e);
-      }
-    });
-
-    setAutoList(
-      _(routeListNearBy)
-        .groupBy((x) => x.nearByStopId)
-        .map((value, key) => ({
-          stopId: key,
-          routes: value,
-        }))
-        .value()
-        .sort((a, b) => a.routes[0].distance - b.routes[0].distance)
+    })
+    .reduce(
+      (prev, curr) => ({
+        ...prev,
+        [Object.keys(curr)]: Object.values(curr)[0].distance,
+      }),
+      {}
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [route]);
+
+  const routeList = Object.keys(gRouteList)
+    .map((e) => gRouteList[e])
+    .filter((e) => basicFiltering(e));
+
+  const routeListNearBy = [];
+
+  // // Find out the route which contains the near by Stops
+  routeList.forEach((e) => {
+    const company = getCoPriorityId(e);
+
+    const filitedStopId = Object.values(e.stops[company]).filter((e) =>
+      Object.keys(stopIdsNearBy).includes(e)
+    );
+
+    if (filitedStopId?.length > 0) {
+      // There may have more than one stopIdsNearBy in a route, find the nearest stop in the route stop List
+      const _stopId = filitedStopId.reduce((prev, curr) =>
+        stopIdsNearBy[prev] < stopIdsNearBy[curr] ? prev : curr
+      );
+      e.nearByStopId = _stopId;
+      e.nearByStopSeq = e.stops[company].findIndex((f) => f === _stopId) + 1;
+      e.distance = stopIdsNearBy[_stopId];
+      routeListNearBy.push(e);
+    }
+  });
+
+  const autoList = _(routeListNearBy)
+    .groupBy((x) => x.nearByStopId)
+    .map((value, key) => ({
+      stopId: key,
+      routes: value,
+    }))
+    .value()
+    .sort((a, b) => a.routes[0].distance - b.routes[0].distance);
 
   return (
     <>

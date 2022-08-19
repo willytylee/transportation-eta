@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState, useEffect } from "react";
+import { useContext, useMemo, useState } from "react";
 import L from "leaflet";
 import {
   ArrowForwardIos as ArrowForwardIosIcon,
@@ -213,15 +213,12 @@ export const Content = () => {
       setNavBtnType("normal");
     });
 
-    useEffect(() => {
-      if (navBtnType === "navigation") {
-        map.panTo([currentLocation.lat, currentLocation.lng], {
-          animate: true,
-          duration: 0.5,
-        });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentLocation.lat, currentLocation.lng, navBtnType]);
+    if (navBtnType === "navigation") {
+      map.panTo([currentLocation.lat, currentLocation.lng], {
+        animate: true,
+        duration: 0.5,
+      });
+    }
 
     const handleIconOnClick = () => {
       map.flyTo([currentLocation.lat, currentLocation.lng], 18, {

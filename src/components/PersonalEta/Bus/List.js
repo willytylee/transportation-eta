@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -11,62 +11,57 @@ import { etaTimeConverter, sortEtaObj } from "../../../Utils";
 import { companyColor } from "../../../constants/Constants";
 
 export const List = ({ sectionData }) => {
-  const [finalResult, setFinalResult] = useState([]);
   const [expanded, setExpanded] = useState(false);
 
-  useEffect(() => {
-    let result = [];
+  let result = [];
 
-    sectionData.forEach((e) => {
-      const { co, etas, route, stopName, stopId, location } = e;
+  sectionData.forEach((e) => {
+    const { co, etas, route, stopName, stopId, location } = e;
 
-      let eta;
+    let eta;
 
-      if (etas) {
-        if (etas.length === 0) {
+    if (etas) {
+      if (etas.length === 0) {
+        result.push({
+          co,
+          route,
+          eta: "",
+          stopName,
+          stopId,
+          latLngUrl: `https://www.google.com.hk/maps/dir/?api=1&destination=${location?.lat},${location?.lng}&travelmode=walking`,
+        });
+      } else {
+        etas.forEach((e) => {
+          eta = e.eta ? e.eta : "";
+          const { rmk_tc } = e;
           result.push({
             co,
             route,
-            eta: "",
+            eta,
+            rmk_tc,
             stopName,
             stopId,
             latLngUrl: `https://www.google.com.hk/maps/dir/?api=1&destination=${location?.lat},${location?.lng}&travelmode=walking`,
           });
-        } else {
-          etas.forEach((e) => {
-            eta = e.eta ? e.eta : "";
-            const { rmk_tc } = e;
-            result.push({
-              co,
-              route,
-              eta,
-              rmk_tc,
-              stopName,
-              stopId,
-              latLngUrl: `https://www.google.com.hk/maps/dir/?api=1&destination=${location?.lat},${location?.lng}&travelmode=walking`,
-            });
-          });
-        }
+        });
       }
-    });
-
-    // Sort the eta for same section
-
-    result = sortEtaObj(result);
-
-    result.forEach((e, i) => {
-      const { eta, rmk_tc } = e;
-      result[i].eta = etaTimeConverter(eta, rmk_tc).etaIntervalStr;
-    });
-
-    if (sectionData.length >= 3) {
-      result = result.slice(0, sectionData.length);
-    } else {
-      result = result.slice(0, 3);
     }
+  });
 
-    setFinalResult(result);
-  }, [sectionData]);
+  // Sort the eta for same section
+
+  result = sortEtaObj(result);
+
+  result.forEach((e, i) => {
+    const { eta, rmk_tc } = e;
+    result[i].eta = etaTimeConverter(eta, rmk_tc).etaIntervalStr;
+  });
+
+  if (sectionData.length >= 3) {
+    result = result.slice(0, sectionData.length);
+  } else {
+    result = result.slice(0, 3);
+  }
 
   const handleChange = (panel) => (e, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -74,7 +69,7 @@ export const List = ({ sectionData }) => {
 
   return (
     <ListView>
-      {finalResult.map((e, i) => {
+      {result.map((e, i) => {
         return (
           <Accordion
             key={i}

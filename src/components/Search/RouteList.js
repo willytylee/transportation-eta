@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import { Card, styled } from "@mui/material";
 import { getCoByStopObj, basicFiltering, sortByCompany } from "../../Utils";
 import { EtaContext } from "../../context/EtaContext";
@@ -7,9 +7,30 @@ import { etaExcluded, routeMap } from "../../constants/Mtr";
 import { DbContext } from "../../context/DbContext";
 
 export const RouteList = ({ route }) => {
-  const [routeList, setRouteList] = useState([]);
   const { updateCurrRoute, currRoute } = useContext(EtaContext);
   const { gRouteList } = useContext(DbContext);
+
+  const routeList =
+    gRouteList &&
+    (route === "MTR"
+      ? Object.keys(gRouteList)
+          .map((e) => gRouteList[e])
+          .filter((e) => e.co.includes("mtr"))
+          .filter(
+            // Combine same route
+            (e, idx, self) =>
+              idx ===
+              self.findIndex((t) => {
+                const eStop = JSON.stringify([...e.stops.mtr].sort());
+                const tStop = JSON.stringify([...t.stops.mtr].sort());
+                return eStop === tStop;
+              })
+          )
+      : Object.keys(gRouteList)
+          .map((e) => gRouteList[e])
+          .filter((e) => basicFiltering(e))
+          .filter((e) => e.route === route)
+          .sort((a, b) => sortByCompany(a, b)));
 
   const handleCardOnClick = (i) => {
     const expandRoute = routeList[i];
@@ -28,35 +49,6 @@ export const RouteList = ({ route }) => {
       JSON.stringify(a.serviceType) === JSON.stringify(b.serviceType)
     );
   };
-
-  // When the route number is changed, update RouteList
-  useEffect(() => {
-    gRouteList &&
-      (route === "MTR"
-        ? setRouteList(
-            Object.keys(gRouteList)
-              .map((e) => gRouteList[e])
-              .filter((e) => e.co.includes("mtr"))
-              .filter(
-                // Combine same route
-                (e, idx, self) =>
-                  idx ===
-                  self.findIndex((t) => {
-                    const eStop = JSON.stringify([...e.stops.mtr].sort());
-                    const tStop = JSON.stringify([...t.stops.mtr].sort());
-                    return eStop === tStop;
-                  })
-              )
-          )
-        : setRouteList(
-            Object.keys(gRouteList)
-              .map((e) => gRouteList[e])
-              .filter((e) => basicFiltering(e))
-              .filter((e) => e.route === route)
-              .sort((a, b) => sortByCompany(a, b))
-          ));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [route]);
 
   return (
     <RouteListRoot>

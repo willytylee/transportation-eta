@@ -1,11 +1,10 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import { styled } from "@mui/material";
 import { EtaContext } from "../../../context/EtaContext";
 import { AutoDistance } from "./AutoDistance";
 import { AutoSearch } from "./AutoSearch";
 
 export const AutoList = ({ route, setAnchorEl, setRoute }) => {
-  const [title, setTitle] = useState("");
   const { updateCurrRoute } = useContext(EtaContext);
 
   const handleItemOnClick = (e) => {
@@ -14,13 +13,7 @@ export const AutoList = ({ route, setAnchorEl, setRoute }) => {
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    if (route) {
-      setTitle("搜尋路線");
-    } else {
-      setTitle("附近路線");
-    }
-  }, [route]);
+  const title = route ? "搜尋路線" : "附近路線";
 
   return (
     <AutoListRoot>
