@@ -1,13 +1,18 @@
 const fs = require("fs");
 
-const d = new Date();
-const year = d.getFullYear().toString();
-const month = (d.getMonth() + 1).toString();
-const date = d.getDate().toString();
-const hour = d.getHours().toString();
-const minutes = d.getMinutes().toString();
+const d = new Date()
+  .toLocaleString("en-US", {
+    timeZone: "Asia/Hong_Kong",
+    hour12: false,
+  })
+  .split(/[\/, :]+/);
 
-// version=${year:3:1}.${month}${date}.${time:0:3}
+const year = d[2];
+const month = d[0];
+const date = d[1];
+const hour = d[3];
+const minutes = d[4];
+
 const version = `${year.slice(-1)}.${month}${date}.${hour}${minutes.slice(
   -2,
   -1
