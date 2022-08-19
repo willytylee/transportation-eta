@@ -46,6 +46,7 @@ export const AutoDistance = ({ handleItemOnClick }) => {
           }),
           {}
         ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
