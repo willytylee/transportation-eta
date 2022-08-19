@@ -13,7 +13,6 @@ export const Eta = ({ routeObj }) => {
     bound: correctBound,
     routeObj,
     isBoundLoading,
-    stopId: routeObj.nearByStopId,
   });
 
   return (
