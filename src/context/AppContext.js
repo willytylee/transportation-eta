@@ -25,14 +25,18 @@ export const AppProvider = ({ children }) => {
 
   /* eslint-disable react-hooks/exhaustive-deps */
   const getGeoLocation = useCallback(() => {
-    const success = (position) => {
-      setLocation({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      });
-    };
+    const intervalContent = async () => {
+      const success = (position) => {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      };
 
-    navigator.geolocation.watchPosition(success);
+      navigator.geolocation.getCurrentPosition(success);
+    };
+    intervalContent();
+    setInterval(intervalContent, 5000);
   }, []);
 
   const updateCurrentUserId = useCallback((userId) => {

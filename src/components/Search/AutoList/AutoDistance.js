@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import _ from "lodash";
 import { getPreciseDistance } from "geolib";
 import { styled } from "@mui/material";
@@ -16,34 +16,38 @@ export const AutoDistance = ({ handleItemOnClick }) => {
   const { location: currentLocation } = useContext(AppContext);
   const { gRouteList, gStopList, gStopMap } = useContext(DbContext);
 
-  // Set Auto Complete Route List
-  const stopIdsNearBy = Object.keys(gStopList)
-    .map((e) => {
-      const obj = gStopList[e];
-      const distance = getPreciseDistance(
-        { latitude: obj.location.lat, longitude: obj.location.lng },
-        { latitude: currentLocation.lat, longitude: currentLocation.lng }
-      );
-      return { [e]: { distance: distance, stopMap: gStopMap[e] } };
-    })
-    .filter((e) => {
-      const value = Object.values(e)[0];
-      return (
-        value.distance < 500 &&
-        (value.stopMap === undefined ||
-          (value.stopMap // For those CTB/NWFB route's stopMap includes 'kmb', filter away. we need kmb stop only
-            ? value.stopMap[0].includes("ctb") ||
-              value.stopMap[0].includes("nwfb")
-            : true))
-      );
-    })
-    .reduce(
-      (prev, curr) => ({
-        ...prev,
-        [Object.keys(curr)]: Object.values(curr)[0].distance,
-      }),
-      {}
-    );
+  const stopIdsNearBy = useMemo(
+    // use useMemo prevent flicker on the list
+    () =>
+      Object.keys(gStopList)
+        .map((e) => {
+          const obj = gStopList[e];
+          const distance = getPreciseDistance(
+            { latitude: obj.location.lat, longitude: obj.location.lng },
+            { latitude: currentLocation.lat, longitude: currentLocation.lng }
+          );
+          return { [e]: { distance: distance, stopMap: gStopMap[e] } };
+        })
+        .filter((e) => {
+          const value = Object.values(e)[0];
+          return (
+            value.distance < 500 &&
+            (value.stopMap === undefined ||
+              (value.stopMap // For those CTB/NWFB route's stopMap includes 'kmb', filter away. we need kmb stop only
+                ? value.stopMap[0].includes("ctb") ||
+                  value.stopMap[0].includes("nwfb")
+                : true))
+          );
+        })
+        .reduce(
+          (prev, curr) => ({
+            ...prev,
+            [Object.keys(curr)]: Object.values(curr)[0].distance,
+          }),
+          {}
+        ),
+    []
+  );
 
   const routeList = Object.keys(gRouteList)
     .map((e) => gRouteList[e])
