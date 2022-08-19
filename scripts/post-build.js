@@ -3,7 +3,7 @@ const fs = require("fs");
 const d = new Date()
   .toLocaleString("en-US", {
     timeZone: "Asia/Hong_Kong",
-    hour12: false,
+    hourCycle: "h23",
   })
   .split(/[\/, :]+/);
 
