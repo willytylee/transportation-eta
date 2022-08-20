@@ -129,22 +129,12 @@ export const StopList = ({ route }) => {
             >
               <AccordionSummary className="accordionSummary">
                 {currRoute.co[0] === "mtr" ? (
-                  <>
-                    <div className="seq">{i + 1}.</div>
-                    <div className="stop" title={e.stopId}>
-                      {e.name.zh}
-                    </div>
-                    {etaExcluded.includes(currRoute.route) ? (
-                      <div className="noEta">沒有相關班次資料</div>
-                    ) : (
-                      <MtrStopEta
-                        seq={i + 1}
-                        routeObj={currRoute}
-                        stopObj={e}
-                        MtrStopEtaRoot={MtrStopEtaRoot}
-                      />
-                    )}
-                  </>
+                  <MtrStopEta
+                    seq={i + 1}
+                    routeObj={currRoute}
+                    stopObj={e}
+                    MtrStopEtaRoot={MtrStopEtaRoot}
+                  />
                 ) : (
                   <StopEta
                     seq={i + 1}
@@ -208,21 +198,7 @@ const StopListRoot = styled("div")({
       minHeight: "unset",
       padding: "0",
       ".MuiAccordionSummary-content": {
-        display: "flex",
-        width: "100%",
-        alignItems: "center",
         margin: 0,
-        ".seq": {
-          width: "5%",
-        },
-        ".stop": {
-          width: "15%",
-        },
-        ".noEta": {
-          textAlign: "center",
-          width: "80%",
-          padding: "4px 0",
-        },
       },
     },
     ".MuiCollapse-root": {
@@ -239,24 +215,41 @@ const StopListRoot = styled("div")({
 
 const MtrStopEtaRoot = styled("div")({
   display: "flex",
-  flexDirection: "column",
+  flexDirection: "row",
   flexGrow: "1",
-  ".etaWrapper": {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
+  alignItems: "center",
+  ".seq": {
+    width: "25px",
+  },
+  ".stop": {
+    width: "50px",
+  },
+  ".noEta": {
+    textAlign: "center",
+    width: "80%",
     padding: "4px 0",
-    ".arriveText": {
-      width: "20%",
-    },
-    ".ttntWrapper": {
-      width: "65%",
+  },
+  ".etasWrapper": {
+    width: "100%",
+    ".etaWrapper": {
       display: "flex",
       flexDirection: "row",
-      ".ttnt": {
-        width: "33.33%",
-        fontSize: "12px",
+      justifyContent: "space-between",
+      padding: "4px 0",
+      ".arriveText": {
+        width: "70px",
+        ".dest": {
+          paddingLeft: "4px",
+        },
+      },
+      ".ttntWrapper": {
+        width: "55%",
+        display: "flex",
+        flexDirection: "row",
+        ".ttnt": {
+          width: "33.33%",
+          fontSize: "12px",
+        },
       },
     },
   },

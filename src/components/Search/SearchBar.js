@@ -103,6 +103,7 @@ const SearchBarWraper = styled("div")({
       ".searchBar": {
         textAlign: "center",
         padding: 0,
+        width: "110px",
       },
     },
   },

@@ -71,21 +71,12 @@ export const Header = ({ handleDialogOnClose }) => {
           </div>
           {mapStopIdx !== -1 &&
             (currRoute.co[0] === "mtr" ? (
-              <div className="mtrStopEtaWrapper">
-                <div className="seqStop">
-                  {mapStopIdx + 1}. {currRouteStopList[mapStopIdx]?.name.zh}
-                </div>
-                {etaExcluded.includes(currRoute.route) ? (
-                  <div className="noEta">沒有相關班次資料</div>
-                ) : (
-                  <MtrStopEta
-                    seq={mapStopIdx + 1}
-                    routeObj={currRoute}
-                    stopObj={currRouteStopList[mapStopIdx]}
-                    MtrStopEtaRoot={MtrStopEtaRoot}
-                  />
-                )}
-              </div>
+              <MtrStopEta
+                seq={mapStopIdx + 1}
+                routeObj={currRoute}
+                stopObj={currRouteStopList[mapStopIdx]}
+                MtrStopEtaRoot={MtrStopEtaRoot}
+              />
             ) : (
               <StopEta
                 seq={mapStopIdx + 1}
@@ -133,43 +124,46 @@ const DialogTitleRoot = styled(DialogTitle)({
           fontSize: "12px",
         },
       },
-      ".mtrStopEtaWrapper": {
-        display: "flex",
-        width: "100%",
-        alignItems: "center",
-        margin: 0,
-        ".seqStop": {
-          width: "90px",
-          paddingRight: "10px",
-        },
-        ".noEta": {
-          textAlign: "right",
-          width: "80%",
-          padding: "4px 0",
-        },
-      },
     },
   },
 });
 
 const MtrStopEtaRoot = styled("div")({
   display: "flex",
-  flexDirection: "column",
+  flexDirection: "row",
   flexGrow: "1",
-  ".etaWrapper": {
+  alignItems: "center",
+  ".seq": {
+    width: "35px",
+  },
+  ".stop": {
+    width: "65px",
+  },
+  ".noEta": {
+    textAlign: "center",
+    width: "80%",
+    padding: "4px 0",
+  },
+  ".etasWrapper": {
     width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    ".arriveText": {
-      width: "25%",
-    },
-    ".ttntWrapper": {
-      width: "65%",
+    ".etaWrapper": {
+      width: "100%",
       display: "flex",
       flexDirection: "row",
-      ".ttnt": {
-        width: "33.33%",
+      justifyContent: "space-between",
+      ".arriveText": {
+        width: "70px",
+        ".dest": {
+          paddingLeft: "4px",
+        },
+      },
+      ".ttntWrapper": {
+        width: "55%",
+        display: "flex",
+        flexDirection: "row",
+        ".ttnt": {
+          width: "33.33%",
+        },
       },
     },
   },
