@@ -11,8 +11,8 @@ export const Search = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const { updateCurrRoute } = useContext(EtaContext);
 
-  const handleFormChange = (e) => {
-    setRoute(e.target.value.toUpperCase());
+  const handleFormChange = (text) => {
+    setRoute(text.toUpperCase());
     updateCurrRoute({});
   };
 
@@ -53,7 +53,7 @@ export const Search = () => {
 
 const popperSx = {
   width: "95%",
-  height: "calc(100% - 160px)",
+  height: "calc(100% - 170px - env(safe-area-inset-bottom))",
   overflow: "auto",
   border: "1px solid lightgrey",
   borderRadius: "5px",

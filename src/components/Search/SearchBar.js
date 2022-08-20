@@ -1,6 +1,10 @@
 import { useContext, useRef, useState, useEffect } from "react";
-import { TextField, styled, IconButton } from "@mui/material";
-import { Search as SearchIcon, Map as MapIcon } from "@mui/icons-material";
+import { TextField, styled, IconButton, InputAdornment } from "@mui/material";
+import {
+  Search as SearchIcon,
+  Map as MapIcon,
+  Close as CloseIcon,
+} from "@mui/icons-material";
 import { AppContext } from "../../context/AppContext";
 import { MapDialog } from "../MapDialog/MapDialog";
 import { EtaContext } from "../../context/EtaContext";
@@ -43,13 +47,26 @@ export const SearchBar = ({
           size="small"
           name="category"
           value={route}
-          onChange={(e) => handleFormChange(e)}
+          onChange={(e) => handleFormChange(e.target.value)}
           autoComplete="off"
           inputRef={textInput}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => {
+                    handleFormChange("");
+                  }}
+                >
+                  <CloseIcon />
+                </IconButton>
+                <IconButton onClick={handleSearchIconOnClick}>
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
-        <IconButton onClick={handleSearchIconOnClick}>
-          <SearchIcon />
-        </IconButton>
       </div>
       <IconButton
         className={`mapIconButton ${
@@ -73,7 +90,7 @@ export const SearchBar = ({
 const SearchBarWraper = styled("div")({
   width: "100%",
   textAlign: "center",
-  margin: "10px 0",
+  margin: "15px 0 10px",
   display: "flex",
   justifyContent: "center",
   flexDirection: "row",
@@ -81,9 +98,13 @@ const SearchBarWraper = styled("div")({
   ".searchWrapper": {
     display: "flex",
     alignItems: "center",
-  },
-  ".searchBar": {
-    textAlign: "center",
+    ".MuiInput-root": {
+      height: "35px",
+      ".searchBar": {
+        textAlign: "center",
+        padding: 0,
+      },
+    },
   },
   ".mapIconButton": {
     position: "absolute",
