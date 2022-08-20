@@ -52,7 +52,7 @@ export const RouteList = ({ route }) => {
 
   return (
     <RouteListRoot>
-      {routeList.map((e, i) => {
+      {routeList?.map((e, i) => {
         return (
           <Card key={i} onClick={() => handleCardOnClick(i)}>
             <div
