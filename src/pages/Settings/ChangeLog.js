@@ -11,7 +11,7 @@ export const ChangeLog = () => {
         <ul>
           <li
             className="underline"
-            onKeyPress={() => navigate("/search", { replace: true })}
+            onClick={() => navigate("/search", { replace: true })}
           >
             加入港鐵搜索功能, 輸入MTR即可顯示所有港鐵路線
           </li>
