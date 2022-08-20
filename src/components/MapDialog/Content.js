@@ -22,6 +22,9 @@ import { EtaContext } from "../../context/EtaContext";
 import { mtrLineColor } from "../../constants/Mtr";
 import { DbContext } from "../../context/DbContext";
 
+const currentLocationIcon = require("../../assets/icons/currentLocation.png");
+const markerIcon = require("../../assets/icons/marker-icon-2x.png");
+
 export const Content = () => {
   const { location: currentLocation } = useContext(AppContext);
   const {
@@ -34,7 +37,7 @@ export const Content = () => {
   const { gStopList } = useContext(DbContext);
   const [navBtnType, setNavBtnType] = useState("normal");
 
-  const location = mapLocation ? mapLocation : currentLocation;
+  const location = mapLocation || currentLocation;
 
   const currRouteStopIdList = useMemo(
     () => currRoute.stops && currRoute.stops[Object.keys(currRoute.stops)[0]],
@@ -55,8 +58,8 @@ export const Content = () => {
   ]);
 
   const currLocationIcon = new L.Icon({
-    iconUrl: require("../../assets/icons/currentLocation.png"),
-    iconRetinaUrl: require("../../assets/icons/currentLocation.png"),
+    iconUrl: currentLocationIcon,
+    iconRetinaUrl: currentLocationIcon,
     iconAnchor: null,
     popupAnchor: null,
     shadowUrl: null,
@@ -70,8 +73,8 @@ export const Content = () => {
     const stopIcon = useMemo(
       () =>
         new L.Icon({
-          iconUrl: require("../../assets/icons/marker-icon-2x.png"),
-          iconRetinaUrl: require("../../assets/icons/marker-icon-2x.png"),
+          iconUrl: markerIcon,
+          iconRetinaUrl: markerIcon,
           iconAnchor: [20, 40],
           popupAnchor: null,
           shadowUrl: null,
@@ -256,7 +259,7 @@ export const Content = () => {
       <Marker
         position={[currentLocation.lat, currentLocation.lng]}
         icon={currLocationIcon}
-      ></Marker>
+      />
 
       <Polyline
         pathOptions={{

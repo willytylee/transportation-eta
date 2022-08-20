@@ -51,7 +51,7 @@ export const BottomNav = () => {
       {currentUserId === -1 ? (
         <BottomNavigationAction
           component={NavLink}
-          to={`/settings`}
+          to="/settings"
           onClick={() => {
             enqueueSnackbar("請選擇用戶", {
               variant: "warning",

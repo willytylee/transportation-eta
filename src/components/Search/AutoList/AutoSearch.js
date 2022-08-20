@@ -26,38 +26,32 @@ export const AutoSearch = ({ route, handleItemOnClick }) => {
     .sort((a, b) => sortByRouteThenCo(a, b));
 
   return (
-    <>
-      {autoList.length > 0 &&
-        autoList.map((e, i) => {
-          return (
-            <AutoSearchRoot onClick={() => handleItemOnClick(e)} key={i}>
-              <div className="route">{e.route}</div>
-              <div className="companyOrigDest">
-                <div className="company">
-                  {getCoByStopObj(e)
-                    .map((e, i) => {
-                      return (
-                        <span key={i} className={e}>
-                          {companyMap[e]}
-                        </span>
-                      );
-                    })
-                    .reduce((a, b) => [a, " + ", b])}
-                </div>
-                <div className="origDest">
-                  <div>
-                    {e.orig.zh} → <span className="dest">{e.dest.zh}</span>
-                    <span className="special">
-                      {" "}
-                      {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </AutoSearchRoot>
-          );
-        })}
-    </>
+    autoList.length > 0 &&
+    autoList.map((e, i) => (
+      <AutoSearchRoot onClick={() => handleItemOnClick(e)} key={i}>
+        <div className="route">{e.route}</div>
+        <div className="companyOrigDest">
+          <div className="company">
+            {getCoByStopObj(e)
+              .map((f, j) => (
+                <span key={j} className={f}>
+                  {companyMap[f]}
+                </span>
+              ))
+              .reduce((a, b) => [a, " + ", b])}
+          </div>
+          <div className="origDest">
+            <div>
+              {e.orig.zh} → <span className="dest">{e.dest.zh}</span>
+              <span className="special">
+                {" "}
+                {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
+              </span>
+            </div>
+          </div>
+        </div>
+      </AutoSearchRoot>
+    ))
   );
 };
 

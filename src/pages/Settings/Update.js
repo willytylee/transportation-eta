@@ -24,56 +24,54 @@ export const Update = () => {
   };
 
   return (
-    <>
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => window.location.reload()}>
-            <ListItemAvatar>
-              <Badge
-                color="primary"
-                badgeContent=" "
-                overlap="circular"
-                invisible={appVersion === serVersion}
-                sx={{
-                  ".MuiBadge-badge": {
-                    minWidth: "14px",
-                    height: "14px",
-                  },
-                }}
-              >
-                <Avatar>
-                  <UpdateIcon />
-                </Avatar>
-              </Badge>
-            </ListItemAvatar>
-            <ListItemText
-              primary={"更新應用程式"}
-              secondary={
-                <span>
-                  {appVersion === serVersion ? (
-                    <span>目前為最新版本: {appVersion}</span>
-                  ) : (
-                    <span>
-                      目前版本: {appVersion} <br />
-                      最新版本: {serVersion}
-                    </span>
-                  )}
-                </span>
-              }
-            />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton onClick={handleRouteDBOnClick}>
-            <ListItemAvatar>
+    <List>
+      <ListItem disablePadding>
+        <ListItemButton onClick={() => window.location.reload()}>
+          <ListItemAvatar>
+            <Badge
+              color="primary"
+              badgeContent=" "
+              overlap="circular"
+              invisible={appVersion === serVersion}
+              sx={{
+                ".MuiBadge-badge": {
+                  minWidth: "14px",
+                  height: "14px",
+                },
+              }}
+            >
               <Avatar>
-                <StorageIcon />
+                <UpdateIcon />
               </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={"重新建立路線資料庫"} />
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </>
+            </Badge>
+          </ListItemAvatar>
+          <ListItemText
+            primary="更新應用程式"
+            secondary={
+              <span>
+                {appVersion === serVersion ? (
+                  <span>目前為最新版本: {appVersion}</span>
+                ) : (
+                  <span>
+                    目前版本: {appVersion} <br />
+                    最新版本: {serVersion}
+                  </span>
+                )}
+              </span>
+            }
+          />
+        </ListItemButton>
+      </ListItem>
+      <ListItem disablePadding>
+        <ListItemButton onClick={handleRouteDBOnClick}>
+          <ListItemAvatar>
+            <Avatar>
+              <StorageIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="重新建立路線資料庫" />
+        </ListItemButton>
+      </ListItem>
+    </List>
   );
 };

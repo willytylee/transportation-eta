@@ -112,7 +112,7 @@ export const SelectUserDialog = ({
             onChange={(val) => {
               handlePinOnChange(val);
             }}
-            autoSelect={true}
+            autoSelect
           />
         </>
       )}

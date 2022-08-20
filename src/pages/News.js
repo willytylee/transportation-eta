@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import moment from "moment";
-import { fetchNews } from "../fetch/News";
 import { List, ListItem, ListItemText, Divider, styled } from "@mui/material/";
+import { fetchNews } from "../fetch/News";
 
 export const News = () => {
   const [news, setNews] = useState([]);
@@ -37,28 +37,26 @@ export const News = () => {
 
   return (
     <ListRoot>
-      {news.map((e) => {
-        return (
-          <div key={e.content_id}>
-            <ListItem disablePadding>
-              <ListItemText
-                primary={e.title}
-                secondary={
-                  <span className="secondary">
-                    <span className="date">
-                      {timeFromNowConverter(e.display_ts)}
-                    </span>
-                    <span className="content">
-                      {e.preview_content.replace(/【(.*?)】/g, "")}
-                    </span>
+      {news.map((e) => (
+        <div key={e.content_id}>
+          <ListItem disablePadding>
+            <ListItemText
+              primary={e.title}
+              secondary={
+                <span className="secondary">
+                  <span className="date">
+                    {timeFromNowConverter(e.display_ts)}
                   </span>
-                }
-              />
-            </ListItem>
-            <Divider />
-          </div>
-        );
-      })}
+                  <span className="content">
+                    {e.preview_content.replace(/【(.*?)】/g, "")}
+                  </span>
+                </span>
+              }
+            />
+          </ListItem>
+          <Divider />
+        </div>
+      ))}
     </ListRoot>
   );
 };

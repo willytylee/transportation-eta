@@ -44,7 +44,7 @@ export const Navbar = () => {
       <AppBarRoot position="static">
         <Toolbar>
           <ul className="left">
-            <li></li>
+            <li> </li>
           </ul>
           <ul className="right">
             <li className="weather">
@@ -52,15 +52,13 @@ export const Navbar = () => {
                 {avgTemp?.toFixed(1)}°C /{" "}
                 {currWeather?.humidity?.data[0]?.value}%
                 <img src={weatherIconMap[currWeather.icon]} alt="" />
-                {Object.keys(warningMsg).map((e, i) => {
-                  return (
-                    <img
-                      key={i}
-                      src={warningIconMap[warningMsg[e].code]}
-                      alt=""
-                    />
-                  );
-                })}
+                {Object.keys(warningMsg).map((e, i) => (
+                  <img
+                    key={i}
+                    src={warningIconMap[warningMsg[e].code]}
+                    alt=""
+                  />
+                ))}
               </Link>
             </li>
             {/* <li className="compareList">

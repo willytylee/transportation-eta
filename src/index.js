@@ -3,11 +3,11 @@ import { useSnackbar } from "notistack";
 import ReactDOM from "react-dom/client";
 import { SnackbarProvider } from "notistack";
 import { BrowserRouter } from "react-router-dom";
+import { Close as CloseIcon } from "@mui/icons-material";
+import { IconButton } from "@mui/material/";
 import App from "./App";
 import { AppProvider } from "./context/AppContext";
 import { EtaProvider } from "./context/EtaContext";
-import { Close as CloseIcon } from "@mui/icons-material";
-import { IconButton } from "@mui/material/";
 import { DbProvider } from "./context/DbContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

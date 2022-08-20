@@ -1,29 +1,28 @@
-import React from "react";
 import { styled } from "@mui/material";
 
 export const Table = ({ data, bound }) => {
   const detail = data[bound];
+
   return (
-    <>
-      {detail?.dest && data.bound.includes(bound) && (
-        <MtrTable>
-          <div className="arriveText">
-            → <span className="dest">{detail.dest}</span>
-          </div>
-          <div className="ttntWrapper">
-            {detail.ttnts === ""
-              ? "已停駛"
-              : detail.ttnts
-                  .map((e, j) => (
-                    <div className="ttnt" key={j}>
-                      {e}
-                    </div>
-                  ))
-                  .slice(0, 3)}
-          </div>
-        </MtrTable>
-      )}
-    </>
+    detail?.dest &&
+    data.bound.includes(bound) && (
+      <MtrTable>
+        <div className="arriveText">
+          → <span className="dest">{detail.dest}</span>
+        </div>
+        <div className="ttntWrapper">
+          {detail.ttnts === ""
+            ? "已停駛"
+            : detail.ttnts
+                .map((e, j) => (
+                  <div className="ttnt" key={j}>
+                    {e}
+                  </div>
+                ))
+                .slice(0, 3)}
+        </div>
+      </MtrTable>
+    )
   );
 };
 

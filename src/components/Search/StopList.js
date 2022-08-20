@@ -13,13 +13,12 @@ import {
 import { getPreciseDistance } from "geolib";
 import { getCoPriorityId } from "../../Utils";
 import { AppContext } from "../../context/AppContext";
-import { StopEta } from "./StopEta";
-import { MtrStopEta } from "./MtrStopEta";
 import { useCorrectBound } from "../../hooks/Bound";
 import { EtaContext } from "../../context/EtaContext";
-import { etaExcluded } from "../../constants/Mtr";
 import { MapDialog } from "../MapDialog/MapDialog";
 import { DbContext } from "../../context/DbContext";
+import { MtrStopEta } from "./MtrStopEta";
+import { StopEta } from "./StopEta";
 
 export const StopList = ({ route }) => {
   const [stopList, setStopList] = useState([]);
@@ -34,6 +33,7 @@ export const StopList = ({ route }) => {
     updateMapLocation,
     updateMapStopIdx,
   } = useContext(EtaContext);
+
   const { correctBound, isBoundLoading } = useCorrectBound({
     routeObj: currRoute,
   });
@@ -149,7 +149,7 @@ export const StopList = ({ route }) => {
               <AccordionDetails>
                 <IconButton
                   className="directionIconBtn"
-                  component={"a"}
+                  component="a"
                   href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
                   target="_blank"
                 >

@@ -37,70 +37,62 @@ export const RouteList = ({ route }) => {
     updateCurrRoute(expandRoute);
   };
 
-  const isMatchCurrRoute = (a, b) => {
+  const isMatchCurrRoute = (a, b) =>
     // There may have nearestStopId in one of the currRoute
-    return (
-      JSON.stringify(a.bound) === JSON.stringify(b.bound) &&
-      JSON.stringify(a.co) === JSON.stringify(b.co) &&
-      JSON.stringify(a.orig) === JSON.stringify(b.orig) &&
-      JSON.stringify(a.dest) === JSON.stringify(b.dest) &&
-      JSON.stringify(a.route) === JSON.stringify(b.route) &&
-      JSON.stringify(a.seq) === JSON.stringify(b.seq) &&
-      JSON.stringify(a.serviceType) === JSON.stringify(b.serviceType)
-    );
-  };
-
+    JSON.stringify(a.bound) === JSON.stringify(b.bound) &&
+    JSON.stringify(a.co) === JSON.stringify(b.co) &&
+    JSON.stringify(a.orig) === JSON.stringify(b.orig) &&
+    JSON.stringify(a.dest) === JSON.stringify(b.dest) &&
+    JSON.stringify(a.route) === JSON.stringify(b.route) &&
+    JSON.stringify(a.seq) === JSON.stringify(b.seq) &&
+    JSON.stringify(a.serviceType) === JSON.stringify(b.serviceType);
   return (
     <RouteListRoot>
-      {routeList?.map((e, i) => {
-        return (
-          <Card key={i} onClick={() => handleCardOnClick(i)}>
-            <div
-              title={JSON.stringify(e.route) + JSON.stringify(e.bound)}
-              className={`routeTitle ${
-                isMatchCurrRoute(currRoute, e) ? "matched" : ""
-              }`}
-            >
-              <div className="company">
-                {getCoByStopObj(e)
-                  .map((coCode, i) => {
-                    return (
-                      <span key={i}>
-                        <span className={coCode}>
-                          {coCode !== "mtr" && companyMap[coCode]}
-                          {coCode === "mtr" && (
-                            <span className={`${e.route}`}>
-                              {" "}
-                              {routeMap[e.route]}
-                            </span>
-                          )}
+      {routeList?.map((e, i) => (
+        <Card key={i} onClick={() => handleCardOnClick(i)}>
+          <div
+            title={JSON.stringify(e.route) + JSON.stringify(e.bound)}
+            className={`routeTitle ${
+              isMatchCurrRoute(currRoute, e) ? "matched" : ""
+            }`}
+          >
+            <div className="company">
+              {getCoByStopObj(e)
+                .map((coCode, j) => (
+                  <span key={j}>
+                    <span className={coCode}>
+                      {coCode !== "mtr" && companyMap[coCode]}
+                      {coCode === "mtr" && (
+                        <span className={`${e.route}`}>
+                          {" "}
+                          {routeMap[e.route]}
                         </span>
-                      </span>
-                    );
-                  })
-                  .reduce((a, b) => [a, " + ", b])}
-              </div>
-              <div className="origDest">
-                {e.orig.zh}{" "}
-                {e.co[0] === "mtr" ? (
-                  <> ←→ {e.dest.zh}</>
-                ) : (
-                  <>
-                    → <span className="dest">{e.dest.zh}</span>
-                  </>
-                )}
-                <span className="special">
-                  {" "}
-                  {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
-                  {etaExcluded.includes(e.route) && (
-                    <span className="star">沒有相關班次資料</span>
-                  )}
-                </span>
-              </div>
+                      )}
+                    </span>
+                  </span>
+                ))
+                .reduce((a, b) => [a, " + ", b])}
             </div>
-          </Card>
-        );
-      })}
+            <div className="origDest">
+              {e.orig.zh}{" "}
+              {e.co[0] === "mtr" ? (
+                <> ←→ {e.dest.zh}</>
+              ) : (
+                <>
+                  → <span className="dest">{e.dest.zh}</span>
+                </>
+              )}
+              <span className="special">
+                {" "}
+                {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
+                {etaExcluded.includes(e.route) && (
+                  <span className="star">沒有相關班次資料</span>
+                )}
+              </span>
+            </div>
+          </div>
+        </Card>
+      ))}
     </RouteListRoot>
   );
 };

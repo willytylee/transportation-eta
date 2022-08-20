@@ -28,7 +28,7 @@ export const Search = () => {
         setAnchorEl={setAnchorEl}
         divRef={divRef}
       />
-      <div ref={divRef}></div>
+      <div ref={divRef}> </div>
       {open && (
         <Popper
           sx={popperSx}

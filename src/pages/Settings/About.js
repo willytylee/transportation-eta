@@ -49,8 +49,8 @@ export const About = () => {
       <Divider />
       <ListItem disablePadding>
         <ListItemButton
-          component={"a"}
-          href={`https://github.com/willytylee/Transportation-ETA`}
+          component="a"
+          href="https://github.com/willytylee/Transportation-ETA"
           target="_blank"
         >
           <ListItemAvatar>
@@ -67,8 +67,8 @@ export const About = () => {
       <Divider />
       <ListItem disablePadding>
         <ListItemButton
-          component={"a"}
-          href={`https://data.gov.hk`}
+          component="a"
+          href="https://data.gov.hk"
           target="_blank"
         >
           <ListItemAvatar>
@@ -78,14 +78,14 @@ export const About = () => {
           </ListItemAvatar>
           <ListItemText
             primary="交通資料來源"
-            secondary={"資料一線通  https://data.gov.hk"}
+            secondary="資料一線通  https://data.gov.hk"
           />
         </ListItemButton>
       </ListItem>
       <ListItem disablePadding>
         <ListItemButton
-          component={"a"}
-          href={`https://github.com/hkbus/hk-bus-crawling`}
+          component="a"
+          href="https://github.com/hkbus/hk-bus-crawling"
           target="_blank"
         >
           <ListItemAvatar>
@@ -95,16 +95,14 @@ export const About = () => {
           </ListItemAvatar>
           <ListItemText
             primary="交通路線整合"
-            secondary={
-              "HK Bus Crawling@2021, https://github.com/hkbus/hk-bus-crawling"
-            }
+            secondary="HK Bus Crawling@2021, https://github.com/hkbus/hk-bus-crawling"
           />
         </ListItemButton>
       </ListItem>
       <ListItem disablePadding>
         <ListItemButton
-          component={"a"}
-          href={`https://www.hko.gov.hk/en/abouthko/opendata_intro.htm`}
+          component="a"
+          href="https://www.hko.gov.hk/en/abouthko/opendata_intro.htm"
           target="_blank"
         >
           <ListItemAvatar>
@@ -114,14 +112,14 @@ export const About = () => {
           </ListItemAvatar>
           <ListItemText
             primary="天氣資料來源"
-            secondary={"香港天文台  https://www.hko.gov.hk"}
+            secondary="香港天文台  https://www.hko.gov.hk"
           />
         </ListItemButton>
       </ListItem>
       <ListItem disablePadding>
         <ListItemButton
-          component={"a"}
-          href={`https://www.881903.com/news/traffic`}
+          component="a"
+          href="https://www.881903.com/news/traffic"
           target="_blank"
         >
           <ListItemAvatar>
@@ -131,7 +129,7 @@ export const About = () => {
           </ListItemAvatar>
           <ListItemText
             primary="交通消息來源"
-            secondary={"商業電台 881903  https://www.881903.com/"}
+            secondary="商業電台 881903  https://www.881903.com/"
           />
         </ListItemButton>
       </ListItem>

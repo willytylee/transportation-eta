@@ -13,8 +13,8 @@ import { companyColor, companyMap } from "../../../constants/Constants";
 import { Eta } from "./Eta";
 
 export const AutoDistance = ({ handleItemOnClick }) => {
-  const { location: currentLocation } = useContext(AppContext);
-  const { gRouteList, gStopList, gStopMap } = useContext(DbContext);
+  const { location: currentLocation } = useContext(AppContext),
+    { gRouteList, gStopList, gStopMap } = useContext(DbContext);
 
   const stopIdsNearBy = useMemo(
     // use useMemo prevent flicker on the list
@@ -26,7 +26,7 @@ export const AutoDistance = ({ handleItemOnClick }) => {
             { latitude: obj.location.lat, longitude: obj.location.lng },
             { latitude: currentLocation.lat, longitude: currentLocation.lng }
           );
-          return { [e]: { distance: distance, stopMap: gStopMap[e] } };
+          return { [e]: { distance, stopMap: gStopMap[e] } };
         })
         .filter((e) => {
           const value = Object.values(e)[0];
@@ -60,8 +60,8 @@ export const AutoDistance = ({ handleItemOnClick }) => {
   routeList.forEach((e) => {
     const company = getCoPriorityId(e);
 
-    const filitedStopId = Object.values(e.stops[company]).filter((e) =>
-      Object.keys(stopIdsNearBy).includes(e)
+    const filitedStopId = Object.values(e.stops[company]).filter((f) =>
+      Object.keys(stopIdsNearBy).includes(f)
     );
 
     if (filitedStopId?.length > 0) {
@@ -86,63 +86,56 @@ export const AutoDistance = ({ handleItemOnClick }) => {
     .sort((a, b) => a.routes[0].distance - b.routes[0].distance);
 
   return (
-    <>
-      {autoList.length > 0 &&
-        autoList.map((e, i) => {
-          const stop = gStopList[e.stopId];
-          const name = stop.name.zh;
-          const { lat, lng } = stop.location;
-          return (
-            <AutoDistanceRoot key={i}>
-              <div className="stop">
-                <a
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
-                  title={e.stopId}
-                >
-                  {name} - {e.routes[0].distance}米
-                </a>
+    autoList.length > 0 &&
+    autoList.map((e, i) => {
+      const stop = gStopList[e.stopId];
+      const name = stop.name.zh;
+      const { lat, lng } = stop.location;
+      return (
+        <AutoDistanceRoot key={i}>
+          <div className="stop">
+            <a
+              href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
+              title={e.stopId}
+            >
+              {name} - {e.routes[0].distance}米
+            </a>
+          </div>
+          <div className="routes">
+            {e.routes.map((routeObj, j) => (
+              <div
+                key={j}
+                className="routeItems"
+                onClick={() => handleItemOnClick(routeObj)}
+              >
+                <div className="company">
+                  {getCoByStopObj(routeObj)
+                    .map((companyId, k) => (
+                      <span key={k} className={companyId}>
+                        {companyMap[companyId]}
+                      </span>
+                    ))
+                    .reduce((a, b) => [a, " + ", b])}
+                </div>
+                <div className="route">{routeObj.route}</div>
+                <div className="nearStopDest">
+                  <div>
+                    <span className="dest">{routeObj.dest.zh}</span>
+                    <span className="special">
+                      {" "}
+                      {parseInt(routeObj.serviceType, 10) !== 1 && "特別班次"}
+                    </span>
+                  </div>
+                </div>
+                <div className="eta">
+                  <Eta routeObj={routeObj} />
+                </div>
               </div>
-              <div className="routes">
-                {e.routes.map((routeObj, i) => {
-                  return (
-                    <div
-                      key={i}
-                      className="routeItems"
-                      onClick={() => handleItemOnClick(routeObj)}
-                    >
-                      <div className="company">
-                        {getCoByStopObj(routeObj)
-                          .map((companyId, j) => {
-                            return (
-                              <span key={j} className={companyId}>
-                                {companyMap[companyId]}
-                              </span>
-                            );
-                          })
-                          .reduce((a, b) => [a, " + ", b])}
-                      </div>
-                      <div className="route">{routeObj.route}</div>
-                      <div className="nearStopDest">
-                        <div>
-                          <span className="dest">{routeObj.dest.zh}</span>
-                          <span className="special">
-                            {" "}
-                            {parseInt(routeObj.serviceType, 10) !== 1 &&
-                              "特別班次"}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="eta">
-                        <Eta routeObj={routeObj} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </AutoDistanceRoot>
-          );
-        })}
-    </>
+            ))}
+          </div>
+        </AutoDistanceRoot>
+      );
+    })
   );
 };
 

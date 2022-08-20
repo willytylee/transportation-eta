@@ -31,9 +31,5 @@ export const Compare = () => {
     title: "快速路線比較",
     data: [data],
   };
-  return (
-    <>
-      <Section category={category} />
-    </>
-  );
+  return <Section category={category} />;
 };

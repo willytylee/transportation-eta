@@ -67,18 +67,17 @@ export const getHeatIndex = (temperature, humidity) => {
   return (heatIndex - 32) / 1.8;
 };
 
-export const getCoByStopObj = (routeObj) => {
-  return routeObj.co.reduce((prev, curr) => {
+export const getCoByStopObj = (routeObj) =>
+  routeObj.co.reduce((prev, curr) => {
     if (Object.keys(routeObj.stops).includes(curr)) {
       prev.push(curr);
     }
     return prev;
   }, []);
-};
 
 export const getCoPriorityId = (currRoute) => {
   let companyId = "";
-  for (let e of coPriority) {
+  for (const e of coPriority) {
     if (Object.keys(currRoute.stops).includes(e)) {
       companyId = e;
       break;
@@ -87,17 +86,14 @@ export const getCoPriorityId = (currRoute) => {
   return companyId;
 };
 
-export const basicFiltering = (e) => {
-  return (
-    (e.co.includes("kmb") ||
-      e.co.includes("nwfb") ||
-      e.co.includes("ctb") ||
-      e.co.includes("gmb") ||
-      e.co.includes("mtr")) &&
-    e.dest.en !== e.orig.en &&
-    e.dest.zh !== e.orig.zh
-  );
-};
+export const basicFiltering = (e) =>
+  (e.co.includes("kmb") ||
+    e.co.includes("nwfb") ||
+    e.co.includes("ctb") ||
+    e.co.includes("gmb") ||
+    e.co.includes("mtr")) &&
+  e.dest.en !== e.orig.en &&
+  e.dest.zh !== e.orig.zh;
 
 export const sortByCompany = (a, b) => {
   const coA = coPriority.indexOf(getCoByStopObj(a)[0]);
@@ -111,10 +107,9 @@ export const sortByCompany = (a, b) => {
   return 0;
 };
 
-export const parseMtrEtas = (e) => {
-  return parseInt(e.ttnt) === 0
+export const parseMtrEtas = (e) =>
+  parseInt(e.ttnt, 10) === 0
     ? "準備埋站"
-    : parseInt(e.ttnt) >= 60
+    : parseInt(e.ttnt, 10) >= 60
     ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:mm")
     : `${e.ttnt}分鐘`;
-};

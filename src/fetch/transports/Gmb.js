@@ -5,13 +5,9 @@ export const fetchGmbEtas = async ({ seq, gtfsId, stopId, route }) => {
     `https://data.etagmb.gov.hk/eta/route-stop/${gtfsId}/${stopId}`
   );
 
-  let { data } = response.data;
+  const { data } = response.data;
 
   return data
-    .filter((e) => {
-      return seq === e.stop_seq;
-    })[0]
-    .eta.map((e) => {
-      return { co: "gmb", eta: e.timestamp, seq, route };
-    });
+    .filter((e) => seq === e.stop_seq)[0]
+    .eta.map((e) => ({ co: "gmb", eta: e.timestamp, seq, route }));
 };

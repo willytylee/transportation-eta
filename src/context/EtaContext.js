@@ -14,8 +14,8 @@ export const EtaProvider = ({ children }) => {
     setCurrRoute(route);
   }, []);
 
-  const updateNearestStopId = useCallback((nearestStopId) => {
-    setNearestStopId(nearestStopId);
+  const updateNearestStopId = useCallback((_nearestStopId) => {
+    setNearestStopId(_nearestStopId);
   }, []);
 
   const updateSectionCompareMode = useCallback((mode) => {

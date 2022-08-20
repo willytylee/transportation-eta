@@ -22,7 +22,7 @@ export const AutoList = ({ route, setAnchorEl, setRoute }) => {
       {route ? (
         <AutoSearch route={route} handleItemOnClick={handleItemOnClick} />
       ) : (
-        <AutoDistance route={route} handleItemOnClick={handleItemOnClick} />
+        <AutoDistance handleItemOnClick={handleItemOnClick} />
       )}
     </AutoListRoot>
   );

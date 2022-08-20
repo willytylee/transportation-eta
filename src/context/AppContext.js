@@ -59,7 +59,6 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   const initDb = useCallback(() => {
-    const dbVersionLocal = localStorage.getItem("dbVersion");
     const stopMapLocal = localStorage.getItem("stopMap");
     const routeListLocal = localStorage.getItem("routeList");
     const stopListLocal = localStorage.getItem("stopList");

@@ -34,19 +34,17 @@ export const Header = ({ handleDialogOnClose }) => {
         <div className="headerWrapper">
           <div className="coRoute">
             {getCoByStopObj(currRoute)
-              .map((e, i) => {
-                return (
-                  <span className={e} key={i}>
-                    {companyMap[e]}
-                    {currRoute.co[0] === "mtr" && (
-                      <span className={`${currRoute.route}`}>
-                        {" "}
-                        {routeMap[currRoute.route]}
-                      </span>
-                    )}
-                  </span>
-                );
-              })
+              .map((e, i) => (
+                <span className={e} key={i}>
+                  {companyMap[e]}
+                  {currRoute.co[0] === "mtr" && (
+                    <span className={`${currRoute.route}`}>
+                      {" "}
+                      {routeMap[currRoute.route]}
+                    </span>
+                  )}
+                </span>
+              ))
               .reduce((a, b) => [a, " + ", b])}{" "}
             <span className="route">
               {currRoute.co[0] !== "mtr" && currRoute.route}

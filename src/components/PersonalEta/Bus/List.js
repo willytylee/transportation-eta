@@ -31,9 +31,9 @@ export const List = ({ sectionData }) => {
           latLngUrl: `https://www.google.com.hk/maps/dir/?api=1&destination=${location?.lat},${location?.lng}&travelmode=walking`,
         });
       } else {
-        etas.forEach((e) => {
-          eta = e.eta ? e.eta : "";
-          const { rmk_tc } = e;
+        etas.forEach((f) => {
+          eta = f.eta ? f.eta : "";
+          const { rmk_tc } = f;
           result.push({
             co,
             route,
@@ -69,36 +69,34 @@ export const List = ({ sectionData }) => {
 
   return (
     <ListView>
-      {result.map((e, i) => {
-        return (
-          <Accordion
-            key={i}
-            className="etaWrapper"
-            expanded={expanded === `panel${i}`}
-            onChange={handleChange(`panel${i}`)}
-          >
-            <AccordionSummary className="accordionSummary">
-              <div className="route">
-                <span className={`${e.co}`}>{e?.route}</span>
-              </div>
-              <div className="stopName" title={e?.stopId}>
-                {e?.stopName}
-              </div>
-              <div className="eta">{e?.eta}</div>
-            </AccordionSummary>
-            <AccordionDetails>
-              <IconButton
-                className="directionIconBtn"
-                component={"a"}
-                href={e?.latLngUrl}
-                target="_blank"
-              >
-                <DirectionsIcon />
-              </IconButton>
-            </AccordionDetails>
-          </Accordion>
-        );
-      })}
+      {result.map((e, i) => (
+        <Accordion
+          key={i}
+          className="etaWrapper"
+          expanded={expanded === `panel${i}`}
+          onChange={handleChange(`panel${i}`)}
+        >
+          <AccordionSummary className="accordionSummary">
+            <div className="route">
+              <span className={`${e.co}`}>{e?.route}</span>
+            </div>
+            <div className="stopName" title={e?.stopId}>
+              {e?.stopName}
+            </div>
+            <div className="eta">{e?.eta}</div>
+          </AccordionSummary>
+          <AccordionDetails>
+            <IconButton
+              className="directionIconBtn"
+              component="a"
+              href={e?.latLngUrl}
+              target="_blank"
+            >
+              <DirectionsIcon />
+            </IconButton>
+          </AccordionDetails>
+        </Accordion>
+      ))}
     </ListView>
   );
 };

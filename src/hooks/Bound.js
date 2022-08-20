@@ -48,21 +48,21 @@ export const useCorrectBound = ({ routeObj }) => {
           let _scoreI = 0;
           let _scoreO = 0;
 
-          for (let i = 1; i < Math.round(expandStopIdArr.length / 2); i++) {
-            for (let j = 0; j < arrI.length - 1; j++) {
+          for (let i = 1; i < Math.round(expandStopIdArr.length / 2); i += 1) {
+            for (let j = 0; j < arrI.length - 1; j += 1) {
               if (
                 expandStopIdArr[i - 1] === arrI[j - 1] &&
                 expandStopIdArr[i] === arrI[j]
               ) {
-                _scoreI++;
+                _scoreI += 1;
               }
             }
-            for (let k = 0; k < arrO.length - 1; k++) {
+            for (let k = 0; k < arrO.length - 1; k += 1) {
               if (
                 expandStopIdArr[i - 1] === arrO[k - 1] &&
                 expandStopIdArr[i] === arrO[k]
               ) {
-                _scoreO++;
+                _scoreO += 1;
               }
             }
           }

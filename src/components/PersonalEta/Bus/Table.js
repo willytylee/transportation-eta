@@ -29,9 +29,7 @@ export const Table = ({ sectionData }) => {
         etas.length === 0
           ? ["沒有班次"]
           : etas
-              .map((e) => {
-                return etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr;
-              })
+              .map((f) => etaTimeConverter(f.eta, f.rmk_tc).etaIntervalStr)
               .slice(0, 3),
       stopName,
       latLngUrl: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
@@ -44,41 +42,37 @@ export const Table = ({ sectionData }) => {
 
   return (
     <TableView>
-      {result.map((e, i) => {
-        return (
-          <Accordion
-            key={i}
-            expanded={expanded === `panel${i}`}
-            onChange={handleChange(`panel${i}`)}
-          >
-            <AccordionSummary className="accordionSummary">
-              <div className="route">
-                <span className={`${e.co}`}>{e.route}</span>
+      {result.map((e, i) => (
+        <Accordion
+          key={i}
+          expanded={expanded === `panel${i}`}
+          onChange={handleChange(`panel${i}`)}
+        >
+          <AccordionSummary className="accordionSummary">
+            <div className="route">
+              <span className={`${e.co}`}>{e.route}</span>
+            </div>
+            <div className="stopName" title={e?.stopId}>
+              {e.stopName}
+            </div>
+            {e.etas.map((eta, j) => (
+              <div key={j} className="eta">
+                {eta}
               </div>
-              <div className="stopName" title={e?.stopId}>
-                {e.stopName}
-              </div>
-              {e.etas.map((e, j) => {
-                return (
-                  <div key={j} className="eta">
-                    {e}
-                  </div>
-                );
-              })}
-            </AccordionSummary>
-            <AccordionDetails>
-              <IconButton
-                className="directionIconBtn"
-                component={"a"}
-                href={e.latLngUrl}
-                target="_blank"
-              >
-                <DirectionsIcon />
-              </IconButton>
-            </AccordionDetails>
-          </Accordion>
-        );
-      })}
+            ))}
+          </AccordionSummary>
+          <AccordionDetails>
+            <IconButton
+              className="directionIconBtn"
+              component="a"
+              href={e.latLngUrl}
+              target="_blank"
+            >
+              <DirectionsIcon />
+            </IconButton>
+          </AccordionDetails>
+        </Accordion>
+      ))}
     </TableView>
   );
 };

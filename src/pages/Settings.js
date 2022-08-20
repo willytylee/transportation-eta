@@ -107,8 +107,8 @@ export const Settings = () => {
         </ListItem> */}
         <ListItem disablePadding>
           <ListItemButton
-            component={"a"}
-            href={`https://wa.me/+85267914731`}
+            component="a"
+            href="https://wa.me/+85267914731"
             target="_blank"
           >
             <ListItemAvatar>

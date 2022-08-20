@@ -9,15 +9,13 @@ export const fetchNwfbCtbEtas = async ({ co, stopId, route, bound }) => {
 
   return data
     .filter((e) => e.eta !== null && bound?.includes(e.dir))
-    .map((e) => {
-      return {
-        co,
-        eta: e.eta,
-        rmk_tc: e.rmk_tc,
-        stopId,
-        seq: e.seq,
-      };
-    });
+    .map((e) => ({
+      co,
+      eta: e.eta,
+      rmk_tc: e.rmk_tc,
+      stopId,
+      seq: e.seq,
+    }));
 };
 
 export const fetchNwfbCtbRouteStop = async ({ co, route, bound }) => {

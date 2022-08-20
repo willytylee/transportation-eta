@@ -5,9 +5,9 @@ import {
   stationDestMap,
   stationMap,
 } from "../../../constants/Mtr";
-import { Table } from "./Table";
 import { fetchEtas } from "../../../fetch/transports";
 import { parseMtrEtas } from "../../../Utils";
+import { Table } from "./Table";
 
 export const Mtrs = ({ section }) => {
   const [sectionData, setSectionData] = useState([]);
@@ -18,7 +18,7 @@ export const Mtrs = ({ section }) => {
     const intervalContent = async () => {
       const allPromises = [];
 
-      for (let i = 0; i < section.length; i++) {
+      for (let i = 0; i < section.length; i += 1) {
         const { route, stopId } = section[i];
         const promise = fetchEtas({ co: ["mtr"], route, stopId });
         allPromises.push(promise);
@@ -42,7 +42,7 @@ export const Mtrs = ({ section }) => {
               dest: stationDestMap[route][boundKey],
               ttnts:
                 stationDataFiltered.length > 1
-                  ? stationDataFiltered.map((e) => parseMtrEtas(e))
+                  ? stationDataFiltered.map((f) => parseMtrEtas(f))
                   : "",
             };
           });
@@ -63,8 +63,8 @@ export const Mtrs = ({ section }) => {
         <span className={`${e.route}`}>{e.name}站</span>
       </div>
       <div className="etaGroupWrapper">
-        {e.bound.map((f, i) => (
-          <Table key={i} data={e} bound={f} />
+        {e.bound.map((f, j) => (
+          <Table key={j} data={e} bound={f} />
         ))}
       </div>
     </MTRRoot>

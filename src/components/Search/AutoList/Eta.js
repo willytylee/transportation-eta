@@ -15,21 +15,17 @@ export const Eta = ({ routeObj }) => {
     isBoundLoading,
   });
 
-  return (
-    <>
-      {isEtaLoading || isBoundLoading ? (
-        <div>載入中</div>
-      ) : eta.length !== 0 ? (
-        eta
-          .map((e, i) => (
-            <div key={i} title={e.seq}>
-              {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
-            </div>
-          ))
-          .slice(0, 1)
-      ) : (
-        <div>沒有班次</div>
-      )}
-    </>
+  return isEtaLoading || isBoundLoading ? (
+    <div>載入中</div>
+  ) : eta.length !== 0 ? (
+    eta
+      .map((e, i) => (
+        <div key={i} title={e.seq}>
+          {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
+        </div>
+      ))
+      .slice(0, 1)
+  ) : (
+    <div>沒有班次</div>
   );
 };
