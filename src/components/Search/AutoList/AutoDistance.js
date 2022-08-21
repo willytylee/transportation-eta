@@ -16,7 +16,7 @@ export const AutoDistance = ({ handleItemOnClick }) => {
   const { location: currentLocation } = useContext(AppContext),
     { gRouteList, gStopList, gStopMap } = useContext(DbContext);
 
-  const stopIdsNearBy = useMemo(
+  const stopIdsNearby = useMemo(
     // use useMemo prevent flicker on the list
     () =>
       Object.keys(gStopList)
@@ -54,30 +54,30 @@ export const AutoDistance = ({ handleItemOnClick }) => {
     .map((e) => gRouteList[e])
     .filter((e) => basicFiltering(e));
 
-  const routeListNearBy = [];
+  const routeListNearby = [];
 
   // // Find out the route which contains the near by Stops
   routeList.forEach((e) => {
     const company = getCoPriorityId(e);
 
     const filitedStopId = Object.values(e.stops[company]).filter((f) =>
-      Object.keys(stopIdsNearBy).includes(f)
+      Object.keys(stopIdsNearby).includes(f)
     );
 
     if (filitedStopId?.length > 0) {
-      // There may have more than one stopIdsNearBy in a route, find the nearest stop in the route stop List
+      // There may have more than one stopIdsNearby in a route, find the nearest stop in the route stop List
       const _stopId = filitedStopId.reduce((prev, curr) =>
-        stopIdsNearBy[prev] < stopIdsNearBy[curr] ? prev : curr
+        stopIdsNearby[prev] < stopIdsNearby[curr] ? prev : curr
       );
-      e.nearByStopId = _stopId;
-      e.nearByStopSeq = e.stops[company].findIndex((f) => f === _stopId) + 1;
-      e.distance = stopIdsNearBy[_stopId];
-      routeListNearBy.push(e);
+      e.nearbyStopId = _stopId;
+      e.nearbyStopSeq = e.stops[company].findIndex((f) => f === _stopId) + 1;
+      e.distance = stopIdsNearby[_stopId];
+      routeListNearby.push(e);
     }
   });
 
-  const autoList = _(routeListNearBy)
-    .groupBy((x) => x.nearByStopId)
+  const autoList = _(routeListNearby)
+    .groupBy((x) => x.nearbyStopId)
     .map((value, key) => ({
       stopId: key,
       routes: value,

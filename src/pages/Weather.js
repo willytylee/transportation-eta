@@ -22,17 +22,17 @@ export const Weather = () => {
         <Tab label="本港現時天氣及預報" {...a11yProps(0)} />
         <Tab label="九天天氣預報" {...a11yProps(1)} />
       </Tabs>
-      <StyledTabPanel value={tabIdx} index={0}>
-        <CurrentWeater tabIdx={tabIdx} />
-      </StyledTabPanel>
-      <StyledTabPanel value={tabIdx} index={1}>
-        <NineDays tabIdx={tabIdx} />
-      </StyledTabPanel>
+      <TabPanelRoot value={tabIdx} index={0}>
+        <CurrentWeater />
+      </TabPanelRoot>
+      <TabPanelRoot value={tabIdx} index={1}>
+        <NineDays />
+      </TabPanelRoot>
     </>
   );
 };
 
-const StyledTabPanel = styled(TabPanel)({
+const TabPanelRoot = styled(TabPanel)({
   overflow: "auto",
   padding: "8px",
 });

@@ -1,7 +1,7 @@
 import { useContext, useRef, useState, useEffect } from "react";
 import { TextField, styled, IconButton, InputAdornment } from "@mui/material";
 import {
-  Search as SearchIcon,
+  // Search as SearchIcon,
   Map as MapIcon,
   Close as CloseIcon,
 } from "@mui/icons-material";
@@ -12,18 +12,18 @@ import { EtaContext } from "../../context/EtaContext";
 export const SearchBar = ({
   handleFormChange,
   route,
-  anchorEl,
-  setAnchorEl,
-  divRef,
+  // anchorEl,
+  // setAnchorEl,
+  // divRef,
 }) => {
   const { dbVersion, location: currentLocation } = useContext(AppContext);
   const { currRoute, updateCurrRoute } = useContext(EtaContext);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const textInput = useRef(null);
 
-  const handleSearchIconOnClick = () => {
-    setAnchorEl(!anchorEl && divRef.current);
-  };
+  // const handleSearchIconOnClick = () => {
+  //   setAnchorEl(!anchorEl && divRef.current);
+  // };
 
   const handleMapDialogOnClose = () => {
     setMapDialogOpen(false);
@@ -60,9 +60,9 @@ export const SearchBar = ({
                 >
                   <CloseIcon />
                 </IconButton>
-                <IconButton onClick={handleSearchIconOnClick}>
+                {/* <IconButton onClick={handleSearchIconOnClick}>
                   <SearchIcon />
-                </IconButton>
+                </IconButton> */}
               </InputAdornment>
             ),
           }}

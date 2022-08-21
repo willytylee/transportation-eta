@@ -127,7 +127,7 @@ const NineDaysRoot = styled("div")({
         width: "20%",
         textAlign: "center",
         img: {
-          width: "70%",
+          width: "60%",
           filter: "drop-shadow(0px 0px 0px black)",
         },
       },
@@ -139,7 +139,7 @@ const NineDaysRoot = styled("div")({
         width: "10%",
         textAlign: "center",
         img: {
-          width: "80%",
+          width: "60%",
         },
       },
     },

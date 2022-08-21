@@ -1,9 +1,9 @@
 {
   "extends": ["react-app", "react-app/jest"],
   "rules": {
-    "no-console": "error",
+    "no-console": "warn",
     "global-require": "warn",
-    "arrow-body-style": "error",
+    "arrow-body-style": "warn",
     "no-restricted-syntax": "error",
     "import/newline-after-import": "error",
     "react/self-closing-comp": "error",

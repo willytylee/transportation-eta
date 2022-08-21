@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { Card, styled } from "@mui/material";
-import { getCoByStopObj, basicFiltering, sortByCompany } from "../../Utils";
-import { EtaContext } from "../../context/EtaContext";
-import { companyMap, companyColor } from "../../constants/Constants";
-import { etaExcluded, routeMap } from "../../constants/Mtr";
-import { DbContext } from "../../context/DbContext";
+import { getCoByStopObj, basicFiltering, sortByCompany } from "../../../Utils";
+import { EtaContext } from "../../../context/EtaContext";
+import { companyMap, companyColor } from "../../../constants/Constants";
+import { etaExcluded, routeMap } from "../../../constants/Mtr";
+import { DbContext } from "../../../context/DbContext";
 
 export const RouteList = ({ route }) => {
   const { updateCurrRoute, currRoute } = useContext(EtaContext);
@@ -46,6 +46,7 @@ export const RouteList = ({ route }) => {
     JSON.stringify(a.route) === JSON.stringify(b.route) &&
     JSON.stringify(a.seq) === JSON.stringify(b.seq) &&
     JSON.stringify(a.serviceType) === JSON.stringify(b.serviceType);
+
   return (
     <RouteListRoot>
       {routeList?.map((e, i) => (
