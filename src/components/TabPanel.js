@@ -8,6 +8,6 @@ export const TabPanel = ({ children, value, index, ...other }) => (
     aria-labelledby={`simple-tab-${index}`}
     {...other}
   >
-    {value === index && { children }}
+    {value === index && <div>{children}</div>}
   </div>
 );
