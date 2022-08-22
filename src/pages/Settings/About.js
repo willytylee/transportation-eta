@@ -36,14 +36,7 @@ export const About = () => {
           <ListItemText
             className="newsText"
             primary="最新功能"
-            secondary={
-              <span>
-                加入港鐵搜索功能, 輸入MTR即可顯示所有港鐵路線
-                <br />
-                加入綠色小巴搜索, 收藏及到站時間排位功能
-                <br />
-              </span>
-            }
+            secondary="加入歷史紀錄功能"
           />
         </ListItemButton>
       </ListItem>

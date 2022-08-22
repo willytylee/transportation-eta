@@ -2,10 +2,25 @@ import { styled } from "@mui/material";
 import { getCoByStopObj } from "../../../Utils";
 import { companyColor, companyMap } from "../../../constants/Constants";
 
-export const SimpleRouteList = ({ routeList, handleRouteListItemOnClick }) =>
+export const SimpleRouteList = ({
+  route,
+  routeList,
+  handleRouteListItemOnClick,
+}) =>
   routeList.map((e, i) => (
     <SearchRouteListRoot onClick={() => handleRouteListItemOnClick(e)} key={i}>
-      <div className="route">{e.route}</div>
+      <div className="route">
+        {route ? (
+          <>
+            <span className="searchText">
+              {e.route.substring(0, route.length)}
+            </span>
+            <span>{e.route.substring(route.length, e.route.length)}</span>
+          </>
+        ) : (
+          <span className="searchText">{e.route}</span>
+        )}
+      </div>
       <div className="companyOrigDest">
         <div className="company">
           {getCoByStopObj(e)
@@ -35,9 +50,11 @@ const SearchRouteListRoot = styled("div")({
   padding: "4px 10px",
   borderBottom: "1px solid lightgrey",
   ".route": {
-    fontWeight: "900",
     letterSpacing: "-0.5px",
     width: "40px",
+    ".searchText": {
+      fontWeight: 900,
+    },
   },
   ".companyOrigDest": {
     display: "flex",

@@ -26,6 +26,7 @@ export const SearchRouteList = ({ route, handleRouteListItemOnClick }) => {
 
   return routeList.length > 0 ? (
     <SimpleRouteList
+      route={route}
       routeList={routeList}
       handleRouteListItemOnClick={handleRouteListItemOnClick}
     />

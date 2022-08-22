@@ -18,6 +18,9 @@ export const Search = () => {
   const handleFormChange = (text) => {
     setRoute(text.toUpperCase());
     updateCurrRoute({});
+    if (tabIdx === 1 || tabIdx === 3) {
+      setTabIdx(0);
+    }
   };
 
   const handleTabChange = (e, value) => {
