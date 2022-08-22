@@ -3,7 +3,7 @@ import { SimpleRouteList } from "./SimpleRouteList";
 export const HistoryRouteList = ({ handleRouteListItemOnClick }) => {
   const routeList = JSON.parse(localStorage.getItem("routeListHistory")) || [];
 
-  return routeList.length > 0 ? (
+  return routeList?.length > 0 ? (
     <SimpleRouteList
       mode="history"
       routeList={routeList}

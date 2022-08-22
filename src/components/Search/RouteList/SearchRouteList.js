@@ -20,13 +20,15 @@ export const SearchRouteList = ({ handleRouteListItemOnClick }) => {
     return routeReturn || sortByCompany(a, b); // Sort by Route first and than sort by company
   };
 
-  const routeList = Object.keys(gRouteList)
-    .map((e) => gRouteList[e])
-    .filter((e) => basicFiltering(e))
-    .filter((e) => route && route === e.route.substring(0, route.length))
-    .sort((a, b) => sortByRouteThenCo(a, b));
+  const routeList =
+    gRouteList &&
+    Object.keys(gRouteList)
+      .map((e) => gRouteList[e])
+      .filter((e) => basicFiltering(e))
+      .filter((e) => route && route === e.route.substring(0, route.length))
+      .sort((a, b) => sortByRouteThenCo(a, b));
 
-  return routeList.length > 0 ? (
+  return routeList?.length > 0 ? (
     <SimpleRouteList
       mode="search"
       routeList={routeList}

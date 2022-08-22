@@ -44,7 +44,7 @@ export const RouteList = () => {
     setRouteListHistory(expandRoute);
   };
 
-  return routeList.length > 0 ? (
+  return routeList?.length > 0 ? (
     <RouteListRoot>
       {routeList?.map((e, i) => (
         <Card key={i} onClick={() => handleCardOnClick(i)}>

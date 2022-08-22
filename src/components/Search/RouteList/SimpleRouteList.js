@@ -12,7 +12,7 @@ export const SimpleRouteList = ({
 }) => {
   const { route } = useContext(EtaContext);
 
-  return routeList.map((e, i) => (
+  return routeList?.map((e, i) => (
     <SearchRouteListRoot onClick={() => handleRouteListItemOnClick(e)} key={i}>
       <div className="route">
         {mode === "search" ? (

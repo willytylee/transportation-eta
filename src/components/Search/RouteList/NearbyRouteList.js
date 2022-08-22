@@ -20,6 +20,7 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
   const stopIdsNearby = useMemo(
     // use useMemo prevent flicker on the list
     () =>
+      gStopList &&
       Object.keys(gStopList)
         .map((e) => {
           const obj = gStopList[e];
@@ -51,14 +52,16 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
     []
   );
 
-  const routeList = Object.keys(gRouteList)
-    .map((e) => gRouteList[e])
-    .filter((e) => basicFiltering(e));
+  const routeList =
+    gRouteList &&
+    Object.keys(gRouteList)
+      .map((e) => gRouteList[e])
+      .filter((e) => basicFiltering(e));
 
   const routeListNearby = [];
 
   // // Find out the route which contains the near by Stops
-  routeList.forEach((e) => {
+  routeList?.forEach((e) => {
     const company = getCoPriorityId(e);
 
     const filitedStopId = Object.values(e.stops[company]).filter((f) =>
@@ -86,7 +89,7 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
     .value()
     .sort((a, b) => a.routes[0].distance - b.routes[0].distance);
 
-  return nearbyRouteList.length > 0 ? (
+  return nearbyRouteList?.length > 0 ? (
     nearbyRouteList.map((e, i) => {
       const stop = gStopList[e.stopId];
       const name = stop.name.zh;
