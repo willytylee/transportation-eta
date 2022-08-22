@@ -3,6 +3,7 @@ import { styled } from "@mui/material";
 import { getCoByStopObj } from "../../../Utils";
 import { companyColor, companyMap } from "../../../constants/Constants";
 import { EtaContext } from "../../../context/EtaContext";
+import { routeMap } from "../../../constants/Mtr";
 
 export const SimpleRouteList = ({
   mode,
@@ -28,9 +29,12 @@ export const SimpleRouteList = ({
       <div className="companyOrigDest">
         <div className="company">
           {getCoByStopObj(e)
-            .map((f, j) => (
-              <span key={j} className={f}>
-                {companyMap[f]}
+            .map((companyId, j) => (
+              <span key={j} className={companyId}>
+                {companyId !== "mtr" && companyMap[companyId]}
+                {companyId === "mtr" && (
+                  <span className={`${e.route}`}> {routeMap[e.route]}</span>
+                )}
               </span>
             ))
             .reduce((a, b) => [a, " + ", b])}

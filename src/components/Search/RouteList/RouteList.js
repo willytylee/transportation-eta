@@ -57,17 +57,12 @@ export const RouteList = () => {
           >
             <div className="company">
               {getCoByStopObj(e)
-                .map((coCode, j) => (
-                  <span key={j}>
-                    <span className={coCode}>
-                      {coCode !== "mtr" && companyMap[coCode]}
-                      {coCode === "mtr" && (
-                        <span className={`${e.route}`}>
-                          {" "}
-                          {routeMap[e.route]}
-                        </span>
-                      )}
-                    </span>
+                .map((companyId, j) => (
+                  <span key={j} className={companyId}>
+                    {companyId !== "mtr" && companyMap[companyId]}
+                    {companyId === "mtr" && (
+                      <span className={`${e.route}`}> {routeMap[e.route]}</span>
+                    )}
                   </span>
                 ))
                 .reduce((a, b) => [a, " + ", b])}

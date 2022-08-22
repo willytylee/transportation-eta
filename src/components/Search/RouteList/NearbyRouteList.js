@@ -10,6 +10,7 @@ import {
 } from "../../../Utils";
 import { DbContext } from "../../../context/DbContext";
 import { companyColor, companyMap } from "../../../constants/Constants";
+import { routeMap } from "../../../constants/Mtr";
 import { Eta } from "./Eta";
 
 export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
@@ -110,8 +111,14 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
                 <div className="company">
                   {getCoByStopObj(routeObj)
                     .map((companyId, k) => (
-                      <span key={k} className={companyId}>
-                        {companyMap[companyId]}
+                      <span key={j} className={companyId}>
+                        {companyId !== "mtr" && companyMap[companyId]}
+                        {companyId === "mtr" && (
+                          <span className={`${routeObj.route}`}>
+                            {" "}
+                            {routeMap[routeObj.route]}
+                          </span>
+                        )}
                       </span>
                     ))
                     .reduce((a, b) => [a, " + ", b])}
