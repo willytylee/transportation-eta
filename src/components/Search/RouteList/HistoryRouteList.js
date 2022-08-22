@@ -5,6 +5,7 @@ export const HistoryRouteList = ({ handleRouteListItemOnClick }) => {
 
   return routeList.length > 0 ? (
     <SimpleRouteList
+      mode="history"
       routeList={routeList}
       handleRouteListItemOnClick={handleRouteListItemOnClick}
     />

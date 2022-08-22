@@ -1,10 +1,12 @@
 import { useContext } from "react";
 import { basicFiltering, sortByCompany } from "../../../Utils";
 import { DbContext } from "../../../context/DbContext";
+import { EtaContext } from "../../../context/EtaContext";
 import { SimpleRouteList } from "./SimpleRouteList";
 
-export const SearchRouteList = ({ route, handleRouteListItemOnClick }) => {
+export const SearchRouteList = ({ handleRouteListItemOnClick }) => {
   const { gRouteList } = useContext(DbContext);
+  const { route } = useContext(EtaContext);
 
   const sortByRouteThenCo = (a, b) => {
     let routeReturn = 0;
@@ -26,7 +28,7 @@ export const SearchRouteList = ({ route, handleRouteListItemOnClick }) => {
 
   return routeList.length > 0 ? (
     <SimpleRouteList
-      route={route}
+      mode="search"
       routeList={routeList}
       handleRouteListItemOnClick={handleRouteListItemOnClick}
     />

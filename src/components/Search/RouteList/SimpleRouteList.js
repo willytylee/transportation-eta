@@ -1,16 +1,20 @@
+import { useContext } from "react";
 import { styled } from "@mui/material";
 import { getCoByStopObj } from "../../../Utils";
 import { companyColor, companyMap } from "../../../constants/Constants";
+import { EtaContext } from "../../../context/EtaContext";
 
 export const SimpleRouteList = ({
-  route,
+  mode,
   routeList,
   handleRouteListItemOnClick,
-}) =>
-  routeList.map((e, i) => (
+}) => {
+  const { route } = useContext(EtaContext);
+
+  return routeList.map((e, i) => (
     <SearchRouteListRoot onClick={() => handleRouteListItemOnClick(e)} key={i}>
       <div className="route">
-        {route ? (
+        {mode === "search" ? (
           <>
             <span className="boldRoute">
               {e.route.substring(0, route.length)}
@@ -43,6 +47,7 @@ export const SimpleRouteList = ({
       </div>
     </SearchRouteListRoot>
   ));
+};
 
 const SearchRouteListRoot = styled("div")({
   display: "flex",

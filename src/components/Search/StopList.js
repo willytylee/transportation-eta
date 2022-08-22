@@ -20,13 +20,14 @@ import { DbContext } from "../../context/DbContext";
 import { MtrStopEta } from "./MtrStopEta";
 import { StopEta } from "./StopEta";
 
-export const StopList = ({ route }) => {
+export const StopList = () => {
   const [stopList, setStopList] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const { location: currentLocation } = useContext(AppContext);
   const { gStopList } = useContext(DbContext);
   const {
+    route,
     currRoute,
     nearestStopId,
     updateNearestStopId,

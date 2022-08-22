@@ -3,7 +3,7 @@
 }
 html {
   height: 100%;
-  font-family: "Noto Sans", sans-serif;
+  font-family: sans-serif;
   overscroll-behavior-y: contain;
   overflow-x: hidden;
 }

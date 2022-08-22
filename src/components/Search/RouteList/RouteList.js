@@ -12,8 +12,8 @@ import { companyMap, companyColor } from "../../../constants/Constants";
 import { etaExcluded, routeMap } from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
 
-export const RouteList = ({ route }) => {
-  const { updateCurrRoute, currRoute } = useContext(EtaContext);
+export const RouteList = () => {
+  const { updateCurrRoute, currRoute, route } = useContext(EtaContext);
   const { gRouteList } = useContext(DbContext);
 
   const routeList =

@@ -3,19 +3,24 @@ import { createContext, useState, useMemo, useCallback } from "react";
 export const EtaContext = createContext();
 
 export const EtaProvider = ({ children }) => {
-  const [currRoute, setCurrRoute] = useState({}, []);
+  const [currRoute, setCurrRoute] = useState({});
+  const [route, setRoute] = useState("");
   const [nearestStopId, setNearestStopId] = useState("");
   const [sectionCompareMode, setSectionCompareMode] = useState(false);
   const [mapLocation, setMapLocation] = useState(undefined);
   const [mapStopIdx, setMapStopIdx] = useState(-1);
 
   /* eslint-disable react-hooks/exhaustive-deps */
-  const updateCurrRoute = useCallback((route) => {
-    setCurrRoute(route);
+  const updateRoute = useCallback((routeStr) => {
+    setRoute(routeStr);
   }, []);
 
-  const updateNearestStopId = useCallback((_nearestStopId) => {
-    setNearestStopId(_nearestStopId);
+  const updateCurrRoute = useCallback((routeObj) => {
+    setCurrRoute(routeObj);
+  }, []);
+
+  const updateNearestStopId = useCallback((stopId) => {
+    setNearestStopId(stopId);
   }, []);
 
   const updateSectionCompareMode = useCallback((mode) => {
@@ -35,6 +40,8 @@ export const EtaProvider = ({ children }) => {
 
   const value = useMemo(
     () => ({
+      route,
+      updateRoute,
       currRoute,
       updateCurrRoute,
       nearestStopId,
@@ -47,6 +54,8 @@ export const EtaProvider = ({ children }) => {
       updateMapStopIdx,
     }),
     [
+      route,
+      updateRoute,
       currRoute,
       updateCurrRoute,
       nearestStopId,

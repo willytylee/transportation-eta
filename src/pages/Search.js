@@ -11,14 +11,13 @@ import { HistoryRouteList } from "../components/Search/RouteList/HistoryRouteLis
 import { setRouteListHistory } from "../Utils";
 
 export const Search = () => {
-  const [route, setRoute] = useState("");
   const [tabIdx, setTabIdx] = useState(0);
-  const { updateCurrRoute } = useContext(EtaContext);
+  const { updateCurrRoute, updateRoute } = useContext(EtaContext);
 
   const handleFormChange = (text) => {
-    setRoute(text.toUpperCase());
+    updateRoute(text.toUpperCase());
     updateCurrRoute({});
-    if (tabIdx === 1 || tabIdx === 3) {
+    if (tabIdx === 2 || tabIdx === 3) {
       setTabIdx(0);
     }
   };
@@ -29,7 +28,7 @@ export const Search = () => {
 
   const handleRouteListItemOnClick = (e) => {
     updateCurrRoute(e);
-    setRoute(e.route);
+    updateRoute(e.route);
     setRouteListHistory(e);
     setTabIdx(0);
   };
@@ -41,27 +40,26 @@ export const Search = () => {
 
   return (
     <SearchRoot>
-      <SearchBar handleFormChange={handleFormChange} route={route} />
+      <SearchBar handleFormChange={handleFormChange} />
 
       <SearchResult>
         <Tabs value={tabIdx} onChange={handleTabChange}>
           <Tab label="交通路線" {...a11yProps(0)} />
-          <Tab label="附近路線" {...a11yProps(1)} />
-          <Tab label="搜尋路線" {...a11yProps(2)} />
+          <Tab label="搜尋路線" {...a11yProps(1)} />
+          <Tab label="附近路線" {...a11yProps(2)} />
           <Tab label="歷史紀錄" {...a11yProps(3)} />
         </Tabs>
         <TabPanelRoot value={tabIdx} index={0}>
-          <RouteList route={route} />
-          <StopList route={route} />
+          <RouteList />
+          <StopList />
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={1}>
-          <NearbyRouteList
+          <SearchRouteList
             handleRouteListItemOnClick={handleRouteListItemOnClick}
           />
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={2}>
-          <SearchRouteList
-            route={route}
+          <NearbyRouteList
             handleRouteListItemOnClick={handleRouteListItemOnClick}
           />
         </TabPanelRoot>

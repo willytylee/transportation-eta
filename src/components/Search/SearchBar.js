@@ -5,9 +5,9 @@ import { AppContext } from "../../context/AppContext";
 import { MapDialog } from "../MapDialog/MapDialog";
 import { EtaContext } from "../../context/EtaContext";
 
-export const SearchBar = ({ handleFormChange, route }) => {
+export const SearchBar = ({ handleFormChange }) => {
   const { dbVersion, location: currentLocation } = useContext(AppContext);
-  const { currRoute, updateCurrRoute } = useContext(EtaContext);
+  const { currRoute, updateCurrRoute, route } = useContext(EtaContext);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const textInput = useRef(null);
 
