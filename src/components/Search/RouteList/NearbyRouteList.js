@@ -85,8 +85,7 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
     .value()
     .sort((a, b) => a.routes[0].distance - b.routes[0].distance);
 
-  return (
-    nearbyRouteList.length > 0 &&
+  return nearbyRouteList.length > 0 ? (
     nearbyRouteList.map((e, i) => {
       const stop = gStopList[e.stopId];
       const name = stop.name.zh;
@@ -136,6 +135,8 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
         </NearbyRouteListRoot>
       );
     })
+  ) : (
+    <div className="emptyMsg">附近未有交通路線</div>
   );
 };
 

@@ -44,7 +44,7 @@ export const RouteList = ({ route }) => {
     setRouteListHistory(expandRoute);
   };
 
-  return (
+  return routeList.length > 0 ? (
     <RouteListRoot>
       {routeList?.map((e, i) => (
         <Card key={i} onClick={() => handleCardOnClick(i)}>
@@ -93,6 +93,8 @@ export const RouteList = ({ route }) => {
         </Card>
       ))}
     </RouteListRoot>
+  ) : (
+    <div className="emptyMsg">請輸入路線</div>
   );
 };
 

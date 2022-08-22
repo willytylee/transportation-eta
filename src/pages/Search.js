@@ -94,4 +94,9 @@ const SearchResult = styled("div")({
 const TabPanelRoot = styled(TabPanel)({
   overflow: "auto",
   padding: "8px",
+  ".emptyMsg": {
+    fontSize: "14px",
+    textAlign: "center",
+    paddingTop: "14px",
+  },
 });

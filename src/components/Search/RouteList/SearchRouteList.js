@@ -24,10 +24,12 @@ export const SearchRouteList = ({ route, handleRouteListItemOnClick }) => {
     .filter((e) => route && route === e.route.substring(0, route.length))
     .sort((a, b) => sortByRouteThenCo(a, b));
 
-  return (
+  return routeList.length > 0 ? (
     <SimpleRouteList
       routeList={routeList}
       handleRouteListItemOnClick={handleRouteListItemOnClick}
     />
+  ) : (
+    <div className="emptyMsg">請輸入路線</div>
   );
 };
