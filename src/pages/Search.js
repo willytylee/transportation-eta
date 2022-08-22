@@ -10,10 +10,12 @@ import { SearchRouteList } from "../components/Search/RouteList/SearchRouteList"
 import { HistoryRouteList } from "../components/Search/RouteList/HistoryRouteList";
 import { setRouteListHistory } from "../Utils";
 import { primaryColor } from "../constants/Constants";
+import { AppContext } from "../context/AppContext";
 
 export const Search = () => {
   const [tabIdx, setTabIdx] = useState(0);
   const { updateCurrRoute, updateRoute } = useContext(EtaContext);
+  const { dbVersion } = useContext(AppContext);
 
   const handleFormChange = (text) => {
     updateRoute(text.toUpperCase());
@@ -49,10 +51,26 @@ export const Search = () => {
           onChange={handleTabChange}
           TabIndicatorProps={{ style: { background: `${primaryColor}` } }}
         >
-          <Tab label="搜尋路線" {...a11yProps(0)} />
-          <Tab label="交通路線" {...a11yProps(1)} />
-          <Tab label="附近路線" {...a11yProps(2)} />
-          <Tab label="歷史紀錄" {...a11yProps(3)} />
+          <Tab
+            disabled={dbVersion === null}
+            label="搜尋路線"
+            {...a11yProps(0)}
+          />
+          <Tab
+            disabled={dbVersion === null}
+            label="交通路線"
+            {...a11yProps(1)}
+          />
+          <Tab
+            disabled={dbVersion === null}
+            label="附近路線"
+            {...a11yProps(2)}
+          />
+          <Tab
+            disabled={dbVersion === null}
+            label="歷史紀錄"
+            {...a11yProps(3)}
+          />
         </Tabs>
         <TabPanelRoot value={tabIdx} index={0}>
           <SearchRouteList
