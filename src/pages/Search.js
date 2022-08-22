@@ -9,6 +9,7 @@ import { NearbyRouteList } from "../components/Search/RouteList/NearbyRouteList"
 import { SearchRouteList } from "../components/Search/RouteList/SearchRouteList";
 import { HistoryRouteList } from "../components/Search/RouteList/HistoryRouteList";
 import { setRouteListHistory } from "../Utils";
+import { primaryColor } from "../constants/Constants";
 
 export const Search = () => {
   const [tabIdx, setTabIdx] = useState(0);
@@ -17,7 +18,7 @@ export const Search = () => {
   const handleFormChange = (text) => {
     updateRoute(text.toUpperCase());
     updateCurrRoute({});
-    if (tabIdx === 2 || tabIdx === 3) {
+    if (tabIdx !== 0) {
       setTabIdx(0);
     }
   };
@@ -30,7 +31,7 @@ export const Search = () => {
     updateCurrRoute(e);
     updateRoute(e.route);
     setRouteListHistory(e);
-    setTabIdx(0);
+    setTabIdx(1);
   };
 
   const a11yProps = (index) => ({
@@ -43,20 +44,24 @@ export const Search = () => {
       <SearchBar handleFormChange={handleFormChange} />
 
       <SearchResult>
-        <Tabs value={tabIdx} onChange={handleTabChange}>
-          <Tab label="交通路線" {...a11yProps(0)} />
-          <Tab label="搜尋路線" {...a11yProps(1)} />
+        <Tabs
+          value={tabIdx}
+          onChange={handleTabChange}
+          TabIndicatorProps={{ style: { background: `${primaryColor}` } }}
+        >
+          <Tab label="搜尋路線" {...a11yProps(0)} />
+          <Tab label="交通路線" {...a11yProps(1)} />
           <Tab label="附近路線" {...a11yProps(2)} />
           <Tab label="歷史紀錄" {...a11yProps(3)} />
         </Tabs>
         <TabPanelRoot value={tabIdx} index={0}>
-          <RouteList />
-          <StopList />
-        </TabPanelRoot>
-        <TabPanelRoot value={tabIdx} index={1}>
           <SearchRouteList
             handleRouteListItemOnClick={handleRouteListItemOnClick}
           />
+        </TabPanelRoot>
+        <TabPanelRoot value={tabIdx} index={1}>
+          <RouteList />
+          <StopList />
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={2}>
           <NearbyRouteList
@@ -87,7 +92,14 @@ const SearchResult = styled("div")({
   ".MuiTabs-flexContainer": {
     justifyContent: "space-evenly",
     button: {
+      "&.Mui-selected": {
+        color: `${primaryColor}`,
+      },
       flexGrow: 1,
+      paddingLeft: 0,
+      paddingRight: 0,
+      maxWidth: "unset",
+      minWidth: "unset",
     },
   },
 });

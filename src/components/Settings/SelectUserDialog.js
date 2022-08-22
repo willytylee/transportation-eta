@@ -11,7 +11,7 @@ import {
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
 import PinInput from "react-pin-input";
-import { dataSet } from "../data/DataSet";
+import { dataSet } from "../../data/DataSet";
 
 export const SelectUserDialog = ({
   handleslctUsrDialogOnClose,
