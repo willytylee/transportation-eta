@@ -1,9 +1,9 @@
 {
   "extends": ["react-app", "react-app/jest"],
   "rules": {
-    "no-console": "warn",
-    "global-require": "warn",
-    "arrow-body-style": "warn",
+    "no-console": "error",
+    "global-require": "error",
+    "arrow-body-style": "error",
     "no-restricted-syntax": "error",
     "import/newline-after-import": "error",
     "react/self-closing-comp": "error",
@@ -19,7 +19,7 @@
     "no-shadow": "error",
     "react/jsx-boolean-value": "error",
     "prefer-const": "error",
-    "no-unused-vars": "warn",
+    "no-unused-vars": "error",
     "react/no-unescaped-entities": "error",
     "no-unneeded-ternary": "error",
     "import/no-unresolved": "error",
