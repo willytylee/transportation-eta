@@ -23,7 +23,6 @@ export const Install = () => {
 
   return (
     <InstallRoot>
-      <div className="title">安裝到手機:</div>
       <div className="subTitle">IOS</div>
       <Accordion
         expanded={accoExpanded === "panel1"}
@@ -98,11 +97,6 @@ const InstallRoot = styled("div")({
   overflow: "auto",
   div: {
     marginBottom: "4px",
-  },
-  ".title": {
-    fontSize: "18px",
-    fontWeight: "900",
-    marginBottom: "8px",
   },
   ".subTitle": {
     fontSize: "16px",

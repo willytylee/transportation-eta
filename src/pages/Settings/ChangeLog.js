@@ -5,7 +5,6 @@ export const ChangeLog = () => {
   const navigate = useNavigate();
   return (
     <NewsRoot>
-      <div className="title">最新功能</div>
       <div className="subTitle">22/8/2022</div>
       <div className="content">
         <ul>
@@ -107,11 +106,6 @@ const NewsRoot = styled("div")({
   overflow: "auto",
   div: {
     marginBottom: "4px",
-  },
-  ".title": {
-    fontSize: "18px",
-    fontWeight: "900",
-    marginBottom: "8px",
   },
   ".subTitle": {
     fontSize: "16px",

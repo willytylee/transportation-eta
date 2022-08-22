@@ -1,19 +1,26 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { AppBar, Toolbar, styled } from "@mui/material";
-import { Settings as SettingsIcon } from "@mui/icons-material";
+import { Link, useLocation } from "react-router-dom";
+import { AppBar, Toolbar, styled, IconButton } from "@mui/material";
+import { ArrowBackIosNew as ArrowBackIosNewIcon } from "@mui/icons-material";
 import { fetchCurrWeather, fetchWarningList } from "../fetch/Weather";
 import { warningIconMap, weatherIconMap } from "../constants/Weather";
-import { SelectUserMenu } from "../components/SelectUserMenu";
+import { navbarDetail, primaryColor } from "../constants/Constants";
 
 export const Navbar = () => {
   const [currWeather, setCurrWeather] = useState({});
   const [warningMsg, setWarningMsg] = useState({});
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const [prevPage, setPrevPage] = useState("");
+  const [title, setTitle] = useState("");
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const key = Object.keys(navbarDetail).find(
+      (e) => e === pathname || (pathname.includes(e) && e === "/bookmark")
+    );
+    const object = navbarDetail[key];
+    object?.title ? setTitle(object.title) : setTitle("");
+    object?.prevPage ? setPrevPage(object.prevPage) : setPrevPage("");
+  }, [pathname]);
 
   useEffect(() => {
     const intervalContent = () => {
@@ -40,17 +47,28 @@ export const Navbar = () => {
   }
 
   return (
-    <>
-      <AppBarRoot position="static">
-        <Toolbar>
-          <ul className="left">
-            <li> </li>
-          </ul>
-          <ul className="right">
-            <li className="weather">
-              <Link to="/weather">
+    <AppBarRoot position="static">
+      <Toolbar>
+        <ul>
+          <li className="back">
+            {prevPage !== "" && (
+              <Link to={prevPage}>
+                <IconButton>
+                  <ArrowBackIosNewIcon />
+                </IconButton>
+              </Link>
+            )}
+          </li>
+        </ul>
+        <ul className="title">{title}</ul>
+        <ul>
+          <li className="weather">
+            <Link to="/weather">
+              <div className="text">
                 {avgTemp?.toFixed(1)}°C /{" "}
                 {currWeather?.humidity?.data[0]?.value}%
+              </div>
+              <div className="img">
                 <img src={weatherIconMap[currWeather.icon]} alt="" />
                 {Object.keys(warningMsg).map((e, i) => (
                   <img
@@ -59,40 +77,23 @@ export const Navbar = () => {
                     alt=""
                   />
                 ))}
-              </Link>
-            </li>
-            {/* <li className="compareList">
-              <Link
-                to="/compare"
-                onClick={() => updateSectionCompareMode(true)}
-              >
-                <FormatListBulletedIcon />
-              </Link>
-            </li> */}
-            <li className="settings">
-              <Link to="/settings">
-                <SettingsIcon />
-              </Link>
-            </li>
-          </ul>
-        </Toolbar>
-      </AppBarRoot>
-      <SelectUserMenu
-        anchorEl={anchorEl}
-        open={open}
-        handleClose={handleClose}
-      />
-    </>
+              </div>
+            </Link>
+          </li>
+        </ul>
+      </Toolbar>
+    </AppBarRoot>
   );
 };
 
 const AppBarRoot = styled(AppBar)({
-  backgroundColor: "#2f305c",
+  backgroundColor: `${primaryColor}`,
   ".MuiToolbar-root": {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "stretch",
-    minHeight: "36px",
+    minHeight: "48px",
+    paddingLeft: "8px",
     ul: {
       padding: "0",
       margin: "0",
@@ -100,6 +101,14 @@ const AppBarRoot = styled(AppBar)({
       display: "flex",
       gap: "0.5rem",
       fontSize: "20px",
+      color: "white",
+      "&.title": {
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        fontSize: "16px",
+      },
       li: {
         color: "inherit",
         textDecoration: "none",
@@ -111,13 +120,25 @@ const AppBarRoot = styled(AppBar)({
           color: "white",
           display: "flex",
           alignItems: "center",
+          button: {
+            color: "white",
+          },
         },
-      },
-      ".weather": {
-        fontSize: "14px",
-        img: {
-          width: "20px",
-          marginLeft: "8px",
+        "&.weather": {
+          fontSize: "12px",
+          paddingRight: 0,
+          a: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "4px",
+            ".img": {
+              display: "flex",
+              gap: "8px",
+              img: {
+                width: "14px",
+              },
+            },
+          },
         },
       },
     },

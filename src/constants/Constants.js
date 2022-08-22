@@ -40,3 +40,41 @@ export const companyColor = {
 export const coPriority = ["kmb", "nwfb", "ctb", "gmb", "mtr", "nlb"];
 
 export const primaryColor = "#2f305c";
+
+export const navbarDetail = {
+  "/search": {
+    title: "路線搜尋",
+  },
+  "/news": {
+    title: "交通消息",
+  },
+  "/weather": {
+    title: "天氣",
+  },
+  "/bookmark": {
+    title: "收藏",
+  },
+  "/settings": {
+    title: "設定",
+  },
+  "/settings/update": {
+    title: "更新",
+    prevPage: "/settings",
+  },
+  "/settings/personal": {
+    title: "個人化設定",
+    prevPage: "/settings",
+  },
+  "/settings/install": {
+    title: "安裝到手機",
+    prevPage: "/settings",
+  },
+  "/settings/about": {
+    title: "關於",
+    prevPage: "/settings",
+  },
+  "/settings/about/changeLog": {
+    title: "最新功能",
+    prevPage: "/settings/about",
+  },
+};
