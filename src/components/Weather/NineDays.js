@@ -127,8 +127,9 @@ const NineDaysRoot = styled("div")({
         width: "20%",
         textAlign: "center",
         img: {
-          width: "60%",
+          width: "100%",
           filter: "drop-shadow(0px 0px 0px black)",
+          maxWidth: "50px",
         },
       },
       ".detailRow": {
@@ -139,7 +140,8 @@ const NineDaysRoot = styled("div")({
         width: "10%",
         textAlign: "center",
         img: {
-          width: "60%",
+          width: "100%",
+          maxWidth: "30px",
         },
       },
     },

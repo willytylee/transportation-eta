@@ -105,6 +105,7 @@ const BottomNavigationRoot = styled(BottomNavigation)({
   ".MuiButtonBase-root": {
     padding: 0,
     minWidth: "unset",
+    maxWidth: "unset",
     border: "2px white solid",
     color: "#2f305c",
   },

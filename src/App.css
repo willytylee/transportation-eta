@@ -13,6 +13,8 @@ body {
   overflow-x: hidden;
   overscroll-behavior-y: contain;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  display: flex;
+  justify-content: center;
 }
 #root {
   display: flex;
@@ -20,6 +22,7 @@ body {
   width: 100%;
   flex-direction: column;
   justify-content: space-between;
+  max-width: 1024px;
 }
 a {
   color: initial;
