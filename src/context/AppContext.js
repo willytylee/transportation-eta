@@ -7,12 +7,6 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const dbVersionLocal = localStorage.getItem("dbVersion");
-  let userIdLocal;
-  try {
-    userIdLocal = JSON.parse(localStorage.getItem("user")).userId;
-  } catch (error) {
-    userIdLocal = -1;
-  }
 
   const [dbVersion, setDbVersion] = useState(dbVersionLocal);
   const [location, setLocation] = useState({
@@ -21,7 +15,6 @@ export const AppProvider = ({ children }) => {
   });
   const [appVersion, setAppVersion] = useState("");
   const [serVersion, setSerVersion] = useState("");
-  const [currentUserId, setCurrentUserId] = useState(userIdLocal);
 
   /* eslint-disable react-hooks/exhaustive-deps */
   const getGeoLocation = useCallback(() => {
@@ -37,10 +30,6 @@ export const AppProvider = ({ children }) => {
     };
     intervalContent();
     setInterval(intervalContent, 5000);
-  }, []);
-
-  const updateCurrentUserId = useCallback((userId) => {
-    setCurrentUserId(userId);
   }, []);
 
   const initAppVersion = useCallback(() => {
@@ -112,8 +101,6 @@ export const AppProvider = ({ children }) => {
       initAppVersion,
       appVersion,
       serVersion,
-      currentUserId,
-      updateCurrentUserId,
     }),
     [
       dbVersion,
@@ -123,8 +110,6 @@ export const AppProvider = ({ children }) => {
       initAppVersion,
       appVersion,
       serVersion,
-      currentUserId,
-      updateCurrentUserId,
     ]
   );
 

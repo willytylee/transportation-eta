@@ -1,5 +1,4 @@
 import { useState, useContext } from "react";
-import { useSnackbar } from "notistack";
 import {
   List,
   ListItem,
@@ -13,36 +12,25 @@ import {
 import { useNavigate } from "react-router-dom";
 import {
   AccountCircle as AccountCircleIcon,
-  LayersClear as LayersClearIcon,
   Update as UpdateIcon,
   Download as DownloadIcon,
   Report as ReportIcon,
   Source as SourceIcon,
+  Tune as TuneIcon,
 } from "@mui/icons-material";
-import { SelectUserDialog } from "../components/SelectUserDialog";
+import { SelectUserDialog } from "../components/Settings/SelectUserDialog";
 import { AppContext } from "../context/AppContext";
 
 export const Settings = () => {
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { appVersion, serVersion, updateCurrentUserId } =
-    useContext(AppContext);
+  const { appVersion, serVersion } = useContext(AppContext);
   const [slctUsrDialogOpen, setslctUsrDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleslctUsrDialogOnClose = ({ userId, username }) => {
     if (userId) {
       localStorage.setItem("user", JSON.stringify({ userId, username }));
-      updateCurrentUserId(userId);
     }
     setslctUsrDialogOpen(false);
-  };
-
-  const handleClearHistOnClick = () => {
-    localStorage.removeItem("routeListHistory");
-    enqueueSnackbar("歷史紀錄已清除", {
-      variant: "success",
-    });
   };
 
   let username;
@@ -63,6 +51,18 @@ export const Settings = () => {
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="選擇用戶" secondary={username} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => navigate("/settings/personal", { replace: true })}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <TuneIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="個人化設定" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -88,16 +88,6 @@ export const Settings = () => {
               </Badge>
             </ListItemAvatar>
             <ListItemText primary="更新" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton onClick={handleClearHistOnClick}>
-            <ListItemAvatar>
-              <Avatar>
-                <LayersClearIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="清除歷史紀錄" />
           </ListItemButton>
         </ListItem>
         <Divider />

@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { useSnackbar } from "notistack";
 import {
   BottomNavigation,
   BottomNavigationAction,
@@ -16,15 +15,15 @@ import {
 } from "@mui/icons-material";
 import { AppContext } from "../context/AppContext";
 import { EtaContext } from "../context/EtaContext";
+import { primaryColor } from "../constants/Constants";
 
 export const BottomNav = () => {
-  const { appVersion, serVersion, currentUserId } = useContext(AppContext);
+  const { appVersion, serVersion } = useContext(AppContext);
   const { updateSectionCompareMode } = useContext(EtaContext);
-  const { enqueueSnackbar } = useSnackbar();
   const { pathname } = useLocation();
 
   const activeStyle = {
-    background: "#2f305c",
+    backgroundColor: `${primaryColor}`,
     color: "white",
   };
 
@@ -48,30 +47,17 @@ export const BottomNav = () => {
         label="交通消息"
         icon={<AnnouncementIcon />}
       />
-      {currentUserId === -1 ? (
-        <BottomNavigationAction
-          component={NavLink}
-          to="/settings"
-          onClick={() => {
-            enqueueSnackbar("請選擇用戶", {
-              variant: "warning",
-            });
-          }}
-          label="收藏"
-          icon={<FavoriteIcon />}
-        />
-      ) : (
-        <BottomNavigationAction
-          component={NavLink}
-          to={`/bookmark/${currentUserId}`}
-          style={({ isActive }) => (isActive ? activeStyle : undefined)}
-          label="收藏"
-          icon={<FavoriteIcon />}
-          onClick={() => {
-            updateSectionCompareMode(false);
-          }}
-        />
-      )}
+      <BottomNavigationAction
+        component={NavLink}
+        to="/bookmark"
+        style={({ isActive }) => (isActive ? activeStyle : undefined)}
+        label="收藏"
+        icon={<FavoriteIcon />}
+        onClick={() => {
+          updateSectionCompareMode(false);
+        }}
+      />
+      {/* )} */}
       <BottomNavigationAction
         component={NavLink}
         style={({ isActive }) => (isActive ? activeStyle : undefined)}
