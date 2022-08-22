@@ -111,7 +111,7 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
                 <div className="company">
                   {getCoByStopObj(routeObj)
                     .map((companyId, k) => (
-                      <span key={j} className={companyId}>
+                      <span key={k} className={companyId}>
                         {companyId !== "mtr" && companyMap[companyId]}
                         {companyId === "mtr" && (
                           <span className={`${routeObj.route}`}>
