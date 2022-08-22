@@ -12,13 +12,13 @@ export const SimpleRouteList = ({
       <div className="route">
         {route ? (
           <>
-            <span className="searchText">
+            <span className="boldRoute">
               {e.route.substring(0, route.length)}
             </span>
             <span>{e.route.substring(route.length, e.route.length)}</span>
           </>
         ) : (
-          <span className="searchText">{e.route}</span>
+          <span className="boldRoute">{e.route}</span>
         )}
       </div>
       <div className="companyOrigDest">
@@ -52,7 +52,7 @@ const SearchRouteListRoot = styled("div")({
   ".route": {
     letterSpacing: "-0.5px",
     width: "40px",
-    ".searchText": {
+    ".boldRoute": {
       fontWeight: 900,
     },
   },
