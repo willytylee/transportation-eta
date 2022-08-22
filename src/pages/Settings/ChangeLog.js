@@ -6,6 +6,18 @@ export const ChangeLog = () => {
   return (
     <NewsRoot>
       <div className="title">最新功能</div>
+      <div className="subTitle">22/8/2022</div>
+      <div className="content">
+        <ul>
+          <li
+            className="underline"
+            onClick={() => navigate("/search", { replace: true })}
+          >
+            加入歷史紀錄功能
+          </li>
+        </ul>
+      </div>
+      <DividerRoot />
       <div className="subTitle">11/8/2022</div>
       <div className="content">
         <ul>

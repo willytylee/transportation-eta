@@ -14,6 +14,7 @@ import {
   RampRight as RampRightIcon,
   Announcement as AnnouncementIcon,
   Info as InfoIcon,
+  GitHub as GitHubIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
@@ -50,17 +51,17 @@ export const About = () => {
       <ListItem disablePadding>
         <ListItemButton
           component="a"
-          href="https://github.com/willytylee/Transportation-ETA"
+          href="https://github.com/willytylee/transportation-eta"
           target="_blank"
         >
           <ListItemAvatar>
             <Avatar>
-              <InfoIcon />
+              <GitHubIcon />
             </Avatar>
           </ListItemAvatar>
           <ListItemText
             primary="原始碼"
-            secondary="https://github.com/willytylee/Transportation-ETA"
+            secondary="https://github.com/willytylee/transportation-eta"
           />
         </ListItemButton>
       </ListItem>
