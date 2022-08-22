@@ -15,7 +15,7 @@ export const SimpleRouteList = ({
             <span className="boldRoute">
               {e.route.substring(0, route.length)}
             </span>
-            <span>{e.route.substring(route.length, e.route.length)}</span>
+            {e.route.substring(route.length, e.route.length)}
           </>
         ) : (
           <span className="boldRoute">{e.route}</span>
@@ -50,7 +50,6 @@ const SearchRouteListRoot = styled("div")({
   padding: "4px 10px",
   borderBottom: "1px solid lightgrey",
   ".route": {
-    letterSpacing: "-0.5px",
     width: "40px",
     ".boldRoute": {
       fontWeight: 900,

@@ -111,7 +111,6 @@ const DialogTitleRoot = styled(DialogTitle)({
         ...companyColor,
         ".route": {
           fontWeight: "900",
-          letterSpacing: "-0.5px",
         },
       },
       ".destSpecial": {

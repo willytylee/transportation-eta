@@ -116,7 +116,6 @@ const RouteListRoot = styled("div")({
       ".route": {
         width: "10%",
         fontWeight: "900",
-        letterSpacing: "-0.5px",
       },
       ".company": {
         ...companyColor,

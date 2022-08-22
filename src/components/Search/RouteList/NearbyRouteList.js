@@ -161,7 +161,6 @@ const NearbyRouteListRoot = styled("div")({
       },
       ".route": {
         fontWeight: "900",
-        letterSpacing: "-0.5px",
         width: "12.5%",
       },
       ".nearStopDest": {
