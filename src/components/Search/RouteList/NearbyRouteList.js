@@ -9,7 +9,11 @@ import {
   getCoPriorityId,
 } from "../../../Utils";
 import { DbContext } from "../../../context/DbContext";
-import { companyColor, companyMap } from "../../../constants/Constants";
+import {
+  companyColor,
+  companyMap,
+  primaryColor,
+} from "../../../constants/Constants";
 import { routeMap } from "../../../constants/Mtr";
 import { Eta } from "./Eta";
 
@@ -155,7 +159,7 @@ const NearbyRouteListRoot = styled("div")({
   padding: "4px",
   flexDirection: "column",
   ".stop": {
-    background: "#2f305c26",
+    backgroundColor: `${primaryColor}26`,
     padding: "4px 10px",
   },
   ".routes": {

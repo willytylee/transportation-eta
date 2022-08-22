@@ -17,6 +17,7 @@ import { useCorrectBound } from "../../hooks/Bound";
 import { EtaContext } from "../../context/EtaContext";
 import { MapDialog } from "../MapDialog/MapDialog";
 import { DbContext } from "../../context/DbContext";
+import { primaryColor } from "../../constants/Constants";
 import { MtrStopEta } from "./MtrStopEta";
 import { StopEta } from "./StopEta";
 
@@ -187,7 +188,7 @@ const StopListRoot = styled("div")({
       backgroundColor: "unset",
     },
     "&.Mui-expanded": {
-      backgroundColor: "#2f305c17",
+      backgroundColor: `${primaryColor}17`,
       padding: "4px 6px 8px",
     },
     "&.highlighted": { backgroundColor: "lightblue" },

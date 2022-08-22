@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { Directions as DirectionsIcon } from "@mui/icons-material";
 import { etaTimeConverter, sortEtaObj } from "../../../Utils";
-import { companyColor } from "../../../constants/Constants";
+import { companyColor, primaryColor } from "../../../constants/Constants";
 
 export const List = ({ sectionData }) => {
   const [expanded, setExpanded] = useState(false);
@@ -109,7 +109,7 @@ const ListView = styled("div")({
       backgroundColor: "unset",
     },
     "&.Mui-expanded": {
-      backgroundColor: "#2f305c17",
+      backgroundColor: `${primaryColor}17`,
       paddingTop: "4px",
       paddingBottom: "4px",
       margin: 0,

@@ -38,3 +38,5 @@ export const companyColor = {
 };
 
 export const coPriority = ["kmb", "nwfb", "ctb", "gmb", "mtr", "nlb"];
+
+export const primaryColor = "#2f305c";
