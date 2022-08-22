@@ -113,3 +113,27 @@ export const parseMtrEtas = (e) =>
     : parseInt(e.ttnt, 10) >= 60
     ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:mm")
     : `${e.ttnt}分鐘`;
+
+export const isMatchRoute = (a, b) =>
+  JSON.stringify(a.bound) === JSON.stringify(b.bound) &&
+  JSON.stringify(a.co) === JSON.stringify(b.co) &&
+  JSON.stringify(a.orig) === JSON.stringify(b.orig) &&
+  JSON.stringify(a.dest) === JSON.stringify(b.dest) &&
+  JSON.stringify(a.route) === JSON.stringify(b.route) &&
+  JSON.stringify(a.seq) === JSON.stringify(b.seq) &&
+  JSON.stringify(a.serviceType) === JSON.stringify(b.serviceType);
+
+export const setRouteListHistory = (routeObj) => {
+  const routeListHistory =
+    JSON.parse(localStorage.getItem("routeListHistory")) || [];
+
+  const isInHistory = routeListHistory.filter((e) => isMatchRoute(e, routeObj));
+
+  if (isInHistory.length === 0) {
+    if (routeListHistory.length >= 20) {
+      routeListHistory.pop();
+    }
+    routeListHistory.unshift(routeObj);
+    localStorage.setItem("routeListHistory", JSON.stringify(routeListHistory));
+  }
+};

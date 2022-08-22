@@ -1,6 +1,12 @@
 import { useContext } from "react";
 import { Card, styled } from "@mui/material";
-import { getCoByStopObj, basicFiltering, sortByCompany } from "../../../Utils";
+import {
+  getCoByStopObj,
+  basicFiltering,
+  sortByCompany,
+  isMatchRoute,
+  setRouteListHistory,
+} from "../../../Utils";
 import { EtaContext } from "../../../context/EtaContext";
 import { companyMap, companyColor } from "../../../constants/Constants";
 import { etaExcluded, routeMap } from "../../../constants/Mtr";
@@ -35,17 +41,8 @@ export const RouteList = ({ route }) => {
   const handleCardOnClick = (i) => {
     const expandRoute = routeList[i];
     updateCurrRoute(expandRoute);
+    setRouteListHistory(expandRoute);
   };
-
-  const isMatchCurrRoute = (a, b) =>
-    // There may have nearestStopId in one of the currRoute
-    JSON.stringify(a.bound) === JSON.stringify(b.bound) &&
-    JSON.stringify(a.co) === JSON.stringify(b.co) &&
-    JSON.stringify(a.orig) === JSON.stringify(b.orig) &&
-    JSON.stringify(a.dest) === JSON.stringify(b.dest) &&
-    JSON.stringify(a.route) === JSON.stringify(b.route) &&
-    JSON.stringify(a.seq) === JSON.stringify(b.seq) &&
-    JSON.stringify(a.serviceType) === JSON.stringify(b.serviceType);
 
   return (
     <RouteListRoot>
@@ -53,8 +50,9 @@ export const RouteList = ({ route }) => {
         <Card key={i} onClick={() => handleCardOnClick(i)}>
           <div
             title={JSON.stringify(e.route) + JSON.stringify(e.bound)}
+            // There may have nearestStopId in one of the currRoute
             className={`routeTitle ${
-              isMatchCurrRoute(currRoute, e) ? "matched" : ""
+              isMatchRoute(currRoute, e) ? "matched" : ""
             }`}
           >
             <div className="company">

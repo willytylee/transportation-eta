@@ -19,7 +19,7 @@
     "no-shadow": "error",
     "react/jsx-boolean-value": "error",
     "prefer-const": "error",
-    "no-unused-vars": "error",
+    "no-unused-vars": "warn",
     "react/no-unescaped-entities": "error",
     "no-unneeded-ternary": "error",
     "import/no-unresolved": "error",

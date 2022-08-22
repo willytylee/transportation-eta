@@ -12,7 +12,7 @@ import { DbContext } from "../../../context/DbContext";
 import { companyColor, companyMap } from "../../../constants/Constants";
 import { Eta } from "./Eta";
 
-export const NearbyRouteList = ({ handleNearbyItemOnClick }) => {
+export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
   const { location: currentLocation } = useContext(AppContext),
     { gRouteList, gStopList, gStopMap } = useContext(DbContext);
 
@@ -76,7 +76,7 @@ export const NearbyRouteList = ({ handleNearbyItemOnClick }) => {
     }
   });
 
-  const autoList = _(routeListNearby)
+  const nearbyRouteList = _(routeListNearby)
     .groupBy((x) => x.nearbyStopId)
     .map((value, key) => ({
       stopId: key,
@@ -86,13 +86,13 @@ export const NearbyRouteList = ({ handleNearbyItemOnClick }) => {
     .sort((a, b) => a.routes[0].distance - b.routes[0].distance);
 
   return (
-    autoList.length > 0 &&
-    autoList.map((e, i) => {
+    nearbyRouteList.length > 0 &&
+    nearbyRouteList.map((e, i) => {
       const stop = gStopList[e.stopId];
       const name = stop.name.zh;
       const { lat, lng } = stop.location;
       return (
-        <AutoDistanceRoot key={i}>
+        <NearbyRouteListRoot key={i}>
           <div className="stop">
             <a
               href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
@@ -106,7 +106,7 @@ export const NearbyRouteList = ({ handleNearbyItemOnClick }) => {
               <div
                 key={j}
                 className="routeItems"
-                onClick={() => handleNearbyItemOnClick(routeObj)}
+                onClick={() => handleRouteListItemOnClick(routeObj)}
               >
                 <div className="company">
                   {getCoByStopObj(routeObj)
@@ -133,13 +133,13 @@ export const NearbyRouteList = ({ handleNearbyItemOnClick }) => {
               </div>
             ))}
           </div>
-        </AutoDistanceRoot>
+        </NearbyRouteListRoot>
       );
     })
   );
 };
 
-const AutoDistanceRoot = styled("div")({
+const NearbyRouteListRoot = styled("div")({
   display: "flex",
   padding: "4px",
   flexDirection: "column",
