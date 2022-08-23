@@ -1,104 +1,118 @@
+import { useState } from "react";
+import {
+  compress as compressJson,
+  decompress as decompressJson,
+} from "lzutf8-light";
 import {
   Dialog,
   List,
   ListItem,
   ListItemText,
-  ListItemIcon,
   styled,
   Grid,
   IconButton,
   DialogTitle,
 } from "@mui/material/";
-import {
-  Close as CloseIcon,
-  DirectionsBus as DirectionsBusIcon,
-  Thermostat as ThermostatIcon,
-  Favorite as FavoriteIcon,
-  Announcement as AnnouncementIcon,
-} from "@mui/icons-material";
-// import { dataSet } from "../../data/DataSet";
+import { Close as CloseIcon } from "@mui/icons-material";
 
 export const BookmarkDialog = ({
   fullWidth,
   bookmarkDialogOpen,
   setBookmarkDialogOpen,
+  bookmarkRouteObj,
 }) => {
-  // const data = dataSet.find((o) => o.userId === userId);
+  const [categoryIdx, setCategoryIdx] = useState(-1);
 
-  const handleListItemOnClick = (e) => {};
+  const transportData = JSON.parse(
+    decompressJson(localStorage.getItem("dataSet"), {
+      inputEncoding: "Base64",
+    })
+  );
+
+  const handleCategoryItemOnClick = (i) => {
+    setCategoryIdx(i);
+  };
+
+  const handleSectionItemOnClick = (i) => {
+    transportData[categoryIdx].data[i].splice(0, 0, bookmarkRouteObj);
+    localStorage.setItem(
+      "dataSet",
+      compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
+    );
+    setCategoryIdx(-1);
+    setBookmarkDialogOpen(false);
+  };
+
+  const handleDialogOnClose = () => {
+    setCategoryIdx(-1);
+    setBookmarkDialogOpen(false);
+  };
 
   return (
     <DialogRoot
-      onClose={() => {
-        setBookmarkDialogOpen(false);
-      }}
+      onClose={handleDialogOnClose}
       open={bookmarkDialogOpen}
       fullWidth={fullWidth}
     >
-      <>
-        <DialogTitle className="dialogTitle">
-          <Grid>
-            <div className="title">預設載入版面</div>
-            <IconButton onClick={() => setBookmarkDialogOpen(false)}>
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-        </DialogTitle>
+      {categoryIdx === -1 && (
+        <>
+          <DialogTitle className="dialogTitle">
+            <Grid>
+              <div className="title">請選擇類別</div>
+              <IconButton onClick={handleDialogOnClose}>
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+          </DialogTitle>
 
-        <List sx={{ pt: 0 }}>
-          <ListItem
-            button
-            onClick={() => {
-              handleListItemOnClick("路線搜尋");
-            }}
-          >
-            <ListItemIcon>
-              <DirectionsBusIcon />
-            </ListItemIcon>
-            <ListItemText primary="路線搜尋" />
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => {
-              handleListItemOnClick("交通消息");
-            }}
-          >
-            <ListItemIcon>
-              <AnnouncementIcon />
-            </ListItemIcon>
-            <ListItemText primary="交通消息" />
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => {
-              handleListItemOnClick("收藏");
-            }}
-          >
-            <ListItemIcon>
-              <FavoriteIcon />
-            </ListItemIcon>
-            <ListItemText primary="收藏" />
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => {
-              handleListItemOnClick("天氣");
-            }}
-          >
-            <ListItemIcon>
-              <ThermostatIcon />
-            </ListItemIcon>
-            <ListItemText primary="天氣" />
-          </ListItem>
-        </List>
-      </>
+          <List sx={{ pt: 0 }}>
+            {transportData.map((e, i) => (
+              <ListItem
+                key={i}
+                button
+                onClick={() => {
+                  handleCategoryItemOnClick(i);
+                }}
+              >
+                <ListItemText primary={e.title} />
+              </ListItem>
+            ))}
+          </List>
+        </>
+      )}
+      {categoryIdx !== -1 && (
+        <>
+          <DialogTitle className="dialogTitle">
+            <Grid>
+              <div className="title">請選擇組合</div>
+              <IconButton onClick={handleDialogOnClose}>
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+          </DialogTitle>
+
+          <List sx={{ pt: 0 }}>
+            {transportData[categoryIdx].data.map((e, i) => (
+              <ListItem
+                key={i}
+                button
+                onClick={() => handleSectionItemOnClick(i)}
+              >
+                <ListItemText
+                  primary={e
+                    .map((f, j) => f.route)
+                    .reduce((a, b) => [a, " + ", b])}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </>
+      )}
     </DialogRoot>
   );
 };
 
-const DialogRoot = styled(Dialog, {
-  shouldForwardProp: (prop) => prop !== "isPinValid",
-})(({ isPinValid }) => ({
+const DialogRoot = styled(Dialog)({
   ".dialogTitle": {
     padding: "0",
     ".MuiGrid-root": {
@@ -115,22 +129,4 @@ const DialogRoot = styled(Dialog, {
   ".MuiList-root": {
     overflow: "auto",
   },
-  ".pincode-input-container": {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "16px",
-
-    ".pincode-input-text": {
-      height: "60px !important",
-      borderColor: isPinValid ? "black !important" : "red !important",
-      fontSize: "24px",
-      borderRadius: "2px",
-    },
-    ".pincode-input-text:focus": {
-      outline: "none",
-      boxShadow: "none",
-      borderColor: "blue !important",
-      borderRadius: "10px",
-    },
-  },
-}));
+});
