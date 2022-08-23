@@ -26,7 +26,7 @@ export const Redirect = () => {
         break;
 
       default:
-        navigate("/search", { replace: true });
+        navigate("/", { replace: true });
         break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
