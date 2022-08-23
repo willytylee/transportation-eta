@@ -1,5 +1,8 @@
 import moment from "moment";
-import { decompress as decompressJson } from "lzutf8-light";
+import {
+  compress as compressJson,
+  decompress as decompressJson,
+} from "lzutf8-light";
 import { coPriority } from "./constants/Constants";
 
 export const etaTimeConverter = (etaStr, remark) => {
@@ -124,8 +127,20 @@ export const isMatchRoute = (a, b) =>
   JSON.stringify(a.serviceType) === JSON.stringify(b.serviceType);
 
 export const setRouteListHistory = (routeObj) => {
-  const routeListHistory =
-    JSON.parse(localStorage.getItem("routeListHistory")) || [];
+  let routeListHistory;
+
+  try {
+    routeListHistory = JSON.parse(
+      decompressJson(localStorage.getItem("routeListHistory") || "W10=", {
+        // "W10=" = compressed []
+        inputEncoding: "Base64",
+      })
+    );
+  } catch (error) {
+    // Reset routeListHistory LocalStorage
+    localStorage.removeItem("routeListHistory");
+    routeListHistory = [];
+  }
 
   const isInHistory = routeListHistory.filter((e) => isMatchRoute(e, routeObj));
 
@@ -134,6 +149,11 @@ export const setRouteListHistory = (routeObj) => {
       routeListHistory.pop();
     }
     routeListHistory.unshift(routeObj);
-    localStorage.setItem("routeListHistory", JSON.stringify(routeListHistory));
+    localStorage.setItem(
+      "routeListHistory",
+      compressJson(JSON.stringify(routeListHistory), {
+        outputEncoding: "Base64",
+      })
+    );
   }
 };
