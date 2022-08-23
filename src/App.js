@@ -16,6 +16,7 @@ import { ChangeLog } from "./pages/Settings/ChangeLog";
 import { Update } from "./pages/Settings/Update";
 import { Compare } from "./pages/Compare";
 import { Personal } from "./pages/Settings/Personal";
+import { Redirect } from "./pages/Redirect";
 
 const App = () => {
   const { initDb, getGeoLocation, initAppVersion } = useContext(AppContext);
@@ -32,7 +33,7 @@ const App = () => {
       <Navbar />
       <Container>
         <Routes>
-          <Route path="/" element={<Search />} />
+          <Route path="/" element={<Redirect />} />
           <Route path="/search" element={<Search />} />
           <Route path="/news" element={<News />} />
           <Route path="/weather" element={<Weather />} />

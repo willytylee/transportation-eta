@@ -8,11 +8,7 @@ export const Bookmark = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  let userId;
-
-  try {
-    userId = JSON.parse(localStorage.getItem("user")).userId;
-  } catch (error) {}
+  const userId = JSON.parse(localStorage.getItem("user"))?.userId || null;
 
   useEffect(() => {
     if (!userId) {

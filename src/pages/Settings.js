@@ -33,12 +33,8 @@ export const Settings = () => {
     setslctUsrDialogOpen(false);
   };
 
-  let username;
-  try {
-    username = JSON.parse(localStorage.getItem("user")).username;
-  } catch (e) {
-    username = "未設定";
-  }
+  const username =
+    JSON.parse(localStorage.getItem("user"))?.username || "未設定";
 
   return (
     <>
