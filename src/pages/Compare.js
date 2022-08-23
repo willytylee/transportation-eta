@@ -1,4 +1,4 @@
-import { Section } from "../components/PersonalEta/Section";
+import { Section } from "../components/Bookmark/Section";
 
 export const Compare = () => {
   const data = [
