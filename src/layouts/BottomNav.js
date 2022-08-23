@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   BottomNavigation,
   BottomNavigationAction,
@@ -20,7 +20,6 @@ import { primaryColor } from "../constants/Constants";
 export const BottomNav = () => {
   const { appVersion, serVersion } = useContext(AppContext);
   const { updateSectionCompareMode } = useContext(EtaContext);
-  const { pathname } = useLocation();
 
   const activeStyle = {
     backgroundColor: `${primaryColor}`,
@@ -31,11 +30,7 @@ export const BottomNav = () => {
     <BottomNavigationRoot showLabels>
       <BottomNavigationAction
         component={NavLink}
-        style={({ isActive }) =>
-          isActive || ["/", "/search"].includes(pathname)
-            ? activeStyle
-            : undefined
-        }
+        style={({ isActive }) => (isActive ? activeStyle : undefined)}
         to="/search"
         label="路線搜尋"
         icon={<DirectionsBusIcon />}
@@ -57,7 +52,6 @@ export const BottomNav = () => {
           updateSectionCompareMode(false);
         }}
       />
-      {/* )} */}
       <BottomNavigationAction
         component={NavLink}
         style={({ isActive }) => (isActive ? activeStyle : undefined)}

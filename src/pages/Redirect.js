@@ -5,8 +5,9 @@ export const Redirect = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const defaultScreen =
-      JSON.parse(localStorage.getItem("settings"))?.defaultScreen || "路線搜尋";
+    const defaultScreen = JSON.parse(
+      localStorage.getItem("settings")
+    )?.defaultScreen;
 
     switch (defaultScreen) {
       case "路線搜尋":
@@ -26,7 +27,7 @@ export const Redirect = () => {
         break;
 
       default:
-        navigate("/", { replace: true });
+        navigate("/search", { replace: true });
         break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
