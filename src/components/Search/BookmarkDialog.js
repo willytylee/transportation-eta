@@ -24,7 +24,7 @@ export const BookmarkDialog = ({
   const [categoryIdx, setCategoryIdx] = useState(-1);
 
   const transportData = JSON.parse(
-    decompressJson(localStorage.getItem("dataSet"), {
+    decompressJson(localStorage.getItem("bookmark"), {
       inputEncoding: "Base64",
     })
   );
@@ -36,7 +36,7 @@ export const BookmarkDialog = ({
   const handleSectionItemOnClick = (i) => {
     transportData[categoryIdx].data[i].splice(0, 0, bookmarkRouteObj);
     localStorage.setItem(
-      "dataSet",
+      "bookmark",
       compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
     );
     setCategoryIdx(-1);

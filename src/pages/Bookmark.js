@@ -1,4 +1,8 @@
 import { useEffect } from "react";
+import {
+  compress as compressJson,
+  decompress as decompressJson,
+} from "lzutf8-light";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { styled } from "@mui/material";
@@ -11,7 +15,24 @@ export const Bookmark = () => {
 
   const userId = JSON.parse(localStorage.getItem("user"))?.userId || null;
   const data = dataSet.find((o) => o.userId === userId);
-  localStorage.setItem("dataSet", JSON.stringify(data.transportData));
+
+  let newTransportData;
+
+  if (localStorage.getItem("bookmark")) {
+    newTransportData = JSON.parse(
+      decompressJson(localStorage.getItem("bookmark"), {
+        inputEncoding: "Base64",
+      })
+    );
+  } else {
+    localStorage.setItem(
+      "bookmark",
+      compressJson(JSON.stringify(data.transportData), {
+        outputEncoding: "Base64",
+      })
+    );
+    newTransportData = data.transportData;
+  }
 
   useEffect(() => {
     if (!userId) {
@@ -25,7 +46,7 @@ export const Bookmark = () => {
 
   return (
     <BookmarkRoot>
-      {data?.transportData?.map((e, i) => (
+      {newTransportData.map((e, i) => (
         <Section key={i} category={e} />
       ))}
     </BookmarkRoot>
