@@ -18,7 +18,7 @@ export const RouteList = () => {
 
   const routeList =
     gRouteList &&
-    (route === "MTR"
+    (route === "M" || route === "MT" || route === "MTR"
       ? Object.keys(gRouteList)
           .map((e) => gRouteList[e])
           .filter((e) => e.co.includes("mtr"))

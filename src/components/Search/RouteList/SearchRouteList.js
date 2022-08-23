@@ -22,11 +22,25 @@ export const SearchRouteList = ({ handleRouteListItemOnClick }) => {
 
   const routeList =
     gRouteList &&
-    Object.keys(gRouteList)
-      .map((e) => gRouteList[e])
-      .filter((e) => basicFiltering(e))
-      .filter((e) => route && route === e.route.substring(0, route.length))
-      .sort((a, b) => sortByRouteThenCo(a, b));
+    (route === "M" || route === "MT" || route === "MTR"
+      ? Object.keys(gRouteList)
+          .map((e) => gRouteList[e])
+          .filter((e) => e.co.includes("mtr"))
+          .filter(
+            // Combine same route
+            (e, idx, self) =>
+              idx ===
+              self.findIndex((t) => {
+                const eStop = JSON.stringify([...e.stops.mtr].sort());
+                const tStop = JSON.stringify([...t.stops.mtr].sort());
+                return eStop === tStop;
+              })
+          )
+      : Object.keys(gRouteList)
+          .map((e) => gRouteList[e])
+          .filter((e) => basicFiltering(e))
+          .filter((e) => route && route === e.route.substring(0, route.length))
+          .sort((a, b) => sortByRouteThenCo(a, b)));
 
   return routeList?.length > 0 ? (
     <SimpleRouteList
