@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { styled } from "@mui/material";
-import { Section } from "../components/Bookmark/Section";
+import { Section } from "../components/Bookmark/Category";
 import { dataSet } from "../data/DataSet";
 
 export const Bookmark = () => {

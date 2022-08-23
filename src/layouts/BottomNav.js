@@ -14,12 +14,10 @@ import {
   Announcement as AnnouncementIcon,
 } from "@mui/icons-material";
 import { AppContext } from "../context/AppContext";
-import { EtaContext } from "../context/EtaContext";
 import { primaryColor } from "../constants/Constants";
 
 export const BottomNav = () => {
   const { appVersion, serVersion } = useContext(AppContext);
-  const { updateSectionCompareMode } = useContext(EtaContext);
 
   const activeStyle = {
     backgroundColor: `${primaryColor}`,
@@ -48,9 +46,6 @@ export const BottomNav = () => {
         style={({ isActive }) => (isActive ? activeStyle : undefined)}
         label="收藏"
         icon={<FavoriteIcon />}
-        onClick={() => {
-          updateSectionCompareMode(false);
-        }}
       />
       <BottomNavigationAction
         component={NavLink}

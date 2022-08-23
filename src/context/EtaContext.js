@@ -6,7 +6,6 @@ export const EtaProvider = ({ children }) => {
   const [currRoute, setCurrRoute] = useState({});
   const [route, setRoute] = useState("");
   const [nearestStopId, setNearestStopId] = useState("");
-  const [sectionCompareMode, setSectionCompareMode] = useState(false);
   const [mapLocation, setMapLocation] = useState(undefined);
   const [mapStopIdx, setMapStopIdx] = useState(-1);
 
@@ -21,10 +20,6 @@ export const EtaProvider = ({ children }) => {
 
   const updateNearestStopId = useCallback((stopId) => {
     setNearestStopId(stopId);
-  }, []);
-
-  const updateSectionCompareMode = useCallback((mode) => {
-    setSectionCompareMode(mode);
   }, []);
 
   const updateMapLocation = useCallback((location) => {
@@ -46,8 +41,6 @@ export const EtaProvider = ({ children }) => {
       updateCurrRoute,
       nearestStopId,
       updateNearestStopId,
-      sectionCompareMode,
-      updateSectionCompareMode,
       mapLocation,
       updateMapLocation,
       mapStopIdx,
@@ -60,8 +53,6 @@ export const EtaProvider = ({ children }) => {
       updateCurrRoute,
       nearestStopId,
       updateNearestStopId,
-      sectionCompareMode,
-      updateSectionCompareMode,
       mapLocation,
       updateMapLocation,
       mapStopIdx,

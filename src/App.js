@@ -14,7 +14,6 @@ import { Install } from "./pages/Settings/Install";
 import { News } from "./pages/News";
 import { ChangeLog } from "./pages/Settings/ChangeLog";
 import { Update } from "./pages/Settings/Update";
-import { Compare } from "./pages/Compare";
 import { Personal } from "./pages/Settings/Personal";
 import { Redirect } from "./pages/Redirect";
 
@@ -44,7 +43,6 @@ const App = () => {
           <Route path="/settings/about/changeLog" element={<ChangeLog />} />
           <Route path="/settings/install" element={<Install />} />
           <Route path="/settings/update" element={<Update />} />
-          <Route path="/compare" element={<Compare />} />
         </Routes>
       </Container>
       <BottomNav />
