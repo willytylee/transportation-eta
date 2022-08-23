@@ -21,11 +21,13 @@ import { DbContext } from "../../context/DbContext";
 import { primaryColor } from "../../constants/Constants";
 import { MtrStopEta } from "./MtrStopEta";
 import { StopEta } from "./StopEta";
+import { BookmarkDialog } from "./BookmarkDialog";
 
 export const StopList = () => {
   const [stopList, setStopList] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
+  const [bookmarkDialogOpen, setBookmarkDialogOpen] = useState(false);
   const { location: currentLocation } = useContext(AppContext);
   const { gStopList } = useContext(DbContext);
   const {
@@ -53,7 +55,8 @@ export const StopList = () => {
   };
 
   const handleFavIconOnClick = (routeObj) => {
-    console.log(routeObj);
+    setBookmarkDialogOpen(true);
+    // console.log(routeObj);
   };
 
   const handleChange = (panel) => (e, isExpanded) => {
@@ -119,81 +122,88 @@ export const StopList = () => {
   }, [stopList]);
 
   return (
-    <StopListRoot>
-      {Object.keys(currRoute).length !== 0 &&
-        stopList?.map((e, i) => {
-          const isNearestStop = gStopList[nearestStopId]?.name === e.name;
-          const {
-            location: { lat, lng },
-          } = e;
-          return (
-            <Accordion
-              expanded={expanded === `panel${i}`}
-              onChange={handleChange(`panel${i}`)}
-              key={i}
-              className={isNearestStop ? "highlighted" : ""}
-              ref={isNearestStop ? stopListRef : null}
-            >
-              <AccordionSummary className="accordionSummary">
-                {currRoute.co[0] === "mtr" ? (
-                  <MtrStopEta
-                    seq={i + 1}
-                    routeObj={currRoute}
-                    stopObj={e}
-                    MtrStopEtaRoot={MtrStopEtaRoot}
-                  />
-                ) : (
-                  <StopEta
-                    seq={i + 1}
-                    routeObj={currRoute}
-                    stopObj={e}
-                    bound={correctBound}
-                    isBoundLoading={isBoundLoading}
-                    StopEtaRoot={StopEtaRoot}
-                  />
-                )}
-              </AccordionSummary>
-              <AccordionDetails>
-                <IconButton
-                  className="directionIconBtn"
-                  component="a"
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
-                  target="_blank"
-                >
-                  <DirectionsIcon />
-                </IconButton>
-                <IconButton
-                  onClick={() =>
-                    handleMapIconOnClick({
-                      mapLocation: { lat, lng },
-                      mapStopIdx: i,
-                    })
-                  }
-                >
-                  <MapIcon />
-                </IconButton>
-                <IconButton
-                  onClick={() =>
-                    handleFavIconOnClick({
-                      seq: i + 1,
-                      co: currRoute.co[0],
-                      route: currRoute.route,
-                      stopId: e.stopId,
-                    })
-                  }
-                >
-                  <FavoriteIcon />
-                </IconButton>
-              </AccordionDetails>
-            </Accordion>
-          );
-        })}
-      <MapDialog
+    <>
+      <StopListRoot>
+        {Object.keys(currRoute).length !== 0 &&
+          stopList?.map((e, i) => {
+            const isNearestStop = gStopList[nearestStopId]?.name === e.name;
+            const {
+              location: { lat, lng },
+            } = e;
+            return (
+              <Accordion
+                expanded={expanded === `panel${i}`}
+                onChange={handleChange(`panel${i}`)}
+                key={i}
+                className={isNearestStop ? "highlighted" : ""}
+                ref={isNearestStop ? stopListRef : null}
+              >
+                <AccordionSummary className="accordionSummary">
+                  {currRoute.co[0] === "mtr" ? (
+                    <MtrStopEta
+                      seq={i + 1}
+                      routeObj={currRoute}
+                      stopObj={e}
+                      MtrStopEtaRoot={MtrStopEtaRoot}
+                    />
+                  ) : (
+                    <StopEta
+                      seq={i + 1}
+                      routeObj={currRoute}
+                      stopObj={e}
+                      bound={correctBound}
+                      isBoundLoading={isBoundLoading}
+                      StopEtaRoot={StopEtaRoot}
+                    />
+                  )}
+                </AccordionSummary>
+                <AccordionDetails>
+                  <IconButton
+                    className="directionIconBtn"
+                    component="a"
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
+                    target="_blank"
+                  >
+                    <DirectionsIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() =>
+                      handleMapIconOnClick({
+                        mapLocation: { lat, lng },
+                        mapStopIdx: i,
+                      })
+                    }
+                  >
+                    <MapIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() =>
+                      handleFavIconOnClick({
+                        seq: i + 1,
+                        co: currRoute.co[0],
+                        route: currRoute.route,
+                        stopId: e.stopId,
+                      })
+                    }
+                  >
+                    <FavoriteIcon />
+                  </IconButton>
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
+        <MapDialog
+          fullWidth
+          mapDialogOpen={mapDialogOpen}
+          handleMapDialogOnClose={handleMapDialogOnClose}
+        />
+      </StopListRoot>
+      <BookmarkDialog
         fullWidth
-        mapDialogOpen={mapDialogOpen}
-        handleMapDialogOnClose={handleMapDialogOnClose}
+        bookmarkDialogOpen={bookmarkDialogOpen}
+        setBookmarkDialogOpen={setBookmarkDialogOpen}
       />
-    </StopListRoot>
+    </>
   );
 };
 
