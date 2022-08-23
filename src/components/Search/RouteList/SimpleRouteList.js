@@ -3,7 +3,7 @@ import { styled } from "@mui/material";
 import { getCoByStopObj } from "../../../Utils";
 import { companyColor, companyMap } from "../../../constants/Constants";
 import { EtaContext } from "../../../context/EtaContext";
-import { routeMap } from "../../../constants/Mtr";
+import { etaExcluded, routeMap } from "../../../constants/Mtr";
 
 export const SimpleRouteList = ({
   mode,
@@ -13,7 +13,11 @@ export const SimpleRouteList = ({
   const { route } = useContext(EtaContext);
 
   return routeList?.map((e, i) => (
-    <SearchRouteListRoot onClick={() => handleRouteListItemOnClick(e)} key={i}>
+    <SearchRouteListRoot
+      onClick={() => handleRouteListItemOnClick(e)}
+      key={i}
+      className={`${route === e.route && mode === "search" && "match"}`}
+    >
       <div className="route">
         {mode === "search" ? (
           <>
@@ -40,13 +44,21 @@ export const SimpleRouteList = ({
             .reduce((a, b) => [a, " + ", b])}
         </div>
         <div className="origDest">
-          <div>
-            {e.orig.zh} → <span className="dest">{e.dest.zh}</span>
-            <span className="special">
-              {" "}
-              {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
-            </span>
-          </div>
+          {e.orig.zh}{" "}
+          {e.co[0] === "mtr" ? (
+            <> ←→ {e.dest.zh}</>
+          ) : (
+            <>
+              → <span className="dest">{e.dest.zh}</span>
+            </>
+          )}
+          <span className="special">
+            {" "}
+            {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
+            {etaExcluded.includes(e.route) && (
+              <span className="star">沒有相關班次資料</span>
+            )}
+          </span>
         </div>
       </div>
     </SearchRouteListRoot>
@@ -58,6 +70,9 @@ const SearchRouteListRoot = styled("div")({
   alignItems: "center",
   padding: "4px 10px",
   borderBottom: "1px solid lightgrey",
+  "&.match": {
+    background: "#ffffe5",
+  },
   ".route": {
     width: "40px",
     ".boldRoute": {

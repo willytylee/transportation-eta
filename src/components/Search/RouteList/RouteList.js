@@ -106,7 +106,7 @@ const RouteListRoot = styled("div")({
       float: "left",
       width: "100%",
       "&.matched": {
-        backgroundColor: "lightyellow",
+        backgroundColor: "#ffffe5",
       },
       ".route": {
         width: "10%",
