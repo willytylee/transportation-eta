@@ -30,6 +30,4 @@ export const Redirect = () => {
         break;
     }
   }, []);
-
-  return null;
 };
