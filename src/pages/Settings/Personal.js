@@ -38,7 +38,7 @@ export const Personal = () => {
                 <PhoneIphoneIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="預設版面" secondary={defaultScreen} />
+            <ListItemText primary="預設載入版面" secondary={defaultScreen} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

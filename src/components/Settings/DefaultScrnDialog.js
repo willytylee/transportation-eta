@@ -40,7 +40,7 @@ export const DefaultScrnDialog = ({
       <>
         <DialogTitle className="dialogTitle">
           <Grid>
-            <div className="title">預設版面:</div>
+            <div className="title">預設載入版面</div>
             <IconButton onClick={() => setDefaultScrnDialogOpen(false)}>
               <CloseIcon />
             </IconButton>

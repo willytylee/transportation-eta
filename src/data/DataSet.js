@@ -133,6 +133,12 @@ export const dataSet = [
               route: "796P",
               stopId: "003365",
             },
+            {
+              seq: 15,
+              co: "nwfb",
+              route: "795X",
+              stopId: "003365",
+            },
           ],
           [
             {
@@ -151,6 +157,12 @@ export const dataSet = [
               seq: 10,
               co: "nwfb",
               route: "796P",
+              stopId: "001412",
+            },
+            {
+              seq: 14,
+              co: "nwfb",
+              route: "795X",
               stopId: "001412",
             },
           ],
