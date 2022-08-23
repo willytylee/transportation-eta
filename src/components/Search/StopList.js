@@ -9,6 +9,7 @@ import {
 import {
   Directions as DirectionsIcon,
   Map as MapIcon,
+  Favorite as FavoriteIcon,
 } from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
 import { getCoPriorityId } from "../../Utils";
@@ -49,6 +50,10 @@ export const StopList = () => {
     setMapDialogOpen(true);
     updateMapLocation(mapLocation);
     updateMapStopIdx(mapStopIdx);
+  };
+
+  const handleFavIconOnClick = (routeObj) => {
+    console.log(routeObj);
   };
 
   const handleChange = (panel) => (e, isExpanded) => {
@@ -158,7 +163,6 @@ export const StopList = () => {
                   <DirectionsIcon />
                 </IconButton>
                 <IconButton
-                  className="mapIconBtn"
                   onClick={() =>
                     handleMapIconOnClick({
                       mapLocation: { lat, lng },
@@ -167,6 +171,18 @@ export const StopList = () => {
                   }
                 >
                   <MapIcon />
+                </IconButton>
+                <IconButton
+                  onClick={() =>
+                    handleFavIconOnClick({
+                      seq: i + 1,
+                      co: currRoute.co[0],
+                      route: currRoute.route,
+                      stopId: e.stopId,
+                    })
+                  }
+                >
+                  <FavoriteIcon />
                 </IconButton>
               </AccordionDetails>
             </Accordion>
