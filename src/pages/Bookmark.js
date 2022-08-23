@@ -11,6 +11,7 @@ export const Bookmark = () => {
 
   const userId = JSON.parse(localStorage.getItem("user"))?.userId || null;
   const data = dataSet.find((o) => o.userId === userId);
+  localStorage.setItem("dataSet", JSON.stringify(data.transportData));
 
   useEffect(() => {
     if (!userId) {
