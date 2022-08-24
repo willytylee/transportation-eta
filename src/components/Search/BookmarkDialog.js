@@ -16,8 +16,10 @@ import {
   Close as CloseIcon,
   Add as AddIcon,
   KeyboardReturn as KeyboardReturnIcon,
+  ArrowBackIos as ArrowBackIosNewIcon,
 } from "@mui/icons-material";
 import { getLocalStorage } from "../../Utils";
+import { companyColor } from "../../constants/Constants";
 
 export const BookmarkDialog = ({
   fullWidth,
@@ -46,6 +48,10 @@ export const BookmarkDialog = ({
 
   const handleCategoryAddBtnOnClick = () => {
     setBookmarkDialogMode("categoryAdd");
+  };
+
+  const handleCategoryAddBackBtnOnClick = () => {
+    setBookmarkDialogMode("category");
   };
 
   const handleCategoryAddKeyPress = (e) => {
@@ -99,6 +105,10 @@ export const BookmarkDialog = ({
     setBookmarkDialogMode(null);
   };
 
+  const handleSectionBackBtnOnClick = () => {
+    setBookmarkDialogMode("category");
+  };
+
   return (
     <DialogRoot
       onClose={handleDialogCloseBtnOnClick}
@@ -107,10 +117,10 @@ export const BookmarkDialog = ({
     >
       {bookmarkDialogMode === "category" && (
         <CategoryRoot>
-          <DialogTitle className="dialogTitle">
+          <DialogTitle>
             <Grid>
               <div className="title">請選擇類別</div>
-              <div className="btnGroup">
+              <div className="rightBtnGroup">
                 <IconButton onClick={handleCategoryAddBtnOnClick}>
                   <AddIcon />
                 </IconButton>
@@ -120,40 +130,60 @@ export const BookmarkDialog = ({
               </div>
             </Grid>
           </DialogTitle>
-          <List sx={{ pt: 0 }}>
-            {transportData.map((e, i) => (
-              <div key={i}>
-                <ListItem
-                  button
-                  onClick={() => {
-                    handleCategoryItemOnClick(i);
-                  }}
-                >
-                  <ListItemText
-                    primary={e.title}
-                    secondary={e.data.map((f, j) => (
-                      <span key={j}>
-                        {f.map((g, k) => g.route).join(", ")}
-                        <br />
-                      </span>
-                    ))}
-                  />
-                </ListItem>
-                {i !== transportData.length - 1 ? <Divider /> : null}
-              </div>
-            ))}
-          </List>
-          {/* TODO: 未有類別 */}
+          {transportData.length > 0 ? (
+            <List sx={{ pt: 0 }}>
+              {transportData.map((e, i) => (
+                <div key={i}>
+                  <ListItem
+                    button
+                    onClick={() => {
+                      handleCategoryItemOnClick(i);
+                    }}
+                  >
+                    <ListItemText
+                      primary={e.title}
+                      secondary={e.data.map((f, j) => (
+                        <span key={j}>
+                          {f
+                            .map((g, k) => (
+                              <span key={k} className={g.co}>
+                                {g.route}
+                              </span>
+                            ))
+                            .reduce((a, b) => [a, " + ", b])}
+                          <br />
+                        </span>
+                      ))}
+                    />
+                  </ListItem>
+                  {i !== transportData.length - 1 ? <Divider /> : null}
+                </div>
+              ))}
+            </List>
+          ) : (
+            <List sx={{ pt: 0 }}>
+              <ListItem button onClick={handleCategoryAddBtnOnClick}>
+                <div className="emptyMsg">未有類別, 按此新增類別</div>
+              </ListItem>
+            </List>
+          )}
         </CategoryRoot>
       )}
       {bookmarkDialogMode === "categoryAdd" && (
         <CategoryAddRoot>
-          <DialogTitle className="dialogTitle">
+          <DialogTitle>
             <Grid>
+              <div className="leftBtnGroup">
+                <IconButton onClick={handleCategoryAddBackBtnOnClick}>
+                  <ArrowBackIosNewIcon />
+                </IconButton>
+              </div>
               <div className="title">請輸入類別名稱</div>
-              <IconButton onClick={handleDialogCloseBtnOnClick}>
-                <CloseIcon />
-              </IconButton>
+              <div className="rightBtnGroup">
+                <IconButton onClick={handleDialogCloseBtnOnClick}>
+                  <CloseIcon />
+                </IconButton>
+              </div>
             </Grid>
           </DialogTitle>
 
@@ -173,10 +203,15 @@ export const BookmarkDialog = ({
       )}
       {bookmarkDialogMode === "section" && (
         <SectionRoot>
-          <DialogTitle className="dialogTitle">
+          <DialogTitle>
             <Grid>
+              <div className="leftBtnGroup">
+                <IconButton onClick={handleSectionBackBtnOnClick}>
+                  <ArrowBackIosNewIcon />
+                </IconButton>
+              </div>
               <div className="title">請選擇組合</div>
-              <div className="btnGroup">
+              <div className="rightBtnGroup">
                 <IconButton onClick={handleSectionAddBtnOnClick}>
                   <AddIcon />
                 </IconButton>
@@ -193,7 +228,15 @@ export const BookmarkDialog = ({
                   <ListItem button onClick={() => handleSectionItemOnClick(i)}>
                     <ListItemText
                       primary={
-                        <li>{`${e.map((f, j) => f.route).join(" + ")}`}</li>
+                        <li>
+                          {e
+                            .map((f, j) => (
+                              <span key={j} className={f.co}>
+                                {f.route}
+                              </span>
+                            ))
+                            .reduce((a, b) => [a, " + ", b])}
+                        </li>
                       }
                     />
                   </ListItem>
@@ -217,31 +260,20 @@ export const BookmarkDialog = ({
 };
 
 const DialogRoot = styled(Dialog)({
-  ".dialogTitle": {
-    padding: "0",
-    ".MuiGrid-root": {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      ".title": {
-        padding: "16px",
-        fontWeight: "900",
-        fontSize: "18px",
-      },
-    },
-  },
   ".MuiList-root": {
     overflow: "auto",
   },
 });
 
 const CategoryRoot = styled("div")({
-  ".MuiListItem-root": {
-    paddingTop: "0 !important",
-    paddingBottom: "0 !important",
-    ".MuiListItemText-secondary": {
-      paddingLeft: "8px",
-    },
+  ".emptyMsg": {
+    fontSize: "15px",
+    textAlign: "center",
+    padding: "20px 0",
+  },
+  ".MuiListItemText-secondary": {
+    paddingLeft: "8px",
+    ...companyColor,
   },
 });
 
@@ -256,9 +288,12 @@ const CategoryAddRoot = styled("div")({
 });
 
 const SectionRoot = styled("div")({
-  ".emptyMsg": {
-    fontSize: "15px",
-    textAlign: "center",
-    padding: "20px 0",
+  ".MuiListItemText-primary": {
+    ...companyColor,
+    ".emptyMsg": {
+      fontSize: "15px",
+      textAlign: "center",
+      padding: "20px 0",
+    },
   },
 });

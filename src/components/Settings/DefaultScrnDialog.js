@@ -38,12 +38,14 @@ export const DefaultScrnDialog = ({
       fullWidth={fullWidth}
     >
       <>
-        <DialogTitle className="dialogTitle">
+        <DialogTitle>
           <Grid>
             <div className="title">預設載入版面</div>
-            <IconButton onClick={() => setDefaultScrnDialogOpen(false)}>
-              <CloseIcon />
-            </IconButton>
+            <div className="rightBtnGroup">
+              <IconButton onClick={() => setDefaultScrnDialogOpen(false)}>
+                <CloseIcon />
+              </IconButton>
+            </div>
           </Grid>
         </DialogTitle>
 
@@ -98,41 +100,8 @@ export const DefaultScrnDialog = ({
   );
 };
 
-const DialogRoot = styled(Dialog, {
-  shouldForwardProp: (prop) => prop !== "isPinValid",
-})(({ isPinValid }) => ({
-  ".dialogTitle": {
-    padding: "0",
-    ".MuiGrid-root": {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      ".title": {
-        padding: "16px",
-        fontWeight: "900",
-        fontSize: "18px",
-      },
-    },
-  },
+const DialogRoot = styled(Dialog)({
   ".MuiList-root": {
     overflow: "auto",
   },
-  ".pincode-input-container": {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "16px",
-
-    ".pincode-input-text": {
-      height: "60px !important",
-      borderColor: isPinValid ? "black !important" : "red !important",
-      fontSize: "24px",
-      borderRadius: "2px",
-    },
-    ".pincode-input-text:focus": {
-      outline: "none",
-      boxShadow: "none",
-      borderColor: "blue !important",
-      borderRadius: "10px",
-    },
-  },
-}));
+});

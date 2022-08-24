@@ -36,11 +36,33 @@ a {
   bottom: 60px !important;
 }
 
-.MuiDialogTitle-root{
+.MuiDialogTitle-root {
   background: #2f305c;
-  color: white
+  color: white;
+  padding: 0 !important;
 }
 
-.MuiDialogTitle-root button{
-  color: white
+.MuiDialogTitle-root .MuiGrid-root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.MuiDialogTitle-root .MuiGrid-root .leftBtnGroup {
+  position: absolute;
+  left: 10px;
+}
+
+.MuiDialogTitle-root .MuiGrid-root .rightBtnGroup {
+  position: absolute;
+  right: 10px;
+}
+
+.MuiDialogTitle-root .MuiGrid-root .title {
+  padding: 16px;
+  font-size: 18px;
+}
+
+.MuiDialogTitle-root button {
+  color: white;
 }

@@ -46,7 +46,11 @@ export const Bookmark = () => {
           </p>
           <p>
             新用戶, 請
-            <a href="https://wa.me/+85267914731" target="_blank" rel="noreferrer">
+            <a
+              href="https://wa.me/+85267914731"
+              target="_blank"
+              rel="noreferrer"
+            >
               聯絡管理員
             </a>
             。

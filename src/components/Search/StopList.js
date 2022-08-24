@@ -189,7 +189,6 @@ export const StopList = () => {
                               route: currRoute.route,
                               stopId: e.stopId,
                               gtfsId: currRoute.gtfsId,
-                              serviceType: currRoute.serviceType,
                             });
                           } else {
                             handleFavIconOnClick({
@@ -197,7 +196,6 @@ export const StopList = () => {
                               co: currRoute.co[0],
                               route: currRoute.route,
                               stopId: e.stopId,
-                              serviceType: currRoute.serviceType,
                             });
                           }
                         }}

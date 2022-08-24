@@ -16,7 +16,7 @@ export const Buses = ({ section }) => {
       const allPromises = [];
 
       for (let i = 0; i < section.length; i += 1) {
-        const { co, route, stopId, serviceType, seq, gtfsId } = section[i];
+        const { co, route, stopId, seq, gtfsId } = section[i];
 
         // Required field: route, company, seq and stopID
         const routeObj = Object.keys(gRouteList)
@@ -25,8 +25,6 @@ export const Buses = ({ section }) => {
             (e) =>
               (route ? e.route === route : true) && // For bus
               (gtfsId ? e.gtfsId === gtfsId : true) && // For Gmb
-              parseInt(e.serviceType, 10) ===
-                (serviceType ? parseInt(serviceType, 10) : 1) &&
               // Default 1
               e.co.includes(co) &&
               e.stops[co][seq - 1] === stopId

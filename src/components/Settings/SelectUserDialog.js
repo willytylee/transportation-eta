@@ -66,12 +66,14 @@ export const SelectUserDialog = ({
     >
       {Object.keys(selectedUser).length === 0 ? (
         <>
-          <DialogTitle className="dialogTitle">
+          <DialogTitle>
             <Grid>
-              <div className="title">請選擇用戶:</div>
-              <IconButton onClick={handleDialogOnClose}>
-                <CloseIcon />
-              </IconButton>
+              <div className="title">請選擇用戶</div>
+              <div className="rightBtnGroup">
+                <IconButton onClick={handleDialogOnClose}>
+                  <CloseIcon />
+                </IconButton>
+              </div>
             </Grid>
           </DialogTitle>
 
@@ -93,12 +95,14 @@ export const SelectUserDialog = ({
         </>
       ) : (
         <>
-          <DialogTitle className="dialogTitle">
+          <DialogTitle>
             <Grid>
-              <div className="title">請輸入Pin碼:</div>
-              <IconButton onClick={handleDialogOnClose}>
-                <CloseIcon />
-              </IconButton>
+              <div className="title">請輸入Pin碼</div>
+              <div className="rightBtnGroup">
+                <IconButton onClick={handleDialogOnClose}>
+                  <CloseIcon />
+                </IconButton>
+              </div>
             </Grid>
           </DialogTitle>
 
@@ -123,19 +127,6 @@ export const SelectUserDialog = ({
 const DialogRoot = styled(Dialog, {
   shouldForwardProp: (prop) => prop !== "isPinValid",
 })(({ isPinValid }) => ({
-  ".dialogTitle": {
-    padding: "0",
-    ".MuiGrid-root": {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      ".title": {
-        padding: "16px",
-        fontWeight: "900",
-        fontSize: "18px",
-      },
-    },
-  },
   ".MuiList-root": {
     overflow: "auto",
   },
