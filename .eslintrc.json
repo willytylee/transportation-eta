@@ -1,6 +1,7 @@
 {
   "extends": ["react-app", "react-app/jest"],
   "rules": {
+    "react-hooks/exhaustive-deps": "off",
     "no-console": "error",
     "global-require": "error",
     "arrow-body-style": "error",
