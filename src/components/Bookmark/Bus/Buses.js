@@ -10,9 +10,9 @@ export const Buses = ({ section }) => {
   const { gStopList, gRouteList } = useContext(DbContext);
   const [sectionData, setSectionData] = useState([]);
 
-  const bookmarkDisplay = JSON.parse(
-    localStorage.getItem("settings")
-  )?.bookmarkDisplay;
+  const bookmarkDisplay =
+    JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay ||
+    "所有路線班次排序";
 
   let viewInit;
 
