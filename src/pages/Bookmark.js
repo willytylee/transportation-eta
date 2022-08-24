@@ -25,7 +25,7 @@ export const Bookmark = () => {
       );
       setNewTransportData(data.transportData);
     }
-  }, [bookmark, userId]);
+  }, [bookmark, userId, data.transportData]);
 
   return (
     <BookmarkRoot>
