@@ -13,6 +13,7 @@ import {
   Thermostat as ThermostatIcon,
   Favorite as FavoriteIcon,
   Announcement as AnnouncementIcon,
+  AccessTime as AccessTimeIcon,
   DepartureBoard as DepartureBoardIcon,
   TableView as TableViewIcon,
   Filter1 as Filter1Icon,
@@ -24,7 +25,6 @@ import {
   Filter7 as Filter7Icon,
   Filter8 as Filter8Icon,
   Filter9 as Filter9Icon,
-  Filter9Plus as Filter9PlusIcon,
 } from "@mui/icons-material";
 import { SimpleSettingDialog } from "../../components/Settings/SimpleSettingDialog";
 
@@ -38,9 +38,9 @@ export const Personal = () => {
     JSON.parse(localStorage.getItem("settings"))?.defaultScreen || "路線搜尋";
   const bookmarkDisplay =
     JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay ||
-    "簡短路線到站時間排序";
+    "所有路線到站時間排序";
   const etaRouteNum =
-    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "顯示全部";
+    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "3個";
 
   const defaultScreenOptions = [
     { name: "路線搜尋", icon: <DirectionsBusIcon /> },
@@ -50,7 +50,8 @@ export const Personal = () => {
   ];
 
   const bookmarkDisplayOptions = [
-    { name: "簡短路線到站時間排序", icon: <DepartureBoardIcon /> },
+    { name: "簡短路線到站時間排序", icon: <AccessTimeIcon /> },
+    { name: "所有路線到站時間排序", icon: <DepartureBoardIcon /> },
     { name: "所有路線班次", icon: <TableViewIcon /> },
   ];
 
@@ -64,7 +65,6 @@ export const Personal = () => {
     { name: "7個", icon: <Filter7Icon /> },
     { name: "8個", icon: <Filter8Icon /> },
     { name: "9個", icon: <Filter9Icon /> },
-    { name: "顯示全部", icon: <Filter9PlusIcon /> },
   ];
 
   const handleDefaltScreenItemOnClick = () => {
@@ -121,8 +121,12 @@ export const Personal = () => {
             <ListItemText primary="預設顯示模式" secondary={bookmarkDisplay} />
           </ListItemButton>
         </ListItem>
+
         <ListItem disablePadding>
-          <ListItemButton onClick={handleEtaRouteNumItemOnClick}>
+          <ListItemButton
+            onClick={handleEtaRouteNumItemOnClick}
+            disabled={bookmarkDisplay === "所有路線到站時間排序"}
+          >
             <ListItemAvatar>
               <Avatar>
                 {
@@ -133,7 +137,11 @@ export const Personal = () => {
             </ListItemAvatar>
             <ListItemText
               primary="簡短到站時間路線顯示數目"
-              secondary={etaRouteNum}
+              secondary={
+                bookmarkDisplay === "所有路線到站時間排序"
+                  ? "不適用"
+                  : etaRouteNum
+              }
             />
           </ListItemButton>
         </ListItem>

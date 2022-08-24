@@ -58,9 +58,9 @@ export const List = ({ sectionData, longList }) => {
   });
 
   const etaRouteNum =
-    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "顯示全部";
+    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "3個";
 
-  if (etaRouteNum !== "顯示全部" && !longList) {
+  if (!longList) {
     result = result.slice(0, etaRouteNum[0]);
   }
 

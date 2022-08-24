@@ -14,9 +14,23 @@ export const Buses = ({ section }) => {
     localStorage.getItem("settings")
   )?.bookmarkDisplay;
 
-  const [view, setView] = useState(
-    bookmarkDisplay === "所有路線班次" ? "table" : "list"
-  );
+  let viewInit;
+
+  switch (bookmarkDisplay) {
+    case "簡短路線到站時間排序":
+      viewInit = "list";
+      break;
+
+    case "所有路線班次":
+      viewInit = "table";
+      break;
+
+    default:
+      viewInit = "longList";
+      break;
+  }
+
+  const [view, setView] = useState(viewInit);
 
   useEffect(() => {
     const intervalContent = async () => {
@@ -71,12 +85,20 @@ export const Buses = ({ section }) => {
   }, [section]);
 
   const handleSwitchBtnOnClick = () => {
-    if (view === "list") {
-      setView("longList");
-    } else if (view === "longList") {
-      setView("table");
-    } else if (view === "table") {
-      setView("list");
+    if (bookmarkDisplay === "所有路線到站時間排序") {
+      if (view === "longList") {
+        setView("table");
+      } else if (view === "table") {
+        setView("longList");
+      }
+    } else {
+      if (view === "list") {
+        setView("longList");
+      } else if (view === "longList") {
+        setView("table");
+      } else if (view === "table") {
+        setView("list");
+      }
     }
   };
 
