@@ -57,10 +57,11 @@ export const List = ({ sectionData }) => {
     result[i].eta = etaTimeConverter(eta, rmk_tc).etaIntervalStr;
   });
 
-  if (sectionData.length >= 3) {
-    result = result.slice(0, sectionData.length);
-  } else {
-    result = result.slice(0, 3);
+  const etaRouteNum =
+    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "顯示全部";
+
+  if (etaRouteNum !== "顯示全部") {
+    result = result.slice(0, etaRouteNum[0]);
   }
 
   const handleChange = (panel) => (e, isExpanded) => {

@@ -60,11 +60,25 @@ export const Buses = ({ section }) => {
     intervalContent();
     const interval = setInterval(intervalContent, 5000);
 
+    const bookmarkDisplay = JSON.parse(
+      localStorage.getItem("settings")
+    )?.bookmarkDisplay;
+
+    switch (bookmarkDisplay) {
+      case "顯示所有班次":
+        setView("table");
+        break;
+
+      default:
+        setView("list");
+        break;
+    }
+
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [section]);
 
-  const switchView = () => {
+  const handleSwitchBtnOnClick = () => {
     if (view === "list") {
       setView("table");
     } else if (view === "table") {
@@ -74,7 +88,7 @@ export const Buses = ({ section }) => {
 
   return (
     <BusesRoot>
-      <button type="button" onClick={() => switchView(view)}>
+      <button type="button" onClick={() => handleSwitchBtnOnClick(view)}>
         {view === "list" ? "顯示所有班次" : "以到站時間排列"}
       </button>
       {view === "list" ? (

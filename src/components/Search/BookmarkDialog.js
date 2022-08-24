@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { compress as compressJson } from "lzutf8-light";
 import {
   Dialog,
@@ -20,6 +20,7 @@ import {
 } from "@mui/icons-material";
 import { getLocalStorage } from "../../Utils";
 import { companyColor } from "../../constants/Constants";
+import { DbContext } from "../../context/DbContext";
 
 export const BookmarkDialog = ({
   fullWidth,
@@ -27,6 +28,7 @@ export const BookmarkDialog = ({
   setBookmarkDialogMode,
   bookmarkRouteObj,
 }) => {
+  const { gStopList } = useContext(DbContext);
   const [categoryIdx, setCategoryIdx] = useState(-1);
   const [categoryValue, setCategoryValue] = useState("");
 
@@ -229,13 +231,14 @@ export const BookmarkDialog = ({
                     <ListItemText
                       primary={
                         <li>
-                          {e
-                            .map((f, j) => (
-                              <span key={j} className={f.co}>
-                                {f.route}
+                          {e.map((f, j) => (
+                            <span key={j}>
+                              <span className={`route ${f.co}`}>{f.route}</span>
+                              <span className="stopName">
+                                {gStopList[f.stopId].name.zh}
                               </span>
-                            ))
-                            .reduce((a, b) => [a, " + ", b])}
+                            </span>
+                          ))}
                         </li>
                       }
                     />
@@ -262,6 +265,7 @@ export const BookmarkDialog = ({
 const DialogRoot = styled(Dialog)({
   ".MuiList-root": {
     overflow: "auto",
+    paddingTop: "8px",
   },
 });
 
@@ -289,11 +293,22 @@ const CategoryAddRoot = styled("div")({
 
 const SectionRoot = styled("div")({
   ".MuiListItemText-primary": {
+    ".route": {
+      display: "inline-block",
+      width: "50px",
+    },
     ...companyColor,
     ".emptyMsg": {
       fontSize: "15px",
       textAlign: "center",
       padding: "20px 0",
     },
+    ".stopName": {
+      fontSize: "12px",
+    },
+  },
+  li: {
+    display: "flex",
+    flexDirection: "column",
   },
 });

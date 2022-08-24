@@ -129,6 +129,7 @@ const DialogRoot = styled(Dialog, {
 })(({ isPinValid }) => ({
   ".MuiList-root": {
     overflow: "auto",
+    paddingTop: "8px",
   },
   ".pincode-input-container": {
     display: "flex",
