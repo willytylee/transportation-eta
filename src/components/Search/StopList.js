@@ -181,16 +181,26 @@ export const StopList = () => {
                   {!process.env.NODE_ENV ||
                     (process.env.NODE_ENV === "development" && (
                       <IconButton
-                        onClick={() =>
-                          handleFavIconOnClick({
-                            seq: i + 1,
-                            co: currRoute.co[0],
-                            route: currRoute.route,
-                            stopId: e.stopId,
-                            gtfsId: currRoute.gtfsId,
-                            serviceType: currRoute.serviceType,
-                          })
-                        }
+                        onClick={() => {
+                          if (currRoute.co[0] === "gmb") {
+                            handleFavIconOnClick({
+                              seq: i + 1,
+                              co: currRoute.co[0],
+                              route: currRoute.route,
+                              stopId: e.stopId,
+                              gtfsId: currRoute.gtfsId,
+                              serviceType: currRoute.serviceType,
+                            });
+                          } else {
+                            handleFavIconOnClick({
+                              seq: i + 1,
+                              co: currRoute.co[0],
+                              route: currRoute.route,
+                              stopId: e.stopId,
+                              serviceType: currRoute.serviceType,
+                            });
+                          }
+                        }}
                       >
                         <FavoriteIcon />
                       </IconButton>

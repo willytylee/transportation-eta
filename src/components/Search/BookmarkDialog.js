@@ -28,7 +28,7 @@ export const BookmarkDialog = ({
   const [categoryIdx, setCategoryIdx] = useState(-1);
   const [categoryValue, setCategoryValue] = useState("");
 
-  const transportData = getLocalStorage("bookmark");
+  const transportData = getLocalStorage("bookmark") || [];
 
   // -------------- Close Btn --------------------
 
@@ -120,7 +120,6 @@ export const BookmarkDialog = ({
               </div>
             </Grid>
           </DialogTitle>
-
           <List sx={{ pt: 0 }}>
             {transportData.map((e, i) => (
               <div key={i}>
@@ -144,6 +143,7 @@ export const BookmarkDialog = ({
               </div>
             ))}
           </List>
+          {/* TODO: 未有類別 */}
         </CategoryRoot>
       )}
       {bookmarkDialogMode === "categoryAdd" && (
@@ -204,7 +204,11 @@ export const BookmarkDialog = ({
               ))}
             </List>
           ) : (
-            <div className="emptyMsg">未有組合</div>
+            <List sx={{ pt: 0 }}>
+              <ListItem button onClick={handleSectionAddBtnOnClick}>
+                <div className="emptyMsg">未有組合, 按此新增並加入路線</div>
+              </ListItem>
+            </List>
           )}
         </SectionRoot>
       )}

@@ -25,7 +25,8 @@ export const Buses = ({ section }) => {
             (e) =>
               (route ? e.route === route : true) && // For bus
               (gtfsId ? e.gtfsId === gtfsId : true) && // For Gmb
-              parseInt(e.serviceType, 10) === (serviceType ? serviceType : 1) &&
+              parseInt(e.serviceType, 10) ===
+                (serviceType ? parseInt(serviceType, 10) : 1) &&
               // Default 1
               e.co.includes(co) &&
               e.stops[co][seq - 1] === stopId
