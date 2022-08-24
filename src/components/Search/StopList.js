@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars  */
 import { useState, useEffect, useContext, useRef } from "react";
 import {
   Accordion,
@@ -177,7 +178,7 @@ export const StopList = () => {
                   >
                     <MapIcon />
                   </IconButton>
-                  <IconButton
+                  {/* <IconButton
                     onClick={() =>
                       handleFavIconOnClick({
                         seq: i + 1,
@@ -188,7 +189,7 @@ export const StopList = () => {
                     }
                   >
                     <FavoriteIcon />
-                  </IconButton>
+                  </IconButton> */}
                 </AccordionDetails>
               </Accordion>
             );
@@ -305,3 +306,4 @@ const StopEtaRoot = styled("div")({
     },
   },
 });
+/* eslint-disable no-unused-vars  */
