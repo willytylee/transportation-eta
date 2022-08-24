@@ -25,7 +25,8 @@ export const Bookmark = () => {
       );
       setNewTransportData(data.transportData);
     }
-  }, [bookmark, userId, data.transportData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bookmark, userId]);
 
   return (
     <BookmarkRoot>
@@ -38,8 +39,13 @@ export const Bookmark = () => {
             現有用戶, 請到<Link to="/settings">設定</Link>選擇用戶。
           </p>
           <p>
-            新用戶, 請到<Link to="/search">路線搜尋</Link>, 選擇巴士站,
-            然後新增收藏。
+            新用戶, 請
+            <a href="https://wa.me/+85267914731" target="_blank" rel="noreferrer">
+              聯絡管理員
+            </a>
+            。
+            {/* 新用戶, 請
+            <Link to="/search">路線搜尋</Link>, 選擇巴士站, 然後新增收藏。 */}
           </p>
         </div>
       )}
