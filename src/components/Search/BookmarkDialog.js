@@ -10,11 +10,12 @@ import {
   IconButton,
   DialogTitle,
   TextField,
+  Divider,
 } from "@mui/material/";
 import {
   Close as CloseIcon,
   Add as AddIcon,
-  Check as CheckIcon,
+  KeyboardReturn as KeyboardReturnIcon,
 } from "@mui/icons-material";
 import { getLocalStorage } from "../../Utils";
 
@@ -47,6 +48,10 @@ export const BookmarkDialog = ({
     setBookmarkDialogMode("categoryAdd");
   };
 
+  const handleCategoryAddKeyPress = (e) => {
+    e.key === "Enter" && handleCategoryConfirmBtnOnClick();
+  };
+
   const handleCategoryConfirmBtnOnClick = () => {
     transportData.push({
       title: categoryValue,
@@ -68,6 +73,12 @@ export const BookmarkDialog = ({
       "bookmark",
       compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
     );
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+      localStorage.setItem(
+        "bookmark_nocompress",
+        JSON.stringify(transportData)
+      );
+    }
     setCategoryIdx(-1);
     setBookmarkDialogMode(null);
   };
@@ -78,6 +89,12 @@ export const BookmarkDialog = ({
       "bookmark",
       compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
     );
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+      localStorage.setItem(
+        "bookmark_nocompress",
+        JSON.stringify(transportData)
+      );
+    }
     setCategoryIdx(-1);
     setBookmarkDialogMode(null);
   };
@@ -106,23 +123,25 @@ export const BookmarkDialog = ({
 
           <List sx={{ pt: 0 }}>
             {transportData.map((e, i) => (
-              <ListItem
-                key={i}
-                button
-                onClick={() => {
-                  handleCategoryItemOnClick(i);
-                }}
-              >
-                <ListItemText
-                  primary={e.title}
-                  secondary={e.data.map((f, j) => (
-                    <span key={j}>
-                      {f.map((g, k) => g.route).join(", ")}
-                      <br />
-                    </span>
-                  ))}
-                />
-              </ListItem>
+              <div key={i}>
+                <ListItem
+                  button
+                  onClick={() => {
+                    handleCategoryItemOnClick(i);
+                  }}
+                >
+                  <ListItemText
+                    primary={e.title}
+                    secondary={e.data.map((f, j) => (
+                      <span key={j}>
+                        {f.map((g, k) => g.route).join(", ")}
+                        <br />
+                      </span>
+                    ))}
+                  />
+                </ListItem>
+                {i !== transportData.length - 1 ? <Divider /> : null}
+              </div>
             ))}
           </List>
         </CategoryRoot>
@@ -143,10 +162,11 @@ export const BookmarkDialog = ({
               variant="standard"
               value={categoryValue}
               onChange={(e) => setCategoryValue(e.target.value)}
+              onKeyPress={(e) => handleCategoryAddKeyPress(e)}
               autoComplete="off"
             />
             <IconButton onClick={handleCategoryConfirmBtnOnClick}>
-              <CheckIcon />
+              <KeyboardReturnIcon />
             </IconButton>
           </div>
         </CategoryAddRoot>
@@ -169,17 +189,18 @@ export const BookmarkDialog = ({
           {transportData[categoryIdx].data.length > 0 ? (
             <List sx={{ pt: 0 }}>
               {transportData[categoryIdx].data.map((e, i) => (
-                <ListItem
-                  key={i}
-                  button
-                  onClick={() => handleSectionItemOnClick(i)}
-                >
-                  <ListItemText
-                    primary={
-                      <li>{`${e.map((f, j) => f.route).join(" + ")}`}</li>
-                    }
-                  />
-                </ListItem>
+                <div key={i}>
+                  <ListItem button onClick={() => handleSectionItemOnClick(i)}>
+                    <ListItemText
+                      primary={
+                        <li>{`${e.map((f, j) => f.route).join(" + ")}`}</li>
+                      }
+                    />
+                  </ListItem>
+                  {i !== transportData[categoryIdx].data.length - 1 ? (
+                    <Divider />
+                  ) : null}
+                </div>
               ))}
             </List>
           ) : (
@@ -211,16 +232,19 @@ const DialogRoot = styled(Dialog)({
 });
 
 const CategoryRoot = styled("div")({
-  ".MuiButtonBase-root": {
+  ".MuiListItem-root": {
     paddingTop: "0 !important",
     paddingBottom: "0 !important",
+    ".MuiListItemText-secondary": {
+      paddingLeft: "8px",
+    },
   },
 });
 
 const CategoryAddRoot = styled("div")({
   ".input": {
     display: "flex",
-    padding: "0px 0px 11px 16px",
+    padding: "16px 0px 8px 16px",
     ".MuiFormControl-root": {
       flexGrow: 1,
     },
@@ -231,6 +255,6 @@ const SectionRoot = styled("div")({
   ".emptyMsg": {
     fontSize: "15px",
     textAlign: "center",
-    paddingBottom: "14px",
+    padding: "20px 0",
   },
 });
