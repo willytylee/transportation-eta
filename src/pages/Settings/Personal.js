@@ -83,7 +83,7 @@ export const Personal = () => {
 
   const handleEtaRouteNumItemOnClick = () => {
     setDialogOpen(true);
-    setDialogTitle("到站時間路線顯示數目");
+    setDialogTitle("到站時間路線排序顯示數目");
     setDialogKey("etaRouteNum");
     setDialogOptions(etaRouteNumOptions);
   };
