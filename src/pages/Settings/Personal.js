@@ -27,6 +27,7 @@ import {
   Filter8 as Filter8Icon,
   Filter9 as Filter9Icon,
   Filter9Plus as Filter9PlusIcon,
+  FormatListNumbered as FormatListNumberedIcon,
 } from "@mui/icons-material";
 import { SimpleSettingDialog } from "../../components/Settings/SimpleSettingDialog";
 
@@ -113,7 +114,7 @@ export const Personal = () => {
           <ListItemButton onClick={handleEtaRouteNumItemOnClick}>
             <ListItemAvatar>
               <Avatar>
-                <ArtTrackIcon />
+                <FormatListNumberedIcon />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
