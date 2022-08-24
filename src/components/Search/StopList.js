@@ -290,6 +290,7 @@ const StopEtaRoot = styled("div")({
   display: "flex",
   padding: "4px 0",
   width: "100%",
+  alignItems: "center",
   ".seq": {
     width: "5%",
   },
