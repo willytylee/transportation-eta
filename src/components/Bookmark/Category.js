@@ -26,4 +26,5 @@ const SectionRoot = styled("div")({
   padding: "10px",
   borderRadius: "2px",
   borderBottom: "1px solid lightgrey",
+  background: "white",
 });

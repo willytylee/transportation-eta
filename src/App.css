@@ -35,3 +35,12 @@ a {
     env(safe-area-inset-bottom) env(safe-area-inset-left);
   bottom: 60px !important;
 }
+
+.MuiDialogTitle-root{
+  background: #2f305c;
+  color: white
+}
+
+.MuiDialogTitle-root button{
+  color: white
+}

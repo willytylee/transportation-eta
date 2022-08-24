@@ -16,6 +16,7 @@ import { ChangeLog } from "./pages/Settings/ChangeLog";
 import { Update } from "./pages/Settings/Update";
 import { Personal } from "./pages/Settings/Personal";
 import { Redirect } from "./pages/Redirect";
+import { Playground } from "./pages/Playground";
 
 const App = () => {
   const { initDb, getGeoLocation, initAppVersion } = useContext(AppContext);
@@ -37,6 +38,7 @@ const App = () => {
           <Route path="/news" element={<News />} />
           <Route path="/weather" element={<Weather />} />
           <Route path="/bookmark" element={<Bookmark />} />
+          <Route path="/bookmark/:userId" element={<Playground />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/settings/personal" element={<Personal />} />
           <Route path="/settings/about" element={<About />} />
