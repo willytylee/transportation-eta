@@ -19,6 +19,7 @@ import {
   Source as SourceIcon,
   Tune as TuneIcon,
   LayersClear as LayersClearIcon,
+  Share as ShareIcon,
 } from "@mui/icons-material";
 import { SelectUserDialog } from "../components/Settings/SelectUserDialog";
 import { AppContext } from "../context/AppContext";
@@ -32,6 +33,21 @@ export const Settings = () => {
   const handleClearHistOnClick = () => {
     localStorage.removeItem("routeListHistory");
     enqueueSnackbar("歷史紀錄已清除", {
+      variant: "success",
+    });
+  };
+
+  const handleShareOnClick = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: "交通預報",
+        url: "https://eta.willytylee.com",
+      });
+    }
+
+    navigator.clipboard.writeText("http://eta.willytylee.com");
+
+    enqueueSnackbar("已複製連結, 多謝分享~", {
       variant: "success",
     });
   };
@@ -131,6 +147,16 @@ export const Settings = () => {
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="回報問題" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleShareOnClick}>
+            <ListItemAvatar>
+              <Avatar>
+                <ShareIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="分享此程式" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
