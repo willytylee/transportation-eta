@@ -123,8 +123,9 @@ const BusesRoot = styled("div")({
     borderRadius: "22px",
     color: "#136ac1",
     borderWidth: "0",
-    padding: "2px 15px",
+    padding: "2px 0",
     fontSize: "13px",
     margin: "2px 0",
+    width: "170px",
   },
 });
