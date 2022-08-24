@@ -5,7 +5,7 @@ import { AppContext } from "../../context/AppContext";
 import { MapDialog } from "../MapDialog/MapDialog";
 import { EtaContext } from "../../context/EtaContext";
 
-export const SearchBar = ({ handleFormChange }) => {
+export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
   const { dbVersion, location: currentLocation } = useContext(AppContext);
   const { currRoute, updateCurrRoute, route } = useContext(EtaContext);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
@@ -34,6 +34,7 @@ export const SearchBar = ({ handleFormChange }) => {
           name="category"
           value={route}
           onChange={(e) => handleFormChange(e.target.value)}
+          onKeyPress={(e) => handleFormKeyPress(e)}
           autoComplete="off"
           inputRef={textInput}
           InputProps={{

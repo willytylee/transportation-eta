@@ -25,6 +25,10 @@ export const Search = () => {
     }
   };
 
+  const handleFormKeyPress = (e) => {
+    e.key === "Enter" && setTabIdx(1);
+  };
+
   const handleTabChange = (e, value) => {
     setTabIdx(value);
   };
@@ -43,7 +47,10 @@ export const Search = () => {
 
   return (
     <SearchRoot>
-      <SearchBar handleFormChange={handleFormChange} />
+      <SearchBar
+        handleFormChange={handleFormChange}
+        handleFormKeyPress={handleFormKeyPress}
+      />
 
       <SearchResult>
         <Tabs
