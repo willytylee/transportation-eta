@@ -156,7 +156,7 @@ export const Settings = () => {
                 <ShareIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="分享此程式" />
+            <ListItemText primary="分享此應用程式" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

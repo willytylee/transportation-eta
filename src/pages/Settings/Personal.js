@@ -9,14 +9,12 @@ import {
   ListSubheader,
 } from "@mui/material/";
 import {
-  PhoneIphone as PhoneIphoneIcon,
   DirectionsBus as DirectionsBusIcon,
   Thermostat as ThermostatIcon,
   Favorite as FavoriteIcon,
   Announcement as AnnouncementIcon,
   DepartureBoard as DepartureBoardIcon,
   TableView as TableViewIcon,
-  ArtTrack as ArtTrackIcon,
   Filter1 as Filter1Icon,
   Filter2 as Filter2Icon,
   Filter3 as Filter3Icon,
@@ -27,7 +25,6 @@ import {
   Filter8 as Filter8Icon,
   Filter9 as Filter9Icon,
   Filter9Plus as Filter9PlusIcon,
-  FormatListNumbered as FormatListNumberedIcon,
 } from "@mui/icons-material";
 import { SimpleSettingDialog } from "../../components/Settings/SimpleSettingDialog";
 
@@ -45,44 +42,50 @@ export const Personal = () => {
   const etaRouteNum =
     JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "顯示全部";
 
+  const defaultScreenOptions = [
+    { name: "路線搜尋", icon: <DirectionsBusIcon /> },
+    { name: "交通消息", icon: <AnnouncementIcon /> },
+    { name: "收藏", icon: <FavoriteIcon /> },
+    { name: "天氣", icon: <ThermostatIcon /> },
+  ];
+
+  const bookmarkDisplayOptions = [
+    { name: "以到站時間排列", icon: <DepartureBoardIcon /> },
+    { name: "顯示所有班次", icon: <TableViewIcon /> },
+  ];
+
+  const etaRouteNumOptions = [
+    { name: "1個", icon: <Filter1Icon /> },
+    { name: "2個", icon: <Filter2Icon /> },
+    { name: "3個", icon: <Filter3Icon /> },
+    { name: "4個", icon: <Filter4Icon /> },
+    { name: "5個", icon: <Filter5Icon /> },
+    { name: "6個", icon: <Filter6Icon /> },
+    { name: "7個", icon: <Filter7Icon /> },
+    { name: "8個", icon: <Filter8Icon /> },
+    { name: "9個", icon: <Filter9Icon /> },
+    { name: "顯示全部", icon: <Filter9PlusIcon /> },
+  ];
+
   const handleDefaltScreenItemOnClick = () => {
     setDialogOpen(true);
     setDialogTitle("預設載入版面");
     setDialogKey("defaultScreen");
-    setDialogOptions([
-      { name: "路線搜尋", icon: <DirectionsBusIcon /> },
-      { name: "交通消息", icon: <AnnouncementIcon /> },
-      { name: "收藏", icon: <FavoriteIcon /> },
-      { name: "天氣", icon: <ThermostatIcon /> },
-    ]);
+    setDialogOptions(defaultScreenOptions);
   };
 
   const handleBookmarkDisplayItemOnClick = () => {
     setDialogOpen(true);
     setDialogTitle("預設收藏顯示模式");
     setDialogKey("bookmarkDisplay");
-    setDialogOptions([
-      { name: "以到站時間排列", icon: <DepartureBoardIcon /> },
-      { name: "顯示所有班次", icon: <TableViewIcon /> },
-    ]);
+    setDialogOptions(bookmarkDisplayOptions);
   };
 
   const handleEtaRouteNumItemOnClick = () => {
     setDialogOpen(true);
     setDialogTitle("到站時間路線顯示數目");
     setDialogKey("etaRouteNum");
-    setDialogOptions([
-      { name: "1個", icon: <Filter1Icon /> },
-      { name: "2個", icon: <Filter2Icon /> },
-      { name: "3個", icon: <Filter3Icon /> },
-      { name: "4個", icon: <Filter4Icon /> },
-      { name: "5個", icon: <Filter5Icon /> },
-      { name: "6個", icon: <Filter6Icon /> },
-      { name: "7個", icon: <Filter7Icon /> },
-      { name: "8個", icon: <Filter8Icon /> },
-      { name: "9個", icon: <Filter9Icon /> },
-      { name: "顯示全部", icon: <Filter9PlusIcon /> },
-    ]);
+    setDialogOptions(etaRouteNumOptions);
   };
 
   return (
@@ -92,7 +95,11 @@ export const Personal = () => {
           <ListItemButton onClick={handleDefaltScreenItemOnClick}>
             <ListItemAvatar>
               <Avatar>
-                <PhoneIphoneIcon />
+                {
+                  defaultScreenOptions.filter(
+                    (e) => e.name === defaultScreen
+                  )[0].icon
+                }
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="預設載入版面" secondary={defaultScreen} />
@@ -104,7 +111,11 @@ export const Personal = () => {
           <ListItemButton onClick={handleBookmarkDisplayItemOnClick}>
             <ListItemAvatar>
               <Avatar>
-                <ArtTrackIcon />
+                {
+                  bookmarkDisplayOptions.filter(
+                    (e) => e.name === bookmarkDisplay
+                  )[0].icon
+                }
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="預設顯示模式" secondary={bookmarkDisplay} />
@@ -114,7 +125,10 @@ export const Personal = () => {
           <ListItemButton onClick={handleEtaRouteNumItemOnClick}>
             <ListItemAvatar>
               <Avatar>
-                <FormatListNumberedIcon />
+                {
+                  etaRouteNumOptions.filter((e) => e.name === etaRouteNum)[0]
+                    .icon
+                }
               </Avatar>
             </ListItemAvatar>
             <ListItemText
