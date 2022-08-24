@@ -98,7 +98,7 @@ export const Personal = () => {
                 {
                   defaultScreenOptions.filter(
                     (e) => e.name === defaultScreen
-                  )[0].icon
+                  )[0]?.icon
                 }
               </Avatar>
             </ListItemAvatar>
@@ -114,7 +114,7 @@ export const Personal = () => {
                 {
                   bookmarkDisplayOptions.filter(
                     (e) => e.name === bookmarkDisplay
-                  )[0].icon
+                  )[0]?.icon
                 }
               </Avatar>
             </ListItemAvatar>
