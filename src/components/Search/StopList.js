@@ -27,7 +27,7 @@ export const StopList = () => {
   const [stopList, setStopList] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
-  const [bookmarkDialogOpen, setBookmarkDialogOpen] = useState(false);
+  const [bookmarkDialogMode, setBookmarkDialogMode] = useState(null);
   const [bookmarkRouteObj, setBookmarkRouteObj] = useState({});
   const { location: currentLocation } = useContext(AppContext);
   const { gStopList } = useContext(DbContext);
@@ -57,8 +57,7 @@ export const StopList = () => {
 
   const handleFavIconOnClick = (routeObj) => {
     setBookmarkRouteObj(routeObj);
-    setBookmarkDialogOpen(true);
-    // console.log(routeObj);
+    setBookmarkDialogMode("category");
   };
 
   const handleChange = (panel) => (e, isExpanded) => {
@@ -202,8 +201,8 @@ export const StopList = () => {
       </StopListRoot>
       <BookmarkDialog
         fullWidth
-        bookmarkDialogOpen={bookmarkDialogOpen}
-        setBookmarkDialogOpen={setBookmarkDialogOpen}
+        bookmarkDialogMode={bookmarkDialogMode}
+        setBookmarkDialogMode={setBookmarkDialogMode}
         bookmarkRouteObj={bookmarkRouteObj}
       />
     </>

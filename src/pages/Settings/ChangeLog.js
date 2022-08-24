@@ -1,18 +1,13 @@
 import { styled, Divider } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export const ChangeLog = () => {
-  const navigate = useNavigate();
-  return (
+export const ChangeLog = () => (
     <NewsRoot>
       <div className="subTitle">22/8/2022</div>
       <div className="content">
         <ul>
-          <li
-            className="underline"
-            onClick={() => navigate("/search", { replace: true })}
-          >
-            加入歷史紀錄功能
+          <li>
+            加入<Link to="/search">歷史紀錄</Link>功能
           </li>
         </ul>
       </div>
@@ -20,17 +15,13 @@ export const ChangeLog = () => {
       <div className="subTitle">11/8/2022</div>
       <div className="content">
         <ul>
-          <li
-            className="underline"
-            onClick={() => navigate("/search", { replace: true })}
-          >
-            加入港鐵搜索功能, 輸入MTR即可顯示所有港鐵路線
+          <li>
+            加入
+            <Link to="/search">港鐵搜索</Link>功能, 輸入MTR即可顯示所有港鐵路線
           </li>
-          <li
-            className="underline"
-            onClick={() => navigate("/search", { replace: true })}
-          >
-            加入綠色小巴搜索, 收藏及到站時間排位功能
+          <li>
+            加入<Link to="/search">綠色小巴搜索</Link>功能,
+            <Link to="/bookmark">收藏及到站時間排位</Link>功能
           </li>
         </ul>
       </div>
@@ -38,17 +29,13 @@ export const ChangeLog = () => {
       <div className="subTitle">5/8/2022</div>
       <div className="content">
         <ul>
-          <li
-            className="underline"
-            onClick={() => navigate("/news", { replace: true })}
-          >
-            加入最新交通消息功能。
+          <li>
+            加入<Link to="/news">最新交通消息</Link>功能。
           </li>
-          <li
-            className="underline"
-            onClick={() => navigate("/settings/update", { replace: true })}
-          >
-            加入更新應用程式及重新建立路線資料庫功能。
+          <li>
+            加入
+            <Link to="/settings/update">更新應用程式</Link>及
+            <Link to="/settings/update">重新建立路線資料庫</Link>功能。
           </li>
         </ul>
       </div>
@@ -56,23 +43,16 @@ export const ChangeLog = () => {
       <div className="subTitle">31/7/2022</div>
       <div className="content">
         <ul>
-          <li
-            className="underline"
-            onClick={() => navigate("/settings", { replace: true })}
-          >
-            加入選擇用戶及用戶pin碼功能。
+          <li>
+            加入<Link to="/settings">選擇用戶</Link>及
+            <Link to="/settings">用戶pin碼</Link>功能。
           </li>
-          <li
-            className="underline"
-            onClick={() => navigate("/search", { replace: true })}
-          >
-            加入搜尋關鍵字路線及附近路線功能。
+          <li>
+            加入<Link to="/search">搜尋關鍵字路線</Link>及
+            <Link to="/search">附近路線</Link>功能。
           </li>
-          <li
-            className="underline"
-            onClick={() => navigate("/weather", { replace: true })}
-          >
-            加入本港天氣及預報功能。
+          <li>
+            加入<Link to="/weather">本港天氣及預報功能</Link>。
           </li>
           <li>加入路線地圖功能。</li>
         </ul>
@@ -81,11 +61,8 @@ export const ChangeLog = () => {
       <div className="subTitle">1/7/2022</div>
       <div className="content">
         <ul>
-          <li
-            className="underline"
-            onClick={() => navigate("/search", { replace: true })}
-          >
-            加入巴士搜索功能
+          <li>
+            加入<Link to="/search">巴士搜索</Link>功能
           </li>
         </ul>
       </div>
@@ -93,13 +70,14 @@ export const ChangeLog = () => {
       <div className="subTitle">29/5/2022</div>
       <div className="content">
         <ul>
-          <li>加入巴士, 港鐵收藏及到站時間排位功能。</li>
+          <li>
+            加入<Link to="/bookmark">巴士, 港鐵收藏及到站時間排位功能</Link>。
+          </li>
         </ul>
       </div>
       <DividerRoot />
     </NewsRoot>
   );
-};
 
 const NewsRoot = styled("div")({
   padding: "14px",
@@ -113,11 +91,6 @@ const NewsRoot = styled("div")({
   ".content": {
     ul: {
       paddingLeft: "25px",
-      li: {
-        "&.underline": {
-          textDecoration: "underline",
-        },
-      },
     },
   },
 });
