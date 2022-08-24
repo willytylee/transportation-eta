@@ -9,7 +9,14 @@ import { List } from "./List";
 export const Buses = ({ section }) => {
   const { gStopList, gRouteList } = useContext(DbContext);
   const [sectionData, setSectionData] = useState([]);
-  const [view, setView] = useState("list");
+
+  const bookmarkDisplay = JSON.parse(
+    localStorage.getItem("settings")
+  )?.bookmarkDisplay;
+
+  const [view, setView] = useState(
+    bookmarkDisplay === "所有路線班次" ? "table" : "list"
+  );
 
   useEffect(() => {
     const intervalContent = async () => {
@@ -25,7 +32,6 @@ export const Buses = ({ section }) => {
             (e) =>
               (route ? e.route === route : true) && // For bus
               (gtfsId ? e.gtfsId === gtfsId : true) && // For Gmb
-              // Default 1
               e.co.includes(co) &&
               e.stops[co][seq - 1] === stopId
           )[0];
@@ -60,26 +66,14 @@ export const Buses = ({ section }) => {
     intervalContent();
     const interval = setInterval(intervalContent, 5000);
 
-    const bookmarkDisplay = JSON.parse(
-      localStorage.getItem("settings")
-    )?.bookmarkDisplay;
-
-    switch (bookmarkDisplay) {
-      case "顯示所有班次":
-        setView("table");
-        break;
-
-      default:
-        setView("list");
-        break;
-    }
-
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [section]);
 
   const handleSwitchBtnOnClick = () => {
     if (view === "list") {
+      setView("longList");
+    } else if (view === "longList") {
       setView("table");
     } else if (view === "table") {
       setView("list");
@@ -89,24 +83,26 @@ export const Buses = ({ section }) => {
   return (
     <BusesRoot>
       <button type="button" onClick={() => handleSwitchBtnOnClick(view)}>
-        {view === "list" ? "顯示所有班次" : "以到站時間排列"}
+        {view === "list" && "以到站時間排列"}
+        {view === "longList" && "所有路線到站時間排列"}
+        {view === "table" && "所有路線班次"}
       </button>
-      {view === "list" ? (
-        <List sectionData={sectionData} />
-      ) : (
-        <Table sectionData={sectionData} />
-      )}
+
+      {view === "list" && <List sectionData={sectionData} longList={false} />}
+      {view === "longList" && <List sectionData={sectionData} longList />}
+      {view === "table" && <Table sectionData={sectionData} />}
     </BusesRoot>
   );
 };
 
 const BusesRoot = styled("div")({
+  paddingBottom: "6px",
   button: {
     borderRadius: "22px",
     color: "#136ac1",
     borderWidth: "0",
     padding: "2px 15px",
-    fontSize: "12px",
+    fontSize: "13px",
     margin: "2px 0",
   },
 });

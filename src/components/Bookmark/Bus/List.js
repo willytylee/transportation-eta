@@ -10,7 +10,7 @@ import { Directions as DirectionsIcon } from "@mui/icons-material";
 import { etaTimeConverter, sortEtaObj } from "../../../Utils";
 import { companyColor, primaryColor } from "../../../constants/Constants";
 
-export const List = ({ sectionData }) => {
+export const List = ({ sectionData, longList }) => {
   const [expanded, setExpanded] = useState(false);
 
   let result = [];
@@ -60,7 +60,7 @@ export const List = ({ sectionData }) => {
   const etaRouteNum =
     JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "顯示全部";
 
-  if (etaRouteNum !== "顯示全部") {
+  if (etaRouteNum !== "顯示全部" && !longList) {
     result = result.slice(0, etaRouteNum[0]);
   }
 
