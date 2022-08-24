@@ -21,7 +21,7 @@ export const Buses = ({ section }) => {
       viewInit = "list";
       break;
 
-    case "所有路線班次":
+    case "詳細路線班次":
       viewInit = "table";
       break;
 
@@ -107,7 +107,7 @@ export const Buses = ({ section }) => {
       <button type="button" onClick={() => handleSwitchBtnOnClick(view)}>
         {view === "list" && "簡短路線到站時間排序"}
         {view === "longList" && "所有路線到站時間排序"}
-        {view === "table" && "所有路線班次"}
+        {view === "table" && "詳細路線班次"}
       </button>
 
       {view === "list" && <List sectionData={sectionData} longList={false} />}

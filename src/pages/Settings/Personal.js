@@ -52,7 +52,7 @@ export const Personal = () => {
   const bookmarkDisplayOptions = [
     { name: "簡短路線到站時間排序", icon: <AccessTimeIcon /> },
     { name: "所有路線到站時間排序", icon: <DepartureBoardIcon /> },
-    { name: "所有路線班次", icon: <TableViewIcon /> },
+    { name: "詳細路線班次", icon: <TableViewIcon /> },
   ];
 
   const etaRouteNumOptions = [
