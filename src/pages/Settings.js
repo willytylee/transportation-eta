@@ -9,6 +9,7 @@ import {
   Divider,
   Badge,
 } from "@mui/material/";
+import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import {
   AccountCircle as AccountCircleIcon,
@@ -17,14 +18,23 @@ import {
   Report as ReportIcon,
   Source as SourceIcon,
   Tune as TuneIcon,
+  LayersClear as LayersClearIcon,
 } from "@mui/icons-material";
 import { SelectUserDialog } from "../components/Settings/SelectUserDialog";
 import { AppContext } from "../context/AppContext";
 
 export const Settings = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const { appVersion, serVersion } = useContext(AppContext);
   const [slctUsrDialogOpen, setslctUsrDialogOpen] = useState(false);
   const navigate = useNavigate();
+
+  const handleClearHistOnClick = () => {
+    localStorage.removeItem("routeListHistory");
+    enqueueSnackbar("歷史紀錄已清除", {
+      variant: "success",
+    });
+  };
 
   const handleslctUsrDialogOnClose = ({ userId, username }) => {
     if (userId) {
@@ -59,6 +69,16 @@ export const Settings = () => {
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="個人化設定" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleClearHistOnClick}>
+            <ListItemAvatar>
+              <Avatar>
+                <LayersClearIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="清除路線歷史紀錄" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
