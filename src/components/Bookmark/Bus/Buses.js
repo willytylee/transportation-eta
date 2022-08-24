@@ -17,7 +17,7 @@ export const Buses = ({ section }) => {
   let viewInit;
 
   switch (bookmarkDisplay) {
-    case "簡短路線到站時間排序":
+    case "簡短路線班次排序":
       viewInit = "list";
       break;
 
@@ -85,7 +85,7 @@ export const Buses = ({ section }) => {
   }, [section]);
 
   const handleSwitchBtnOnClick = () => {
-    if (bookmarkDisplay === "所有路線到站時間排序") {
+    if (bookmarkDisplay === "所有路線班次排序") {
       if (view === "longList") {
         setView("table");
       } else if (view === "table") {
@@ -105,8 +105,8 @@ export const Buses = ({ section }) => {
   return (
     <BusesRoot>
       <button type="button" onClick={() => handleSwitchBtnOnClick(view)}>
-        {view === "list" && "簡短路線到站時間排序"}
-        {view === "longList" && "所有路線到站時間排序"}
+        {view === "list" && "簡短路線班次排序"}
+        {view === "longList" && "所有路線班次排序"}
         {view === "table" && "詳細路線班次"}
       </button>
 
@@ -126,6 +126,6 @@ const BusesRoot = styled("div")({
     padding: "2px 0",
     fontSize: "13px",
     margin: "2px 0",
-    width: "170px",
+    width: "145px",
   },
 });

@@ -38,7 +38,7 @@ export const Personal = () => {
     JSON.parse(localStorage.getItem("settings"))?.defaultScreen || "路線搜尋";
   const bookmarkDisplay =
     JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay ||
-    "所有路線到站時間排序";
+    "所有路線班次排序";
   const etaRouteNum =
     JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "3個";
 
@@ -50,8 +50,8 @@ export const Personal = () => {
   ];
 
   const bookmarkDisplayOptions = [
-    { name: "簡短路線到站時間排序", icon: <AccessTimeIcon /> },
-    { name: "所有路線到站時間排序", icon: <DepartureBoardIcon /> },
+    { name: "簡短路線班次排序", icon: <AccessTimeIcon /> },
+    { name: "所有路線班次排序", icon: <DepartureBoardIcon /> },
     { name: "詳細路線班次", icon: <TableViewIcon /> },
   ];
 
@@ -125,7 +125,7 @@ export const Personal = () => {
         <ListItem disablePadding>
           <ListItemButton
             onClick={handleEtaRouteNumItemOnClick}
-            disabled={bookmarkDisplay === "所有路線到站時間排序"}
+            disabled={bookmarkDisplay === "所有路線班次排序"}
           >
             <ListItemAvatar>
               <Avatar>
@@ -136,11 +136,9 @@ export const Personal = () => {
               </Avatar>
             </ListItemAvatar>
             <ListItemText
-              primary="簡短到站時間路線顯示數目"
+              primary="簡短班次路線顯示數目"
               secondary={
-                bookmarkDisplay === "所有路線到站時間排序"
-                  ? "不適用"
-                  : etaRouteNum
+                bookmarkDisplay === "所有路線班次排序" ? "不適用" : etaRouteNum
               }
             />
           </ListItemButton>
