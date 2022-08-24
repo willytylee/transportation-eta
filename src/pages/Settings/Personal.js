@@ -38,7 +38,7 @@ export const Personal = () => {
     JSON.parse(localStorage.getItem("settings"))?.defaultScreen || "路線搜尋";
   const bookmarkDisplay =
     JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay ||
-    "以到站時間排列";
+    "簡短路線到站時間排序";
   const etaRouteNum =
     JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "顯示全部";
 
@@ -50,7 +50,7 @@ export const Personal = () => {
   ];
 
   const bookmarkDisplayOptions = [
-    { name: "以到站時間排列", icon: <DepartureBoardIcon /> },
+    { name: "簡短路線到站時間排序", icon: <DepartureBoardIcon /> },
     { name: "所有路線班次", icon: <TableViewIcon /> },
   ];
 
@@ -132,7 +132,7 @@ export const Personal = () => {
               </Avatar>
             </ListItemAvatar>
             <ListItemText
-              primary="到站時間路線顯示數目"
+              primary="簡短到站時間路線顯示數目"
               secondary={etaRouteNum}
             />
           </ListItemButton>

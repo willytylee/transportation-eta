@@ -83,8 +83,8 @@ export const Buses = ({ section }) => {
   return (
     <BusesRoot>
       <button type="button" onClick={() => handleSwitchBtnOnClick(view)}>
-        {view === "list" && "以到站時間排列"}
-        {view === "longList" && "所有路線到站時間排列"}
+        {view === "list" && "簡短路線到站時間排序"}
+        {view === "longList" && "所有路線到站時間排序"}
         {view === "table" && "所有路線班次"}
       </button>
 
