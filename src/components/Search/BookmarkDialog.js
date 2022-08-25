@@ -4,7 +4,6 @@ import {
   Dialog,
   List,
   ListItem,
-  ListItemText,
   styled,
   Grid,
   IconButton,
@@ -24,7 +23,7 @@ import { companyColor } from "../../constants/Constants";
 import { DbContext } from "../../context/DbContext";
 import {
   CategoryListItemText,
-  sectionSecondary,
+  SectionListItemText,
 } from "../../modules/BookmarkDialog";
 
 export const BookmarkDialog = ({
@@ -225,10 +224,7 @@ export const BookmarkDialog = ({
               {transportData[categoryIdx].data.map((e, i) => (
                 <div key={i}>
                   <ListItem button onClick={() => handleSectionItemOnClick(i)}>
-                    <ListItemText
-                      primary={`組合${i + 1}`}
-                      secondary={sectionSecondary({ e, gStopList })}
-                    />
+                    {SectionListItemText({ i, e, gStopList })}
                   </ListItem>
                   {i !== transportData[categoryIdx].data.length - 1 ? (
                     <Divider />

@@ -26,15 +26,20 @@ export const CategoryListItemText = (e) => (
   />
 );
 
-export const sectionSecondary = ({ e, gStopList }) => (
-  <li>
-    {e.map((f, j) => (
-      <span key={j}>
-        <span className={`route ${f.co}`}>{f.route}</span>
-        <span className="stopName">{gStopList[f.stopId].name.zh}</span>
-      </span>
-    ))}
-  </li>
+export const SectionListItemText = ({ i, e, gStopList }) => (
+  <ListItemText
+    primary={`組合${i + 1}`}
+    secondary={
+      <li>
+        {e.map((f, j) => (
+          <span key={j}>
+            <span className={`route ${f.co}`}>{f.route}</span>
+            <span className="stopName">{gStopList[f.stopId].name.zh}</span>
+          </span>
+        ))}
+      </li>
+    }
+  />
 );
 
 export const DialogRoot = styled(Dialog)({

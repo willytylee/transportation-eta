@@ -3,7 +3,6 @@ import { compress as compressJson } from "lzutf8-light";
 import {
   List,
   ListItem,
-  ListItemText,
   Grid,
   IconButton,
   DialogTitle,
@@ -26,8 +25,8 @@ import {
   CategoryListItemText,
   CategoryRoot,
   DialogRoot,
+  SectionListItemText,
   SectionRoot,
-  sectionSecondary,
 } from "../../modules/BookmarkDialog";
 
 export const BookmarkDialog = ({
@@ -235,10 +234,7 @@ export const BookmarkDialog = ({
                     disablePadding
                   >
                     <ListItemButton onClick={() => handleSectionItemOnClick(i)}>
-                      <ListItemText
-                        primary={`組合${i + 1}`}
-                        secondary={sectionSecondary({ e, gStopList })}
-                      />
+                      {SectionListItemText({ i, e, gStopList })}
                     </ListItemButton>
                   </ListItem>
                   {i !== transportData[categoryIdx].data.length - 1 ? (
