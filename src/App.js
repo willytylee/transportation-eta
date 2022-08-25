@@ -17,6 +17,7 @@ import { Update } from "./pages/Settings/Update";
 import { Personal } from "./pages/Settings/Personal";
 import { Redirect } from "./pages/Redirect";
 import { Playground } from "./pages/Playground";
+import { BookmarkEdit } from "./pages/Settings/BookmarkEdit";
 
 const App = () => {
   const { initDb, getGeoLocation, initAppVersion } = useContext(AppContext);
@@ -41,6 +42,11 @@ const App = () => {
           <Route path="/bookmark/:userId" element={<Playground />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/settings/personal" element={<Personal />} />
+          <Route
+            path="/settings/personal/bookmarkEdit"
+            element={<BookmarkEdit />}
+          />
+
           <Route path="/settings/about" element={<About />} />
           <Route path="/settings/about/changeLog" element={<ChangeLog />} />
           <Route path="/settings/install" element={<Install />} />
