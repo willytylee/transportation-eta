@@ -4,11 +4,7 @@ import { EtaContext } from "../../context/EtaContext";
 import { Header } from "./Header";
 import { Content } from "./Content";
 
-export const MapDialog = ({
-  mapDialogOpen,
-  handleMapDialogOnClose,
-  fullWidth,
-}) => {
+export const MapDialog = ({ mapDialogOpen, handleMapDialogOnClose }) => {
   const { currRoute, updateMapStopIdx, updateMapLocation } =
     useContext(EtaContext);
 
@@ -19,11 +15,7 @@ export const MapDialog = ({
   };
 
   return (
-    <DialogRoot
-      onClose={handleDialogOnClose}
-      open={mapDialogOpen}
-      fullWidth={fullWidth}
-    >
+    <DialogRoot onClose={handleDialogOnClose} open={mapDialogOpen} fullWidth>
       {Object.keys(currRoute).length !== 0 && (
         <>
           <Header handleDialogOnClose={handleDialogOnClose} />

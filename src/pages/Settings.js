@@ -173,7 +173,6 @@ export const Settings = () => {
         </ListItem>
       </List>
       <SelectUserDialog
-        fullWidth
         slctUsrDialogOpen={slctUsrDialogOpen}
         handleslctUsrDialogOnClose={handleslctUsrDialogOnClose}
       />

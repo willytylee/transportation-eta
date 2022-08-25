@@ -24,7 +24,6 @@ import { companyColor } from "../../constants/Constants";
 import { DbContext } from "../../context/DbContext";
 
 export const BookmarkDialog = ({
-  fullWidth,
   bookmarkDialogMode,
   setBookmarkDialogMode,
   bookmarkRouteObj,
@@ -123,7 +122,7 @@ export const BookmarkDialog = ({
     <DialogRoot
       onClose={handleDialogCloseBtnOnClick}
       open={bookmarkDialogMode !== null}
-      fullWidth={fullWidth}
+      fullWidth
     >
       {bookmarkDialogMode === "category" && (
         <CategoryRoot>

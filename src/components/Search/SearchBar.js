@@ -62,7 +62,6 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
         <MapIcon />
       </IconButton>
       <MapDialog
-        fullWidth
         mapDialogOpen={mapDialogOpen}
         handleMapDialogOnClose={handleMapDialogOnClose}
         currentLocation={currentLocation}

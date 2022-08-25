@@ -16,7 +16,6 @@ import { dataSet } from "../../data/DataSet";
 export const SelectUserDialog = ({
   handleslctUsrDialogOnClose,
   slctUsrDialogOpen,
-  fullWidth,
 }) => {
   const [selectedUser, setSelectedUser] = useState({});
   const [isPinValid, setIsPinValid] = useState(true);
@@ -61,7 +60,7 @@ export const SelectUserDialog = ({
         handleDialogOnClose();
       }}
       open={slctUsrDialogOpen}
-      fullWidth={fullWidth}
+      fullWidth
       isPinValid={isPinValid}
     >
       {Object.keys(selectedUser).length === 0 ? (

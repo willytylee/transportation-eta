@@ -208,13 +208,11 @@ export const StopList = () => {
             );
           })}
         <MapDialog
-          fullWidth
           mapDialogOpen={mapDialogOpen}
           handleMapDialogOnClose={handleMapDialogOnClose}
         />
       </StopListRoot>
       <BookmarkDialog
-        fullWidth
         bookmarkDialogMode={bookmarkDialogMode}
         setBookmarkDialogMode={setBookmarkDialogMode}
         bookmarkRouteObj={bookmarkRouteObj}

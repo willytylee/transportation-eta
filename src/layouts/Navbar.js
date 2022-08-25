@@ -14,9 +14,7 @@ export const Navbar = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const key = Object.keys(navbarDetail).find(
-      (e) => e === pathname || (pathname.includes(e) && e === "/bookmark")
-    );
+    const key = Object.keys(navbarDetail).find((e) => e === pathname);
     const object = navbarDetail[key];
     object?.title ? setTitle(object.title) : setTitle("");
     object?.prevPage ? setPrevPage(object.prevPage) : setPrevPage("");
