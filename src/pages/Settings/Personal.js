@@ -25,6 +25,8 @@ import {
   Filter7 as Filter7Icon,
   Filter8 as Filter8Icon,
   Filter9 as Filter9Icon,
+  ManageSearch as ManageSearchIcon,
+  SavedSearch as SavedSearchIcon,
 } from "@mui/icons-material";
 import { SimpleSettingDialog } from "../../components/Settings/SimpleSettingDialog";
 
@@ -73,12 +75,12 @@ export const Personal = () => {
     {
       primary: "搜尋路線",
       secondary: "自動列出所有包含搜尋字眼路線, 運算較快手機適用",
-      icon: <Filter1Icon />,
+      icon: <ManageSearchIcon />,
     },
     {
       primary: "交通路線",
       secondary: "只列出搜尋字眼路線, 運算較慢手機適用",
-      icon: <Filter2Icon />,
+      icon: <SavedSearchIcon />,
     },
   ];
 
@@ -135,7 +137,7 @@ export const Personal = () => {
               <Avatar>
                 {
                   searchMethodOptions.filter(
-                    (e) => e.primary === defaultScreen
+                    (e) => e.primary === searchMethod
                   )[0]?.icon
                 }
               </Avatar>
