@@ -8,7 +8,6 @@ import {
   Avatar,
   ListSubheader,
 } from "@mui/material/";
-import { useNavigate } from "react-router-dom";
 import {
   DirectionsBus as DirectionsBusIcon,
   Thermostat as ThermostatIcon,
@@ -32,7 +31,6 @@ import {
 import { SimpleSettingDialog } from "../../components/Settings/SimpleSettingDialog";
 
 export const Personal = () => {
-  const navigate = useNavigate();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogOptions, setDialogOptions] = useState([]);
@@ -184,26 +182,6 @@ export const Personal = () => {
             />
           </ListItemButton>
         </ListItem>
-        {(!process.env.NODE_ENV || process.env.NODE_ENV === "development") && (
-          <ListItem disablePadding>
-            <ListItemButton
-              onClick={() =>
-                navigate("/settings/personal/bookmarkEdit", { replace: true })
-              }
-            >
-              <ListItemAvatar>
-                <Avatar>
-                  {
-                    etaRouteNumOptions.filter(
-                      (e) => e.primary === etaRouteNum
-                    )[0]?.icon
-                  }
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="編輯收藏" />
-            </ListItemButton>
-          </ListItem>
-        )}
       </List>
       <SimpleSettingDialog
         dialogOpen={dialogOpen}

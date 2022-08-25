@@ -22,6 +22,10 @@ import {
 import { getLocalStorage } from "../../Utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { DbContext } from "../../context/DbContext";
+import {
+  CategoryListItemText,
+  sectionSecondary,
+} from "../../modules/BookmarkDialog";
 
 export const BookmarkDialog = ({
   bookmarkDialogMode,
@@ -149,28 +153,7 @@ export const BookmarkDialog = ({
                       handleCategoryItemOnClick(i);
                     }}
                   >
-                    <ListItemText
-                      primary={e.title}
-                      secondary={
-                        e.data.length > 0 ? (
-                          e.data.map((f, j) => (
-                            <span key={j}>
-                              {f.length > 0 &&
-                                f
-                                  .map((g, k) => (
-                                    <span key={k} className={g.co}>
-                                      {g.route}
-                                    </span>
-                                  ))
-                                  .reduce((a, b) => [a, " + ", b])}
-                              <br />
-                            </span>
-                          ))
-                        ) : (
-                          <>未有組合</>
-                        )
-                      }
-                    />
+                    {CategoryListItemText(e)}
                   </ListItem>
                   {i !== transportData.length - 1 ? <Divider /> : null}
                 </div>
@@ -244,18 +227,7 @@ export const BookmarkDialog = ({
                   <ListItem button onClick={() => handleSectionItemOnClick(i)}>
                     <ListItemText
                       primary={`組合${i + 1}`}
-                      secondary={
-                        <li>
-                          {e.map((f, j) => (
-                            <span key={j}>
-                              <span className={`route ${f.co}`}>{f.route}</span>
-                              <span className="stopName">
-                                {gStopList[f.stopId].name.zh}
-                              </span>
-                            </span>
-                          ))}
-                        </li>
-                      }
+                      secondary={sectionSecondary({ e, gStopList })}
                     />
                   </ListItem>
                   {i !== transportData[categoryIdx].data.length - 1 ? (

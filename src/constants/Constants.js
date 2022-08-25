@@ -77,4 +77,8 @@ export const navbarDetail = {
     title: "最新功能",
     prevPage: "/settings/about",
   },
+  "/settings/bookmarkEdit": {
+    title: "編輯收藏",
+    prevPage: "/settings",
+  },
 };

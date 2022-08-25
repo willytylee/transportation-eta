@@ -1,11 +1,9 @@
 import { useState, useContext } from "react";
 import { compress as compressJson } from "lzutf8-light";
 import {
-  Dialog,
   List,
   ListItem,
   ListItemText,
-  styled,
   Grid,
   IconButton,
   DialogTitle,
@@ -13,7 +11,7 @@ import {
   Divider,
   ListItemButton,
 } from "@mui/material/";
-import { useSnackbar } from "notistack";
+
 import {
   Close as CloseIcon,
   Add as AddIcon,
@@ -22,16 +20,20 @@ import {
   Delete as DeleteIcon,
 } from "@mui/icons-material";
 import { getLocalStorage } from "../../Utils/Utils";
-import { companyColor } from "../../constants/Constants";
 import { DbContext } from "../../context/DbContext";
+import {
+  CategoryAddRoot,
+  CategoryListItemText,
+  CategoryRoot,
+  DialogRoot,
+  SectionRoot,
+  sectionSecondary,
+} from "../../modules/BookmarkDialog";
 
 export const BookmarkDialog = ({
-  fullWidth,
   bookmarkDialogMode,
   setBookmarkDialogMode,
-  bookmarkRouteObj,
 }) => {
-  const { enqueueSnackbar } = useSnackbar();
   const { gStopList } = useContext(DbContext);
   const [categoryIdx, setCategoryIdx] = useState(-1);
   const [categoryValue, setCategoryValue] = useState("");
@@ -80,7 +82,7 @@ export const BookmarkDialog = ({
   // -------------- Section Dialog --------------------
 
   const handleSectionItemOnClick = (i) => {
-    transportData[categoryIdx].data[i].push(bookmarkRouteObj);
+    // transportData[categoryIdx].data[i].push(bookmarkRouteObj);
     localStorage.setItem(
       "bookmark",
       compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
@@ -91,14 +93,7 @@ export const BookmarkDialog = ({
         JSON.stringify(transportData)
       );
     }
-    enqueueSnackbar(
-      `成功加入路線 ${bookmarkRouteObj.route} 到: ${
-        transportData[categoryIdx].title
-      } → 組合${i + 1}`,
-      {
-        variant: "success",
-      }
-    );
+
     setCategoryIdx(-1);
     setBookmarkDialogMode(null);
   };
@@ -125,13 +120,13 @@ export const BookmarkDialog = ({
     <DialogRoot
       onClose={handleDialogCloseBtnOnClick}
       open={bookmarkDialogMode !== null}
-      fullWidth={fullWidth}
+      fullWidth
     >
       {bookmarkDialogMode === "category" && (
         <CategoryRoot>
           <DialogTitle>
             <Grid>
-              <div className="title">請選擇類別</div>
+              <div className="title">編輯類別</div>
               <div className="rightBtnGroup">
                 <IconButton onClick={handleCategoryAddBtnOnClick}>
                   <AddIcon />
@@ -159,28 +154,7 @@ export const BookmarkDialog = ({
                         handleCategoryItemOnClick(i);
                       }}
                     >
-                      <ListItemText
-                        primary={e.title}
-                        secondary={
-                          e.data.length > 0 ? (
-                            e.data.map((f, j) => (
-                              <span key={j}>
-                                {f.length > 0 &&
-                                  f
-                                    .map((g, k) => (
-                                      <span key={k} className={g.co}>
-                                        {g.route}
-                                      </span>
-                                    ))
-                                    .reduce((a, b) => [a, " + ", b])}
-                                <br />
-                              </span>
-                            ))
-                          ) : (
-                            <>未有組合</>
-                          )
-                        }
-                      />
+                      {CategoryListItemText(e)}
                     </ListItemButton>
                   </ListItem>
                   {i !== transportData.length - 1 ? <Divider /> : null}
@@ -237,7 +211,7 @@ export const BookmarkDialog = ({
                   <ArrowBackIosNewIcon />
                 </IconButton>
               </div>
-              <div className="title">請選擇組合</div>
+              <div className="title">編輯組合</div>
               <div className="rightBtnGroup">
                 <IconButton onClick={handleSectionAddBtnOnClick}>
                   <AddIcon />
@@ -263,20 +237,7 @@ export const BookmarkDialog = ({
                     <ListItemButton onClick={() => handleSectionItemOnClick(i)}>
                       <ListItemText
                         primary={`組合${i + 1}`}
-                        secondary={
-                          <li>
-                            {e.map((f, j) => (
-                              <span key={j}>
-                                <span className={`route ${f.co}`}>
-                                  {f.route}
-                                </span>
-                                <span className="stopName">
-                                  {gStopList[f.stopId].name.zh}
-                                </span>
-                              </span>
-                            ))}
-                          </li>
-                        }
+                        secondary={sectionSecondary({ e, gStopList })}
                       />
                     </ListItemButton>
                   </ListItem>
@@ -298,67 +259,3 @@ export const BookmarkDialog = ({
     </DialogRoot>
   );
 };
-
-const DialogRoot = styled(Dialog)({
-  ".MuiList-root": {
-    overflow: "auto",
-    paddingTop: "8px",
-  },
-});
-
-const CategoryRoot = styled("div")({
-  ".emptyMsg": {
-    fontSize: "15px",
-    textAlign: "center",
-    padding: "20px 0",
-  },
-  ".MuiListItemText-root": {
-    display: "flex",
-    alignItems: "center",
-    ".MuiListItemText-primary": {
-      width: "70px",
-    },
-    ".MuiListItemText-secondary": {
-      paddingLeft: "8px",
-      fontSize: "12px",
-      ...companyColor,
-    },
-  },
-});
-
-const CategoryAddRoot = styled("div")({
-  ".input": {
-    display: "flex",
-    padding: "36px 0px 18px 16px",
-    ".MuiFormControl-root": {
-      flexGrow: 1,
-    },
-  },
-});
-
-const SectionRoot = styled("div")({
-  ".MuiListItemText-root": {
-    display: "flex",
-    alignItems: "center",
-    ".MuiListItemText-primary": {
-      width: "70px",
-    },
-    ".MuiListItemText-secondary": {
-      fontSize: "12px",
-      li: {
-        display: "flex",
-        flexDirection: "column",
-        ".route": {
-          display: "inline-block",
-          width: "50px",
-        },
-        ...companyColor,
-      },
-    },
-  },
-  ".emptyMsg": {
-    fontSize: "15px",
-    textAlign: "center",
-    padding: "20px 0",
-  },
-});

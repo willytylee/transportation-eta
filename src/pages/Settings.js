@@ -87,6 +87,20 @@ export const Settings = () => {
             <ListItemText primary="個人化設定" />
           </ListItemButton>
         </ListItem>
+        {(!process.env.NODE_ENV || process.env.NODE_ENV === "development") && (
+          <ListItem disablePadding>
+            <ListItemButton
+              onClick={() =>
+                navigate("/settings/bookmarkEdit", { replace: true })
+              }
+            >
+              <ListItemAvatar>
+                <Avatar />
+              </ListItemAvatar>
+              <ListItemText primary="編輯收藏" />
+            </ListItemButton>
+          </ListItem>
+        )}
         <ListItem disablePadding>
           <ListItemButton onClick={handleClearHistOnClick}>
             <ListItemAvatar>

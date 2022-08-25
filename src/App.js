@@ -42,11 +42,7 @@ const App = () => {
           <Route path="/bookmark/:userId" element={<Playground />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/settings/personal" element={<Personal />} />
-          <Route
-            path="/settings/personal/bookmarkEdit"
-            element={<BookmarkEdit />}
-          />
-
+          <Route path="/settings/bookmarkEdit" element={<BookmarkEdit />} />
           <Route path="/settings/about" element={<About />} />
           <Route path="/settings/about/changeLog" element={<ChangeLog />} />
           <Route path="/settings/install" element={<Install />} />
