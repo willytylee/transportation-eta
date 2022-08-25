@@ -118,7 +118,7 @@ export const Buses = ({ section }) => {
 };
 
 const BusesRoot = styled("div")({
-  paddingBottom: "6px",
+  paddingTop: "6px",
   button: {
     borderRadius: "22px",
     color: "#136ac1",
