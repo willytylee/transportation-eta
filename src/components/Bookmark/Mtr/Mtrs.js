@@ -6,7 +6,7 @@ import {
   stationMap,
 } from "../../../constants/Mtr";
 import { fetchEtas } from "../../../fetch/transports";
-import { parseMtrEtas } from "../../../Utils";
+import { parseMtrEtas } from "../../../Utils/Utils";
 import { Table } from "./Table";
 
 export const Mtrs = ({ section }) => {

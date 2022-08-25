@@ -7,7 +7,7 @@ import {
   getCoByStopObj,
   basicFiltering,
   getCoPriorityId,
-} from "../../../Utils";
+} from "../../../Utils/Utils";
 import { DbContext } from "../../../context/DbContext";
 import {
   companyColor,

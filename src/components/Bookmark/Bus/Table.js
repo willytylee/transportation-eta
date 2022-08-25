@@ -7,7 +7,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { Directions as DirectionsIcon } from "@mui/icons-material";
-import { etaTimeConverter } from "../../../Utils";
+import { etaTimeConverter } from "../../../Utils/Utils";
 import { companyColor, primaryColor } from "../../../constants/Constants";
 
 export const Table = ({ sectionData }) => {

@@ -7,7 +7,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { Directions as DirectionsIcon } from "@mui/icons-material";
-import { etaTimeConverter, sortEtaObj } from "../../../Utils";
+import { etaTimeConverter, sortEtaObj } from "../../../Utils/Utils";
 import { companyColor, primaryColor } from "../../../constants/Constants";
 
 export const List = ({ sectionData, longList }) => {

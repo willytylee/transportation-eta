@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { DialogTitle, Grid, IconButton, styled } from "@mui/material";
-import { getCoByStopObj } from "../../Utils";
+import { getCoByStopObj } from "../../Utils/Utils";
 import { companyMap, companyColor } from "../../constants/Constants";
 import { useCorrectBound } from "../../hooks/Bound";
 import { EtaContext } from "../../context/EtaContext";

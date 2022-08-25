@@ -16,7 +16,7 @@ import {
   Polyline,
 } from "react-leaflet";
 import { AppContext } from "../../context/AppContext";
-import { getCoByStopObj } from "../../Utils";
+import { getCoByStopObj } from "../../Utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { EtaContext } from "../../context/EtaContext";
 import { mtrLineColor } from "../../constants/Mtr";

@@ -8,7 +8,7 @@ import { TabPanel } from "../components/TabPanel";
 import { NearbyRouteList } from "../components/Search/RouteList/NearbyRouteList";
 import { SearchRouteList } from "../components/Search/RouteList/SearchRouteList";
 import { HistoryRouteList } from "../components/Search/RouteList/HistoryRouteList";
-import { setRouteListHistory } from "../Utils";
+import { setRouteListHistory } from "../Utils/Utils";
 import { primaryColor } from "../constants/Constants";
 import { AppContext } from "../context/AppContext";
 

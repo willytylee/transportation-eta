@@ -13,7 +13,7 @@ import {
   Favorite as FavoriteIcon,
 } from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
-import { getCoPriorityId } from "../../Utils";
+import { getCoPriorityId } from "../../Utils/Utils";
 import { AppContext } from "../../context/AppContext";
 import { useCorrectBound } from "../../hooks/Bound";
 import { EtaContext } from "../../context/EtaContext";

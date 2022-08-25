@@ -1,4 +1,4 @@
-import { etaTimeConverter } from "../../Utils";
+import { etaTimeConverter } from "../../Utils/Utils";
 import { useEtas } from "../../hooks/Etas";
 
 export const StopEta = ({

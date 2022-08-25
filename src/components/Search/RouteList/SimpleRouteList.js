@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { styled } from "@mui/material";
-import { getCoByStopObj } from "../../../Utils";
+import { getCoByStopObj } from "../../../Utils/Utils";
 import { companyColor, companyMap } from "../../../constants/Constants";
 import { EtaContext } from "../../../context/EtaContext";
 import { etaExcluded, routeMap } from "../../../constants/Mtr";

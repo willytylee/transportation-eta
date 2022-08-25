@@ -1,4 +1,4 @@
-import { parseMtrEtas } from "../../Utils";
+import { parseMtrEtas } from "../../Utils/Utils";
 import { useEtas } from "../../hooks/Etas";
 import { etaExcluded, stationDestMap } from "../../constants/Mtr";
 

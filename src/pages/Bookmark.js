@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { styled } from "@mui/material";
 import { Category } from "../components/Bookmark/Category";
 import { dataSet } from "../data/DataSet";
-import { getLocalStorage } from "../Utils";
+import { getLocalStorage } from "../Utils/Utils";
 
 export const Bookmark = () => {
   const [newTransportData, setNewTransportData] = useState([]);

@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo } from "react";
-import { getLocalStorage } from "../Utils";
+import { getLocalStorage } from "../Utils/Utils";
 import { AppContext } from "./AppContext";
 
 export const DbContext = createContext();

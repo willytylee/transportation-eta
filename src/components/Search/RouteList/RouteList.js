@@ -6,7 +6,7 @@ import {
   sortByCompany,
   isMatchRoute,
   setRouteListHistory,
-} from "../../../Utils";
+} from "../../../Utils/Utils";
 import { EtaContext } from "../../../context/EtaContext";
 import { companyMap, companyColor } from "../../../constants/Constants";
 import { etaExcluded, routeMap } from "../../../constants/Mtr";

@@ -3,7 +3,7 @@ import {
   compress as compressJson,
   decompress as decompressJson,
 } from "lzutf8-light";
-import { coPriority } from "./constants/Constants";
+import { coPriority } from "../constants/Constants";
 
 export const etaTimeConverter = (etaStr, remark) => {
   let etaIntervalStr, remarkStr;

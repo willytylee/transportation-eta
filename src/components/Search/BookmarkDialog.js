@@ -19,7 +19,7 @@ import {
   KeyboardReturn as KeyboardReturnIcon,
   ArrowBackIosNew as ArrowBackIosNewIcon,
 } from "@mui/icons-material";
-import { getLocalStorage } from "../../Utils";
+import { getLocalStorage } from "../../Utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { DbContext } from "../../context/DbContext";
 

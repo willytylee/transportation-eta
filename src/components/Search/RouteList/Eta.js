@@ -1,7 +1,7 @@
 import React from "react";
 import { useCorrectBound } from "../../../hooks/Bound";
 import { useEtas } from "../../../hooks/Etas";
-import { etaTimeConverter } from "../../../Utils";
+import { etaTimeConverter } from "../../../Utils/Utils";
 
 export const Eta = ({ routeObj }) => {
   const { correctBound, isBoundLoading } = useCorrectBound({

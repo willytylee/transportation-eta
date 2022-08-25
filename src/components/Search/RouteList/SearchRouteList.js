@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { basicFiltering, sortByCompany } from "../../../Utils";
+import { basicFiltering, sortByCompany } from "../../../Utils/Utils";
 import { DbContext } from "../../../context/DbContext";
 import { EtaContext } from "../../../context/EtaContext";
 import { SimpleRouteList } from "./SimpleRouteList";
