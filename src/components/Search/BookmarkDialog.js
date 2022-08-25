@@ -12,6 +12,7 @@ import {
   TextField,
   Divider,
 } from "@mui/material/";
+import { useSnackbar } from "notistack";
 import {
   Close as CloseIcon,
   Add as AddIcon,
@@ -28,6 +29,7 @@ export const BookmarkDialog = ({
   setBookmarkDialogMode,
   bookmarkRouteObj,
 }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const { gStopList } = useContext(DbContext);
   const [categoryIdx, setCategoryIdx] = useState(-1);
   const [categoryValue, setCategoryValue] = useState("");
@@ -76,7 +78,7 @@ export const BookmarkDialog = ({
   // -------------- Section Dialog --------------------
 
   const handleSectionItemOnClick = (i) => {
-    transportData[categoryIdx].data[i].splice(0, 0, bookmarkRouteObj);
+    transportData[categoryIdx].data[i].push(bookmarkRouteObj);
     localStorage.setItem(
       "bookmark",
       compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
@@ -87,6 +89,9 @@ export const BookmarkDialog = ({
         JSON.stringify(transportData)
       );
     }
+    enqueueSnackbar(`成功加入路線 ${bookmarkRouteObj.route}`, {
+      variant: "success",
+    });
     setCategoryIdx(-1);
     setBookmarkDialogMode(null);
   };
@@ -103,6 +108,9 @@ export const BookmarkDialog = ({
         JSON.stringify(transportData)
       );
     }
+    enqueueSnackbar(`成功加入路線 ${bookmarkRouteObj.route}`, {
+      variant: "success",
+    });
     setCategoryIdx(-1);
     setBookmarkDialogMode(null);
   };
@@ -292,7 +300,7 @@ const CategoryRoot = styled("div")({
 const CategoryAddRoot = styled("div")({
   ".input": {
     display: "flex",
-    padding: "16px 0px 8px 16px",
+    padding: "36px 0px 18px 16px",
     ".MuiFormControl-root": {
       flexGrow: 1,
     },
@@ -306,14 +314,14 @@ const SectionRoot = styled("div")({
       width: "50px",
     },
     ...companyColor,
-    ".emptyMsg": {
-      fontSize: "15px",
-      textAlign: "center",
-      padding: "20px 0",
-    },
     ".stopName": {
       fontSize: "12px",
     },
+  },
+  ".emptyMsg": {
+    fontSize: "15px",
+    textAlign: "center",
+    padding: "20px 0",
   },
   li: {
     display: "flex",
