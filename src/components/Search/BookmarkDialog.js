@@ -16,7 +16,7 @@ import {
   Close as CloseIcon,
   Add as AddIcon,
   KeyboardReturn as KeyboardReturnIcon,
-  ArrowBackIos as ArrowBackIosNewIcon,
+  ArrowBackIosNew as ArrowBackIosNewIcon,
 } from "@mui/icons-material";
 import { getLocalStorage } from "../../Utils";
 import { companyColor } from "../../constants/Constants";
@@ -275,9 +275,17 @@ const CategoryRoot = styled("div")({
     textAlign: "center",
     padding: "20px 0",
   },
-  ".MuiListItemText-secondary": {
-    paddingLeft: "8px",
-    ...companyColor,
+  ".MuiListItemText-root": {
+    display: "flex",
+    alignItems: "center",
+    ".MuiListItemText-primary": {
+      width: "70px",
+    },
+    ".MuiListItemText-secondary": {
+      paddingLeft: "8px",
+      fontSize: "12px",
+      ...companyColor,
+    },
   },
 });
 

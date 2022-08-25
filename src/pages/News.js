@@ -12,7 +12,7 @@ export const News = () => {
     };
 
     intervalContent();
-    const interval = setInterval(intervalContent, 30000);
+    const interval = setInterval(intervalContent, 60000);
 
     return () => clearInterval(interval);
   }, []);

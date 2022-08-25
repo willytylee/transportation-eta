@@ -52,7 +52,7 @@ export const Mtrs = ({ section }) => {
     };
 
     intervalContent();
-    const interval = setInterval(intervalContent, 5000);
+    const interval = setInterval(intervalContent, 10000);
 
     return () => clearInterval(interval);
   }, [section]);

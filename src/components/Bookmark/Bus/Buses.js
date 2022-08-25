@@ -77,7 +77,7 @@ export const Buses = ({ section }) => {
     };
 
     intervalContent();
-    const interval = setInterval(intervalContent, 5000);
+    const interval = setInterval(intervalContent, 10000);
 
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps

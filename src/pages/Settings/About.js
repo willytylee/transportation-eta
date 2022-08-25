@@ -62,23 +62,6 @@ export const About = () => {
       <ListItem disablePadding>
         <ListItemButton
           component="a"
-          href="https://data.gov.hk"
-          target="_blank"
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <DepartureBoardIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary="交通資料來源"
-            secondary="資料一線通  https://data.gov.hk"
-          />
-        </ListItemButton>
-      </ListItem>
-      <ListItem disablePadding>
-        <ListItemButton
-          component="a"
           href="https://github.com/hkbus/hk-bus-crawling"
           target="_blank"
         >
@@ -90,6 +73,24 @@ export const About = () => {
           <ListItemText
             primary="交通路線整合"
             secondary="HK Bus Crawling@2021, https://github.com/hkbus/hk-bus-crawling"
+          />
+        </ListItemButton>
+      </ListItem>
+      <Divider />
+      <ListItem disablePadding>
+        <ListItemButton
+          component="a"
+          href="https://data.gov.hk"
+          target="_blank"
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <DepartureBoardIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary="交通資料來源"
+            secondary="資料一線通  https://data.gov.hk"
           />
         </ListItemButton>
       </ListItem>

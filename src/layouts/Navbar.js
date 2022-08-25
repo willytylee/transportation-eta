@@ -33,7 +33,7 @@ export const Navbar = () => {
     };
 
     intervalContent();
-    const interval = setInterval(intervalContent, 10000);
+    const interval = setInterval(intervalContent, 120000);
 
     return () => clearInterval(interval);
   }, []);
