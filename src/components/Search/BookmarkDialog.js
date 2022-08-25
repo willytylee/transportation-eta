@@ -89,15 +89,20 @@ export const BookmarkDialog = ({
         JSON.stringify(transportData)
       );
     }
-    enqueueSnackbar(`成功加入路線 ${bookmarkRouteObj.route}`, {
-      variant: "success",
-    });
+    enqueueSnackbar(
+      `成功加入路線 ${bookmarkRouteObj.route} 到: ${
+        transportData[categoryIdx].title
+      } → 組合${i + 1}`,
+      {
+        variant: "success",
+      }
+    );
     setCategoryIdx(-1);
     setBookmarkDialogMode(null);
   };
 
   const handleSectionAddBtnOnClick = () => {
-    transportData[categoryIdx].data.push([bookmarkRouteObj]);
+    transportData[categoryIdx].data.push([]);
     localStorage.setItem(
       "bookmark",
       compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
@@ -108,11 +113,6 @@ export const BookmarkDialog = ({
         JSON.stringify(transportData)
       );
     }
-    enqueueSnackbar(`成功加入路線 ${bookmarkRouteObj.route}`, {
-      variant: "success",
-    });
-    setCategoryIdx(-1);
-    setBookmarkDialogMode(null);
   };
 
   const handleSectionBackBtnOnClick = () => {
@@ -152,18 +152,25 @@ export const BookmarkDialog = ({
                   >
                     <ListItemText
                       primary={e.title}
-                      secondary={e.data.map((f, j) => (
-                        <span key={j}>
-                          {f
-                            .map((g, k) => (
-                              <span key={k} className={g.co}>
-                                {g.route}
-                              </span>
-                            ))
-                            .reduce((a, b) => [a, " + ", b])}
-                          <br />
-                        </span>
-                      ))}
+                      secondary={
+                        e.data.length > 0 ? (
+                          e.data.map((f, j) => (
+                            <span key={j}>
+                              {f.length > 0 &&
+                                f
+                                  .map((g, k) => (
+                                    <span key={k} className={g.co}>
+                                      {g.route}
+                                    </span>
+                                  ))
+                                  .reduce((a, b) => [a, " + ", b])}
+                              <br />
+                            </span>
+                          ))
+                        ) : (
+                          <>未有組合</>
+                        )
+                      }
                     />
                   </ListItem>
                   {i !== transportData.length - 1 ? <Divider /> : null}
@@ -237,7 +244,8 @@ export const BookmarkDialog = ({
                 <div key={i}>
                   <ListItem button onClick={() => handleSectionItemOnClick(i)}>
                     <ListItemText
-                      primary={
+                      primary={`組合${i + 1}`}
+                      secondary={
                         <li>
                           {e.map((f, j) => (
                             <span key={j}>
@@ -308,23 +316,28 @@ const CategoryAddRoot = styled("div")({
 });
 
 const SectionRoot = styled("div")({
-  ".MuiListItemText-primary": {
-    ".route": {
-      display: "inline-block",
-      width: "50px",
+  ".MuiListItemText-root": {
+    display: "flex",
+    alignItems: "center",
+    ".MuiListItemText-primary": {
+      width: "70px",
     },
-    ...companyColor,
-    ".stopName": {
+    ".MuiListItemText-secondary": {
       fontSize: "12px",
+      li: {
+        display: "flex",
+        flexDirection: "column",
+        ".route": {
+          display: "inline-block",
+          width: "50px",
+        },
+        ...companyColor,
+      },
     },
   },
   ".emptyMsg": {
     fontSize: "15px",
     textAlign: "center",
     padding: "20px 0",
-  },
-  li: {
-    display: "flex",
-    flexDirection: "column",
   },
 });

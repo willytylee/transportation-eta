@@ -84,10 +84,7 @@ export const Settings = () => {
                 <TuneIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText
-              primary="個人化設定"
-              secondary="預設版面, 路線搜尋模式 等等..."
-            />
+            <ListItemText primary="個人化設定" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -122,10 +119,7 @@ export const Settings = () => {
                 </Avatar>
               </Badge>
             </ListItemAvatar>
-            <ListItemText
-              primary="更新"
-              secondary="更新應用程式 或 重新建立路線資料庫"
-            />
+            <ListItemText primary="更新" />
           </ListItemButton>
         </ListItem>
         <Divider />
@@ -138,7 +132,7 @@ export const Settings = () => {
                 <DownloadIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="安裝到手機" secondary="加至主畫面" />
+            <ListItemText primary="安裝到手機" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -174,10 +168,7 @@ export const Settings = () => {
                 <SourceIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText
-              primary="關於"
-              secondary="最新功能, 原始碼, 資料來源 等等..."
-            />
+            <ListItemText primary="關於" />
           </ListItemButton>
         </ListItem>
       </List>
