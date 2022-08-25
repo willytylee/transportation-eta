@@ -12,7 +12,7 @@ export const Buses = ({ section }) => {
 
   const bookmarkDisplay =
     JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay ||
-    "所有路線班次排序";
+    "簡短路線班次排序";
 
   let viewInit;
 

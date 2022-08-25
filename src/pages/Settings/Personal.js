@@ -38,9 +38,9 @@ export const Personal = () => {
     JSON.parse(localStorage.getItem("settings"))?.defaultScreen || "路線搜尋";
   const bookmarkDisplay =
     JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay ||
-    "所有路線班次排序";
+    "簡短路線班次排序";
   const etaRouteNum =
-    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "3個";
+    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "5個";
 
   const defaultScreenOptions = [
     { name: "路線搜尋", icon: <DirectionsBusIcon /> },
