@@ -58,7 +58,7 @@ export const List = ({ sectionData, longList }) => {
   });
 
   const etaRouteNum =
-    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "3個";
+    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "5個";
 
   if (!longList) {
     result = result.slice(0, etaRouteNum[0]);

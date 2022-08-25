@@ -25,6 +25,8 @@ import {
   Filter7 as Filter7Icon,
   Filter8 as Filter8Icon,
   Filter9 as Filter9Icon,
+  ManageSearch as ManageSearchIcon,
+  SavedSearch as SavedSearchIcon,
 } from "@mui/icons-material";
 import { SimpleSettingDialog } from "../../components/Settings/SimpleSettingDialog";
 
@@ -38,45 +40,60 @@ export const Personal = () => {
     JSON.parse(localStorage.getItem("settings"))?.defaultScreen || "路線搜尋";
   const bookmarkDisplay =
     JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay ||
-    "所有路線班次排序";
+    "簡短路線班次排序";
   const etaRouteNum =
-    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "3個";
+    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "5個";
+  const searchMethod =
+    JSON.parse(localStorage.getItem("settings"))?.searchMethod || "搜尋路線";
 
   const defaultScreenOptions = [
-    { name: "路線搜尋", icon: <DirectionsBusIcon /> },
-    { name: "交通消息", icon: <AnnouncementIcon /> },
-    { name: "收藏", icon: <FavoriteIcon /> },
-    { name: "天氣", icon: <ThermostatIcon /> },
+    { primary: "路線搜尋", icon: <DirectionsBusIcon /> },
+    { primary: "交通消息", icon: <AnnouncementIcon /> },
+    { primary: "收藏", icon: <FavoriteIcon /> },
+    { primary: "天氣", icon: <ThermostatIcon /> },
   ];
 
   const bookmarkDisplayOptions = [
-    { name: "簡短路線班次排序", icon: <AccessTimeIcon /> },
-    { name: "所有路線班次排序", icon: <DepartureBoardIcon /> },
-    { name: "詳細路線班次", icon: <TableViewIcon /> },
+    { primary: "簡短路線班次排序", icon: <AccessTimeIcon /> },
+    { primary: "所有路線班次排序", icon: <DepartureBoardIcon /> },
+    { primary: "詳細路線班次", icon: <TableViewIcon /> },
   ];
 
   const etaRouteNumOptions = [
-    { name: "1個", icon: <Filter1Icon /> },
-    { name: "2個", icon: <Filter2Icon /> },
-    { name: "3個", icon: <Filter3Icon /> },
-    { name: "4個", icon: <Filter4Icon /> },
-    { name: "5個", icon: <Filter5Icon /> },
-    { name: "6個", icon: <Filter6Icon /> },
-    { name: "7個", icon: <Filter7Icon /> },
-    { name: "8個", icon: <Filter8Icon /> },
-    { name: "9個", icon: <Filter9Icon /> },
+    { primary: "1個", icon: <Filter1Icon /> },
+    { primary: "2個", icon: <Filter2Icon /> },
+    { primary: "3個", icon: <Filter3Icon /> },
+    { primary: "4個", icon: <Filter4Icon /> },
+    { primary: "5個", icon: <Filter5Icon /> },
+    { primary: "6個", icon: <Filter6Icon /> },
+    { primary: "7個", icon: <Filter7Icon /> },
+    { primary: "8個", icon: <Filter8Icon /> },
+    { primary: "9個", icon: <Filter9Icon /> },
+  ];
+
+  const searchMethodOptions = [
+    {
+      primary: "搜尋路線",
+      secondary: "自動列出所有包含搜尋字眼路線, 運算較快手機適用",
+      icon: <ManageSearchIcon />,
+    },
+    {
+      primary: "交通路線",
+      secondary: "只列出搜尋字眼路線, 運算較慢手機適用",
+      icon: <SavedSearchIcon />,
+    },
   ];
 
   const handleDefaltScreenItemOnClick = () => {
     setDialogOpen(true);
-    setDialogTitle("預設載入版面");
+    setDialogTitle("預設版面");
     setDialogKey("defaultScreen");
     setDialogOptions(defaultScreenOptions);
   };
 
   const handleBookmarkDisplayItemOnClick = () => {
     setDialogOpen(true);
-    setDialogTitle("預設收藏顯示模式");
+    setDialogTitle("收藏顯示模式");
     setDialogKey("bookmarkDisplay");
     setDialogOptions(bookmarkDisplayOptions);
   };
@@ -88,6 +105,13 @@ export const Personal = () => {
     setDialogOptions(etaRouteNumOptions);
   };
 
+  const handleSearchMethodItemOnClick = () => {
+    setDialogOpen(true);
+    setDialogTitle("路線搜尋模式");
+    setDialogKey("searchMethod");
+    setDialogOptions(searchMethodOptions);
+  };
+
   return (
     <>
       <List subheader={<ListSubheader>應用程式</ListSubheader>}>
@@ -97,12 +121,28 @@ export const Personal = () => {
               <Avatar>
                 {
                   defaultScreenOptions.filter(
-                    (e) => e.name === defaultScreen
+                    (e) => e.primary === defaultScreen
                   )[0]?.icon
                 }
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="預設載入版面" secondary={defaultScreen} />
+            <ListItemText primary="預設版面" secondary={defaultScreen} />
+          </ListItemButton>
+        </ListItem>
+      </List>
+      <List subheader={<ListSubheader>路線搜尋</ListSubheader>}>
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleSearchMethodItemOnClick}>
+            <ListItemAvatar>
+              <Avatar>
+                {
+                  searchMethodOptions.filter(
+                    (e) => e.primary === searchMethod
+                  )[0]?.icon
+                }
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="路線搜尋模式" secondary={searchMethod} />
           </ListItemButton>
         </ListItem>
       </List>
@@ -113,15 +153,14 @@ export const Personal = () => {
               <Avatar>
                 {
                   bookmarkDisplayOptions.filter(
-                    (e) => e.name === bookmarkDisplay
+                    (e) => e.primary === bookmarkDisplay
                   )[0]?.icon
                 }
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="預設顯示模式" secondary={bookmarkDisplay} />
+            <ListItemText primary="顯示模式" secondary={bookmarkDisplay} />
           </ListItemButton>
         </ListItem>
-
         <ListItem disablePadding>
           <ListItemButton
             onClick={handleEtaRouteNumItemOnClick}
@@ -130,8 +169,8 @@ export const Personal = () => {
             <ListItemAvatar>
               <Avatar>
                 {
-                  etaRouteNumOptions.filter((e) => e.name === etaRouteNum)[0]
-                    .icon
+                  etaRouteNumOptions.filter((e) => e.primary === etaRouteNum)[0]
+                    ?.icon
                 }
               </Avatar>
             </ListItemAvatar>

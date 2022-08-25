@@ -51,11 +51,11 @@ export const SimpleSettingDialog = ({
               key={i}
               button
               onClick={() => {
-                handleListItemOnClick(e.name);
+                handleListItemOnClick(e.primary);
               }}
             >
               <ListItemIcon>{e.icon}</ListItemIcon>
-              <ListItemText primary={e.name} />
+              <ListItemText primary={e.primary} secondary={e.secondary} />
             </ListItem>
           ))}
         </List>

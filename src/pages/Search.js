@@ -13,15 +13,18 @@ import { primaryColor } from "../constants/Constants";
 import { AppContext } from "../context/AppContext";
 
 export const Search = () => {
-  const [tabIdx, setTabIdx] = useState(0);
+  const searchMethod =
+    JSON.parse(localStorage.getItem("settings"))?.searchMethod || "搜尋路線";
+
+  const [tabIdx, setTabIdx] = useState(searchMethod === "搜尋路線" ? 0 : 1);
   const { updateCurrRoute, updateRoute } = useContext(EtaContext);
   const { dbVersion } = useContext(AppContext);
 
   const handleFormChange = (text) => {
     updateRoute(text.toUpperCase());
     updateCurrRoute({});
-    if (tabIdx !== 0) {
-      setTabIdx(0);
+    if (tabIdx !== 0 && tabIdx !== 1) {
+      setTabIdx(searchMethod === "搜尋路線" ? 0 : 1);
     }
   };
 

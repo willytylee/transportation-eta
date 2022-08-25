@@ -7,12 +7,9 @@ import { List } from "./List";
 
 // Works for KMB, NWFB, CTB and GMB
 export const Buses = ({ section }) => {
-  const { gStopList, gRouteList } = useContext(DbContext);
-  const [sectionData, setSectionData] = useState([]);
-
   const bookmarkDisplay =
     JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay ||
-    "所有路線班次排序";
+    "簡短路線班次排序";
 
   let viewInit;
 
@@ -31,6 +28,8 @@ export const Buses = ({ section }) => {
   }
 
   const [view, setView] = useState(viewInit);
+  const { gStopList, gRouteList } = useContext(DbContext);
+  const [sectionData, setSectionData] = useState([]);
 
   useEffect(() => {
     const intervalContent = async () => {
