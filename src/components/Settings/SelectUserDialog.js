@@ -8,6 +8,7 @@ import {
   Grid,
   IconButton,
   DialogTitle,
+  ListItemButton,
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
 import PinInput from "react-pin-input";
@@ -80,14 +81,14 @@ export const SelectUserDialog = ({
             {dataSet
               .filter((e) => e.display)
               .map((e, i) => (
-                <ListItem
-                  button
-                  onClick={() => {
-                    handleUserListOnClick(e);
-                  }}
-                  key={i}
-                >
-                  <ListItemText primary={e.username} />
+                <ListItem key={i} disablePadding>
+                  <ListItemButton
+                    onClick={() => {
+                      handleUserListOnClick(e);
+                    }}
+                  >
+                    <ListItemText primary={e.username} />
+                  </ListItemButton>
                 </ListItem>
               ))}
           </List>

@@ -97,7 +97,7 @@ export const Settings = () => {
               <ListItemAvatar>
                 <Avatar />
               </ListItemAvatar>
-              <ListItemText primary="編輯收藏" />
+              <ListItemText primary="自訂收藏" />
             </ListItemButton>
           </ListItem>
         )}

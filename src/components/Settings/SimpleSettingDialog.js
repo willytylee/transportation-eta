@@ -8,6 +8,7 @@ import {
   Grid,
   IconButton,
   DialogTitle,
+  ListItemButton,
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
 
@@ -47,15 +48,15 @@ export const SimpleSettingDialog = ({
 
         <List sx={{ pt: 0 }}>
           {dialogOptions.map((e, i) => (
-            <ListItem
-              key={i}
-              button
-              onClick={() => {
-                handleListItemOnClick(e.primary);
-              }}
-            >
-              <ListItemIcon>{e.icon}</ListItemIcon>
-              <ListItemText primary={e.primary} secondary={e.secondary} />
+            <ListItem key={i} disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  handleListItemOnClick(e.primary);
+                }}
+              >
+                <ListItemIcon>{e.icon}</ListItemIcon>
+                <ListItemText primary={e.primary} secondary={e.secondary} />
+              </ListItemButton>
             </ListItem>
           ))}
         </List>
