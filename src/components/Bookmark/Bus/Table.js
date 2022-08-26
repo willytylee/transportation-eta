@@ -13,40 +13,28 @@ import { companyColor, primaryColor } from "../../../constants/Constants";
 export const Table = ({ sectionData }) => {
   const [expanded, setExpanded] = useState(false);
 
-  const result = sectionData
-    .map((e) => {
-      const {
-        co,
-        etas,
-        route,
-        stopName,
-        location: { lat, lng },
-      } = e;
+  const result = sectionData.map((e) => {
+    const {
+      co,
+      etas,
+      route,
+      stopName,
+      location: { lat, lng },
+    } = e;
 
-      return {
-        co,
-        route,
-        etas:
-          etas.length === 0
-            ? ["沒有班次"]
-            : etas
-                .map((f) => etaTimeConverter(f.eta, f.rmk_tc).etaIntervalStr)
-                .slice(0, 3),
-        stopName,
-        latLngUrl: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
-      };
-    })
-    .sort((a, b) => {
-      let routeReturn = 0;
-      if (a.route < b.route) {
-        routeReturn = -1;
-      }
-      if (a.route > b.route) {
-        routeReturn = 1;
-      }
-
-      return routeReturn;
-    });
+    return {
+      co,
+      route,
+      etas:
+        etas.length === 0
+          ? ["沒有班次"]
+          : etas
+              .map((f) => etaTimeConverter(f.eta, f.rmk_tc).etaIntervalStr)
+              .slice(0, 3),
+      stopName,
+      latLngUrl: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
+    };
+  });
 
   const handleChange = (panel) => (e, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
