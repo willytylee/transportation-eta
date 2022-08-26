@@ -1,5 +1,9 @@
 import { useState, useEffect, useContext } from "react";
-import { styled } from "@mui/material";
+import { styled, IconButton } from "@mui/material";
+import {
+  ExpandMore as ExpandMoreIcon,
+  ExpandLess as ExpandLessIcon,
+} from "@mui/icons-material";
 import { fetchEtas } from "../../../fetch/transports";
 import { DbContext } from "../../../context/DbContext";
 import { Table } from "./Table";
@@ -84,33 +88,61 @@ export const Buses = ({ section }) => {
   }, [section]);
 
   const handleSwitchBtnOnClick = () => {
-    if (bookmarkDisplay === "所有路線班次排序") {
-      if (view === "longList") {
-        setView("table");
-      } else if (view === "table") {
-        setView("longList");
-      }
+    if (view !== "table") {
+      setView("table");
+    } else if (bookmarkDisplay === "所有路線班次排序") {
+      setView("longList");
     } else {
-      if (view === "list") {
-        setView("longList");
-      } else if (view === "longList") {
-        setView("table");
-      } else if (view === "table") {
-        setView("list");
-      }
+      setView("list");
     }
   };
 
   return (
     <BusesRoot>
-      <button type="button" onClick={() => handleSwitchBtnOnClick(view)}>
+      <button
+        type="button"
+        className="switchBtn"
+        onClick={() => handleSwitchBtnOnClick(view)}
+      >
         {view === "list" && "簡短路線班次排序"}
         {view === "longList" && "所有路線班次排序"}
         {view === "table" && "詳細路線班次"}
       </button>
 
-      {view === "list" && <List sectionData={sectionData} longList={false} />}
-      {view === "longList" && <List sectionData={sectionData} longList />}
+      {view === "list" && (
+        <>
+          <List sectionData={sectionData} longList={false} />
+          <div className="expandIconWrapper">
+            {view === "list" && (
+              <IconButton
+                className="expandBtn"
+                onClick={() => {
+                  setView("longList");
+                }}
+              >
+                <ExpandMoreIcon fontSize="small" />
+              </IconButton>
+            )}
+          </div>
+        </>
+      )}
+      {view === "longList" && (
+        <>
+          <List sectionData={sectionData} longList />
+          <div className="expandIconWrapper">
+            {view === "longList" && (
+              <IconButton
+                className="expandLessBtn"
+                onClick={() => {
+                  setView("list");
+                }}
+              >
+                <ExpandLessIcon fontSize="small" />
+              </IconButton>
+            )}
+          </div>
+        </>
+      )}
       {view === "table" && <Table sectionData={sectionData} />}
     </BusesRoot>
   );
@@ -118,7 +150,7 @@ export const Buses = ({ section }) => {
 
 const BusesRoot = styled("div")({
   paddingTop: "6px",
-  button: {
+  ".switchBtn": {
     borderRadius: "22px",
     color: "#136ac1",
     borderWidth: "0",
@@ -126,5 +158,12 @@ const BusesRoot = styled("div")({
     fontSize: "13px",
     margin: "2px 0",
     width: "145px",
+  },
+  ".expandIconWrapper": {
+    display: "flex",
+    justifyContent: "center",
+    button: {
+      padding: 0,
+    },
   },
 });
