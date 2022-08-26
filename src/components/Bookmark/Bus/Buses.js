@@ -155,7 +155,7 @@ const BusesRoot = styled("div")({
       height: "22px",
     },
     ".expandBtn, .expandLessBtn": {
-      padding: 0,
+      padding: "3px",
       marginRight: "8px",
     },
   },

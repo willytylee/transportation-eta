@@ -91,7 +91,7 @@ export const Settings = () => {
           <ListItem disablePadding>
             <ListItemButton
               onClick={() =>
-                navigate("/settings/bookmarkEdit", { replace: true })
+                navigate("/settings/bookmarkModify", { replace: true })
               }
             >
               <ListItemAvatar>

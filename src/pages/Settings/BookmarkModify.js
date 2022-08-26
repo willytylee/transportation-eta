@@ -11,7 +11,7 @@ import {
 import { AccountCircle as AccountCircleIcon } from "@mui/icons-material";
 import { BookmarkDialog } from "../../components/Settings/BookmarkDialog";
 
-export const BookmarkEdit = () => {
+export const BookmarkModify = () => {
   const [bookmarkDialogMode, setBookmarkDialogMode] = useState(null);
 
   return (
