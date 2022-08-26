@@ -12,10 +12,9 @@ import {
   KeyboardReturn as KeyboardReturnIcon,
   ArrowBackIosNew as ArrowBackIosNewIcon,
 } from "@mui/icons-material";
-import { getLocalStorage } from "../../../Utils/Utils";
+import { getLocalStorage } from "../../Utils/Utils";
 
 export const CategoryAdd = ({
-  setCategoryIdx,
   setBookmarkDialogMode,
   handleDialogCloseBtnOnClick,
 }) => {

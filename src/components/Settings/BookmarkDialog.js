@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { styled, Dialog } from "@mui/material/";
-import { CategoryAdd } from "../Search/BookmarkDialog/CategoryAdd";
+import { CategoryAdd } from "../BookmarkDialog/CategoryAdd";
 import { Category } from "./BookmarkDialog/Category";
 import { Section } from "./BookmarkDialog/Section";
 

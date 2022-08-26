@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { styled, Dialog } from "@mui/material/";
+import { CategoryAdd } from "../BookmarkDialog/CategoryAdd";
 import { Category } from "./BookmarkDialog/Category";
-import { CategoryAdd } from "./BookmarkDialog/CategoryAdd";
 import { Section } from "./BookmarkDialog/Section";
 
 export const BookmarkDialog = ({
