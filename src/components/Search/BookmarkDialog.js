@@ -28,12 +28,14 @@ export const BookmarkDialog = ({
         <Category
           setBookmarkDialogMode={setBookmarkDialogMode}
           setCategoryIdx={setCategoryIdx}
+          handleDialogCloseBtnOnClick={handleDialogCloseBtnOnClick}
         />
       )}
       {bookmarkDialogMode === "categoryAdd" && (
         <CategoryAdd
           setCategoryIdx={setCategoryIdx}
           setBookmarkDialogMode={setBookmarkDialogMode}
+          handleDialogCloseBtnOnClick={handleDialogCloseBtnOnClick}
         />
       )}
       {bookmarkDialogMode === "section" && (
@@ -42,6 +44,7 @@ export const BookmarkDialog = ({
           setBookmarkDialogMode={setBookmarkDialogMode}
           categoryIdx={categoryIdx}
           bookmarkRouteObj={bookmarkRouteObj}
+          handleDialogCloseBtnOnClick={handleDialogCloseBtnOnClick}
         />
       )}
     </DialogRoot>
