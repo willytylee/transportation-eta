@@ -99,50 +99,40 @@ export const Buses = ({ section }) => {
 
   return (
     <BusesRoot>
-      <button
-        type="button"
-        className="switchBtn"
-        onClick={() => handleSwitchBtnOnClick(view)}
-      >
-        {view === "list" && "簡短班次排序"}
-        {view === "longList" && "所有班次排序"}
-        {view === "table" && "詳細路線班次"}
-      </button>
+      <div className="topBtnGroup">
+        <button
+          type="button"
+          className="switchBtn"
+          onClick={() => handleSwitchBtnOnClick(view)}
+        >
+          {view === "list" && "簡短班次排序"}
+          {view === "longList" && "所有班次排序"}
+          {view === "table" && "詳細路線班次"}
+        </button>
+        {view === "list" && (
+          <IconButton
+            className="expandBtn"
+            onClick={() => {
+              setView("longList");
+            }}
+          >
+            <ExpandMoreIcon fontSize="small" />
+          </IconButton>
+        )}
+        {view === "longList" && (
+          <IconButton
+            className="expandLessBtn"
+            onClick={() => {
+              setView("list");
+            }}
+          >
+            <ExpandLessIcon fontSize="small" />
+          </IconButton>
+        )}
+      </div>
 
-      {view === "list" && (
-        <>
-          <List sectionData={sectionData} longList={false} />
-          <div className="expandIconWrapper">
-            {view === "list" && (
-              <IconButton
-                className="expandBtn"
-                onClick={() => {
-                  setView("longList");
-                }}
-              >
-                <ExpandMoreIcon fontSize="small" />
-              </IconButton>
-            )}
-          </div>
-        </>
-      )}
-      {view === "longList" && (
-        <>
-          <List sectionData={sectionData} longList />
-          <div className="expandIconWrapper">
-            {view === "longList" && (
-              <IconButton
-                className="expandLessBtn"
-                onClick={() => {
-                  setView("list");
-                }}
-              >
-                <ExpandLessIcon fontSize="small" />
-              </IconButton>
-            )}
-          </div>
-        </>
-      )}
+      {view === "list" && <List sectionData={sectionData} longList={false} />}
+      {view === "longList" && <List sectionData={sectionData} longList />}
       {view === "table" && <Table sectionData={sectionData} />}
     </BusesRoot>
   );
@@ -150,21 +140,19 @@ export const Buses = ({ section }) => {
 
 const BusesRoot = styled("div")({
   paddingTop: "6px",
-  ".switchBtn": {
-    borderRadius: "22px",
-    color: "#136ac1",
-    borderWidth: "0",
-    padding: "2px 0",
-    fontSize: "13px",
-    margin: "2px 0",
-    width: "145px",
-  },
-  ".expandIconWrapper": {
+  ".topBtnGroup": {
     display: "flex",
-    justifyContent: "center",
-    button: {
-      padding: 0,
-      width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    ".switchBtn": {
+      borderRadius: "22px",
+      color: "#136ac1",
+      borderWidth: "0",
+      padding: "2px 0",
+      fontSize: "13px",
+      margin: "2px 0",
+      width: "145px",
+      height: "22px",
     },
   },
 });
