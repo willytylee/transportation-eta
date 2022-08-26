@@ -96,17 +96,20 @@ const CategoryRoot = styled("div")({
     textAlign: "center",
     padding: "20px 0",
   },
-  ".MuiListItemText-root": {
-    display: "flex",
-    alignItems: "center",
-    ".MuiListItemText-primary": {
-      width: "30%",
-    },
-    ".MuiListItemText-secondary": {
-      width: "70%",
-      paddingLeft: "8px",
-      fontSize: "12px",
-      ...companyColor,
+  ".MuiListItemButton-root": {
+    paddingRight: "75px",
+    ".MuiListItemText-root": {
+      display: "flex",
+      alignItems: "center",
+      ".MuiListItemText-primary": {
+        width: "30%",
+      },
+      ".MuiListItemText-secondary": {
+        width: "70%",
+        paddingLeft: "8px",
+        fontSize: "12px",
+        ...companyColor,
+      },
     },
   },
 });
