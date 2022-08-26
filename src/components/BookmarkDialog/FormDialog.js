@@ -52,7 +52,6 @@ export const FormDialog = ({
       />
     </DialogContent>
     <DialogActions>
-      <Button onClick={handleDialogCloseBtnOnClick}>取消</Button>
       <Button onClick={handleConfirmBtnOnClick}>確定</Button>
     </DialogActions>
   </FormDialogRoot>

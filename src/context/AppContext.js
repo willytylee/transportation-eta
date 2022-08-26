@@ -29,7 +29,7 @@ export const AppProvider = ({ children }) => {
       navigator.geolocation.getCurrentPosition(success);
     };
     intervalContent();
-    setInterval(intervalContent, 1000);
+    setInterval(intervalContent, 5000);
   }, []);
 
   const initAppVersion = useCallback(() => {

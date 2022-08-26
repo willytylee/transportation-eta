@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 import { compress as compressJson } from "lzutf8-light";
-import { styled, Dialog } from "@mui/material/";
+import { styled, Dialog, IconButton } from "@mui/material/";
+import { Close as CloseIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { FormDialog } from "../BookmarkDialog/FormDialog";
 import { getLocalStorage } from "../../Utils/Utils";
 import { ListBtnDialog } from "../BookmarkDialog/ListBtnDialog";
@@ -8,14 +11,18 @@ import { ListBtnDialog } from "../BookmarkDialog/ListBtnDialog";
 export const BookmarkDialog = ({
   bookmarkDialogMode,
   setBookmarkDialogMode,
-  bookmarkRouteObj,
 }) => {
+  const navigate = useNavigate();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [categoryIdx, setCategoryIdx] = useState(-1);
-  const [categoryValue, setCategoryValue] = useState("");
-  const transportData = getLocalStorage("bookmark") || [];
+  const [sectionIdx, setSectionIdx] = useState(-1);
+  const [formValue, setFormValue] = useState("");
+  const _transportData = getLocalStorage("bookmark") || [];
+  const [transportData, setTransportData] = useState(_transportData);
 
   const handleDialogCloseBtnOnClick = () => {
     setCategoryIdx(-1);
+    setSectionIdx(-1);
     setBookmarkDialogMode(null);
   };
 
@@ -30,58 +37,110 @@ export const BookmarkDialog = ({
     setBookmarkDialogMode("categoryAdd");
   };
 
+  const handleCategoryEditBtnOnClick = (i) => {
+    setCategoryIdx(i);
+    setBookmarkDialogMode("categoryEdit");
+  };
+
+  const handleCategoryDeleteBtnOnClick = (i) => {
+    const action = (snackbarId) => (
+      <>
+        <IconButton
+          className="deleteBtn"
+          onClick={() => {
+            _transportData.splice(i, 1);
+            setTransportData(_transportData);
+            localStorage.setItem(
+              "bookmark",
+              compressJson(JSON.stringify(_transportData), {
+                outputEncoding: "Base64",
+              })
+            );
+            closeSnackbar(snackbarId);
+          }}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+        <IconButton
+          onClick={() => {
+            closeSnackbar(snackbarId);
+          }}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </>
+    );
+
+    enqueueSnackbar(`確定刪除 ${transportData[i].title} ?`, {
+      variant: "warning",
+      autoHideDuration: 5000,
+      action,
+    });
+  };
+
   // -------------------- Category Add --------------------
 
   const handleCategoryAddBackBtnOnClick = () => {
     setBookmarkDialogMode("category");
   };
 
-  const handleCategoryConfirmBtnOnClick = () => {
-    transportData.push({
-      title: categoryValue,
+  const handleCategoryAddConfirmBtnOnClick = () => {
+    _transportData.push({
+      title: formValue,
       data: [],
     });
+    setTransportData(_transportData);
     localStorage.setItem(
       "bookmark",
-      compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
+      compressJson(JSON.stringify(_transportData), { outputEncoding: "Base64" })
     );
     setBookmarkDialogMode("category");
-    setCategoryValue("");
+    setFormValue("");
   };
 
   const handleCategoryAddKeyPress = (e) => {
-    e.key === "Enter" && handleCategoryConfirmBtnOnClick();
+    e.key === "Enter" && handleCategoryAddConfirmBtnOnClick();
+  };
+
+  // -------------------- Category Edit --------------------
+
+  const handleCategoryEditBackBtnOnClick = () => {
+    setBookmarkDialogMode("category");
+  };
+
+  const handleCategoryEditConfirmBtnOnClick = () => {
+    _transportData[categoryIdx].title = formValue;
+    setTransportData(_transportData);
+    localStorage.setItem(
+      "bookmark",
+      compressJson(JSON.stringify(_transportData), { outputEncoding: "Base64" })
+    );
+    setBookmarkDialogMode("category");
+    setFormValue("");
+  };
+
+  const handleCategoryEditKeyPress = (e) => {
+    e.key === "Enter" && handleCategoryEditConfirmBtnOnClick();
   };
 
   // -------------------- Section --------------------
 
   const handleSectionItemOnClick = (i) => {
-    // transportData[categoryIdx].data[i].push(bookmarkRouteObj);
-    localStorage.setItem(
-      "bookmark",
-      compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
-    );
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-      localStorage.setItem(
-        "bookmark_nocompress",
-        JSON.stringify(transportData)
-      );
-    }
-
-    setCategoryIdx(-1);
-    setBookmarkDialogMode(null);
+    setSectionIdx(i);
+    setBookmarkDialogMode("route");
   };
 
   const handleSectionAddBtnOnClick = () => {
-    transportData[categoryIdx].data.push([]);
+    _transportData[categoryIdx].data.push([]);
+    setTransportData(_transportData);
     localStorage.setItem(
       "bookmark",
-      compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
+      compressJson(JSON.stringify(_transportData), { outputEncoding: "Base64" })
     );
     if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
       localStorage.setItem(
         "bookmark_nocompress",
-        JSON.stringify(transportData)
+        JSON.stringify(_transportData)
       );
     }
   };
@@ -89,6 +148,93 @@ export const BookmarkDialog = ({
   const handleSectionBackBtnOnClick = () => {
     setBookmarkDialogMode("category");
   };
+
+  const handleSectionDeleteBtnOnClick = (i) => {
+    const action = (snackbarId) => (
+      <>
+        <IconButton
+          className="deleteBtn"
+          onClick={() => {
+            _transportData[categoryIdx].data.splice(i, 1);
+            setTransportData(_transportData);
+            localStorage.setItem(
+              "bookmark",
+              compressJson(JSON.stringify(_transportData), {
+                outputEncoding: "Base64",
+              })
+            );
+            closeSnackbar(snackbarId);
+          }}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+        <IconButton
+          onClick={() => {
+            closeSnackbar(snackbarId);
+          }}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </>
+    );
+
+    enqueueSnackbar(`確定刪除 組合${i + 1} ?`, {
+      variant: "warning",
+      autoHideDuration: 5000,
+      action,
+    });
+  };
+
+  // -------------------- Route --------------------
+
+  const handleRouteBackBtnOnClick = () => {
+    setBookmarkDialogMode("section");
+  };
+
+  const handleRouteAddBtnOnClick = () => {
+    navigate("/search", { replace: true });
+  };
+
+  const handleRouteDeleteBtnOnClick = (i) => {
+    const action = (snackbarId) => (
+      <>
+        <IconButton
+          className="deleteBtn"
+          onClick={() => {
+            _transportData[categoryIdx].data[sectionIdx].splice(i, 1);
+            setTransportData(_transportData);
+            localStorage.setItem(
+              "bookmark",
+              compressJson(JSON.stringify(_transportData), {
+                outputEncoding: "Base64",
+              })
+            );
+            closeSnackbar(snackbarId);
+          }}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+        <IconButton
+          onClick={() => {
+            closeSnackbar(snackbarId);
+          }}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </>
+    );
+
+    enqueueSnackbar(
+      `確定刪除 ${transportData[categoryIdx].data[sectionIdx][i].route} ?`,
+      {
+        variant: "warning",
+        autoHideDuration: 5000,
+        action,
+      }
+    );
+  };
+
+  // ------------------------------------------------
 
   return (
     <DialogRoot
@@ -98,39 +244,64 @@ export const BookmarkDialog = ({
     >
       {bookmarkDialogMode === "category" && (
         <ListBtnDialog
-          title="編輯類別"
+          title="自訂類別"
+          emptyMsg="未有類別"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleItemOnClick={handleCategoryItemOnClick}
           handleAddBtnOnClick={handleCategoryAddBtnOnClick}
+          handleEditBtnOnClick={handleCategoryEditBtnOnClick}
+          handleDeleteBtnOnClick={handleCategoryDeleteBtnOnClick}
           data={transportData}
           bookmarkDialogMode={bookmarkDialogMode}
-          emptyMsg="未有類別, 按此新增類別"
         />
       )}
       {bookmarkDialogMode === "categoryAdd" && (
         <FormDialog
           title="新增類別"
           label="類別名稱"
-          value={categoryValue}
-          setValue={setCategoryValue}
-          setCategoryIdx={setCategoryIdx}
-          setBookmarkDialogMode={setBookmarkDialogMode}
+          value={formValue}
+          setValue={setFormValue}
           handleDialogCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleBackBtnOnClick={handleCategoryAddBackBtnOnClick}
-          handleConfirmBtnOnClick={handleCategoryConfirmBtnOnClick}
+          handleConfirmBtnOnClick={handleCategoryAddConfirmBtnOnClick}
           handleAddKeyPress={handleCategoryAddKeyPress}
+        />
+      )}
+      {bookmarkDialogMode === "categoryEdit" && (
+        <FormDialog
+          title="重新命名類別"
+          label="類別名稱"
+          value={formValue}
+          setValue={setFormValue}
+          handleDialogCloseBtnOnClick={handleDialogCloseBtnOnClick}
+          handleBackBtnOnClick={handleCategoryEditBackBtnOnClick}
+          handleConfirmBtnOnClick={handleCategoryEditConfirmBtnOnClick}
+          handleAddKeyPress={handleCategoryEditKeyPress}
         />
       )}
       {bookmarkDialogMode === "section" && (
         <ListBtnDialog
-          title="請選擇組合"
+          title="自訂組合"
+          emptyMsg="未有組合"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleItemOnClick={handleSectionItemOnClick}
           handleAddBtnOnClick={handleSectionAddBtnOnClick}
+          handleBackBtnOnClick={handleSectionBackBtnOnClick}
+          handleDeleteBtnOnClick={handleSectionDeleteBtnOnClick}
           data={transportData[categoryIdx].data}
           bookmarkDialogMode={bookmarkDialogMode}
-          handleBackBtnOnClick={handleSectionBackBtnOnClick}
-          emptyMsg="未有組合, 按此新增並加入路線"
+        />
+      )}
+      {bookmarkDialogMode === "route" && (
+        <ListBtnDialog
+          title="刪除路線"
+          emptyMsg="未有路線"
+          handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
+          handleBackBtnOnClick={handleRouteBackBtnOnClick}
+          handleAddBtnOnClick={handleRouteAddBtnOnClick}
+          handleDeleteBtnOnClick={handleRouteDeleteBtnOnClick}
+          data={transportData[categoryIdx].data[sectionIdx]}
+          bookmarkDialogMode={bookmarkDialogMode}
         />
       )}
     </DialogRoot>

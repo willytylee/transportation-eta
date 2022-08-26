@@ -36,6 +36,14 @@ a {
   bottom: 60px !important;
 }
 
+.SnackbarContainer-bottom button {
+  color: white;
+}
+
+.SnackbarContainer-bottom button.deleteBtn {
+  color: red;
+}
+
 .MuiDialogTitle-root {
   background: #2f305c;
   color: white;

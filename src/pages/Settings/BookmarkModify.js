@@ -8,7 +8,7 @@ import {
   Avatar,
 } from "@mui/material/";
 
-import { AccountCircle as AccountCircleIcon } from "@mui/icons-material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { BookmarkDialog } from "../../components/Settings/BookmarkDialog";
 
 export const BookmarkModify = () => {
@@ -21,7 +21,7 @@ export const BookmarkModify = () => {
           <ListItemButton onClick={() => setBookmarkDialogMode("category")}>
             <ListItemAvatar>
               <Avatar>
-                <AccountCircleIcon />
+                <EditIcon />
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="新增 / 編輯 / 刪除" />

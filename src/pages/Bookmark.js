@@ -23,12 +23,6 @@ export const Bookmark = () => {
           outputEncoding: "Base64",
         })
       );
-      if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-        localStorage.setItem(
-          "bookmark_nocompress",
-          JSON.stringify(data.transportData)
-        );
-      }
       setNewTransportData(data.transportData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

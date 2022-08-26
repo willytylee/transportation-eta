@@ -50,7 +50,7 @@ export const Buses = ({ section }) => {
               (route ? e.route === route : true) && // For bus
               (gtfsId ? e.gtfsId === gtfsId : true) && // For Gmb
               e.co.includes(co) &&
-              e.stops[co][seq - 1] === stopId
+              (e.stops[co] ? e.stops[co][seq - 1] === stopId : true)
           )[0];
         // Even if there are more than one result, the ETAs should be the same,
         // so [0] can be applied here

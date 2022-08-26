@@ -14,7 +14,8 @@ export const BookmarkDialog = ({
   const { enqueueSnackbar } = useSnackbar();
   const [categoryIdx, setCategoryIdx] = useState(-1);
   const [categoryValue, setCategoryValue] = useState("");
-  const transportData = getLocalStorage("bookmark") || [];
+  const _transportData = getLocalStorage("bookmark") || [];
+  const [transportData, setTransportData] = useState(_transportData);
 
   const handleDialogCloseBtnOnClick = () => {
     setCategoryIdx(-1);
@@ -39,13 +40,14 @@ export const BookmarkDialog = ({
   };
 
   const handleCategoryConfirmBtnOnClick = () => {
-    transportData.push({
+    _transportData.push({
       title: categoryValue,
       data: [],
     });
+    setTransportData(_transportData);
     localStorage.setItem(
       "bookmark",
-      compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
+      compressJson(JSON.stringify(_transportData), { outputEncoding: "Base64" })
     );
     setBookmarkDialogMode("category");
     setCategoryValue("");
@@ -58,15 +60,16 @@ export const BookmarkDialog = ({
   // -------------------- Section --------------------
 
   const handleSectionItemOnClick = (i) => {
-    transportData[categoryIdx].data[i].push(bookmarkRouteObj);
+    _transportData[categoryIdx].data[i].push(bookmarkRouteObj);
+    setTransportData(_transportData);
     localStorage.setItem(
       "bookmark",
-      compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
+      compressJson(JSON.stringify(_transportData), { outputEncoding: "Base64" })
     );
     if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
       localStorage.setItem(
         "bookmark_nocompress",
-        JSON.stringify(transportData)
+        JSON.stringify(_transportData)
       );
     }
     enqueueSnackbar(
@@ -82,15 +85,16 @@ export const BookmarkDialog = ({
   };
 
   const handleSectionAddBtnOnClick = () => {
-    transportData[categoryIdx].data.push([]);
+    _transportData[categoryIdx].data.push([]);
+    setTransportData(_transportData);
     localStorage.setItem(
       "bookmark",
-      compressJson(JSON.stringify(transportData), { outputEncoding: "Base64" })
+      compressJson(JSON.stringify(_transportData), { outputEncoding: "Base64" })
     );
     if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
       localStorage.setItem(
         "bookmark_nocompress",
-        JSON.stringify(transportData)
+        JSON.stringify(_transportData)
       );
     }
   };
@@ -113,7 +117,7 @@ export const BookmarkDialog = ({
           handleAddBtnOnClick={handleCategoryAddBtnOnClick}
           data={transportData}
           bookmarkDialogMode={bookmarkDialogMode}
-          emptyMsg="未有類別, 按此新增類別"
+          emptyMsg="未有類別"
         />
       )}
       {bookmarkDialogMode === "categoryAdd" && (
@@ -122,8 +126,6 @@ export const BookmarkDialog = ({
           label="類別名稱"
           value={categoryValue}
           setValue={setCategoryValue}
-          setCategoryIdx={setCategoryIdx}
-          setBookmarkDialogMode={setBookmarkDialogMode}
           handleDialogCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleBackBtnOnClick={handleCategoryAddBackBtnOnClick}
           handleConfirmBtnOnClick={handleCategoryConfirmBtnOnClick}
@@ -139,7 +141,7 @@ export const BookmarkDialog = ({
           data={transportData[categoryIdx].data}
           bookmarkDialogMode={bookmarkDialogMode}
           handleBackBtnOnClick={handleSectionBackBtnOnClick}
-          emptyMsg="未有組合, 按此新增並加入路線"
+          emptyMsg="未有組合"
         />
       )}
     </DialogRoot>

@@ -7,13 +7,13 @@ import {
   Divider,
   ListItemButton,
   styled,
+  ListItemText,
 } from "@mui/material/";
 import {
   Close as CloseIcon,
   Add as AddIcon,
   ArrowBackIosNew as ArrowBackIosNewIcon,
 } from "@mui/icons-material";
-import { companyColor } from "../../constants/Constants";
 import { CategoryListItemText } from "./CategoryListItemText";
 import { SectionListItemText } from "./SectionListItemText";
 
@@ -27,7 +27,7 @@ export const ListDialog = ({
   emptyMsg,
   handleBackBtnOnClick,
 }) => (
-  <ListDialogRoot bookmarkDialogMode={bookmarkDialogMode}>
+  <ListDialogRoot>
     <DialogTitle>
       <Grid>
         {handleBackBtnOnClick && (
@@ -72,19 +72,15 @@ export const ListDialog = ({
       </List>
     ) : (
       <List sx={{ pt: 0 }}>
-        <ListItem disablePadding>
-          <ListItemButton onClick={handleAddBtnOnClick}>
-            <div className="emptyMsg">{emptyMsg}</div>
-          </ListItemButton>
+        <ListItem>
+          <ListItemText primary={emptyMsg} />
         </ListItem>
       </List>
     )}
   </ListDialogRoot>
 );
 
-const ListDialogRoot = styled("div", {
-  shouldForwardProp: (prop) => prop !== "bookmarkDialogMode",
-})(({ bookmarkDialogMode }) => ({
+const ListDialogRoot = styled("div")({
   ".emptyMsg": {
     fontSize: "15px",
     textAlign: "center",
@@ -96,28 +92,5 @@ const ListDialogRoot = styled("div", {
     ".MuiListItemText-primary": {
       width: "70px",
     },
-    ...(bookmarkDialogMode === "category" && {
-      ".MuiListItemText-secondary": {
-        flex: 1,
-        paddingLeft: "8px",
-        fontSize: "12px",
-        ...companyColor,
-      },
-    }),
-    ...(bookmarkDialogMode === "section" && {
-      ".MuiListItemText-secondary": {
-        flex: 1,
-        fontSize: "12px",
-        li: {
-          display: "flex",
-          flexDirection: "column",
-          ".route": {
-            display: "inline-block",
-            width: "50px",
-          },
-          ...companyColor,
-        },
-      },
-    }),
   },
-}));
+});

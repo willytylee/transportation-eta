@@ -20,6 +20,7 @@ import {
   Tune as TuneIcon,
   LayersClear as LayersClearIcon,
   Share as ShareIcon,
+  Edit as EditIcon,
 } from "@mui/icons-material";
 import { SelectUserDialog } from "../components/Settings/SelectUserDialog";
 import { AppContext } from "../context/AppContext";
@@ -95,7 +96,9 @@ export const Settings = () => {
               }
             >
               <ListItemAvatar>
-                <Avatar />
+                <Avatar>
+                  <EditIcon />
+                </Avatar>
               </ListItemAvatar>
               <ListItemText primary="自訂收藏" />
             </ListItemButton>

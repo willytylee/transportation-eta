@@ -7,6 +7,7 @@ import {
   Divider,
   ListItemButton,
   styled,
+  ListItemText,
 } from "@mui/material/";
 import {
   Close as CloseIcon,
@@ -15,9 +16,9 @@ import {
   Delete as DeleteIcon,
   Edit as EditIcon,
 } from "@mui/icons-material";
-import { companyColor } from "../../constants/Constants";
 import { CategoryListItemText } from "./CategoryListItemText";
 import { SectionListItemText } from "./SectionListItemText";
+import { RouteListItemText } from "./RouteListItemText";
 
 export const ListBtnDialog = ({
   title,
@@ -28,6 +29,8 @@ export const ListBtnDialog = ({
   data,
   emptyMsg,
   handleBackBtnOnClick,
+  handleEditBtnOnClick,
+  handleDeleteBtnOnClick,
 }) => (
   <ListDialogRoot bookmarkDialogMode={bookmarkDialogMode}>
     <DialogTitle>
@@ -41,9 +44,11 @@ export const ListBtnDialog = ({
         )}
         <div className="title">{title}</div>
         <div className="rightBtnGroup">
-          <IconButton onClick={handleAddBtnOnClick}>
-            <AddIcon />
-          </IconButton>
+          {handleAddBtnOnClick && (
+            <IconButton onClick={handleAddBtnOnClick}>
+              <AddIcon />
+            </IconButton>
+          )}
           <IconButton onClick={handleCloseBtnOnClick}>
             <CloseIcon />
           </IconButton>
@@ -57,10 +62,18 @@ export const ListBtnDialog = ({
             <ListItem
               secondaryAction={
                 <>
-                  <IconButton edge="end" aria-label="edit">
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton edge="end" aria-label="delete">
+                  {handleEditBtnOnClick && (
+                    <IconButton
+                      edge="end"
+                      onClick={() => handleEditBtnOnClick(i)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  )}
+                  <IconButton
+                    edge="end"
+                    onClick={() => handleDeleteBtnOnClick(i)}
+                  >
                     <DeleteIcon />
                   </IconButton>
                 </>
@@ -69,7 +82,7 @@ export const ListBtnDialog = ({
             >
               <ListItemButton
                 onClick={() => {
-                  handleItemOnClick(i);
+                  handleItemOnClick && handleItemOnClick(i);
                 }}
               >
                 {bookmarkDialogMode === "category" && (
@@ -77,6 +90,9 @@ export const ListBtnDialog = ({
                 )}
                 {bookmarkDialogMode === "section" && (
                   <SectionListItemText i={i} e={e} />
+                )}
+                {bookmarkDialogMode === "route" && (
+                  <RouteListItemText i={i} e={e} />
                 )}
               </ListItemButton>
             </ListItem>
@@ -86,10 +102,8 @@ export const ListBtnDialog = ({
       </List>
     ) : (
       <List sx={{ pt: 0 }}>
-        <ListItem disablePadding>
-          <ListItemButton onClick={handleAddBtnOnClick}>
-            <div className="emptyMsg">{emptyMsg}</div>
-          </ListItemButton>
+        <ListItem>
+          <ListItemText primary={emptyMsg} />
         </ListItem>
       </List>
     )}
@@ -106,35 +120,18 @@ const ListDialogRoot = styled("div", {
   },
 
   ".MuiListItemButton-root": {
-    paddingRight: "115px !important",
+    ...(bookmarkDialogMode === "category" && {
+      paddingRight: "115px !important",
+    }),
+    ...(bookmarkDialogMode === "section" && {
+      paddingRight: "75px !important",
+    }),
     ".MuiListItemText-root": {
       display: "flex",
       alignItems: "center",
       ".MuiListItemText-primary": {
         width: "70px",
       },
-      ...(bookmarkDialogMode === "category" && {
-        ".MuiListItemText-secondary": {
-          flex: 1,
-          paddingLeft: "8px",
-          fontSize: "12px",
-          ...companyColor,
-        },
-      }),
-      ...(bookmarkDialogMode === "section" && {
-        ".MuiListItemText-secondary": {
-          fontSize: "12px",
-          li: {
-            display: "flex",
-            flexDirection: "column",
-            ".route": {
-              display: "inline-block",
-              width: "50px",
-            },
-            ...companyColor,
-          },
-        },
-      }),
     },
   },
   ".MuiListItemSecondaryAction-root": {

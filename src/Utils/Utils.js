@@ -145,7 +145,7 @@ export const setRouteListHistory = (routeObj) => {
   const isInHistory = routeListHistory.filter((e) => isMatchRoute(e, routeObj));
 
   if (isInHistory.length === 0) {
-    if (routeListHistory.length >= 20) {
+    if (routeListHistory.length >= 10) {
       routeListHistory.pop();
     }
     routeListHistory.unshift(routeObj);
