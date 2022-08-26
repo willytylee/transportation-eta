@@ -18,8 +18,8 @@ export const Buses = ({ section }) => {
   let viewInit;
 
   switch (bookmarkDisplay) {
-    case "簡短班次排序":
-      viewInit = "list";
+    case "所有班次排序":
+      viewInit = "longList";
       break;
 
     case "詳細路線班次":
@@ -27,7 +27,7 @@ export const Buses = ({ section }) => {
       break;
 
     default:
-      viewInit = "longList";
+      viewInit = "list";
       break;
   }
 
