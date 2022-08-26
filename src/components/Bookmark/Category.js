@@ -3,8 +3,8 @@ import { Buses } from "./Bus/Buses";
 import { Mtrs } from "./Mtr/Mtrs";
 
 export const Category = ({ category }) => (
-  <SectionRoot>
-    <div>{category.title}</div>
+  <CategoryRoot>
+    <div className="categoryName">{category.title}</div>
     {category.data.map((e, i) => {
       const firstCo = e[0]?.co;
       if (
@@ -19,12 +19,15 @@ export const Category = ({ category }) => (
       }
       return null;
     })}
-  </SectionRoot>
+  </CategoryRoot>
 );
 
-const SectionRoot = styled("div")({
+const CategoryRoot = styled("div")({
   padding: "10px",
   borderRadius: "2px",
   borderBottom: "1px solid lightgrey",
   background: "white",
+  ".categoryName": {
+    fontSize: "15px",
+  },
 });
