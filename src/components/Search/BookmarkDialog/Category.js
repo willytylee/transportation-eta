@@ -84,9 +84,10 @@ const CategoryRoot = styled("div")({
     display: "flex",
     alignItems: "center",
     ".MuiListItemText-primary": {
-      width: "70px",
+      width: "30%",
     },
     ".MuiListItemText-secondary": {
+      width: "70%",
       paddingLeft: "8px",
       fontSize: "12px",
       ...companyColor,
