@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { compress as compressJson } from "lzutf8-light";
 import {
   List,
@@ -19,21 +19,19 @@ import {
   Delete as DeleteIcon,
 } from "@mui/icons-material";
 import { getLocalStorage } from "../../Utils/Utils";
-import { DbContext } from "../../context/DbContext";
 import {
   CategoryAddRoot,
-  CategoryListItemText,
   CategoryRoot,
   DialogRoot,
-  SectionListItemText,
   SectionRoot,
 } from "../../modules/BookmarkDialog";
+import { CategoryListItemText } from "../BookmarkDialog/CategoryListItemText";
+import { SectionListItemText } from "../BookmarkDialog/SectionListItemText";
 
 export const BookmarkDialog = ({
   bookmarkDialogMode,
   setBookmarkDialogMode,
 }) => {
-  const { gStopList } = useContext(DbContext);
   const [categoryIdx, setCategoryIdx] = useState(-1);
   const [categoryValue, setCategoryValue] = useState("");
 
@@ -153,7 +151,7 @@ export const BookmarkDialog = ({
                         handleCategoryItemOnClick(i);
                       }}
                     >
-                      {CategoryListItemText(e)}
+                      <CategoryListItemText e={e} />
                     </ListItemButton>
                   </ListItem>
                   {i !== transportData.length - 1 ? <Divider /> : null}
@@ -234,7 +232,7 @@ export const BookmarkDialog = ({
                     disablePadding
                   >
                     <ListItemButton onClick={() => handleSectionItemOnClick(i)}>
-                      {SectionListItemText({ i, e, gStopList })}
+                      <SectionListItemText i={i} e={e} />
                     </ListItemButton>
                   </ListItem>
                   {i !== transportData[categoryIdx].data.length - 1 ? (

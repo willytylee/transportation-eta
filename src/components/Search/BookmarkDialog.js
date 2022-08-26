@@ -1,10 +1,8 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { compress as compressJson } from "lzutf8-light";
 import {
-  Dialog,
   List,
   ListItem,
-  styled,
   Grid,
   IconButton,
   DialogTitle,
@@ -19,11 +17,13 @@ import {
   ArrowBackIosNew as ArrowBackIosNewIcon,
 } from "@mui/icons-material";
 import { getLocalStorage } from "../../Utils/Utils";
-import { companyColor } from "../../constants/Constants";
-import { DbContext } from "../../context/DbContext";
+import { CategoryListItemText } from "../BookmarkDialog/CategoryListItemText";
+import { SectionListItemText } from "../BookmarkDialog/SectionListItemText";
 import {
-  CategoryListItemText,
-  SectionListItemText,
+  CategoryAddRoot,
+  CategoryRoot,
+  DialogRoot,
+  SectionRoot,
 } from "../../modules/BookmarkDialog";
 
 export const BookmarkDialog = ({
@@ -32,7 +32,6 @@ export const BookmarkDialog = ({
   bookmarkRouteObj,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { gStopList } = useContext(DbContext);
   const [categoryIdx, setCategoryIdx] = useState(-1);
   const [categoryValue, setCategoryValue] = useState("");
 
@@ -152,7 +151,7 @@ export const BookmarkDialog = ({
                       handleCategoryItemOnClick(i);
                     }}
                   >
-                    {CategoryListItemText(e)}
+                    <CategoryListItemText e={e} />
                   </ListItem>
                   {i !== transportData.length - 1 ? <Divider /> : null}
                 </div>
@@ -224,7 +223,7 @@ export const BookmarkDialog = ({
               {transportData[categoryIdx].data.map((e, i) => (
                 <div key={i}>
                   <ListItem button onClick={() => handleSectionItemOnClick(i)}>
-                    {SectionListItemText({ i, e, gStopList })}
+                    <SectionListItemText i={i} e={e} />
                   </ListItem>
                   {i !== transportData[categoryIdx].data.length - 1 ? (
                     <Divider />
@@ -244,67 +243,3 @@ export const BookmarkDialog = ({
     </DialogRoot>
   );
 };
-
-const DialogRoot = styled(Dialog)({
-  ".MuiList-root": {
-    overflow: "auto",
-    paddingTop: "8px",
-  },
-});
-
-const CategoryRoot = styled("div")({
-  ".emptyMsg": {
-    fontSize: "15px",
-    textAlign: "center",
-    padding: "20px 0",
-  },
-  ".MuiListItemText-root": {
-    display: "flex",
-    alignItems: "center",
-    ".MuiListItemText-primary": {
-      width: "70px",
-    },
-    ".MuiListItemText-secondary": {
-      paddingLeft: "8px",
-      fontSize: "12px",
-      ...companyColor,
-    },
-  },
-});
-
-const CategoryAddRoot = styled("div")({
-  ".input": {
-    display: "flex",
-    padding: "36px 0px 18px 16px",
-    ".MuiFormControl-root": {
-      flexGrow: 1,
-    },
-  },
-});
-
-const SectionRoot = styled("div")({
-  ".MuiListItemText-root": {
-    display: "flex",
-    alignItems: "center",
-    ".MuiListItemText-primary": {
-      width: "70px",
-    },
-    ".MuiListItemText-secondary": {
-      fontSize: "12px",
-      li: {
-        display: "flex",
-        flexDirection: "column",
-        ".route": {
-          display: "inline-block",
-          width: "50px",
-        },
-        ...companyColor,
-      },
-    },
-  },
-  ".emptyMsg": {
-    fontSize: "15px",
-    textAlign: "center",
-    padding: "20px 0",
-  },
-});

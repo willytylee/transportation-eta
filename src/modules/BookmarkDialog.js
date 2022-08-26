@@ -1,46 +1,5 @@
-import { Dialog, styled, ListItemText } from "@mui/material/";
+import { Dialog, styled } from "@mui/material/";
 import { companyColor } from "../constants/Constants";
-
-export const CategoryListItemText = (e) => (
-  <ListItemText
-    primary={e.title}
-    secondary={
-      e.data.length > 0 ? (
-        e.data.map((f, j) => (
-          <span key={j}>
-            {f.length > 0 &&
-              f
-                .map((g, k) => (
-                  <span key={k} className={g.co}>
-                    {g.route}
-                  </span>
-                ))
-                .reduce((a, b) => [a, " + ", b])}
-            <br />
-          </span>
-        ))
-      ) : (
-        <>未有組合</>
-      )
-    }
-  />
-);
-
-export const SectionListItemText = ({ i, e, gStopList }) => (
-  <ListItemText
-    primary={`組合${i + 1}`}
-    secondary={
-      <li>
-        {e.map((f, j) => (
-          <span key={j}>
-            <span className={`route ${f.co}`}>{f.route}</span>
-            <span className="stopName">{gStopList[f.stopId].name.zh}</span>
-          </span>
-        ))}
-      </li>
-    }
-  />
-);
 
 export const DialogRoot = styled(Dialog)({
   ".MuiList-root": {
