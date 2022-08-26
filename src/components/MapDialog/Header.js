@@ -95,6 +95,8 @@ export const Header = ({ handleDialogOnClose }) => {
 };
 
 const DialogTitleRoot = styled(DialogTitle)({
+  background: "white",
+  color: "black",
   padding: "4px 8px",
   ".MuiGrid-root": {
     display: "flex",
@@ -104,6 +106,7 @@ const DialogTitleRoot = styled(DialogTitle)({
     ".closeBtn": {
       position: "absolute",
       right: 0,
+      color: "rgba(0, 0, 0, 0.54)",
     },
     ".headerWrapper": {
       width: "100%",
