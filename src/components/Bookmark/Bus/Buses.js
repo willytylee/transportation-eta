@@ -13,12 +13,12 @@ import { List } from "./List";
 export const Buses = ({ section }) => {
   const bookmarkDisplay =
     JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay ||
-    "簡短路線班次排序";
+    "簡短班次排序";
 
   let viewInit;
 
   switch (bookmarkDisplay) {
-    case "簡短路線班次排序":
+    case "簡短班次排序":
       viewInit = "list";
       break;
 
@@ -90,7 +90,7 @@ export const Buses = ({ section }) => {
   const handleSwitchBtnOnClick = () => {
     if (view !== "table") {
       setView("table");
-    } else if (bookmarkDisplay === "所有路線班次排序") {
+    } else if (bookmarkDisplay === "所有班次排序") {
       setView("longList");
     } else {
       setView("list");
@@ -104,8 +104,8 @@ export const Buses = ({ section }) => {
         className="switchBtn"
         onClick={() => handleSwitchBtnOnClick(view)}
       >
-        {view === "list" && "簡短路線班次排序"}
-        {view === "longList" && "所有路線班次排序"}
+        {view === "list" && "簡短班次排序"}
+        {view === "longList" && "所有班次排序"}
         {view === "table" && "詳細路線班次"}
       </button>
 
@@ -164,6 +164,7 @@ const BusesRoot = styled("div")({
     justifyContent: "center",
     button: {
       padding: 0,
+      width: "100%",
     },
   },
 });
