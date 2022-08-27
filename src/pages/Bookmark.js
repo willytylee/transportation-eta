@@ -31,7 +31,17 @@ export const Bookmark = () => {
   return (
     <BookmarkRoot>
       {bookmark ? (
-        newTransportData?.map((e, i) => <Category key={i} category={e} />)
+        newTransportData?.length > 0 ? (
+          newTransportData?.map((e, i) => <Category key={i} category={e} />)
+        ) : (
+          <div className="emptyMsg">
+            <p>未有收藏。</p>
+            <p>
+              請先到<Link to="/search">路線搜尋</Link>, 選擇巴士路線,
+              再選擇巴士站, 然後新增收藏。
+            </p>
+          </div>
+        )
       ) : (
         <div className="emptyMsg">
           <p>未有收藏</p>
@@ -39,17 +49,8 @@ export const Bookmark = () => {
             現有用戶, 請到<Link to="/settings">設定</Link>選擇用戶。
           </p>
           <p>
-            新用戶, 請
-            <a
-              href="https://wa.me/+85267914731"
-              target="_blank"
-              rel="noreferrer"
-            >
-              聯絡管理員
-            </a>
-            。
-            {/* 新用戶, 請
-            <Link to="/search">路線搜尋</Link>, 選擇巴士站, 然後新增收藏。 */}
+            新用戶, 請先到<Link to="/search">路線搜尋</Link>, 選擇巴士路線,
+            再選擇巴士站, 然後新增收藏。
           </p>
         </div>
       )}
