@@ -61,7 +61,7 @@ export const Settings = () => {
   };
 
   const username =
-    JSON.parse(localStorage.getItem("user"))?.username || "未載入";
+    JSON.parse(localStorage.getItem("user"))?.username || "未載入 (一次性使用)";
 
   const bookmark = localStorage.getItem("bookmark");
   return (
@@ -79,7 +79,7 @@ export const Settings = () => {
             </ListItemAvatar>
             <ListItemText
               primary="載入用戶收藏"
-              secondary={bookmark ? "手機已載入收藏, 此功能不適用" : username}
+              secondary={bookmark ? "手機已載入收藏, 此功能不再適用" : username}
             />
           </ListItemButton>
         </ListItem>

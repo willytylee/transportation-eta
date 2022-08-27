@@ -124,7 +124,7 @@ export const BookmarkDialog = ({
         <FormDialog
           title="新增類別"
           label="類別名稱"
-          placeholder="上班 / 回家"
+          placeholder="上班"
           value={categoryValue}
           setValue={setCategoryValue}
           handleDialogCloseBtnOnClick={handleDialogCloseBtnOnClick}

@@ -14,7 +14,7 @@ import {
   Add as AddIcon,
   ArrowBackIosNew as ArrowBackIosNewIcon,
   Delete as DeleteIcon,
-  Edit as EditIcon,
+  DriveFileRenameOutline as DriveFileRenameOutlineIcon,
 } from "@mui/icons-material";
 import { CategoryListItemText } from "./CategoryListItemText";
 import { SectionListItemText } from "./SectionListItemText";
@@ -67,7 +67,7 @@ export const ListBtnDialog = ({
                       edge="end"
                       onClick={() => handleEditBtnOnClick(i)}
                     >
-                      <EditIcon />
+                      <DriveFileRenameOutlineIcon />
                     </IconButton>
                   )}
                   <IconButton

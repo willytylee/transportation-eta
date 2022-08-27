@@ -74,12 +74,12 @@ export const Personal = () => {
   const searchMethodOptions = [
     {
       primary: "搜尋路線",
-      secondary: "自動列出所有包含搜尋字眼路線, 運算較快手機適用",
+      secondary: "自動列出所有包含搜尋號碼字眼路線, 運算較快手機適用",
       icon: <ManageSearchIcon />,
     },
     {
       primary: "交通路線",
-      secondary: "只列出搜尋字眼路線, 運算較慢手機適用",
+      secondary: "只列出搜尋號碼字眼路線, 運算較慢手機適用",
       icon: <SavedSearchIcon />,
     },
   ];

@@ -27,7 +27,8 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
       <div className="searchWrapper">
         <TextField
           variant="standard"
-          placeholder="輸入路線"
+          label="輸入路線號碼"
+          placeholder="297"
           disabled={dbVersion === null}
           inputProps={{ className: "searchBar" }}
           size="small"
@@ -83,7 +84,7 @@ const SearchBarWraper = styled("div")({
     display: "flex",
     alignItems: "center",
     ".MuiInput-root": {
-      height: "35px",
+      paddingBottom: "6px",
       ".searchBar": {
         textAlign: "center",
         padding: 0,
