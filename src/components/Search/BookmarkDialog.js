@@ -117,7 +117,7 @@ export const BookmarkDialog = ({
           handleAddBtnOnClick={handleCategoryAddBtnOnClick}
           data={transportData}
           bookmarkDialogMode={bookmarkDialogMode}
-          emptyMsg="未有類別"
+          emptyMsg="未有類別, 請先新增類別"
         />
       )}
       {bookmarkDialogMode === "categoryAdd" && (
@@ -142,7 +142,7 @@ export const BookmarkDialog = ({
           data={transportData[categoryIdx].data}
           bookmarkDialogMode={bookmarkDialogMode}
           handleBackBtnOnClick={handleSectionBackBtnOnClick}
-          emptyMsg="未有組合"
+          emptyMsg="未有組合, 請先新增組合"
         />
       )}
     </DialogRoot>

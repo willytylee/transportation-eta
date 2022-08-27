@@ -245,7 +245,7 @@ export const BookmarkDialog = ({
       {bookmarkDialogMode === "category" && (
         <ListBtnDialog
           title="新增 / 編輯 / 刪除"
-          emptyMsg="未有類別"
+          emptyMsg="未有類別, 請先新增類別"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleItemOnClick={handleCategoryItemOnClick}
           handleAddBtnOnClick={handleCategoryAddBtnOnClick}
@@ -284,7 +284,7 @@ export const BookmarkDialog = ({
       {bookmarkDialogMode === "section" && (
         <ListBtnDialog
           title={_transportData[categoryIdx].title}
-          emptyMsg="未有組合"
+          emptyMsg="未有組合, 請先新增組合"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleItemOnClick={handleSectionItemOnClick}
           handleAddBtnOnClick={handleSectionAddBtnOnClick}

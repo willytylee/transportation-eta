@@ -72,7 +72,7 @@ export const ListDialog = ({
       </List>
     ) : (
       <List sx={{ pt: 0 }}>
-        <ListItem>
+        <ListItem className="emptyMsg">
           <ListItemText primary={emptyMsg} />
         </ListItem>
       </List>
@@ -81,10 +81,8 @@ export const ListDialog = ({
 );
 
 const ListDialogRoot = styled("div")({
-  ".emptyMsg": {
-    fontSize: "15px",
-    textAlign: "center",
-    padding: "20px 0",
+  ".emptyMsg .MuiListItemText-root .MuiListItemText-primary": {
+    width: "100%",
   },
   ".MuiListItemText-root": {
     display: "flex",

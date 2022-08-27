@@ -102,7 +102,7 @@ export const ListBtnDialog = ({
       </List>
     ) : (
       <List sx={{ pt: 0 }}>
-        <ListItem>
+        <ListItem className="emptyMsg">
           <ListItemText primary={emptyMsg} />
         </ListItem>
       </List>
@@ -113,12 +113,9 @@ export const ListBtnDialog = ({
 const ListDialogRoot = styled("div", {
   shouldForwardProp: (prop) => prop !== "bookmarkDialogMode",
 })(({ bookmarkDialogMode }) => ({
-  ".emptyMsg": {
-    fontSize: "15px",
-    textAlign: "center",
-    padding: "20px 0",
+  ".emptyMsg .MuiListItemText-root .MuiListItemText-primary": {
+    width: "100%",
   },
-
   ".MuiListItemButton-root": {
     ...(bookmarkDialogMode === "category" && {
       paddingRight: "115px !important",
