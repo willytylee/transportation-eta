@@ -79,9 +79,7 @@ export const Settings = () => {
             </ListItemAvatar>
             <ListItemText
               primary="載入用戶收藏"
-              secondary={
-                bookmark ? "手機已設定收藏, 載入用戶收藏不適用" : username
-              }
+              secondary={bookmark ? "手機已載入收藏, 此功能不適用" : username}
             />
           </ListItemButton>
         </ListItem>
