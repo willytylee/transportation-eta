@@ -63,17 +63,26 @@ export const Settings = () => {
   const username =
     JSON.parse(localStorage.getItem("user"))?.username || "未設定";
 
+  const bookmark = localStorage.getItem("bookmark");
   return (
     <>
       <List>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => setslctUsrDialogOpen(true)}>
+          <ListItemButton
+            onClick={() => setslctUsrDialogOpen(true)}
+            disabled={bookmark}
+          >
             <ListItemAvatar>
               <Avatar>
                 <AccountCircleIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="載入用戶" secondary={username} />
+            <ListItemText
+              primary="載入用戶收藏"
+              secondary={
+                bookmark ? "手機已設定收藏, 載入用戶收藏不適用" : username
+              }
+            />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

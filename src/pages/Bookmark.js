@@ -46,7 +46,7 @@ export const Bookmark = () => {
         <div className="emptyMsg">
           <p>未有收藏</p>
           <p>
-            現有用戶, 請到<Link to="/settings">設定</Link>載入用戶。
+            現有用戶, 請到<Link to="/settings">設定</Link>, 載入用戶收藏。
           </p>
           <p>
             新用戶, 請先到<Link to="/search">路線搜尋</Link>, 選擇巴士路線,
