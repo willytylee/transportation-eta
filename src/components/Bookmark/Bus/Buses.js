@@ -49,7 +49,7 @@ export const Buses = ({ section }) => {
             (e) =>
               (route ? e.route === route : true) && // For bus
               (gtfsId ? e.gtfsId === gtfsId : true) && // For Gmb
-              e.co.includes(co) &&
+              Object.keys(e.stops).includes(co) && // Use routeObj.stops's company as standard
               (e.stops[co] ? e.stops[co][seq - 1] === stopId : true)
           )[0];
         // Even if there are more than one result, the ETAs should be the same,
