@@ -184,7 +184,7 @@ export const StopList = () => {
                       if (currRoute.co[0] === "gmb") {
                         handleFavIconOnClick({
                           seq: i + 1,
-                          co: currRoute.co[0],
+                          co: Object.keys(currRoute.stops)[0], // use currRoute.stops' company as standard
                           route: currRoute.route,
                           stopId: e.stopId,
                           gtfsId: currRoute.gtfsId,
@@ -192,7 +192,7 @@ export const StopList = () => {
                       } else {
                         handleFavIconOnClick({
                           seq: i + 1,
-                          co: currRoute.co[0],
+                          co: Object.keys(currRoute.stops)[0], // use currRoute.stops' company as standard
                           route: currRoute.route,
                           stopId: e.stopId,
                         });
