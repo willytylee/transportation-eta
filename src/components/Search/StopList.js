@@ -11,6 +11,7 @@ import {
   Directions as DirectionsIcon,
   Map as MapIcon,
   Favorite as FavoriteIcon,
+  Streetview as StreetviewIcon,
 } from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
 import { getCoPriorityId } from "../../Utils/Utils";
@@ -161,14 +162,7 @@ export const StopList = () => {
                 </AccordionSummary>
                 <AccordionDetails>
                   <IconButton
-                    className="directionIconBtn"
-                    component="a"
-                    href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
-                    target="_blank"
-                  >
-                    <DirectionsIcon />
-                  </IconButton>
-                  <IconButton
+                    className="mapIconBtn"
                     onClick={() =>
                       handleMapIconOnClick({
                         mapLocation: { lat, lng },
@@ -178,7 +172,21 @@ export const StopList = () => {
                   >
                     <MapIcon />
                   </IconButton>
-
+                  <IconButton
+                    component="a"
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
+                    target="_blank"
+                  >
+                    <DirectionsIcon />
+                  </IconButton>
+                  <IconButton
+                    className="streetViewIconBtn"
+                    component="a"
+                    href={`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=0&pitch=0&fov=160`}
+                    target="_blank"
+                  >
+                    <StreetviewIcon />
+                  </IconButton>
                   <IconButton
                     onClick={() => {
                       if (currRoute.co[0] === "gmb") {
@@ -245,7 +253,7 @@ const StopListRoot = styled("div")({
       ".MuiAccordionDetails-root": {
         padding: "0px 16px 0px 5%",
         display: "flex",
-        ".directionIconBtn": {
+        ".mapIconBtn": {
           marginLeft: "-8px",
         },
       },
