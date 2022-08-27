@@ -105,7 +105,7 @@ export const Install = () => {
             使用定位服務
           </AccordionSummary>
           <AccordionDetails>
-            <div>1. 設定 → 位置 設定為「啟用」</div>
+            <div>1. 設定 → 位置, 設定為「啟用」</div>
             <DividerRoot />
             <div>2. 使用Chrome瀏覽此網頁</div>
             <DividerRoot />
