@@ -68,7 +68,7 @@ export const SelectUserDialog = ({
         <>
           <DialogTitle>
             <Grid>
-              <div className="title">請選擇用戶</div>
+              <div className="title">載入用戶</div>
               <div className="rightBtnGroup">
                 <IconButton onClick={handleDialogOnClose}>
                   <CloseIcon />

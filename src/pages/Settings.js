@@ -73,7 +73,7 @@ export const Settings = () => {
                 <AccountCircleIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="選擇用戶" secondary={username} />
+            <ListItemText primary="載入用戶" secondary={username} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

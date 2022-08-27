@@ -44,7 +44,7 @@ export const ChangeLog = () => (
     <div className="content">
       <ul>
         <li>
-          加入<Link to="/settings">選擇用戶</Link>及
+          加入<Link to="/settings">載入用戶</Link>及
           <Link to="/settings">用戶pin碼</Link>功能。
         </li>
         <li>
