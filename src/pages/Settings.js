@@ -70,7 +70,7 @@ export const Settings = () => {
         <ListItem disablePadding>
           <ListItemButton
             onClick={() => setslctUsrDialogOpen(true)}
-            disabled={bookmark}
+            disabled={!!bookmark}
           >
             <ListItemAvatar>
               <Avatar>

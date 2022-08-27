@@ -72,7 +72,7 @@ export const BookmarkModify = () => {
                 <DeleteIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="一鍵清除收藏 (請謹慎使用)" />
+            <ListItemText primary="清除收藏 (請謹慎使用)" />
           </ListItemButton>
         </ListItem>
       </List>
