@@ -61,7 +61,7 @@ export const Settings = () => {
   };
 
   const username =
-    JSON.parse(localStorage.getItem("user"))?.username || "未設定";
+    JSON.parse(localStorage.getItem("user"))?.username || "未載入";
 
   const bookmark = localStorage.getItem("bookmark");
   return (
