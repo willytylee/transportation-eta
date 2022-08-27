@@ -16,6 +16,7 @@ import {
 export const FormDialog = ({
   title,
   label,
+  placeholder,
   value,
   setValue,
   handleDialogCloseBtnOnClick,
@@ -45,6 +46,7 @@ export const FormDialog = ({
         variant="standard"
         label={label}
         value={value}
+        placeholder={placeholder}
         onChange={(e) => setValue(e.target.value)}
         onKeyPress={(e) => handleAddKeyPress(e)}
         autoComplete="off"

@@ -111,7 +111,7 @@ export const BookmarkDialog = ({
     >
       {bookmarkDialogMode === "category" && (
         <ListDialog
-          title="請選擇類別"
+          title="加入收藏"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleItemOnClick={handleCategoryItemOnClick}
           handleAddBtnOnClick={handleCategoryAddBtnOnClick}
@@ -124,6 +124,7 @@ export const BookmarkDialog = ({
         <FormDialog
           title="新增類別"
           label="類別名稱"
+          placeholder="上班 / 回家"
           value={categoryValue}
           setValue={setCategoryValue}
           handleDialogCloseBtnOnClick={handleDialogCloseBtnOnClick}
@@ -134,7 +135,7 @@ export const BookmarkDialog = ({
       )}
       {bookmarkDialogMode === "section" && (
         <ListDialog
-          title="請選擇組合"
+          title={_transportData[categoryIdx].title}
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleItemOnClick={handleSectionItemOnClick}
           handleAddBtnOnClick={handleSectionAddBtnOnClick}

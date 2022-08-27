@@ -178,31 +178,29 @@ export const StopList = () => {
                   >
                     <MapIcon />
                   </IconButton>
-                  {!process.env.NODE_ENV ||
-                    (process.env.NODE_ENV === "development" && (
-                      <IconButton
-                        onClick={() => {
-                          if (currRoute.co[0] === "gmb") {
-                            handleFavIconOnClick({
-                              seq: i + 1,
-                              co: currRoute.co[0],
-                              route: currRoute.route,
-                              stopId: e.stopId,
-                              gtfsId: currRoute.gtfsId,
-                            });
-                          } else {
-                            handleFavIconOnClick({
-                              seq: i + 1,
-                              co: currRoute.co[0],
-                              route: currRoute.route,
-                              stopId: e.stopId,
-                            });
-                          }
-                        }}
-                      >
-                        <FavoriteIcon />
-                      </IconButton>
-                    ))}
+
+                  <IconButton
+                    onClick={() => {
+                      if (currRoute.co[0] === "gmb") {
+                        handleFavIconOnClick({
+                          seq: i + 1,
+                          co: currRoute.co[0],
+                          route: currRoute.route,
+                          stopId: e.stopId,
+                          gtfsId: currRoute.gtfsId,
+                        });
+                      } else {
+                        handleFavIconOnClick({
+                          seq: i + 1,
+                          co: currRoute.co[0],
+                          route: currRoute.route,
+                          stopId: e.stopId,
+                        });
+                      }
+                    }}
+                  >
+                    <FavoriteIcon />
+                  </IconButton>
                 </AccordionDetails>
               </Accordion>
             );

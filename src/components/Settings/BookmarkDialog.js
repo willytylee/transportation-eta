@@ -244,7 +244,7 @@ export const BookmarkDialog = ({
     >
       {bookmarkDialogMode === "category" && (
         <ListBtnDialog
-          title="自訂類別"
+          title="新增 / 編輯 / 刪除"
           emptyMsg="未有類別"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleItemOnClick={handleCategoryItemOnClick}
@@ -259,6 +259,7 @@ export const BookmarkDialog = ({
         <FormDialog
           title="新增類別"
           label="類別名稱"
+          placeholder="上班 / 回家"
           value={formValue}
           setValue={setFormValue}
           handleDialogCloseBtnOnClick={handleDialogCloseBtnOnClick}
@@ -271,6 +272,7 @@ export const BookmarkDialog = ({
         <FormDialog
           title="重新命名類別"
           label="類別名稱"
+          placeholder="上班 / 回家"
           value={formValue}
           setValue={setFormValue}
           handleDialogCloseBtnOnClick={handleDialogCloseBtnOnClick}
@@ -281,7 +283,7 @@ export const BookmarkDialog = ({
       )}
       {bookmarkDialogMode === "section" && (
         <ListBtnDialog
-          title="自訂組合"
+          title={_transportData[categoryIdx].title}
           emptyMsg="未有組合"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleItemOnClick={handleSectionItemOnClick}
@@ -294,7 +296,7 @@ export const BookmarkDialog = ({
       )}
       {bookmarkDialogMode === "route" && (
         <ListBtnDialog
-          title="刪除路線"
+          title={`組合${sectionIdx + 1}`}
           emptyMsg="未有路線"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleBackBtnOnClick={handleRouteBackBtnOnClick}
