@@ -10,7 +10,7 @@ import {
   DirectionsBus as DirectionsBusIcon,
   Settings as SettingsIcon,
   Thermostat as ThermostatIcon,
-  Favorite as FavoriteIcon,
+  Bookmark as BookmarkIcon,
   Announcement as AnnouncementIcon,
 } from "@mui/icons-material";
 import { AppContext } from "../context/AppContext";
@@ -44,8 +44,8 @@ export const BottomNav = () => {
         component={NavLink}
         to="/bookmark"
         style={({ isActive }) => (isActive ? activeStyle : undefined)}
-        label="收藏"
-        icon={<FavoriteIcon />}
+        label="書籤"
+        icon={<BookmarkIcon />}
       />
       <BottomNavigationAction
         component={NavLink}

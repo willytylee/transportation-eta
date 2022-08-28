@@ -111,7 +111,7 @@ export const BookmarkDialog = ({
     >
       {bookmarkDialogMode === "category" && (
         <ListDialog
-          title="加入收藏"
+          title="加入書籤"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleItemOnClick={handleCategoryItemOnClick}
           handleAddBtnOnClick={handleCategoryAddBtnOnClick}

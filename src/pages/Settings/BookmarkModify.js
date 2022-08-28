@@ -44,7 +44,7 @@ export const BookmarkModify = () => {
       </>
     );
 
-    enqueueSnackbar("確定刪除收藏 ?", {
+    enqueueSnackbar("確定刪除書籤 ?", {
       variant: "warning",
       autoHideDuration: 5000,
       action,
@@ -72,7 +72,7 @@ export const BookmarkModify = () => {
                 <DeleteIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="清除收藏 (請謹慎使用)" />
+            <ListItemText primary="刪除書籤" secondary="請謹慎使用" />
           </ListItemButton>
         </ListItem>
       </List>

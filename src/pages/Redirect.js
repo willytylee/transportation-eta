@@ -18,7 +18,7 @@ export const Redirect = () => {
         navigate("/news", { replace: true });
         break;
 
-      case "收藏":
+      case "書籤":
         navigate("/bookmark", { replace: true });
         break;
 

@@ -10,7 +10,7 @@ import {
 import {
   Directions as DirectionsIcon,
   Map as MapIcon,
-  Favorite as FavoriteIcon,
+  BookmarkAdd as BookmarkAddIcon,
   Streetview as StreetviewIcon,
 } from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
@@ -207,7 +207,7 @@ export const StopList = () => {
                       }
                     }}
                   >
-                    <FavoriteIcon />
+                    <BookmarkAddIcon />
                   </IconButton>
                 </AccordionDetails>
               </Accordion>

@@ -78,8 +78,8 @@ export const Settings = () => {
               </Avatar>
             </ListItemAvatar>
             <ListItemText
-              primary="載入用戶收藏"
-              secondary={bookmark ? "手機已載入收藏, 此功能不再適用" : username}
+              primary="載入用戶書籤"
+              secondary={bookmark ? "手機已載入書籤, 此功能不再適用" : username}
             />
           </ListItemButton>
         </ListItem>
@@ -106,7 +106,7 @@ export const Settings = () => {
                 <EditIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="自訂收藏" />
+            <ListItemText primary="書籤設定" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

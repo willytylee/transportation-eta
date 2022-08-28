@@ -21,7 +21,7 @@ export const ChangeLog = () => (
         </li>
         <li>
           加入<Link to="/search">綠色小巴搜索</Link>功能,
-          <Link to="/bookmark">收藏及班次排位</Link>功能
+          <Link to="/bookmark">書籤及班次排位</Link>功能
         </li>
       </ul>
     </div>
@@ -44,7 +44,7 @@ export const ChangeLog = () => (
     <div className="content">
       <ul>
         <li>
-          加入<Link to="/settings">載入用戶收藏</Link>及
+          加入<Link to="/settings">載入用戶書籤</Link>及
           <Link to="/settings">用戶pin碼</Link>功能。
         </li>
         <li>
@@ -71,7 +71,7 @@ export const ChangeLog = () => (
     <div className="content">
       <ul>
         <li>
-          加入<Link to="/bookmark">巴士, 港鐵收藏及到站時間排位功能</Link>。
+          加入<Link to="/bookmark">巴士, 港鐵書籤及到站時間排位功能</Link>。
         </li>
       </ul>
     </div>

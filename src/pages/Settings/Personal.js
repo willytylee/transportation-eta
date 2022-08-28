@@ -11,7 +11,7 @@ import {
 import {
   DirectionsBus as DirectionsBusIcon,
   Thermostat as ThermostatIcon,
-  Favorite as FavoriteIcon,
+  Bookmark as BookmarkIcon,
   Announcement as AnnouncementIcon,
   AccessTime as AccessTimeIcon,
   DepartureBoard as DepartureBoardIcon,
@@ -49,7 +49,7 @@ export const Personal = () => {
   const defaultScreenOptions = [
     { primary: "路線搜尋", icon: <DirectionsBusIcon /> },
     { primary: "交通消息", icon: <AnnouncementIcon /> },
-    { primary: "收藏", icon: <FavoriteIcon /> },
+    { primary: "書籤", icon: <BookmarkIcon /> },
     { primary: "天氣", icon: <ThermostatIcon /> },
   ];
 
@@ -93,7 +93,7 @@ export const Personal = () => {
 
   const handleBookmarkDisplayItemOnClick = () => {
     setDialogOpen(true);
-    setDialogTitle("收藏顯示模式");
+    setDialogTitle("書籤顯示模式");
     setDialogKey("bookmarkDisplay");
     setDialogOptions(bookmarkDisplayOptions);
   };
@@ -146,7 +146,7 @@ export const Personal = () => {
           </ListItemButton>
         </ListItem>
       </List>
-      <List subheader={<ListSubheader>收藏</ListSubheader>}>
+      <List subheader={<ListSubheader>書籤</ListSubheader>}>
         <ListItem disablePadding>
           <ListItemButton onClick={handleBookmarkDisplayItemOnClick}>
             <ListItemAvatar>

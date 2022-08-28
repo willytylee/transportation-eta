@@ -52,7 +52,7 @@ export const navbarDetail = {
     title: "天氣",
   },
   "/bookmark": {
-    title: "收藏",
+    title: "書籤",
   },
   "/settings": {
     title: "設定",
@@ -78,7 +78,7 @@ export const navbarDetail = {
     prevPage: "/settings/about",
   },
   "/settings/bookmarkModify": {
-    title: "自訂收藏",
+    title: "書籤設定",
     prevPage: "/settings",
   },
 };
