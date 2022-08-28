@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { compress as compressJson } from "lzutf8-light";
 import { useSnackbar } from "notistack";
 import { styled, Dialog } from "@mui/material/";
@@ -14,8 +14,13 @@ export const BookmarkDialog = ({
   const { enqueueSnackbar } = useSnackbar();
   const [categoryIdx, setCategoryIdx] = useState(-1);
   const [categoryValue, setCategoryValue] = useState("");
+  const [transportData, setTransportData] = useState("");
+
   const _transportData = getLocalStorage("bookmark") || [];
-  const [transportData, setTransportData] = useState(_transportData);
+
+  useEffect(() => {
+    setTransportData(_transportData);
+  }, [localStorage.getItem("bookmark")]);
 
   const handleDialogCloseBtnOnClick = () => {
     setCategoryIdx(-1);

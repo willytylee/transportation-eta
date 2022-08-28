@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { compress as compressJson } from "lzutf8-light";
@@ -17,8 +17,13 @@ export const BookmarkDialog = ({
   const [categoryIdx, setCategoryIdx] = useState(-1);
   const [sectionIdx, setSectionIdx] = useState(-1);
   const [formValue, setFormValue] = useState("");
+  const [transportData, setTransportData] = useState("");
+
   const _transportData = getLocalStorage("bookmark") || [];
-  const [transportData, setTransportData] = useState(_transportData);
+
+  useEffect(() => {
+    setTransportData(_transportData);
+  }, [localStorage.getItem("bookmark")]);
 
   const handleDialogCloseBtnOnClick = () => {
     setCategoryIdx(-1);
