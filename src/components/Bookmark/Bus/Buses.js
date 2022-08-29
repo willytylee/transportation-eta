@@ -85,7 +85,7 @@ export const Buses = ({ section }) => {
 
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [section]);
+  }, []);
 
   const handleSwitchBtnOnClick = () => {
     if (view !== "table") {

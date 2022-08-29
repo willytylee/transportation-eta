@@ -53,7 +53,7 @@ export const Mtrs = ({ section }) => {
     const interval = setInterval(intervalContent, 10000);
 
     return () => clearInterval(interval);
-  }, [section]);
+  }, []);
 
   return sectionData.map((e, i) => (
     <MTRRoot key={i}>
