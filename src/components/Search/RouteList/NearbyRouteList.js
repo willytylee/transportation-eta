@@ -38,6 +38,10 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
           const value = Object.values(e)[0];
           return (
             value.distance < 500
+            // TODO: The function below should combine different stops from different bus company into one,
+            // but accidentally filter away the correct stops,
+            // so that the route with only "ctb" / "nwfb" can't found the stop
+            //
             // &&
             // (value.stopMap === undefined ||
             //   (value.stopMap.length > 0 // For those CTB/NWFB route's stopMap includes 'kmb', filter away. we need kmb stop only

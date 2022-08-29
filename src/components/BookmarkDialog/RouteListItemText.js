@@ -9,7 +9,13 @@ export const RouteListItemText = ({ i, e }) => {
 
   return (
     <ListItemTextRoot
-      primary={<span className={e.co}>{e.route}</span>}
+      primary={
+        e.co === "mtr" ? (
+          <span className={e.co}>{e.route}</span>
+        ) : (
+          <span className={e.co}>{e.route}</span>
+        )
+      }
       secondary={gStopList[e.stopId].name.zh}
     />
   );

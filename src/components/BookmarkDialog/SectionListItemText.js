@@ -3,6 +3,7 @@ import { styled } from "@mui/material/";
 import { ListItemText } from "@mui/material/";
 import { DbContext } from "../../context/DbContext";
 import { companyColor } from "../../constants/Constants";
+import { mtrLineColor, routeMap, stationMap } from "../../constants/Mtr";
 
 export const SectionListItemText = ({ i, e }) => {
   const { gStopList } = useContext(DbContext);
@@ -12,10 +13,25 @@ export const SectionListItemText = ({ i, e }) => {
       primary={`組合${i + 1}`}
       secondary={
         e.length > 0 ? (
-          e.map((f, j) => (
+          e.map((route, j) => (
             <span className="routeStopName" key={j}>
-              <span className={`route ${f.co}`}>{f.route}</span>
-              <span className="stopName">{gStopList[f.stopId].name.zh}</span>
+              {route.co === "mtr" ? (
+                <>
+                  <span className={`route ${route.route}`}>
+                    {routeMap[route.route]}
+                  </span>
+                  <span className={`stopName ${route.route}`}>
+                    {stationMap[route.stopId]}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className={`route ${route.co}`}>{route.route}</span>
+                  <span className="stopName">
+                    {gStopList[route.stopId].name.zh}
+                  </span>
+                </>
+              )}
             </span>
           ))
         ) : (
@@ -43,6 +59,7 @@ const ListItemTextRoot = styled(ListItemText)({
         flex: 1,
       },
       ...companyColor,
+      ...mtrLineColor,
     },
   },
 });

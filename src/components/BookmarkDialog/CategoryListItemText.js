@@ -1,21 +1,28 @@
 import { styled } from "@mui/material/";
 import { ListItemText } from "@mui/material/";
 import { companyColor } from "../../constants/Constants";
+import { mtrLineColor, stationMap } from "../../constants/Mtr";
 
 export const CategoryListItemText = ({ e }) => (
   <ListItemTextRoot
     primary={e.title}
     secondary={
       e.data.length > 0 ? (
-        e.data.map((f, j) => (
+        e.data.map((routes, j) => (
           <span className="routes" key={j}>
-            {f.length > 0 ? (
-              f
-                .map((g, k) => (
-                  <span key={k} className={g.co}>
-                    {g.route}
-                  </span>
-                ))
+            {routes.length > 0 ? (
+              routes
+                .map((route, k) =>
+                  route.co === "mtr" ? (
+                    <span key={k} className={route.route}>
+                      {stationMap[route.stopId]}
+                    </span>
+                  ) : (
+                    <span key={k} className={route.co}>
+                      {route.route}
+                    </span>
+                  )
+                )
                 .reduce((a, b) => [a, " + ", b])
             ) : (
               <>未有路線</>
@@ -38,6 +45,7 @@ const ListItemTextRoot = styled(ListItemText)({
     flex: 1,
     listStyleType: "disc",
     ...companyColor,
+    ...mtrLineColor,
     ".routes": {
       display: "list-item",
       "&::marker": {
