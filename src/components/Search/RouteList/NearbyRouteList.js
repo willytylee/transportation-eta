@@ -62,8 +62,7 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
     gRouteList &&
     Object.keys(gRouteList)
       .map((e) => gRouteList[e])
-      .filter((e) => basicFiltering(e))
-      .filter((e) => e.route === "9");
+      .filter((e) => basicFiltering(e));
 
   const routeListNearby = [];
 
