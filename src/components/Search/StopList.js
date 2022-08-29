@@ -62,13 +62,11 @@ export const StopList = () => {
 
   const handleBookmarkAddIconOnClick = (routeObj) => {
     setBookmarkRouteObj(routeObj);
-    setBookmarkDialogMode("category");
-  };
-
-  const handleMtrBookmarkAddIconOnClick = (routeObj) => {
-    setBookmarkRouteObj(routeObj);
-    setBookmarkDialogMode("category");
-    // setMtrRouteOptionDialogOpen(true);
+    if (routeObj.co === "mtr") {
+      setMtrRouteOptionDialogOpen(true);
+    } else {
+      setBookmarkDialogMode("category");
+    }
   };
 
   const handleChange = (panel) => (e, isExpanded) => {
@@ -207,11 +205,10 @@ export const StopList = () => {
                           gtfsId: currRoute.gtfsId,
                         });
                       } else if (currRoute.co[0] === "mtr") {
-                        handleMtrBookmarkAddIconOnClick({
+                        handleBookmarkAddIconOnClick({
                           co: "mtr", // use currRoute.stops' company as standard
                           route: currRoute.route,
                           stopId: e.stopId,
-                          bound: ["up", "down"],
                         });
                       } else {
                         handleBookmarkAddIconOnClick({
@@ -241,8 +238,11 @@ export const StopList = () => {
       />
       <MtrRouteOptionDialog
         mtrRouteOptionDialogOpen={mtrRouteOptionDialogOpen}
+        setBookmarkDialogMode={setBookmarkDialogMode}
         bookmarkRouteObj={bookmarkRouteObj}
         currRoute={currRoute}
+        setBookmarkRouteObj={setBookmarkRouteObj}
+        setMtrRouteOptionDialogOpen={setMtrRouteOptionDialogOpen}
       />
     </>
   );

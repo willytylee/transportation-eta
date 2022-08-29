@@ -14,52 +14,82 @@ import { stationMap } from "../../constants/Mtr";
 
 export const MtrRouteOptionDialog = ({
   mtrRouteOptionDialogOpen,
+  setBookmarkDialogMode,
   bookmarkRouteObj,
   currRoute,
-}) => (
-  <DialogRoot
-    // onClose={handleDialogCloseBtnOnClick}
-    open={mtrRouteOptionDialogOpen}
-    fullWidth
-  >
-    <DialogTitle>
-      <Grid>
-        <div className="title">請選擇方向</div>
-        <div className="rightBtnGroup">
-          <IconButton>
-            <CloseIcon />
-          </IconButton>
-        </div>
-      </Grid>
-    </DialogTitle>
+  setBookmarkRouteObj,
+  setMtrRouteOptionDialogOpen,
+}) => {
+  const handleItemButtonOnClick = (bound) => {
+    setBookmarkDialogMode("category");
+    setBookmarkRouteObj({
+      ...bookmarkRouteObj,
+      bound,
+    });
+    setMtrRouteOptionDialogOpen(false);
+  };
 
-    <List sx={{ pt: 0 }}>
-      <ListItem disablePadding>
-        <ListItemButton>
-          <ListItemText
-            primary={`${stationMap[bookmarkRouteObj.stopId]} 去 ${
-              currRoute.orig.zh
-            }`}
-          />
-        </ListItemButton>
-      </ListItem>
-      <ListItem disablePadding>
-        <ListItemButton>
-          <ListItemText
-            primary={`${stationMap[bookmarkRouteObj.stopId]} 去 ${
-              currRoute.dest.zh
-            }`}
-          />
-        </ListItemButton>
-      </ListItem>
-      <ListItem disablePadding>
-        <ListItemButton>
-          <ListItemText primary="兩邊方向" />
-        </ListItemButton>
-      </ListItem>
-    </List>
-  </DialogRoot>
-);
+  const handleCloseBtnOnClick = () => {
+    setMtrRouteOptionDialogOpen(false);
+  };
+
+  return (
+    <DialogRoot
+      onClose={handleCloseBtnOnClick}
+      open={mtrRouteOptionDialogOpen}
+      fullWidth
+    >
+      <DialogTitle>
+        <Grid>
+          <div className="title">請選擇方向</div>
+          <div className="rightBtnGroup">
+            <IconButton onClick={handleCloseBtnOnClick}>
+              <CloseIcon />
+            </IconButton>
+          </div>
+        </Grid>
+      </DialogTitle>
+
+      <List sx={{ pt: 0 }}>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => {
+              handleItemButtonOnClick(["up"]);
+            }}
+          >
+            <ListItemText
+              primary={`${stationMap[bookmarkRouteObj.stopId]} 去 ${
+                currRoute?.orig?.zh
+              }`}
+            />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => {
+              handleItemButtonOnClick(["down"]);
+            }}
+          >
+            <ListItemText
+              primary={`${stationMap[bookmarkRouteObj.stopId]} 去 ${
+                currRoute?.dest?.zh
+              }`}
+            />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => {
+              handleItemButtonOnClick(["up", "down"]);
+            }}
+          >
+            <ListItemText primary="加入兩邊方向" />
+          </ListItemButton>
+        </ListItem>
+      </List>
+    </DialogRoot>
+  );
+};
 
 const DialogRoot = styled(Dialog)({
   ".emptyMsg .MuiListItemText-root .MuiListItemText-primary": {
