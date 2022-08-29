@@ -13,8 +13,6 @@ export const Mtrs = ({ section }) => {
   const [sectionData, setSectionData] = useState([]);
 
   useEffect(() => {
-    setSectionData([]);
-
     const intervalContent = async () => {
       const allPromises = [];
 
