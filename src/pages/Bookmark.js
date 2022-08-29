@@ -1,38 +1,30 @@
-import { useState, useEffect } from "react";
-import { compress as compressJson } from "lzutf8-light";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material";
 import { Category } from "../components/Bookmark/Category";
 import { dataSet } from "../data/DataSet";
-import { getLocalStorage } from "../Utils/Utils";
+import { getLocalStorage, setLocalStorage } from "../Utils/Utils";
 
 export const Bookmark = () => {
-  const [newTransportData, setNewTransportData] = useState([]);
+  // const [transportData, setTransportData] = useState([]);
 
   const bookmark = localStorage.getItem("bookmark");
   const userId = JSON.parse(localStorage.getItem("user"))?.userId || null;
   const data = dataSet.find((o) => o.userId === userId);
 
-  useEffect(() => {
-    if (bookmark) {
-      setNewTransportData(getLocalStorage("bookmark"));
-    } else if (userId) {
-      localStorage.setItem(
-        "bookmark",
-        compressJson(JSON.stringify(data.transportData), {
-          outputEncoding: "Base64",
-        })
-      );
-      setNewTransportData(data.transportData);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bookmark, userId]);
+  let transportData;
+
+  if (bookmark) {
+    transportData = getLocalStorage("bookmark");
+  } else if (userId) {
+    setLocalStorage("bookmark", data.transportData);
+    transportData = data.transportData;
+  }
 
   return (
     <BookmarkRoot>
       {bookmark ? (
-        newTransportData?.length > 0 ? (
-          newTransportData?.map((e, i) => <Category key={i} category={e} />)
+        transportData?.length > 0 ? (
+          transportData?.map((e, i) => <Category key={i} category={e} />)
         ) : (
           <div className="emptyMsg">
             <p>未有書籤。</p>

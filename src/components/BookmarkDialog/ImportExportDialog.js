@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import { decompress as decompressJson } from "lzutf8-light";
 import {
   Grid,
   IconButton,
@@ -16,55 +16,103 @@ import { Close as CloseIcon } from "@mui/icons-material";
 
 import { PreviewDialog } from "./PreviewDialog";
 
-export const ImportExportDialog = ({ imExportMode, setImExportMode }) => {
+export const ImportExportDialog = ({
+  importExportMode,
+  setImportExportMode,
+}) => {
   const { enqueueSnackbar } = useSnackbar();
-
   const [previewFrom, setPreviewFrom] = useState("");
-  const [encodedData, setEncodedData] = useState("");
+  const [importData, setImportData] = useState("");
+  const [exportData, setExportData] = useState("");
 
   useEffect(() => {
     const bookmark = localStorage.getItem("bookmark") || "W10=";
-    setEncodedData(bookmark);
+    setExportData(bookmark);
   }, [localStorage.getItem("bookmark")]);
 
   const handleDialogCloseBtnOnClick = () => {
-    setImExportMode(null);
+    setImportExportMode(null);
   };
 
   const handleimportBtnOnClick = () => {
-    localStorage.setItem("bookmark", encodedData);
-    enqueueSnackbar("成功匯入書籤。", {
-      variant: "success",
-    });
+    try {
+      JSON.parse(
+        decompressJson(importData, {
+          inputEncoding: "Base64",
+        })
+      );
+      localStorage.setItem("bookmark", importData);
+      enqueueSnackbar("成功匯入書籤。", {
+        variant: "success",
+      });
+    } catch (error) {
+      enqueueSnackbar("資料錯誤, 請重新輸入。", {
+        variant: "error",
+      });
+    }
   };
 
   const handleExportBtnOnClick = () => {
-    navigator.clipboard.writeText(encodedData);
-    enqueueSnackbar("已複製資料到剪貼簿, 請妥善保管。", {
-      variant: "success",
-    });
+    try {
+      JSON.parse(
+        decompressJson(exportData, {
+          inputEncoding: "Base64",
+        })
+      );
+      navigator.clipboard.writeText(exportData);
+      enqueueSnackbar("已複製資料到剪貼簿, 請妥善保管。", {
+        variant: "success",
+      });
+    } catch (error) {
+      enqueueSnackbar("資料錯誤, 請重新匯入或刪除書籤。", {
+        variant: "error",
+      });
+    }
   };
 
-  const handlePreviewDialogCloseBtnOnClick = () => {
-    setImExportMode(previewFrom);
+  const handleImportPreviewBtnOnClick = () => {
+    try {
+      JSON.parse(
+        decompressJson(importData, {
+          inputEncoding: "Base64",
+        })
+      );
+      setPreviewFrom("import");
+      setImportExportMode("importPreview");
+    } catch (error) {
+      enqueueSnackbar("資料錯誤, 請重新輸入。", {
+        variant: "error",
+      });
+    }
   };
 
-  const handlePreviewBtnOnClick = () => {
-    setPreviewFrom(imExportMode);
-    setImExportMode("preview");
+  const handleExportPreviewBtnOnClick = () => {
+    try {
+      JSON.parse(
+        decompressJson(exportData, {
+          inputEncoding: "Base64",
+        })
+      );
+      setPreviewFrom("export");
+      setImportExportMode("exportPreview");
+    } catch (error) {
+      enqueueSnackbar("資料錯誤, 請重新匯入或刪除書籤。", {
+        variant: "error",
+      });
+    }
   };
 
   const handleFormChange = (e) => {
-    setEncodedData(e.target.value);
+    setImportData(e.target.value);
   };
 
   return (
     <DialogRoot
       onClose={handleDialogCloseBtnOnClick}
-      open={imExportMode !== null}
+      open={importExportMode !== null}
       fullWidth
     >
-      {imExportMode === "import" && (
+      {importExportMode === "import" && (
         <>
           <DialogTitle>
             <Grid>
@@ -83,19 +131,19 @@ export const ImportExportDialog = ({ imExportMode, setImExportMode }) => {
               label="請輸入資料"
               autoComplete="off"
               onChange={handleFormChange}
-              value={encodedData}
+              value={importData}
               fullWidth
               multiline
               maxRows={3}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handlePreviewBtnOnClick}>預覽</Button>
+            <Button onClick={handleImportPreviewBtnOnClick}>預覽</Button>
             <Button onClick={handleimportBtnOnClick}>匯入</Button>
           </DialogActions>
         </>
       )}
-      {imExportMode === "export" && (
+      {importExportMode === "export" && (
         <ExportDialog>
           <DialogTitle>
             <Grid>
@@ -112,7 +160,7 @@ export const ImportExportDialog = ({ imExportMode, setImExportMode }) => {
               margin="dense"
               variant="standard"
               label="資料"
-              defaultValue={encodedData}
+              defaultValue={exportData}
               autoComplete="off"
               fullWidth
               InputProps={{
@@ -123,18 +171,23 @@ export const ImportExportDialog = ({ imExportMode, setImExportMode }) => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handlePreviewBtnOnClick}>預覽</Button>
+            <Button onClick={handleExportPreviewBtnOnClick}>預覽</Button>
             <Button onClick={handleExportBtnOnClick}>匯出</Button>
           </DialogActions>
         </ExportDialog>
       )}
-      {imExportMode === "preview" && (
+      {importExportMode === "importPreview" && (
         <PreviewDialog
+          data={importData}
+          setImportExportMode={setImportExportMode}
           previewFrom={previewFrom}
-          encodedData={encodedData}
-          handlePreviewDialogCloseBtnOnClick={
-            handlePreviewDialogCloseBtnOnClick
-          }
+        />
+      )}
+      {importExportMode === "exportPreview" && (
+        <PreviewDialog
+          data={exportData}
+          setImportExportMode={setImportExportMode}
+          previewFrom={previewFrom}
         />
       )}
     </DialogRoot>

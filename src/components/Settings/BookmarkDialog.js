@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
-import { compress as compressJson } from "lzutf8-light";
 import { styled, Dialog, IconButton } from "@mui/material/";
 import { Close as CloseIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { FormDialog } from "../BookmarkDialog/FormDialog";
-import { getLocalStorage } from "../../Utils/Utils";
+import { getLocalStorage, setLocalStorage } from "../../Utils/Utils";
 import { ListBtnDialog } from "../BookmarkDialog/ListBtnDialog";
 
 export const BookmarkDialog = ({
@@ -19,7 +18,13 @@ export const BookmarkDialog = ({
   const [formValue, setFormValue] = useState("");
   const [transportData, setTransportData] = useState("");
 
-  const _transportData = getLocalStorage("bookmark") || [];
+  let _transportData = "";
+
+  try {
+    _transportData = getLocalStorage("bookmark") || [];
+  } catch (error) {
+    _transportData = [];
+  }
 
   useEffect(() => {
     setTransportData(_transportData);
@@ -55,12 +60,7 @@ export const BookmarkDialog = ({
           onClick={() => {
             _transportData.splice(i, 1);
             setTransportData(_transportData);
-            localStorage.setItem(
-              "bookmark",
-              compressJson(JSON.stringify(_transportData), {
-                outputEncoding: "Base64",
-              })
-            );
+            setLocalStorage("bookmark", _transportData);
             closeSnackbar(snackbarId);
           }}
         >
@@ -95,10 +95,7 @@ export const BookmarkDialog = ({
       data: [],
     });
     setTransportData(_transportData);
-    localStorage.setItem(
-      "bookmark",
-      compressJson(JSON.stringify(_transportData), { outputEncoding: "Base64" })
-    );
+    setLocalStorage("bookmark", _transportData);
     setBookmarkDialogMode("category");
     setFormValue("");
   };
@@ -116,10 +113,7 @@ export const BookmarkDialog = ({
   const handleCategoryEditConfirmBtnOnClick = () => {
     _transportData[categoryIdx].title = formValue;
     setTransportData(_transportData);
-    localStorage.setItem(
-      "bookmark",
-      compressJson(JSON.stringify(_transportData), { outputEncoding: "Base64" })
-    );
+    setLocalStorage("bookmark", _transportData);
     setBookmarkDialogMode("category");
     setFormValue("");
   };
@@ -138,10 +132,8 @@ export const BookmarkDialog = ({
   const handleSectionAddBtnOnClick = () => {
     _transportData[categoryIdx].data.push([]);
     setTransportData(_transportData);
-    localStorage.setItem(
-      "bookmark",
-      compressJson(JSON.stringify(_transportData), { outputEncoding: "Base64" })
-    );
+    setLocalStorage("bookmark", _transportData);
+
     if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
       localStorage.setItem(
         "bookmark_nocompress",
@@ -162,12 +154,7 @@ export const BookmarkDialog = ({
           onClick={() => {
             _transportData[categoryIdx].data.splice(i, 1);
             setTransportData(_transportData);
-            localStorage.setItem(
-              "bookmark",
-              compressJson(JSON.stringify(_transportData), {
-                outputEncoding: "Base64",
-              })
-            );
+            setLocalStorage("bookmark", _transportData);
             closeSnackbar(snackbarId);
           }}
         >
@@ -208,12 +195,7 @@ export const BookmarkDialog = ({
           onClick={() => {
             _transportData[categoryIdx].data[sectionIdx].splice(i, 1);
             setTransportData(_transportData);
-            localStorage.setItem(
-              "bookmark",
-              compressJson(JSON.stringify(_transportData), {
-                outputEncoding: "Base64",
-              })
-            );
+            setLocalStorage("bookmark", _transportData);
             closeSnackbar(snackbarId);
           }}
         >

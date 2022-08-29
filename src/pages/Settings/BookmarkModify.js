@@ -13,6 +13,7 @@ import { useSnackbar } from "notistack";
 import {
   Edit as EditIcon,
   Close as CloseIcon,
+  BookmarkRemove as BookmarkRemoveIcon,
   Delete as DeleteIcon,
   FileUpload as FileUploadIcon,
   FileDownload as FileDownloadIcon,
@@ -23,7 +24,7 @@ import { ImportExportDialog } from "../../components/BookmarkDialog/ImportExport
 export const BookmarkModify = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [bookmarkDialogMode, setBookmarkDialogMode] = useState(null);
-  const [imExportMode, setImExportMode] = useState(null);
+  const [importExportMode, setImportExportMode] = useState(null);
 
   const handleClearBtnOnClick = (i) => {
     const action = (snackbarId) => (
@@ -33,6 +34,9 @@ export const BookmarkModify = () => {
           onClick={() => {
             localStorage.removeItem("bookmark");
             localStorage.removeItem("user");
+            enqueueSnackbar("成功刪除書籤。", {
+              variant: "success",
+            });
             closeSnackbar(snackbarId);
           }}
         >
@@ -48,7 +52,7 @@ export const BookmarkModify = () => {
       </>
     );
 
-    enqueueSnackbar("確定刪除書籤 ?", {
+    enqueueSnackbar("確定刪除書籤?", {
       variant: "warning",
       autoHideDuration: 5000,
       action,
@@ -68,38 +72,33 @@ export const BookmarkModify = () => {
             <ListItemText primary="新增, 編輯或刪除" />
           </ListItemButton>
         </ListItem>
-        {!process.env.NODE_ENV ||
-          (process.env.NODE_ENV === "development" && (
-            <>
-              <Divider />
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => setImExportMode("import")}>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <FileUploadIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary="匯入書籤" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => setImExportMode("export")}>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <FileDownloadIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary="匯出書籤" />
-                </ListItemButton>
-              </ListItem>
-            </>
-          ))}
+        <Divider />
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => setImportExportMode("import")}>
+            <ListItemAvatar>
+              <Avatar>
+                <FileUploadIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="匯入書籤" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => setImportExportMode("export")}>
+            <ListItemAvatar>
+              <Avatar>
+                <FileDownloadIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="匯出書籤" />
+          </ListItemButton>
+        </ListItem>
         <Divider />
         <ListItem disablePadding>
           <ListItemButton onClick={handleClearBtnOnClick}>
             <ListItemAvatar>
               <Avatar>
-                <DeleteIcon />
+                <BookmarkRemoveIcon />
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="刪除書籤" secondary="請謹慎使用" />
@@ -111,8 +110,8 @@ export const BookmarkModify = () => {
         setBookmarkDialogMode={setBookmarkDialogMode}
       />
       <ImportExportDialog
-        imExportMode={imExportMode}
-        setImExportMode={setImExportMode}
+        importExportMode={importExportMode}
+        setImportExportMode={setImportExportMode}
       />
     </>
   );

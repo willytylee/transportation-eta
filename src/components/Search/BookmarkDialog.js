@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { compress as compressJson } from "lzutf8-light";
 import { useSnackbar } from "notistack";
 import { styled, Dialog } from "@mui/material/";
 import { FormDialog } from "../BookmarkDialog/FormDialog";
-import { getLocalStorage } from "../../Utils/Utils";
+import { getLocalStorage, setLocalStorage } from "../../Utils/Utils";
 import { ListDialog } from "../BookmarkDialog/ListDialog";
 
 export const BookmarkDialog = ({
@@ -16,7 +15,13 @@ export const BookmarkDialog = ({
   const [categoryValue, setCategoryValue] = useState("");
   const [transportData, setTransportData] = useState("");
 
-  const _transportData = getLocalStorage("bookmark") || [];
+  let _transportData = "";
+
+  try {
+    _transportData = getLocalStorage("bookmark") || [];
+  } catch (error) {
+    _transportData = [];
+  }
 
   useEffect(() => {
     setTransportData(_transportData);
@@ -50,10 +55,7 @@ export const BookmarkDialog = ({
       data: [],
     });
     setTransportData(_transportData);
-    localStorage.setItem(
-      "bookmark",
-      compressJson(JSON.stringify(_transportData), { outputEncoding: "Base64" })
-    );
+    setLocalStorage("bookmark", _transportData);
     setBookmarkDialogMode("category");
     setCategoryValue("");
   };
@@ -67,10 +69,7 @@ export const BookmarkDialog = ({
   const handleSectionItemOnClick = (i) => {
     _transportData[categoryIdx].data[i].push(bookmarkRouteObj);
     setTransportData(_transportData);
-    localStorage.setItem(
-      "bookmark",
-      compressJson(JSON.stringify(_transportData), { outputEncoding: "Base64" })
-    );
+    setLocalStorage("bookmark", _transportData);
     if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
       localStorage.setItem(
         "bookmark_nocompress",
@@ -92,10 +91,8 @@ export const BookmarkDialog = ({
   const handleSectionAddBtnOnClick = () => {
     _transportData[categoryIdx].data.push([]);
     setTransportData(_transportData);
-    localStorage.setItem(
-      "bookmark",
-      compressJson(JSON.stringify(_transportData), { outputEncoding: "Base64" })
-    );
+    setLocalStorage("bookmark", _transportData);
+
     if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
       localStorage.setItem(
         "bookmark_nocompress",

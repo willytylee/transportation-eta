@@ -20,7 +20,7 @@ import {
   Tune as TuneIcon,
   LayersClear as LayersClearIcon,
   Share as ShareIcon,
-  Edit as EditIcon,
+  Bookmark as BookmarkIcon,
 } from "@mui/icons-material";
 import { SelectUserDialog } from "../components/Settings/SelectUserDialog";
 import { AppContext } from "../context/AppContext";
@@ -103,7 +103,7 @@ export const Settings = () => {
           >
             <ListItemAvatar>
               <Avatar>
-                <EditIcon />
+                <BookmarkIcon />
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="書籤設定" />

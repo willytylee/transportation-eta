@@ -7,52 +7,65 @@ import {
   styled,
   DialogContent,
 } from "@mui/material/";
-import { Close as CloseIcon } from "@mui/icons-material";
+import {
+  Close as CloseIcon,
+  ArrowBackIosNew as ArrowBackIosNewIcon,
+} from "@mui/icons-material";
 import { DbContext } from "../../context/DbContext";
 import { companyColor } from "../../constants/Constants";
 
-export const PreviewDialog = ({
-  encodedData,
-  handlePreviewDialogCloseBtnOnClick,
-}) => {
+export const PreviewDialog = ({ data, setImportExportMode, previewFrom }) => {
   const { gStopList } = useContext(DbContext);
 
+  const handleBackBtnOnClick = () => {
+    setImportExportMode(previewFrom);
+  };
+
   const decodedData = JSON.parse(
-    decompressJson(encodedData || "W10=", {
-      // "W10=" = compressed []
+    decompressJson(data, {
       inputEncoding: "Base64",
     })
   );
+
   return (
     <PreviewDialogRoot>
       <DialogTitle>
         <Grid>
           <div className="title">預覽</div>
+          <div className="leftBtnGroup">
+            <IconButton onClick={handleBackBtnOnClick}>
+              <ArrowBackIosNewIcon />
+            </IconButton>
+          </div>
           <div className="rightBtnGroup">
-            <IconButton onClick={handlePreviewDialogCloseBtnOnClick}>
+            <IconButton onClick={handleBackBtnOnClick}>
               <CloseIcon />
             </IconButton>
           </div>
         </Grid>
       </DialogTitle>
       <DialogContent>
-        {decodedData.map((category, i) => (
-          <div key={i} className="category">
-            <div className="title">{category.title}</div>
-            {category.data.map((section, j) => (
-              <div key={j} className="section">
-                {section.map((routes, k) => (
-                  <div key={k} className="routes">
-                    <div className={`route ${routes.co}`}>{routes.route}</div>
-                    <div className="stopId">
-                      {gStopList[routes.stopId].name.zh}
+        {decodedData?.length > 0 ? (
+          decodedData.map((category, i) => (
+            <div key={i} className="category">
+              <div className="title">{category.title}</div>
+              {category.data.map((section, j) => (
+                <div key={j} className="section">
+                  {section.map((routes, k) => (
+                    <div key={k} className="routes">
+                      <div className={`route ${routes.co}`}>{routes.route}</div>
+                      <div className="stopId">
+                        {gStopList[routes.stopId].name.zh}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        ))}
+                  ))}
+                </div>
+              ))}
+            </div>
+          ))
+        ) : (
+          <div className="emptyMsg">沒有書籤</div>
+        )}
       </DialogContent>
     </PreviewDialogRoot>
   );
@@ -81,5 +94,10 @@ const PreviewDialogRoot = styled("div")({
         ...companyColor,
       },
     },
+  },
+  ".emptyMsg": {
+    fontSize: "14px",
+    textAlign: "center",
+    paddingTop: "14px",
   },
 });

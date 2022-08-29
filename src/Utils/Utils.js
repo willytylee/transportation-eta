@@ -41,6 +41,15 @@ export const getLocalStorage = (key) => {
   }
 };
 
+export const setLocalStorage = (key, data) => {
+  localStorage.setItem(
+    key,
+    compressJson(JSON.stringify(data), {
+      outputEncoding: "Base64",
+    })
+  );
+};
+
 export const sortEtaObj = (etaObjArr) => {
   etaObjArr.sort((a, b) => {
     if (a.eta === "" || a.eta === null) {
@@ -149,11 +158,6 @@ export const setRouteListHistory = (routeObj) => {
       routeListHistory.pop();
     }
     routeListHistory.unshift(routeObj);
-    localStorage.setItem(
-      "routeListHistory",
-      compressJson(JSON.stringify(routeListHistory), {
-        outputEncoding: "Base64",
-      })
-    );
+    setLocalStorage("routeListHistory", routeListHistory);
   }
 };
