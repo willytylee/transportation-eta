@@ -24,11 +24,14 @@ import { primaryColor } from "../../constants/Constants";
 import { MtrStopEta } from "./MtrStopEta";
 import { StopEta } from "./StopEta";
 import { BookmarkDialog } from "./BookmarkDialog";
+import { MtrRouteOptionDialog } from "./MtrRouteOptionDialog";
 
 export const StopList = () => {
   const [stopList, setStopList] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
+  const [mtrRouteOptionDialogOpen, setMtrRouteOptionDialogOpen] =
+    useState(false);
   const [bookmarkDialogMode, setBookmarkDialogMode] = useState(null);
   const [bookmarkRouteObj, setBookmarkRouteObj] = useState({});
   const { location: currentLocation } = useContext(AppContext);
@@ -57,9 +60,15 @@ export const StopList = () => {
     updateMapStopIdx(mapStopIdx);
   };
 
-  const handleFavIconOnClick = (routeObj) => {
+  const handleBookmarkAddIconOnClick = (routeObj) => {
     setBookmarkRouteObj(routeObj);
     setBookmarkDialogMode("category");
+  };
+
+  const handleMtrBookmarkAddIconOnClick = (routeObj) => {
+    setBookmarkRouteObj(routeObj);
+    setBookmarkDialogMode("category");
+    // setMtrRouteOptionDialogOpen(true);
   };
 
   const handleChange = (panel) => (e, isExpanded) => {
@@ -190,17 +199,24 @@ export const StopList = () => {
                   <IconButton
                     onClick={() => {
                       if (currRoute.co[0] === "gmb") {
-                        handleFavIconOnClick({
+                        handleBookmarkAddIconOnClick({
                           seq: i + 1,
-                          co: Object.keys(currRoute.stops)[0], // use currRoute.stops' company as standard
+                          co: "gmb",
                           route: currRoute.route,
                           stopId: e.stopId,
                           gtfsId: currRoute.gtfsId,
                         });
+                      } else if (currRoute.co[0] === "mtr") {
+                        handleMtrBookmarkAddIconOnClick({
+                          co: "mtr", // use currRoute.stops' company as standard
+                          route: currRoute.route,
+                          stopId: e.stopId,
+                          bound: ["up", "down"],
+                        });
                       } else {
-                        handleFavIconOnClick({
+                        handleBookmarkAddIconOnClick({
                           seq: i + 1,
-                          co: Object.keys(currRoute.stops)[0], // use currRoute.stops' company as standard
+                          co: getCoPriorityId(currRoute), // use currRoute.stops' company as standard
                           route: currRoute.route,
                           stopId: e.stopId,
                         });
@@ -213,15 +229,20 @@ export const StopList = () => {
               </Accordion>
             );
           })}
-        <MapDialog
-          mapDialogOpen={mapDialogOpen}
-          handleMapDialogOnClose={handleMapDialogOnClose}
-        />
       </StopListRoot>
+      <MapDialog
+        mapDialogOpen={mapDialogOpen}
+        handleMapDialogOnClose={handleMapDialogOnClose}
+      />
       <BookmarkDialog
         bookmarkDialogMode={bookmarkDialogMode}
         setBookmarkDialogMode={setBookmarkDialogMode}
         bookmarkRouteObj={bookmarkRouteObj}
+      />
+      <MtrRouteOptionDialog
+        mtrRouteOptionDialogOpen={mtrRouteOptionDialogOpen}
+        bookmarkRouteObj={bookmarkRouteObj}
+        currRoute={currRoute}
       />
     </>
   );
