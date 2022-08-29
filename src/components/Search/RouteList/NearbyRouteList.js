@@ -37,14 +37,16 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
         .filter((e) => {
           const value = Object.values(e)[0];
           return (
-            value.distance < 500 &&
-            (value.stopMap === undefined ||
-              (value.stopMap // For those CTB/NWFB route's stopMap includes 'kmb', filter away. we need kmb stop only
-                ? value.stopMap[0].includes("ctb") ||
-                  value.stopMap[0].includes("nwfb")
-                : true))
+            value.distance < 500
+            // &&
+            // (value.stopMap === undefined ||
+            //   (value.stopMap.length > 0 // For those CTB/NWFB route's stopMap includes 'kmb', filter away. we need kmb stop only
+            //     ? value.stopMap[0].includes("ctb") ||
+            //       value.stopMap[0].includes("nwfb")
+            //     : true))
           );
         })
+
         .reduce(
           (prev, curr) => ({
             ...prev,
@@ -60,11 +62,12 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
     gRouteList &&
     Object.keys(gRouteList)
       .map((e) => gRouteList[e])
-      .filter((e) => basicFiltering(e));
+      .filter((e) => basicFiltering(e))
+      .filter((e) => e.route === "9");
 
   const routeListNearby = [];
 
-  // // Find out the route which contains the near by Stops
+  // Find out the route which contains the near by Stops
   routeList?.forEach((e) => {
     const company = getCoPriorityId(e);
 
