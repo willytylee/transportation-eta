@@ -16,27 +16,47 @@ export const RouteList = () => {
   const { updateCurrRoute, currRoute, route } = useContext(EtaContext);
   const { gRouteList } = useContext(DbContext);
 
-  const routeList =
-    gRouteList &&
-    (route === "M" || route === "MT" || route === "MTR"
-      ? Object.keys(gRouteList)
-          .map((e) => gRouteList[e])
-          .filter((e) => e.co.includes("mtr"))
-          .filter(
-            // Combine same route
-            (e, idx, self) =>
-              idx ===
-              self.findIndex((t) => {
-                const eStop = JSON.stringify([...e.stops.mtr].sort());
-                const tStop = JSON.stringify([...t.stops.mtr].sort());
-                return eStop === tStop;
-              })
-          )
-      : Object.keys(gRouteList)
-          .map((e) => gRouteList[e])
-          .filter((e) => basicFiltering(e))
-          .filter((e) => e.route === route)
-          .sort((a, b) => sortByCompany(a, b)));
+  const english = /^[A-Za-z]*$/;
+
+  let routeList;
+
+  if (gRouteList) {
+    if (route === "M" || route === "MT" || route === "MTR") {
+      routeList = Object.keys(gRouteList)
+        .map((e) => gRouteList[e])
+        .filter((e) => e.co.includes("mtr"))
+        .filter(
+          // Combine same route
+          (e, idx, self) =>
+            idx ===
+            self.findIndex((t) => {
+              const eStop = JSON.stringify([...e.stops.mtr].sort());
+              const tStop = JSON.stringify([...t.stops.mtr].sort());
+              return eStop === tStop;
+            })
+        );
+    } else if (route.length === 3 && english.test(route) && route !== "MTR") {
+      routeList = Object.keys(gRouteList)
+        .map((e) => gRouteList[e])
+        .filter((e) => e.co.includes("mtr") && e.route === route)
+        .filter(
+          // Combine same route
+          (e, idx, self) =>
+            idx ===
+            self.findIndex((t) => {
+              const eStop = JSON.stringify([...e.stops.mtr].sort());
+              const tStop = JSON.stringify([...t.stops.mtr].sort());
+              return eStop === tStop;
+            })
+        );
+    } else {
+      routeList = Object.keys(gRouteList)
+        .map((e) => gRouteList[e])
+        .filter((e) => basicFiltering(e))
+        .filter((e) => e.route === route)
+        .sort((a, b) => sortByCompany(a, b));
+    }
+  }
 
   const handleCardOnClick = (i) => {
     const expandRoute = routeList[i];

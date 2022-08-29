@@ -118,7 +118,7 @@ const ListDialogRoot = styled("div", {
   },
   ".MuiListItemButton-root": {
     ...(bookmarkDialogMode === "category" && {
-      paddingRight: "115px !important",
+      paddingRight: "90px !important",
     }),
     ...(bookmarkDialogMode === "section" && {
       paddingRight: "75px !important",
