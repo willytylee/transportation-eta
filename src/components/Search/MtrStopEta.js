@@ -1,6 +1,7 @@
+import _ from "lodash";
 import { parseMtrEtas } from "../../Utils/Utils";
 import { useEtas } from "../../hooks/Etas";
-import { etaExcluded, stationDestMap } from "../../constants/Mtr";
+import { etaExcluded, stationMap } from "../../constants/Mtr";
 
 export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
   const { eta, isEtaLoading } = useEtas({
@@ -9,11 +10,9 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
     isBoundLoading: false,
   });
 
-  const upEta = eta.filter((e) => e.bound === "up");
-  const downEta = eta.filter((e) => e.bound === "down");
-
-  const bound = routeObj.bound.mtr;
-  const prefix = bound.includes("-") ? `${bound.split("-")[0]}_` : "";
+  const groupedEtas = _(eta)
+    .groupBy((x) => x.dest)
+    .value();
 
   return (
     <MtrStopEtaRoot>
@@ -23,52 +22,26 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
         <div className="noEta">沒有相關班次資料</div>
       ) : (
         <div className="etasWrapper">
-          <div className="etaWrapper">
-            <div className="arriveText">
-              →{" "}
-              <span className="dest">
-                {stationDestMap[routeObj.route][`${prefix}UP`]}
-              </span>
+          {Object.keys(groupedEtas).map((destKey) => (
+            <div className="etaWrapper">
+              <div className="arriveText">
+                → <span className="dest">{stationMap[destKey]}</span>
+              </div>
+              <div className="ttntWrapper">
+                {isEtaLoading ? (
+                  <div className="ttnt">載入中</div>
+                ) : (
+                  groupedEtas[destKey]
+                    .map((e, i) => (
+                      <div key={i} className="ttnt" title={e.seq}>
+                        {parseMtrEtas(e)}
+                      </div>
+                    ))
+                    .slice(0, 3)
+                )}
+              </div>
             </div>
-            <div className="ttntWrapper">
-              {isEtaLoading ? (
-                <div className="ttnt">載入中</div>
-              ) : upEta.length !== 0 ? (
-                upEta
-                  .map((e, i) => (
-                    <div key={i} className="ttnt" title={e.seq}>
-                      {parseMtrEtas(e)}
-                    </div>
-                  ))
-                  .slice(0, 3)
-              ) : (
-                <div>沒有班次</div>
-              )}
-            </div>
-          </div>
-          <div className="etaWrapper">
-            <div className="arriveText">
-              →{" "}
-              <span className="dest">
-                {stationDestMap[routeObj.route][`${prefix}DOWN`]}
-              </span>
-            </div>
-            <div className="ttntWrapper">
-              {isEtaLoading ? (
-                <div className="ttnt">載入中</div>
-              ) : downEta.length !== 0 ? (
-                downEta
-                  .map((e, i) => (
-                    <div key={i} className="ttnt" title={e.seq}>
-                      {parseMtrEtas(e)}
-                    </div>
-                  ))
-                  .slice(0, 3)
-              ) : (
-                <div>沒有班次</div>
-              )}
-            </div>
-          </div>
+          ))}
         </div>
       )}
     </MtrStopEtaRoot>
