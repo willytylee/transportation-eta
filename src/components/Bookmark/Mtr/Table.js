@@ -1,14 +1,15 @@
 import { styled } from "@mui/material";
+import { stationMap } from "../../../constants/Mtr";
 
-export const Table = ({ data, bound }) => {
-  const detail = data[bound];
+export const Table = ({ data, dests }) => {
+  const detail = data[dests];
 
   return (
     detail?.dest &&
-    data.bound.includes(bound) && (
+    data.dests.includes(dests) && (
       <MtrTable>
         <div className="arriveText">
-          → <span className="dest">{detail.dest}</span>
+          → <span className="dest">{stationMap[detail.dest]}</span>
         </div>
         <div className="ttntWrapper">
           {detail.ttnts === ""

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { styled, Dialog, IconButton } from "@mui/material/";
 import { Close as CloseIcon, Delete as DeleteIcon } from "@mui/icons-material";
@@ -11,7 +10,6 @@ export const BookmarkDialog = ({
   bookmarkDialogMode,
   setBookmarkDialogMode,
 }) => {
-  const navigate = useNavigate();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [categoryIdx, setCategoryIdx] = useState(-1);
   const [sectionIdx, setSectionIdx] = useState(-1);
@@ -183,10 +181,6 @@ export const BookmarkDialog = ({
     setBookmarkDialogMode("section");
   };
 
-  const handleRouteAddBtnOnClick = () => {
-    navigate("/search", { replace: true });
-  };
-
   const handleRouteDeleteBtnOnClick = (i) => {
     const action = (snackbarId) => (
       <>
@@ -289,7 +283,6 @@ export const BookmarkDialog = ({
           emptyMsg="未有路線"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleBackBtnOnClick={handleRouteBackBtnOnClick}
-          handleAddBtnOnClick={handleRouteAddBtnOnClick}
           handleDeleteBtnOnClick={handleRouteDeleteBtnOnClick}
           data={transportData[categoryIdx].data[sectionIdx]}
           bookmarkDialogMode={bookmarkDialogMode}

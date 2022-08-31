@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import { styled } from "@mui/material";
-import {
-  mtrLineColor,
-  stationDestMap,
-  stationMap,
-} from "../../../constants/Mtr";
+import { mtrLineColor, stationMap } from "../../../constants/Mtr";
 import { fetchEtas } from "../../../fetch/transports";
 import { parseMtrEtas } from "../../../Utils/Utils";
 import { Table } from "./Table";
@@ -22,24 +18,26 @@ export const Mtrs = ({ section }) => {
         allPromises.push(promise);
       }
 
-      const result = await Promise.all(allPromises);
+      const etas = await Promise.all(allPromises);
 
       setSectionData(
-        result.map((stationData, i) => {
-          const { route, stopId, bound } = section[i];
+        etas.map((stationData, i) => {
+          const { route, stopId, dests } = section[i];
           const _sectionData = {};
           _sectionData.name = stationMap[stopId];
-          _sectionData.bound = bound;
+          _sectionData.dests = dests;
           _sectionData.route = route;
-          bound.forEach((e) => {
-            const boundKey = e.toUpperCase();
+          dests.forEach((dest) => {
+            // const boundKey = e.toUpperCase();
             const stationDataFiltered = stationData.filter(
-              (f) => e === f.bound
+              (f) => dest === f.dest
             );
-            _sectionData[e] = {
-              dest: stationDestMap[route][boundKey],
+
+            _sectionData[dest] = {
+              // dest: stationDestMap[route][boundKey],
+              dest,
               ttnts:
-                stationDataFiltered.length > 1
+                stationDataFiltered.length > 0
                   ? stationDataFiltered.map((f) => parseMtrEtas(f))
                   : "",
             };
@@ -61,8 +59,8 @@ export const Mtrs = ({ section }) => {
         <span className={`${e.route}`}>{e.name}站</span>
       </div>
       <div className="etaGroupWrapper">
-        {e.bound.map((f, j) => (
-          <Table key={j} data={e} bound={f} />
+        {e.dests.map((f, j) => (
+          <Table key={j} data={e} dests={f} />
         ))}
       </div>
     </MTRRoot>
