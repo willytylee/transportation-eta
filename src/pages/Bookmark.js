@@ -17,6 +17,10 @@ export const Bookmark = () => {
     transportData = getLocalStorage("bookmark");
   } else if (userId) {
     setLocalStorage("bookmark", data.transportData);
+    localStorage.setItem(
+      "bookmark_nocompress",
+      JSON.stringify(data.transportData)
+    );
     transportData = data.transportData;
   }
 
