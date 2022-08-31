@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { styled } from "@mui/material";
 import { Category } from "../components/Bookmark/Category";
 import { dataSet } from "../data/DataSet";
-import { getLocalStorage, setLocalStorage } from "../Utils/Utils";
+import { getLocalStorage } from "../Utils/Utils";
 
 export const Bookmark = () => {
   // const [transportData, setTransportData] = useState([]);
@@ -16,7 +16,7 @@ export const Bookmark = () => {
   if (bookmark) {
     transportData = getLocalStorage("bookmark");
   } else if (userId) {
-    setLocalStorage("bookmark", data.transportData);
+    // setLocalStorage("bookmark", data.transportData);
     transportData = data.transportData;
   }
 
