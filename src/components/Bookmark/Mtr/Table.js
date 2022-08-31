@@ -35,7 +35,7 @@ const MtrTable = styled("div")({
   flexDirection: "row",
   justifyContent: "space-between",
   ".arriveText": {
-    width: "20%",
+    width: "47%",
     ".dest": {
       fontWeight: "900",
     },

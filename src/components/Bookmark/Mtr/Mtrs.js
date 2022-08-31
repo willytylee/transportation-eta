@@ -28,13 +28,11 @@ export const Mtrs = ({ section }) => {
           _sectionData.dests = dests;
           _sectionData.route = route;
           dests.forEach((dest) => {
-            // const boundKey = e.toUpperCase();
             const stationDataFiltered = stationData.filter(
               (f) => dest === f.dest
             );
 
             _sectionData[dest] = {
-              // dest: stationDestMap[route][boundKey],
               dest,
               ttnts:
                 stationDataFiltered.length > 0
