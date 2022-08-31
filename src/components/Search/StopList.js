@@ -194,34 +194,36 @@ export const StopList = () => {
                   >
                     <StreetviewIcon />
                   </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      if (currRoute.co[0] === "gmb") {
-                        handleBookmarkAddIconOnClick({
-                          seq: i + 1,
-                          co: "gmb",
-                          route: currRoute.route,
-                          stopId: e.stopId,
-                          gtfsId: currRoute.gtfsId,
-                        });
-                      } else if (currRoute.co[0] === "mtr") {
-                        handleBookmarkAddIconOnClick({
-                          co: "mtr", // use currRoute.stops' company as standard
-                          route: currRoute.route,
-                          stopId: e.stopId,
-                        });
-                      } else {
-                        handleBookmarkAddIconOnClick({
-                          seq: i + 1,
-                          co: getCoPriorityId(currRoute), // use currRoute.stops' company as standard
-                          route: currRoute.route,
-                          stopId: e.stopId,
-                        });
-                      }
-                    }}
-                  >
-                    <BookmarkAddIcon />
-                  </IconButton>
+                  {currRoute.co[0] !== "mtr" && (
+                    <IconButton
+                      onClick={() => {
+                        if (currRoute.co[0] === "gmb") {
+                          handleBookmarkAddIconOnClick({
+                            seq: i + 1,
+                            co: "gmb",
+                            route: currRoute.route,
+                            stopId: e.stopId,
+                            gtfsId: currRoute.gtfsId,
+                          });
+                        } else if (currRoute.co[0] === "mtr") {
+                          handleBookmarkAddIconOnClick({
+                            co: "mtr", // use currRoute.stops' company as standard
+                            route: currRoute.route,
+                            stopId: e.stopId,
+                          });
+                        } else {
+                          handleBookmarkAddIconOnClick({
+                            seq: i + 1,
+                            co: getCoPriorityId(currRoute), // use currRoute.stops' company as standard
+                            route: currRoute.route,
+                            stopId: e.stopId,
+                          });
+                        }
+                      }}
+                    >
+                      <BookmarkAddIcon />
+                    </IconButton>
+                  )}
                 </AccordionDetails>
               </Accordion>
             );
