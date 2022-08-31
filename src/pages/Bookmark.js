@@ -13,7 +13,10 @@ export const Bookmark = () => {
 
   useEffect(() => {
     if (bookmark) {
-      setTransportData(getLocalStorage("bookmark"));
+      const _bookmark = getLocalStorage("bookmark");
+      // eslint-disable-next-line no-console
+      console.log(_bookmark);
+      setTransportData(_bookmark);
     } else if (userId) {
       const data = dataSet.find((o) => o.userId === userId);
       // eslint-disable-next-line no-console
