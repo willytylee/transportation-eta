@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material";
 import { Category } from "../components/Bookmark/Category";
@@ -6,25 +5,20 @@ import { dataSet } from "../data/DataSet";
 import { getLocalStorage, setLocalStorage } from "../Utils/Utils";
 
 export const Bookmark = () => {
-  const [transportData, setTransportData] = useState([]);
+  // const [transportData, setTransportData] = useState([]);
 
   const bookmark = localStorage.getItem("bookmark");
   const userId = JSON.parse(localStorage.getItem("user"))?.userId || null;
+  const data = dataSet.find((o) => o.userId === userId);
 
-  useEffect(() => {
-    if (bookmark) {
-      const _bookmark = getLocalStorage("bookmark");
-      // eslint-disable-next-line no-console
-      console.log(_bookmark);
-      setTransportData(_bookmark);
-    } else if (userId) {
-      const data = dataSet.find((o) => o.userId === userId);
-      // eslint-disable-next-line no-console
-      console.log(data);
-      setLocalStorage("bookmark", data.transportData);
-      setTransportData(data.transportData);
-    }
-  }, []);
+  let transportData;
+
+  if (bookmark) {
+    transportData = getLocalStorage("bookmark");
+  } else if (userId) {
+    setLocalStorage("bookmark", data.transportData);
+    transportData = data.transportData;
+  }
 
   return (
     <BookmarkRoot>
