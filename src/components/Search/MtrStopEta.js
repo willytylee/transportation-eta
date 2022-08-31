@@ -12,7 +12,12 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
 
   const groupedEtas = _(eta)
     .groupBy((x) => x.dest)
-    .value();
+    .map((value, key) => ({
+      dest: key,
+      etas: value,
+    }))
+    .value()
+    .sort((a, b) => (a.etas[0].bound > b.etas[0].bound ? 1 : -1));
 
   return (
     <MtrStopEtaRoot>
@@ -22,26 +27,33 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
         <div className="noEta">沒有相關班次資料</div>
       ) : (
         <div className="etasWrapper">
-          {Object.keys(groupedEtas).map((destKey) => (
+          {groupedEtas.length > 0 ? (
+            groupedEtas.map((destEtas, i) => (
+              <div key={i} className="etaWrapper">
+                <div className="arriveText">
+                  → <span className="dest">{stationMap[destEtas.dest]}</span>
+                </div>
+                <div className="ttntWrapper">
+                  {isEtaLoading ? (
+                    <div className="ttnt">載入中</div>
+                  ) : (
+                    destEtas.etas
+                      .map((_eta, j) => (
+                        <div key={j} className="ttnt" title={_eta.seq}>
+                          {parseMtrEtas(_eta)}
+                        </div>
+                      ))
+                      .slice(0, 3)
+                  )}
+                </div>
+              </div>
+            ))
+          ) : (
             <div className="etaWrapper">
-              <div className="arriveText">
-                → <span className="dest">{stationMap[destKey]}</span>
-              </div>
-              <div className="ttntWrapper">
-                {isEtaLoading ? (
-                  <div className="ttnt">載入中</div>
-                ) : (
-                  groupedEtas[destKey]
-                    .map((e, i) => (
-                      <div key={i} className="ttnt" title={e.seq}>
-                        {parseMtrEtas(e)}
-                      </div>
-                    ))
-                    .slice(0, 3)
-                )}
-              </div>
+              <div> </div>
+              <div className="noEta2">沒有相關班次資料</div>
             </div>
-          ))}
+          )}
         </div>
       )}
     </MtrStopEtaRoot>

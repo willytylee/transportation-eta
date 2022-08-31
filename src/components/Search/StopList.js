@@ -300,6 +300,9 @@ const MtrStopEtaRoot = styled("div")({
     width: "80%",
     padding: "4px 0",
   },
+  ".noEta2": {
+    width: "55%",
+  },
   ".etasWrapper": {
     width: "100%",
     ".etaWrapper": {
