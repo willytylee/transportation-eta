@@ -29,7 +29,7 @@ export const Mtrs = ({ section }) => {
               etas: value,
             }))
             .value()
-            .sort((a, b) => (a.dest > b.dest ? -1 : 1));
+            .sort((a, b) => (a.bound > b.bound ? -1 : 1));
 
           const { route, stopId, bound } = section[i];
           const _sectionData = {};
