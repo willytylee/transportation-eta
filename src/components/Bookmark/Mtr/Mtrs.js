@@ -25,22 +25,23 @@ export const Mtrs = ({ section }) => {
           const groupedStationData = _(stationData)
             .groupBy((x) => x.bound)
             .map((value, key) => ({
-              dest: key,
+              bound: key,
               etas: value,
             }))
             .value()
             .sort((a, b) => (a.dest > b.dest ? -1 : 1));
 
-          const { route, stopId } = section[i];
+          const { route, stopId, bound } = section[i];
           const _sectionData = {};
           _sectionData.name = stationMap[stopId];
           _sectionData.route = route;
-
           _sectionData.ttns = [];
 
-          groupedStationData.forEach((e) => {
-            _sectionData.ttns.push(e.etas.length > 0 ? e.etas : "");
-          });
+          groupedStationData
+            .filter((e) => bound.includes(e.bound))
+            .forEach((e) => {
+              _sectionData.ttns.push(e.etas.length > 0 ? e.etas : "");
+            });
           return _sectionData;
         })
       );

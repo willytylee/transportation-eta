@@ -7,8 +7,8 @@ export const Table = ({ etasDetail }) => (
     {etasDetail.length === 0 ? (
       <div className="noEta">沒有班次</div>
     ) : (
-      etasDetail.map((etas) => (
-        <div className="ttntWrapper">
+      etasDetail.map((etas, i) => (
+        <div key={i} className="boundWrapper">
           {etas
             .map((e, j) => (
               <div className="ttnt" key={j}>
@@ -33,7 +33,7 @@ const MtrTable = styled("div")({
     fontSize: "12px",
     width: "50%",
   },
-  ".ttntWrapper": {
+  ".boundWrapper": {
     fontSize: "12px",
     width: "90%",
     padding: "2px 0",
