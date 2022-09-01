@@ -1,39 +1,32 @@
 import { styled } from "@mui/material";
 import { stationMap } from "../../../constants/Mtr";
+import { parseMtrEtas } from "../../../Utils/Utils";
 
-export const Table = ({ data, dests }) => {
-  const detail = data[dests];
-
-  return (
-    detail?.dest &&
-    data.dests.includes(dests) && (
-      <MtrTable>
-        <div className="arriveText">
-          → <span className="dest">{stationMap[detail.dest]}</span>
-        </div>
-        <div className="ttntWrapper">
-          {detail.ttnts === ""
-            ? "沒有班次"
-            : detail.ttnts
-                .map((e, j) => (
-                  <div className="ttnt" key={j}>
-                    {e}
-                  </div>
-                ))
-                .slice(0, 3)}
-        </div>
-      </MtrTable>
-    )
-  );
-};
+export const Table = ({ etasDetail }) =>
+  etasDetail.length === 0
+    ? "沒有班次"
+    : etasDetail.map((etas) => (
+        <MtrTable>
+          <div className="ttntWrapper">
+            {etas
+              .map((e, j) => (
+                <div className="ttnt" key={j}>
+                  <div className="dest">{stationMap[e.dest]}</div>
+                  <div className="minutes">{parseMtrEtas(e)}</div>
+                </div>
+              ))
+              .slice(0, 4)}
+          </div>
+        </MtrTable>
+      ));
 
 const MtrTable = styled("div")({
   fontSize: "12px",
-  width: "100%",
+  width: "95%",
   padding: "2px 0",
   display: "flex",
   flexDirection: "row",
-  justifyContent: "space-between",
+  justifyContent: "flex-end",
   ".arriveText": {
     width: "47%",
     ".dest": {
@@ -41,11 +34,13 @@ const MtrTable = styled("div")({
     },
   },
   ".ttntWrapper": {
-    width: "53%",
+    width: "100%",
     display: "flex",
     flexDirection: "row",
     ".ttnt": {
-      width: "33.33%",
+      display: "flex",
+      flexDirection: "column",
+      width: "25%",
       fontSize: "12px",
     },
   },

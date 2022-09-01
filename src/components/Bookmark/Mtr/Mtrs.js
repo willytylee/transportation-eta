@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
+import _ from "lodash";
 import { styled } from "@mui/material";
 import { mtrLineColor, stationMap } from "../../../constants/Mtr";
 import { fetchEtas } from "../../../fetch/transports";
-import { parseMtrEtas } from "../../../Utils/Utils";
 import { Table } from "./Table";
 
 export const Mtrs = ({ section }) => {
@@ -22,23 +22,24 @@ export const Mtrs = ({ section }) => {
 
       setSectionData(
         etas.map((stationData, i) => {
-          const { route, stopId, dests } = section[i];
+          const groupedStationData = _(stationData)
+            .groupBy((x) => x.bound)
+            .map((value, key) => ({
+              dest: key,
+              etas: value,
+            }))
+            .value()
+            .sort((a, b) => (a.dest > b.dest ? -1 : 1));
+
+          const { route, stopId } = section[i];
           const _sectionData = {};
           _sectionData.name = stationMap[stopId];
-          _sectionData.dests = dests;
           _sectionData.route = route;
-          dests.forEach((dest) => {
-            const stationDataFiltered = stationData.filter(
-              (f) => dest === f.dest
-            );
 
-            _sectionData[dest] = {
-              dest,
-              ttnts:
-                stationDataFiltered.length > 0
-                  ? stationDataFiltered.map((f) => parseMtrEtas(f))
-                  : "",
-            };
+          _sectionData.ttns = [];
+
+          groupedStationData.forEach((e) => {
+            _sectionData.ttns.push(e.etas.length > 0 ? e.etas : "");
           });
           return _sectionData;
         })
@@ -53,13 +54,11 @@ export const Mtrs = ({ section }) => {
 
   return sectionData.map((e, i) => (
     <MTRRoot key={i}>
-      <div className="dest">
-        <span className={`${e.route}`}>{e.name}站</span>
+      <div className="stop">
+        <span className={`${e.route}`}>{e.name}</span>
       </div>
       <div className="etaGroupWrapper">
-        {e.dests.map((f, j) => (
-          <Table key={j} data={e} dests={f} />
-        ))}
+        <Table etasDetail={e.ttns} />
       </div>
     </MTRRoot>
   ));
@@ -68,8 +67,9 @@ export const Mtrs = ({ section }) => {
 const MTRRoot = styled("div")({
   display: "flex",
   alignItems: "center",
-  padding: "4px 0",
-  ".dest": {
+  padding: "6px 0",
+  gap: "12px",
+  ".stop": {
     fontSize: "12px",
     width: "15%",
     ...mtrLineColor,
@@ -77,6 +77,8 @@ const MTRRoot = styled("div")({
   ".etaGroupWrapper": {
     display: "flex",
     flexDirection: "column",
+    alignItems: "flex-end",
     flexGrow: 1,
+    gap: "4px",
   },
 });
