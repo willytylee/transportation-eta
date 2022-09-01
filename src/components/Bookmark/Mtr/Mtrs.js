@@ -57,9 +57,7 @@ export const Mtrs = ({ section }) => {
       <div className="stop">
         <span className={`${e.route}`}>{e.name}</span>
       </div>
-      <div className="etaGroupWrapper">
-        <Table etasDetail={e.ttns} />
-      </div>
+      <Table etasDetail={e.ttns} />
     </MTRRoot>
   ));
 };
@@ -73,12 +71,5 @@ const MTRRoot = styled("div")({
     fontSize: "12px",
     width: "15%",
     ...mtrLineColor,
-  },
-  ".etaGroupWrapper": {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-end",
-    flexGrow: 1,
-    gap: "4px",
   },
 });
