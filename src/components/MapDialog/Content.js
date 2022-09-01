@@ -15,18 +15,18 @@ import {
   useMap,
   Polyline,
 } from "react-leaflet";
-import { AppContext } from "../../context/AppContext";
 import { getCoByStopObj } from "../../Utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { EtaContext } from "../../context/EtaContext";
 import { mtrLineColor } from "../../constants/Mtr";
 import { DbContext } from "../../context/DbContext";
+import { useLocation } from "../../hooks/Location";
 
 const currentLocationIcon = require("../../assets/icons/currentLocation.png");
 const markerIcon = require("../../assets/icons/marker-icon-2x.png");
 
 export const Content = () => {
-  const { location: currentLocation } = useContext(AppContext);
+  const { location: currentLocation } = useLocation({ time: 1000 });
   const {
     currRoute,
     nearestStopId,

@@ -6,7 +6,7 @@ import { MapDialog } from "../MapDialog/MapDialog";
 import { EtaContext } from "../../context/EtaContext";
 
 export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
-  const { dbVersion, location: currentLocation } = useContext(AppContext);
+  const { dbVersion } = useContext(AppContext);
   const { currRoute, updateCurrRoute, route } = useContext(EtaContext);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const textInput = useRef(null);
@@ -65,7 +65,6 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
       <MapDialog
         mapDialogOpen={mapDialogOpen}
         handleMapDialogOnClose={handleMapDialogOnClose}
-        currentLocation={currentLocation}
       />
     </SearchBarWraper>
   );

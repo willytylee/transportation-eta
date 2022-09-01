@@ -15,18 +15,19 @@ import {
 } from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
 import { getCoPriorityId } from "../../Utils/Utils";
-import { AppContext } from "../../context/AppContext";
 import { useCorrectBound } from "../../hooks/Bound";
 import { EtaContext } from "../../context/EtaContext";
 import { MapDialog } from "../MapDialog/MapDialog";
 import { DbContext } from "../../context/DbContext";
 import { primaryColor } from "../../constants/Constants";
+import { useLocation } from "../../hooks/Location";
 import { MtrStopEta } from "./MtrStopEta";
 import { StopEta } from "./StopEta";
 import { BookmarkDialog } from "./BookmarkDialog";
 import { MtrRouteOptionDialog } from "./MtrRouteOptionDialog";
 
 export const StopList = () => {
+  const { location: currentLocation } = useLocation({ time: 60000 });
   const [stopList, setStopList] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
@@ -34,7 +35,6 @@ export const StopList = () => {
     useState(false);
   const [bookmarkDialogMode, setBookmarkDialogMode] = useState(null);
   const [bookmarkRouteObj, setBookmarkRouteObj] = useState({});
-  const { location: currentLocation } = useContext(AppContext);
   const { gStopList } = useContext(DbContext);
   const {
     route,
@@ -88,38 +88,42 @@ export const StopList = () => {
 
       setStopList(expandStopIdArr.map((e) => ({ ...gStopList[e], stopId: e })));
 
-      updateNearestStopId(
-        expandStopIdArr.reduce((prev, curr) => {
-          const prevDistance = getPreciseDistance(
-            {
-              latitude: gStopList[prev].location.lat,
-              longitude: gStopList[prev].location.lng,
-            },
-            {
-              latitude: currentLocation.lat,
-              longitude: currentLocation.lng,
-            }
-          );
-          const currDistance = getPreciseDistance(
-            {
-              latitude: gStopList[curr].location.lat,
-              longitude: gStopList[curr].location.lng,
-            },
-            {
-              latitude: currentLocation.lat,
-              longitude: currentLocation.lng,
-            }
-          );
+      if (currentLocation.lat !== 0 && currentLocation.lng !== 0) {
+        updateNearestStopId(
+          expandStopIdArr.reduce((prev, curr) => {
+            const prevDistance = getPreciseDistance(
+              {
+                latitude: gStopList[prev].location.lat,
+                longitude: gStopList[prev].location.lng,
+              },
+              {
+                latitude: currentLocation.lat,
+                longitude: currentLocation.lng,
+              }
+            );
+            const currDistance = getPreciseDistance(
+              {
+                latitude: gStopList[curr].location.lat,
+                longitude: gStopList[curr].location.lng,
+              },
+              {
+                latitude: currentLocation.lat,
+                longitude: currentLocation.lng,
+              }
+            );
 
-          if (prevDistance < currDistance) {
-            return prev;
-          }
-          return curr;
-        })
-      );
+            if (prevDistance < currDistance) {
+              return prev;
+            }
+            return curr;
+          })
+        );
+      } else {
+        updateNearestStopId("");
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currRoute]);
+  }, [currRoute, currentLocation.lat, currentLocation.lng]);
 
   useEffect(() => {
     if (stopList.length > 0) {
@@ -136,7 +140,10 @@ export const StopList = () => {
       <StopListRoot>
         {Object.keys(currRoute).length !== 0 &&
           stopList?.map((e, i) => {
-            const isNearestStop = gStopList[nearestStopId]?.name === e.name;
+            const isNearestStop =
+              gStopList[nearestStopId]?.name === e.name &&
+              currentLocation.lat !== -1 &&
+              currentLocation.lng !== -1;
             const {
               location: { lat, lng },
             } = e;

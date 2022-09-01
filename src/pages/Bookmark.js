@@ -9,13 +9,13 @@ export const Bookmark = () => {
 
   const bookmark = localStorage.getItem("bookmark");
   const userId = JSON.parse(localStorage.getItem("user"))?.userId || null;
-  const data = dataSet.find((o) => o.userId === userId);
 
   let transportData;
 
   if (bookmark) {
     transportData = getLocalStorage("bookmark");
   } else if (userId) {
+    const data = dataSet.find((o) => o.userId === userId);
     setLocalStorage("bookmark", data.transportData);
     transportData = data.transportData;
   }

@@ -20,10 +20,9 @@ import { Playground } from "./pages/Playground";
 import { BookmarkModify } from "./pages/Settings/BookmarkModify";
 
 const App = () => {
-  const { initDb, getGeoLocation, initAppVersion } = useContext(AppContext);
+  const { initDb, initAppVersion } = useContext(AppContext);
 
   useEffect(() => {
-    getGeoLocation();
     initDb();
     initAppVersion();
     // eslint-disable-next-line react-hooks/exhaustive-deps

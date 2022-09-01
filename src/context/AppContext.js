@@ -9,28 +9,11 @@ export const AppProvider = ({ children }) => {
   const dbVersionLocal = localStorage.getItem("dbVersion");
 
   const [dbVersion, setDbVersion] = useState(dbVersionLocal);
-  const [location, setLocation] = useState({
-    lat: 22.313879,
-    lng: 114.186484,
-  });
+
   const [appVersion, setAppVersion] = useState("");
   const [serVersion, setSerVersion] = useState("");
 
   /* eslint-disable react-hooks/exhaustive-deps */
-  const getGeoLocation = useCallback(() => {
-    const intervalContent = async () => {
-      const success = (position) => {
-        setLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      };
-
-      navigator.geolocation.getCurrentPosition(success);
-    };
-    intervalContent();
-    setInterval(intervalContent, 1000);
-  }, []);
 
   const initAppVersion = useCallback(() => {
     fetchVersion().then((version) => {
@@ -80,22 +63,12 @@ export const AppProvider = ({ children }) => {
   const value = useMemo(
     () => ({
       dbVersion,
-      location,
       initDb,
-      getGeoLocation,
       initAppVersion,
       appVersion,
       serVersion,
     }),
-    [
-      dbVersion,
-      location,
-      initDb,
-      getGeoLocation,
-      initAppVersion,
-      appVersion,
-      serVersion,
-    ]
+    [dbVersion, initDb, initAppVersion, appVersion, serVersion]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

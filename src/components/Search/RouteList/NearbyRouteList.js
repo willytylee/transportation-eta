@@ -2,7 +2,6 @@ import { useContext, useMemo } from "react";
 import _ from "lodash";
 import { getPreciseDistance } from "geolib";
 import { styled } from "@mui/material";
-import { AppContext } from "../../../context/AppContext";
 import {
   getCoByStopObj,
   basicFiltering,
@@ -15,11 +14,12 @@ import {
   primaryColor,
 } from "../../../constants/Constants";
 import { routeMap } from "../../../constants/Mtr";
+import { useLocation } from "../../../hooks/Location";
 import { Eta } from "./Eta";
 
 export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
-  const { location: currentLocation } = useContext(AppContext),
-    { gRouteList, gStopList, gStopMap } = useContext(DbContext);
+  const { gRouteList, gStopList, gStopMap } = useContext(DbContext);
+  const { location: currentLocation } = useLocation({ time: 60000 });
 
   const stopIdsNearby = useMemo(
     // use useMemo prevent flicker on the list
@@ -59,7 +59,7 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
           {}
         ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [currentLocation.lat, currentLocation.lng]
   );
 
   const routeList =
@@ -99,64 +99,76 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
     .value()
     .sort((a, b) => a.routes[0].distance - b.routes[0].distance);
 
-  return nearbyRouteList?.length > 0 ? (
-    nearbyRouteList.map((e, i) => {
-      const stop = gStopList[e.stopId];
-      const name = stop.name.zh;
-      const { lat, lng } = stop.location;
-      return (
-        <NearbyRouteListRoot key={i}>
-          <div className="stop">
-            <a
-              href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
-              title={e.stopId}
-            >
-              {name} - {e.routes[0].distance}米
-            </a>
-          </div>
-          <div className="routes">
-            {e.routes.map((routeObj, j) => (
-              <div
-                key={j}
-                className="routeItems"
-                onClick={() => handleRouteListItemOnClick(routeObj)}
-              >
-                <div className="company">
-                  {getCoByStopObj(routeObj)
-                    .map((companyId, k) => (
-                      <span key={k} className={companyId}>
-                        {companyId !== "mtr" && companyMap[companyId]}
-                        {companyId === "mtr" && (
-                          <span className={`${routeObj.route}`}>
-                            {" "}
-                            {routeMap[routeObj.route]}
-                          </span>
-                        )}
-                      </span>
-                    ))
-                    .reduce((a, b) => [a, " + ", b])}
-                </div>
-                <div className="route">{routeObj.route}</div>
-                <div className="nearStopDest">
-                  <div>
-                    <span className="dest">{routeObj.dest.zh}</span>
-                    <span className="special">
-                      {" "}
-                      {parseInt(routeObj.serviceType, 10) !== 1 && "特別班次"}
-                    </span>
-                  </div>
-                </div>
-                <div className="eta">
-                  <Eta routeObj={routeObj} />
-                </div>
+  return (
+    <>
+      {nearbyRouteList?.length > 0 &&
+        nearbyRouteList.map((e, i) => {
+          const stop = gStopList[e.stopId];
+          const name = stop.name.zh;
+          const { lat, lng } = stop.location;
+          return (
+            <NearbyRouteListRoot key={i}>
+              <div className="stop">
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
+                  title={e.stopId}
+                >
+                  {name} - {e.routes[0].distance}米
+                </a>
               </div>
-            ))}
-          </div>
-        </NearbyRouteListRoot>
-      );
-    })
-  ) : (
-    <div className="emptyMsg">附近未有交通路線</div>
+              <div className="routes">
+                {e.routes.map((routeObj, j) => (
+                  <div
+                    key={j}
+                    className="routeItems"
+                    onClick={() => handleRouteListItemOnClick(routeObj)}
+                  >
+                    <div className="company">
+                      {getCoByStopObj(routeObj)
+                        .map((companyId, k) => (
+                          <span key={k} className={companyId}>
+                            {companyId !== "mtr" && companyMap[companyId]}
+                            {companyId === "mtr" && (
+                              <span className={`${routeObj.route}`}>
+                                {" "}
+                                {routeMap[routeObj.route]}
+                              </span>
+                            )}
+                          </span>
+                        ))
+                        .reduce((a, b) => [a, " + ", b])}
+                    </div>
+                    <div className="route">{routeObj.route}</div>
+                    <div className="nearStopDest">
+                      <div>
+                        <span className="dest">{routeObj.dest.zh}</span>
+                        <span className="special">
+                          {" "}
+                          {parseInt(routeObj.serviceType, 10) !== 1 &&
+                            "特別班次"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="eta">
+                      <Eta routeObj={routeObj} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </NearbyRouteListRoot>
+          );
+        })}
+
+      {currentLocation.lat === 0 && currentLocation.lng === 0 && (
+        <div className="emptyMsg">載入中</div>
+      )}
+
+      {currentLocation.lat !== 0 &&
+        currentLocation.lng !== 0 &&
+        nearbyRouteList?.length === 0 && (
+          <div className="emptyMsg">附近未有交通路線</div>
+        )}
+    </>
   );
 };
 
