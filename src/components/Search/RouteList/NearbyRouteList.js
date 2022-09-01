@@ -160,7 +160,7 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
         })}
 
       {currentLocation.lat === 0 && currentLocation.lng === 0 && (
-        <div className="emptyMsg">載入中</div>
+        <div className="emptyMsg">載入中...</div>
       )}
 
       {currentLocation.lat !== 0 &&

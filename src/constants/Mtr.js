@@ -124,48 +124,44 @@ export const mtrLineColor = {
 
 export const stationDestMap = {
   AEL: {
-    UP: stationMap.AWE,
-    DOWN: stationMap.HOK,
+    up: ["AWE"],
+    down: ["HOK"],
   },
   DRL: {
-    UP: stationMap.DIS,
-    DOWN: stationMap.SUN,
+    up: ["DIS"],
+    down: ["SUN"],
   },
   TML: {
-    UP: stationMap.TUM,
-    DOWN: stationMap.WKS,
+    up: ["TUM"],
+    down: ["WKS"],
   },
   TCL: {
-    UP: stationMap.TUC,
-    DOWN: stationMap.HOK,
+    up: ["TUC"],
+    down: ["HOK"],
   },
   TKL: {
-    UP: stationMap.POA,
-    DOWN: stationMap.NOP,
-    TKS_UP: stationMap.LHP,
-    TKS_DOWN: stationMap.TIK,
+    up: ["POA", "LHP"],
+    down: ["NOP", "TIK"],
   },
   EAL: {
-    UP: stationMap.LOW,
-    DOWN: stationMap.ADM,
-    LMC_UP: stationMap.LMC,
-    LMC_DOWN: stationMap.ADM,
+    up: ["LOW", "LMC"],
+    down: ["ADM"],
   },
   ISL: {
-    UP: stationMap.CHW,
-    DOWN: stationMap.KET,
+    up: ["CHW"],
+    down: ["KET"],
   },
   KTL: {
-    UP: stationMap.TIK,
-    DOWN: stationMap.WHA,
+    up: ["TIK"],
+    down: ["WHA"],
   },
   SIL: {
-    UP: stationMap.ADM,
-    DOWN: stationMap.SOH,
+    up: ["ADM"],
+    down: ["SOH"],
   },
   TWL: {
-    UP: stationMap.CEN,
-    DOWN: stationMap.TSW,
+    up: ["CEN"],
+    down: ["TSW"],
   },
 };
 

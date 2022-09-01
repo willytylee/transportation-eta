@@ -21,6 +21,7 @@ import { MapDialog } from "../MapDialog/MapDialog";
 import { DbContext } from "../../context/DbContext";
 import { primaryColor } from "../../constants/Constants";
 import { useLocation } from "../../hooks/Location";
+import { etaExcluded } from "../../constants/Mtr";
 import { MtrStopEta } from "./MtrStopEta";
 import { StopEta } from "./StopEta";
 import { BookmarkDialog } from "./BookmarkDialog";
@@ -201,7 +202,7 @@ export const StopList = () => {
                   >
                     <StreetviewIcon />
                   </IconButton>
-                  {currRoute.co[0] !== "mtr" && (
+                  {!etaExcluded.includes(currRoute.route) && (
                     <IconButton
                       onClick={() => {
                         if (currRoute.co[0] === "gmb") {
@@ -318,7 +319,7 @@ const MtrStopEtaRoot = styled("div")({
       justifyContent: "space-between",
       padding: "4px 0",
       ".arriveText": {
-        width: "70px",
+        width: "80px",
         ".dest": {
           paddingLeft: "4px",
         },

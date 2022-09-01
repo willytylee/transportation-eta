@@ -24,7 +24,7 @@ export const StopEta = ({
       </div>
       <div className="etas">
         {isEtaLoading || isBoundLoading ? (
-          <div className="eta">載入中</div>
+          <div className="eta">載入中...</div>
         ) : eta.length !== 0 ? (
           eta
             .map((e, i) => (

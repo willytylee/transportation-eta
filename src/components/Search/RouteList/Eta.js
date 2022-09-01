@@ -16,7 +16,7 @@ export const Eta = ({ routeObj }) => {
   });
 
   return isEtaLoading || isBoundLoading ? (
-    <div>載入中</div>
+    <div>載入中...</div>
   ) : eta.length !== 0 ? (
     eta
       .map((e, i) => (

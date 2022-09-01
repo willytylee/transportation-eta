@@ -34,24 +34,22 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
                   → <span className="dest">{stationMap[destEtas.dest]}</span>
                 </div>
                 <div className="ttntWrapper">
-                  {isEtaLoading ? (
-                    <div className="ttnt">載入中</div>
-                  ) : (
-                    destEtas.etas
-                      .map((_eta, j) => (
-                        <div key={j} className="ttnt" title={_eta.seq}>
-                          {parseMtrEtas(_eta)}
-                        </div>
-                      ))
-                      .slice(0, 3)
-                  )}
+                  {destEtas.etas
+                    .map((_eta, j) => (
+                      <div key={j} className="ttnt">
+                        {parseMtrEtas(_eta)}
+                      </div>
+                    ))
+                    .slice(0, 3)}
                 </div>
               </div>
             ))
           ) : (
             <div className="etaWrapper">
               <div> </div>
-              <div className="noEta2">沒有相關班次資料</div>
+              <div className="noEta2">
+                {isEtaLoading ? "載入中..." : "沒有相關班次資料"}
+              </div>
             </div>
           )}
         </div>

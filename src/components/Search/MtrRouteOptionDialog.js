@@ -1,16 +1,20 @@
+import { useState } from "react";
+import { useSnackbar } from "notistack";
 import {
-  List,
-  ListItem,
   Grid,
   IconButton,
   DialogTitle,
-  ListItemButton,
   styled,
   Dialog,
-  ListItemText,
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  DialogActions,
+  Button,
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { stationMap } from "../../constants/Mtr";
+import { stationDestMap, stationMap } from "../../constants/Mtr";
 
 export const MtrRouteOptionDialog = ({
   mtrRouteOptionDialogOpen,
@@ -20,17 +24,35 @@ export const MtrRouteOptionDialog = ({
   setBookmarkRouteObj,
   setMtrRouteOptionDialogOpen,
 }) => {
-  const handleItemButtonOnClick = (bound) => {
-    setBookmarkDialogMode("category");
-    setBookmarkRouteObj({
-      ...bookmarkRouteObj,
-      bound,
-    });
+  const [bound, setBound] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleCloseBtnOnClick = () => {
+    setBound([]);
     setMtrRouteOptionDialogOpen(false);
   };
 
-  const handleCloseBtnOnClick = () => {
-    setMtrRouteOptionDialogOpen(false);
+  const handleFormChange = (e) => {
+    let _bound = [...bound];
+    if (e.target.checked) {
+      _bound.push(e.target.name);
+    } else {
+      _bound = _bound.filter((f) => f !== e.target.name);
+    }
+    setBound(_bound);
+  };
+
+  const handleConfirmBtnOnClick = () => {
+    if (bound.length > 0) {
+      setBookmarkRouteObj({ ...bookmarkRouteObj, bound });
+      setMtrRouteOptionDialogOpen(false);
+      setBookmarkDialogMode("category");
+      setBound([]);
+    } else {
+      enqueueSnackbar("請選擇方向", {
+        variant: "error",
+      });
+    }
   };
 
   return (
@@ -50,43 +72,30 @@ export const MtrRouteOptionDialog = ({
         </Grid>
       </DialogTitle>
 
-      <List sx={{ pt: 0 }}>
-        <ListItem disablePadding>
-          <ListItemButton
-            onClick={() => {
-              handleItemButtonOnClick(["up"]);
-            }}
-          >
-            <ListItemText
-              primary={`${stationMap[bookmarkRouteObj.stopId]} 去 ${
-                currRoute?.orig?.zh
-              }`}
-            />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton
-            onClick={() => {
-              handleItemButtonOnClick(["down"]);
-            }}
-          >
-            <ListItemText
-              primary={`${stationMap[bookmarkRouteObj.stopId]} 去 ${
-                currRoute?.dest?.zh
-              }`}
-            />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton
-            onClick={() => {
-              handleItemButtonOnClick(["up", "down"]);
-            }}
-          >
-            <ListItemText primary="加入兩邊方向" />
-          </ListItemButton>
-        </ListItem>
-      </List>
+      <FormControl sx={{ m: 3, mb: 0 }} component="fieldset" variant="standard">
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox onChange={handleFormChange} name="up" />}
+            label={`${stationMap[bookmarkRouteObj.stopId]} → ${stationDestMap[
+              currRoute?.route
+            ]?.up
+              .map((dest) => stationMap[dest])
+              .join(" / ")}`}
+          />
+
+          <FormControlLabel
+            control={<Checkbox onChange={handleFormChange} name="down" />}
+            label={`${stationMap[bookmarkRouteObj.stopId]} → ${stationDestMap[
+              currRoute?.route
+            ]?.down
+              .map((dest) => stationMap[dest])
+              .join(" / ")}`}
+          />
+        </FormGroup>
+      </FormControl>
+      <DialogActions>
+        <Button onClick={handleConfirmBtnOnClick}>確定</Button>
+      </DialogActions>
     </DialogRoot>
   );
 };
