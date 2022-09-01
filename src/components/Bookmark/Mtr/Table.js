@@ -39,7 +39,7 @@ const MtrTable = styled("div")({
     padding: "2px 0",
     display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
     ".ttnt": {
       display: "flex",
       flexDirection: "column",
