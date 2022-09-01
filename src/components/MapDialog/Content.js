@@ -59,7 +59,15 @@ export const Content = () => {
     [currRoute]
   );
 
-  const location = mapLocation || currRouteStopList[nearestStopIdx].location;
+  let location = {};
+
+  if (mapLocation) {
+    location = mapLocation;
+  } else if (currRouteStopList[nearestStopIdx]) {
+    location = currRouteStopList[nearestStopIdx].location;
+  } else {
+    location = { lat: 0, lng: 0 };
+  }
 
   const routeLine = currRouteStopList?.map((e) => [
     e.location.lat,
