@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useState, useEffect } from "react";
 import L from "leaflet";
 import {
   ArrowForwardIos as ArrowForwardIosIcon,
@@ -37,20 +37,29 @@ export const Content = () => {
   const { gStopList } = useContext(DbContext);
   const [navBtnType, setNavBtnType] = useState("normal");
 
-  const location = mapLocation || currentLocation;
-
   const currRouteStopIdList = useMemo(
     () => currRoute.stops && currRoute.stops[Object.keys(currRoute.stops)[0]],
     [currRoute]
   );
+
   const nearestStopIdx = currRouteStopIdList?.findIndex(
     (e) => e === nearestStopId
   );
+
+  useEffect(() => {
+    if (!mapLocation) {
+      updateMapStopIdx(nearestStopIdx);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const currRouteStopList = useMemo(
     () => currRouteStopIdList?.map((e) => gStopList[e]),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currRoute]
   );
+
+  const location = mapLocation || currRouteStopList[nearestStopIdx].location;
 
   const routeLine = currRouteStopList?.map((e) => [
     e.location.lat,
@@ -119,13 +128,12 @@ export const Content = () => {
     const map = useMap();
 
     const handleIconOnClick = () => {
-      const idx = mapStopIdx === -1 ? nearestStopIdx + 1 : mapStopIdx;
-      const prevStop = currRouteStopList[idx - 1];
+      const prevStop = currRouteStopList[mapStopIdx - 1];
       map.panTo([prevStop.location.lat, prevStop.location.lng], {
         animate: true,
         duration: 0.5,
       });
-      updateMapStopIdx(idx - 1);
+      updateMapStopIdx(mapStopIdx - 1);
       setNavBtnType("normal");
     };
 
@@ -142,13 +150,12 @@ export const Content = () => {
     const map = useMap();
 
     const handleIconOnClick = () => {
-      const idx = mapStopIdx === -1 ? nearestStopIdx - 1 : mapStopIdx;
-      const nextStop = currRouteStopList[idx + 1];
+      const nextStop = currRouteStopList[mapStopIdx + 1];
       map.panTo([nextStop.location.lat, nextStop.location.lng], {
         animate: true,
         duration: 0.5,
       });
-      updateMapStopIdx(idx + 1);
+      updateMapStopIdx(mapStopIdx + 1);
       setNavBtnType("normal");
     };
 
