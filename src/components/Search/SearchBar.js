@@ -1,19 +1,21 @@
 import { useContext, useRef, useState, useEffect } from "react";
 import { TextField, styled, IconButton, InputAdornment } from "@mui/material";
-import { Map as MapIcon, Close as CloseIcon } from "@mui/icons-material";
+import {
+  Map as MapIcon,
+  Close as CloseIcon,
+  // AccessTime as AccessTimeIcon,
+} from "@mui/icons-material";
 import { AppContext } from "../../context/AppContext";
 import { MapDialog } from "../MapDialog/MapDialog";
 import { EtaContext } from "../../context/EtaContext";
+import { TimetableDialog } from "../TimetableDialog";
 
 export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
   const { dbVersion } = useContext(AppContext);
   const { currRoute, updateCurrRoute, route } = useContext(EtaContext);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
+  const [timetableDialogOpen, setTimetableDialogOpen] = useState(false);
   const textInput = useRef(null);
-
-  const handleMapDialogOnClose = () => {
-    setMapDialogOpen(false);
-  };
 
   useEffect(() => {
     if (!route) {
@@ -24,6 +26,15 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
 
   return (
     <SearchBarWraper>
+      {/* <IconButton
+        className={`timetableIconButton ${
+          Object.keys(currRoute).length === 0 ? "hide" : ""
+        }`}
+        disabled={dbVersion === null}
+        onClick={() => setTimetableDialogOpen(true)}
+      >
+        <AccessTimeIcon />
+      </IconButton> */}
       <div className="searchWrapper">
         <TextField
           variant="standard"
@@ -64,7 +75,11 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
       </IconButton>
       <MapDialog
         mapDialogOpen={mapDialogOpen}
-        handleMapDialogOnClose={handleMapDialogOnClose}
+        setMapDialogOpen={setMapDialogOpen}
+      />
+      <TimetableDialog
+        timetableDialogOpen={timetableDialogOpen}
+        setTimetableDialogOpen={setTimetableDialogOpen}
       />
     </SearchBarWraper>
   );
@@ -94,6 +109,13 @@ const SearchBarWraper = styled("div")({
   ".mapIconButton": {
     position: "absolute",
     right: 0,
+    "&.hide": {
+      display: "none",
+    },
+  },
+  ".timetableIconButton": {
+    position: "absolute",
+    left: 0,
     "&.hide": {
       display: "none",
     },
