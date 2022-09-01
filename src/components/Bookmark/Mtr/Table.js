@@ -4,20 +4,22 @@ import { parseMtrEtas } from "../../../Utils/Utils";
 
 export const Table = ({ etasDetail }) => (
   <MtrTable>
-    {etasDetail.length === 0
-      ? "沒有班次"
-      : etasDetail.map((etas) => (
-          <div className="ttntWrapper">
-            {etas
-              .map((e, j) => (
-                <div className="ttnt" key={j}>
-                  <div className="dest">{stationMap[e.dest]}</div>
-                  <div className="minutes">{parseMtrEtas(e)}</div>
-                </div>
-              ))
-              .slice(0, 4)}
-          </div>
-        ))}
+    {etasDetail.length === 0 ? (
+      <div className="noEta">沒有班次</div>
+    ) : (
+      etasDetail.map((etas) => (
+        <div className="ttntWrapper">
+          {etas
+            .map((e, j) => (
+              <div className="ttnt" key={j}>
+                <div className="dest">{stationMap[e.dest]}</div>
+                <div className="minutes">{parseMtrEtas(e)}</div>
+              </div>
+            ))
+            .slice(0, 4)}
+        </div>
+      ))
+    )}
   </MtrTable>
 );
 
@@ -27,9 +29,13 @@ const MtrTable = styled("div")({
   alignItems: "flex-end",
   flexGrow: 1,
   gap: "4px",
+  ".noEta": {
+    fontSize: "12px",
+    width: "50%",
+  },
   ".ttntWrapper": {
     fontSize: "12px",
-    width: "95%",
+    width: "90%",
     padding: "2px 0",
     display: "flex",
     flexDirection: "row",

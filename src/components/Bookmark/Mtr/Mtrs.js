@@ -65,11 +65,11 @@ export const Mtrs = ({ section }) => {
 const MTRRoot = styled("div")({
   display: "flex",
   alignItems: "center",
-  padding: "6px 0",
-  gap: "12px",
+  padding: "6px",
+  gap: "0",
   ".stop": {
     fontSize: "12px",
-    width: "15%",
+    width: "10%",
     ...mtrLineColor,
   },
 });
