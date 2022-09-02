@@ -25,8 +25,6 @@ export const TimetableDialog = ({
   const day = d.getDay();
   const current = parseInt(d.getHours() + "" + d.getMinutes(), 10);
 
-  console.log(current);
-
   return (
     <DialogRoot
       open={timetableDialogOpen}
