@@ -32,12 +32,15 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
     <SearchBarWraper>
       <IconButton
         className={`timetableIconButton ${
-          Object.keys(currRoute).length === 0 ? "hide" : ""
+          Object.keys(currRoute).length === 0 || currRoute.co[0] === "mtr"
+            ? "hide"
+            : ""
         }`}
         disabled={dbVersion === null}
         onClick={() => setTimetableDialogOpen(true)}
       >
         <AccessTimeIcon />
+        <div>昤間表</div>
       </IconButton>
       <div className="searchWrapper">
         <TextField
@@ -76,6 +79,7 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
         onClick={() => setMapDialogOpen(true)}
       >
         <MapIcon />
+        <div>地圖</div>
       </IconButton>
       <MapDialog
         mapDialogOpen={mapDialogOpen}
@@ -111,15 +115,25 @@ const SearchBarWraper = styled("div")({
     },
   },
   ".mapIconButton": {
+    display: "flex",
+    flexDirection: "column",
     position: "absolute",
     right: 0,
+    width: "55px",
+    height: "55px",
+    fontSize: "10px",
     "&.hide": {
       display: "none",
     },
   },
   ".timetableIconButton": {
+    display: "flex",
+    flexDirection: "column",
     position: "absolute",
     left: 0,
+    width: "55px",
+    height: "55px",
+    fontSize: "10px",
     "&.hide": {
       display: "none",
     },

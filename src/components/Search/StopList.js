@@ -177,7 +177,7 @@ export const StopList = () => {
                 </AccordionSummary>
                 <AccordionDetails>
                   <IconButton
-                    className="mapIconBtn"
+                    className="iconBtn mapIconBtn"
                     onClick={() =>
                       handleMapIconOnClick({
                         mapLocation: { lat, lng },
@@ -186,24 +186,29 @@ export const StopList = () => {
                     }
                   >
                     <MapIcon />
+                    <div>地圖</div>
                   </IconButton>
                   <IconButton
+                    className="iconBtn"
                     component="a"
                     href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
                     target="_blank"
                   >
                     <DirectionsIcon />
+                    <div>路線</div>
                   </IconButton>
                   <IconButton
-                    className="streetViewIconBtn"
+                    className="iconBtn"
                     component="a"
                     href={`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}&heading=0&pitch=0&fov=160`}
                     target="_blank"
                   >
                     <StreetviewIcon />
+                    <div>街景</div>
                   </IconButton>
                   {!etaExcluded.includes(currRoute.route) && (
                     <IconButton
+                      className="iconBtn"
                       onClick={() => {
                         if (currRoute.co[0] === "gmb") {
                           handleBookmarkAddIconOnClick({
@@ -230,6 +235,7 @@ export const StopList = () => {
                       }}
                     >
                       <BookmarkAddIcon />
+                      <div>書籤</div>
                     </IconButton>
                   )}
                 </AccordionDetails>
@@ -285,6 +291,12 @@ const StopListRoot = styled("div")({
         display: "flex",
         ".mapIconBtn": {
           marginLeft: "-8px",
+        },
+        ".iconBtn": {
+          flexDirection: "column",
+          fontSize: "10px",
+          height: "50px",
+          width: "50px",
         },
       },
     },

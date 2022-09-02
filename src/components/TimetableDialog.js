@@ -38,18 +38,28 @@ export const TimetableDialog = ({
       </DialogTitle>
       <DialogContent>
         {currRoute.freq &&
+          Object.keys(currRoute.freq).length > 0 &&
           Object.keys(currRoute.freq).map((date, i) => (
             <div key={i} className="dateWrapper">
               <div className="date">{serviceDate[date]}:</div>
-              <div className="timeFreqWrapper">
+              <div className="timeFreqGroup">
                 {Object.keys(currRoute.freq[date])
                   .sort()
-                  .map((startTime, j) => (
-                    <div key={j}>
-                      {startTime} - {currRoute.freq[date][startTime][0]}:{" "}
-                      {currRoute.freq[date][startTime][1] / 60}
-                    </div>
-                  ))}
+                  .map((startTime, j) => {
+                    if (currRoute.freq[date][startTime] !== null) {
+                      return (
+                        <div key={j} className="timeFreqWrapper">
+                          <div className="timeRange">
+                            {startTime} - {currRoute.freq[date][startTime][0]}
+                          </div>
+                          <div className="interval">
+                            {currRoute.freq[date][startTime][1] / 60}分鐘
+                          </div>
+                        </div>
+                      );
+                    }
+                    return "沒有相關資料";
+                  })}
               </div>
             </div>
           ))}
@@ -63,8 +73,13 @@ const DialogRoot = styled(Dialog)({
     paddingTop: "20px !important",
     ".dateWrapper": {
       padding: "6px 0",
-      ".timeFreqWrapper": {
+      ".timeFreqGroup": {
         fontSize: "14px",
+        ".timeFreqWrapper": {
+          display: "flex",
+          alignItems: "center",
+          gap: "28px",
+        },
       },
     },
   },
