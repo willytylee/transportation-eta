@@ -71,7 +71,7 @@ export const Update = () => {
           </ListItemAvatar>
           <ListItemText
             primary="重新建立路線資料庫"
-            secondary="如發現路線未更新, 請按此重新建立路線資料庫"
+            secondary="如發現路線不正確, 請按此重新建立路線資料庫"
           />
         </ListItemButton>
       </ListItem>

@@ -72,7 +72,7 @@ export const TimetableDialog = ({
                         </div>
                       );
                     }
-                    return "沒有相關資料";
+                    return <div>{startTime} - 沒有相關資料</div>;
                   })}
               </div>
             </div>
