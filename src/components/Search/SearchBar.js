@@ -3,7 +3,7 @@ import { TextField, styled, IconButton, InputAdornment } from "@mui/material";
 import {
   Map as MapIcon,
   Close as CloseIcon,
-  // AccessTime as AccessTimeIcon,
+  AccessTime as AccessTimeIcon,
 } from "@mui/icons-material";
 import { AppContext } from "../../context/AppContext";
 import { MapDialog } from "../MapDialog/MapDialog";
@@ -30,7 +30,7 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
 
   return (
     <SearchBarWraper>
-      {/* <IconButton
+      <IconButton
         className={`timetableIconButton ${
           Object.keys(currRoute).length === 0 ? "hide" : ""
         }`}
@@ -38,7 +38,7 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
         onClick={() => setTimetableDialogOpen(true)}
       >
         <AccessTimeIcon />
-      </IconButton> */}
+      </IconButton>
       <div className="searchWrapper">
         <TextField
           variant="standard"

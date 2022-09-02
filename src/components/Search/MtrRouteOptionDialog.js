@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useSnackbar } from "notistack";
 import {
   Grid,
@@ -15,15 +15,16 @@ import {
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { stationDestMap, stationMap } from "../../constants/Mtr";
+import { EtaContext } from "../../context/EtaContext";
 
 export const MtrRouteOptionDialog = ({
   mtrRouteOptionDialogOpen,
   setBookmarkDialogMode,
   bookmarkRouteObj,
-  currRoute,
   setBookmarkRouteObj,
   setMtrRouteOptionDialogOpen,
 }) => {
+  const { currRoute } = useContext(EtaContext);
   const [bound, setBound] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
 

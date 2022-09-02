@@ -250,7 +250,6 @@ export const StopList = () => {
         mtrRouteOptionDialogOpen={mtrRouteOptionDialogOpen}
         setBookmarkDialogMode={setBookmarkDialogMode}
         bookmarkRouteObj={bookmarkRouteObj}
-        currRoute={currRoute}
         setBookmarkRouteObj={setBookmarkRouteObj}
         setMtrRouteOptionDialogOpen={setMtrRouteOptionDialogOpen}
       />
