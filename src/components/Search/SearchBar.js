@@ -24,6 +24,10 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
 
+  const handleMapDialogOnClose = () => {
+    setMapDialogOpen(false);
+  };
+
   return (
     <SearchBarWraper>
       {/* <IconButton
@@ -75,7 +79,7 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
       </IconButton>
       <MapDialog
         mapDialogOpen={mapDialogOpen}
-        setMapDialogOpen={setMapDialogOpen}
+        handleMapDialogOnClose={handleMapDialogOnClose}
       />
       <TimetableDialog
         timetableDialogOpen={timetableDialogOpen}
