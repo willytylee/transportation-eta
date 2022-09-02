@@ -271,7 +271,7 @@ const StopListRoot = styled("div")({
     },
     "&.Mui-expanded": {
       backgroundColor: `${primaryColor}17`,
-      padding: "4px 6px 8px",
+      padding: "4px 6px 0px",
     },
     "&.highlighted": { backgroundColor: "lightblue" },
     padding: "0 6px",
@@ -357,8 +357,7 @@ const StopEtaRoot = styled("div")({
     width: "5%",
   },
   ".stop": {
-    display: "flex",
-    flexGrow: "1",
+    width: "50%",
   },
   ".etas": {
     width: "40%",

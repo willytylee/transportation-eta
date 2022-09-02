@@ -88,12 +88,13 @@ export const List = ({ sectionData, longList }) => {
           </AccordionSummary>
           <AccordionDetails>
             <IconButton
-              className="directionIconBtn"
+              className="iconBtn directionIconBtn"
               component="a"
               href={e?.latLngUrl}
               target="_blank"
             >
               <DirectionsIcon />
+              <div>路線</div>
             </IconButton>
           </AccordionDetails>
         </Accordion>
@@ -112,7 +113,7 @@ const ListView = styled("div")({
     "&.Mui-expanded": {
       backgroundColor: `${primaryColor}17`,
       paddingTop: "4px",
-      paddingBottom: "4px",
+      paddingBottom: "0",
       margin: 0,
     },
     display: "flex",
@@ -147,6 +148,12 @@ const ListView = styled("div")({
       paddingTop: "6px",
       ".directionIconBtn": {
         marginLeft: "-10px",
+      },
+      ".iconBtn": {
+        flexDirection: "column",
+        fontSize: "10px",
+        height: "50px",
+        width: "50px",
       },
     },
   },

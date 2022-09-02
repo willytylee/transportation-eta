@@ -16,9 +16,16 @@ export const TimetableDialog = ({
   setTimetableDialogOpen,
 }) => {
   const { currRoute } = useContext(EtaContext);
+
   const handleDialogOnClose = () => {
     setTimetableDialogOpen(false);
   };
+
+  const d = new Date();
+  const day = d.getDay();
+  const current = parseInt(d.getHours() + "" + d.getMinutes(), 10);
+
+  console.log(current);
 
   return (
     <DialogRoot
@@ -41,20 +48,29 @@ export const TimetableDialog = ({
           Object.keys(currRoute.freq).length > 0 &&
           Object.keys(currRoute.freq).map((date, i) => (
             <div key={i} className="dateWrapper">
-              <div className="date">{serviceDate[date]}:</div>
+              <div className="date">{serviceDate[date].string}:</div>
               <div className="timeFreqGroup">
                 {Object.keys(currRoute.freq[date])
                   .sort()
                   .map((startTime, j) => {
                     if (currRoute.freq[date][startTime] !== null) {
+                      const endTime = currRoute.freq[date][startTime][0];
+                      const interval = currRoute.freq[date][startTime][1] / 60;
                       return (
-                        <div key={j} className="timeFreqWrapper">
+                        <div
+                          key={j}
+                          className={`timeFreqWrapper ${
+                            serviceDate[date].day.includes(day) &&
+                            parseInt(startTime, 10) < current &&
+                            parseInt(endTime, 10) > current
+                              ? "bold"
+                              : ""
+                          }`}
+                        >
                           <div className="timeRange">
-                            {startTime} - {currRoute.freq[date][startTime][0]}
+                            {startTime} - {endTime}
                           </div>
-                          <div className="interval">
-                            {currRoute.freq[date][startTime][1] / 60}分鐘
-                          </div>
+                          <div className="interval">{interval}分鐘</div>
                         </div>
                       );
                     }
@@ -79,6 +95,9 @@ const DialogRoot = styled(Dialog)({
           display: "flex",
           alignItems: "center",
           gap: "28px",
+          "&.bold": {
+            fontWeight: 900,
+          },
         },
       },
     },
