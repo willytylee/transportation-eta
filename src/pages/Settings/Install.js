@@ -138,7 +138,7 @@ export const Install = () => {
               圖示
             </div>
             <DividerRoot />
-            <div>3. 加至主頁面</div>
+            <div>3. 新增至主螢幕</div>
           </AccordionDetails>
         </Accordion>
       </div>

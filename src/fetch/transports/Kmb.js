@@ -13,7 +13,7 @@ export const fetchKmbEtas = async ({
 
   const { data } = response.data;
 
-  const ACCEPT_RANGE = 1;
+  const ACCEPT_RANGE = 10; // TODO: temp fix
 
   return data
     .filter(
@@ -22,7 +22,7 @@ export const fetchKmbEtas = async ({
         e.dir === bound &&
         ((seq >= e.seq - ACCEPT_RANGE && seq <= e.seq + ACCEPT_RANGE) ||
           seq === e.seq) // Only accept the seq +- 1 in order
-        // Special handling for Circular Route, Same ETA return except the seq
+      // Special handling for Circular Route, Same ETA return except the seq
     )
     .map((e) => ({
       co: "kmb",
