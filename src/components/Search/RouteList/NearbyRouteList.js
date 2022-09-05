@@ -1,6 +1,5 @@
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import _ from "lodash";
-import { getPreciseDistance } from "geolib";
 import { styled } from "@mui/material";
 import {
   getCoByStopObj,
@@ -15,52 +14,17 @@ import {
 } from "../../../constants/Constants";
 import { routeMap } from "../../../constants/Mtr";
 import { useLocation } from "../../../hooks/Location";
+import { useStopIdsNearBy } from "../../../hooks/Stop";
 import { Eta } from "./Eta";
 
 export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
-  const { gRouteList, gStopList, gStopMap } = useContext(DbContext);
+  const { gRouteList, gStopList } = useContext(DbContext);
   const { location: currentLocation } = useLocation({ time: 60000 });
-
-  const stopIdsNearby = useMemo(
-    // use useMemo prevent flicker on the list
-    () =>
-      gStopList &&
-      Object.keys(gStopList)
-        .map((e) => {
-          const obj = gStopList[e];
-          const distance = getPreciseDistance(
-            { latitude: obj.location.lat, longitude: obj.location.lng },
-            { latitude: currentLocation.lat, longitude: currentLocation.lng }
-          );
-          return { [e]: { distance, stopMap: gStopMap[e] } };
-        })
-        .filter((e) => {
-          const value = Object.values(e)[0];
-          return (
-            value.distance < 500
-            // TODO: The function below should combine different stops from different bus company into one,
-            // but accidentally filter away the correct stops,
-            // so that the route with only "ctb" / "nwfb" can't found the stop
-            //
-            // &&
-            // (value.stopMap === undefined ||
-            //   (value.stopMap.length > 0 // For those CTB/NWFB route's stopMap includes 'kmb', filter away. we need kmb stop only
-            //     ? value.stopMap[0].includes("ctb") ||
-            //       value.stopMap[0].includes("nwfb")
-            //     : true))
-          );
-        })
-
-        .reduce(
-          (prev, curr) => ({
-            ...prev,
-            [Object.keys(curr)]: Object.values(curr)[0].distance,
-          }),
-          {}
-        ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentLocation.lat, currentLocation.lng]
-  );
+  const { stopIdsNearby } = useStopIdsNearBy({
+    maxDistance: 500,
+    lat: currentLocation.lat,
+    lng: currentLocation.lng,
+  });
 
   const routeList =
     gRouteList &&

@@ -72,7 +72,7 @@ export const TimetableDialog = ({
                         </div>
                       );
                     }
-                    return <div>{startTime} - 沒有相關資料</div>;
+                    return <div key={j}>{startTime} - 沒有相關資料</div>;
                   })}
               </div>
             </div>

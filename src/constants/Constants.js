@@ -54,6 +54,9 @@ export const navbarDetail = {
   "/bookmark": {
     title: "書籤",
   },
+  "/direction": {
+    title: "規劃路線",
+  },
   "/settings": {
     title: "設定",
   },
