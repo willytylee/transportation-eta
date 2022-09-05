@@ -32,7 +32,7 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
       .map((e) => gRouteList[e])
       .filter((e) => basicFiltering(e));
 
-  const routeListNearby = [];
+  const filteredRouteList = [];
 
   // Find out the route which contains the near by Stops
   routeList?.forEach((e) => {
@@ -50,11 +50,11 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
       e.nearbyStopId = _stopId;
       e.nearbyStopSeq = e.stops[company].findIndex((f) => f === _stopId) + 1;
       e.distance = stopIdsNearby[_stopId];
-      routeListNearby.push(e);
+      filteredRouteList.push(e);
     }
   });
 
-  const nearbyRouteList = _(routeListNearby)
+  const nearbyRouteList = _(filteredRouteList)
     .groupBy((x) => x.nearbyStopId)
     .map((value, key) => ({
       stopId: key,

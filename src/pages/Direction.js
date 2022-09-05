@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import AsyncSelect from "react-select/async";
 import proj4 from "proj4";
 import { styled } from "@mui/material";
+import { getPreciseDistance } from "geolib";
 import { fetchLocation } from "../fetch/Location";
 import { useStopIdsNearBy } from "../hooks/Stop";
 import { DbContext } from "../context/DbContext";
@@ -13,19 +14,15 @@ export const Direction = () => {
   const [destLocation, setDestLocation] = useState({});
   const { location: currentLocation } = useLocation({ time: 60000 });
   const { stopIdsNearby: origStopIdsNearby } = useStopIdsNearBy({
-    maxDistance: 500,
+    maxDistance: 600,
     lat: currentLocation.lat,
     lng: currentLocation.lng,
   });
   const { stopIdsNearby: destStopIdsNearby } = useStopIdsNearBy({
     maxDistance: 500,
-    lat: destLocation.lat,
-    lng: destLocation.lng,
+    lat: destLocation?.lat,
+    lng: destLocation?.lng,
   });
-
-  const onChange = (e) => {
-    setDestLocation(e?.location);
-  };
 
   const loadOptions = async (input, callback) => {
     callback(
@@ -33,8 +30,14 @@ export const Direction = () => {
         response
           .filter(
             (e) =>
-              e.addressZH.toLowerCase().includes(input.toLowerCase()) ||
-              e.nameZH.toLowerCase().includes(input.toLowerCase())
+              e.addressZH
+                .toLowerCase()
+                .replace(/\s/g, "")
+                .includes(input.toLowerCase().replace(/\s/g, "")) ||
+              e.nameZH
+                .toLowerCase()
+                .replace(/\s/g, "")
+                .includes(input.toLowerCase().replace(/\s/g, ""))
           )
           .map((e) => {
             const [lng, lat] = proj4(
@@ -44,6 +47,7 @@ export const Direction = () => {
             );
             return {
               label: `${e.nameZH} - ${e.addressZH}`,
+              value: `${e.nameZH} - ${e.addressZH}`,
               location: {
                 lat,
                 lng,
@@ -54,13 +58,17 @@ export const Direction = () => {
     );
   };
 
+  const onChange = (e) => {
+    setDestLocation(e?.location);
+  };
+
   const routeList =
     gRouteList &&
     Object.keys(gRouteList)
       .map((e) => gRouteList[e])
       .filter((e) => basicFiltering(e));
 
-  const routeListNearby = [];
+  const filteredRouteList = [];
 
   origStopIdsNearby &&
     destStopIdsNearby &&
@@ -97,18 +105,28 @@ export const Direction = () => {
         e.destDistance = destStopIdsNearby[_destStopId];
 
         if (e.nearbyOrigStopSeq < e.nearbyDestStopSeq) {
-          routeListNearby.push(e);
+          filteredRouteList.push(e);
         }
       }
     });
 
-  const nearbyRouteList = routeListNearby
-    .sort((a, b) => {
-      const aSeqDiff = a.nearbyDestStopSeq - a.nearbyOrigStopSeq;
-      const bSeqDiff = b.nearbyDestStopSeq - b.nearbyOrigStopSeq;
-      return aSeqDiff - bSeqDiff;
+  const routeListNearby = filteredRouteList
+    .map((e) => {
+      const company = getCoPriorityId(e);
+      let totalDistance = 0;
+      for (let i = e.nearbyOrigStopSeq; i < e.nearbyDestStopSeq; i += 1) {
+        const stopId = e?.stops[company][i];
+        const nextStopId = e?.stops[company][i + 1];
+        const { location } = gStopList[stopId];
+        const { location: nextLocation } = gStopList[nextStopId];
+        totalDistance += getPreciseDistance(
+          { latitude: location?.lat, longitude: location?.lng },
+          { latitude: nextLocation?.lat, longitude: nextLocation?.lng }
+        );
+      }
+      return { ...e, routeDistance: totalDistance };
     })
-    .map((e) => e.route);
+    .sort((a, b) => a.routeDistance - b.routeDistance);
 
   return (
     <>
@@ -119,7 +137,7 @@ export const Direction = () => {
           onChange={onChange}
         />
       </DirectionRoot>
-      {nearbyRouteList?.length > 0 &&
+      {routeListNearby?.length > 0 &&
         routeListNearby.map((e, i) => (
           <div key={i}>
             {e.route} {gStopList[e.nearbyOrigStopId].name.zh} →{" "}
