@@ -161,3 +161,8 @@ export const setRouteListHistory = (routeObj) => {
     setLocalStorage("routeListHistory", routeListHistory);
   }
 };
+
+export const findNearestNumber = (goal, arr) =>
+  arr.reduce((prev, curr) =>
+    Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev
+  );

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { findNearestNumber } from "../../Utils/Utils";
 
 export const fetchKmbEtas = async ({
   stopId,
@@ -12,18 +13,18 @@ export const fetchKmbEtas = async ({
   );
 
   const { data } = response.data;
+  const seqSet = [...new Set(data.map((e) => e.seq))];
+  let correctSeq;
 
-  const ACCEPT_RANGE = 10; // TODO: temp fix
+  if (seqSet.length > 1) {
+    // Find correct seq if one start and end Stop have two ETA
+    correctSeq = findNearestNumber(seq, seqSet);
+  } else {
+    correctSeq = seq;
+  }
 
   return data
-    .filter(
-      (e) =>
-        e.eta !== null &&
-        e.dir === bound &&
-        ((seq >= e.seq - ACCEPT_RANGE && seq <= e.seq + ACCEPT_RANGE) ||
-          seq === e.seq) // Only accept the seq +- 1 in order
-      // Special handling for Circular Route, Same ETA return except the seq
-    )
+    .filter((e) => e.eta !== null && e.dir === bound && seq === correctSeq)
     .map((e) => ({
       co: "kmb",
       eta: e.eta,
