@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchEtas } from "../fetch/transports";
 
-export const useEtas = ({ seq, routeObj, bound, isBoundLoading }) => {
+export const useEtas = ({ seq, routeObj }) => {
   const [eta, setEta] = useState([]);
   const [isEtaLoading, setIsEtaLoading] = useState(true);
 
@@ -12,14 +12,10 @@ export const useEtas = ({ seq, routeObj, bound, isBoundLoading }) => {
         ...routeObj,
         seq: parseInt(seq, 10),
       };
-      if (bound) {
-        _routeObj.bound = bound;
-      }
-      !isBoundLoading && // FetchEtas after finding correct bound!
-        fetchEtas(_routeObj).then((response) => {
-          setIsEtaLoading(false);
-          setEta(response);
-        });
+      fetchEtas(_routeObj).then((response) => {
+        setIsEtaLoading(false);
+        setEta(response);
+      });
     };
 
     intervalContent();
@@ -29,7 +25,7 @@ export const useEtas = ({ seq, routeObj, bound, isBoundLoading }) => {
     return () => {
       clearInterval(interval);
     };
-  }, [routeObj, seq, bound, isBoundLoading]);
+  }, [routeObj, seq]);
 
   return { eta, isEtaLoading };
 };

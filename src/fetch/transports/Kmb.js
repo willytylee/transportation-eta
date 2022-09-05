@@ -13,18 +13,19 @@ export const fetchKmbEtas = async ({
   );
 
   const { data } = response.data;
+
   const seqSet = [...new Set(data.map((e) => e.seq))];
   let correctSeq;
 
   if (seqSet.length > 1) {
-    // Find correct seq if one start and end Stop have two ETA
+    // Find correct seq if one Stop have two ETA
     correctSeq = findNearestNumber(seq, seqSet);
   } else {
-    correctSeq = seq;
+    correctSeq = seqSet[0];
   }
 
   return data
-    .filter((e) => e.eta !== null && e.dir === bound && seq === correctSeq)
+    .filter((e) => e.eta !== null && e.dir === bound && e.seq === correctSeq)
     .map((e) => ({
       co: "kmb",
       eta: e.eta,

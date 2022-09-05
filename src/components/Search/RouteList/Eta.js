@@ -1,21 +1,15 @@
 import React from "react";
-import { useCorrectBound } from "../../../hooks/Bound";
 import { useEtas } from "../../../hooks/Etas";
 import { etaTimeConverter } from "../../../Utils/Utils";
 
 export const Eta = ({ routeObj }) => {
-  const { correctBound, isBoundLoading } = useCorrectBound({
-    routeObj,
-  });
-
   const { eta, isEtaLoading } = useEtas({
     seq: routeObj.nearbyStopSeq,
-    bound: correctBound,
+
     routeObj,
-    isBoundLoading,
   });
 
-  return isEtaLoading || isBoundLoading ? (
+  return isEtaLoading ? (
     <div>載入中...</div>
   ) : eta.length !== 0 ? (
     eta

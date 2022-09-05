@@ -7,7 +7,6 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
   const { eta, isEtaLoading } = useEtas({
     seq,
     routeObj,
-    isBoundLoading: false,
   });
 
   const groupedEtas = _(eta)

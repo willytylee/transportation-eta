@@ -1,3 +1,5 @@
+// deprecated
+
 import { useState, useEffect } from "react";
 import { fetchNwfbCtbRouteStop } from "../fetch/transports/NwfbCtb";
 import { getCoPriorityId } from "../Utils/Utils";

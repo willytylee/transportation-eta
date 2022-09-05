@@ -15,7 +15,6 @@ import {
 } from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
 import { getCoPriorityId } from "../../Utils/Utils";
-import { useCorrectBound } from "../../hooks/Bound";
 import { EtaContext } from "../../context/EtaContext";
 import { MapDialog } from "../MapDialog/MapDialog";
 import { DbContext } from "../../context/DbContext";
@@ -46,9 +45,6 @@ export const StopList = () => {
     updateMapStopIdx,
   } = useContext(EtaContext);
 
-  const { correctBound, isBoundLoading } = useCorrectBound({
-    routeObj: currRoute,
-  });
   const stopListRef = useRef(null);
 
   const handleMapDialogOnClose = () => {
@@ -169,8 +165,6 @@ export const StopList = () => {
                       seq={i + 1}
                       routeObj={currRoute}
                       stopObj={e}
-                      bound={correctBound}
-                      isBoundLoading={isBoundLoading}
                       StopEtaRoot={StopEtaRoot}
                     />
                   )}

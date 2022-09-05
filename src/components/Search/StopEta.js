@@ -5,15 +5,11 @@ export const StopEta = ({
   seq,
   stopObj: { name, stopId },
   routeObj,
-  bound,
-  isBoundLoading,
   StopEtaRoot,
 }) => {
   const { eta, isEtaLoading } = useEtas({
     seq,
-    bound,
     routeObj,
-    isBoundLoading,
   });
 
   return (
@@ -23,7 +19,7 @@ export const StopEta = ({
         {name.zh}
       </div>
       <div className="etas">
-        {isEtaLoading || isBoundLoading ? (
+        {isEtaLoading ? (
           <div className="eta">載入中...</div>
         ) : eta.length !== 0 ? (
           eta

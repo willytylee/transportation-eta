@@ -44,6 +44,7 @@ export const fetchEtas = async ({
               bound: _bound,
               co: company_id,
               route,
+              seq,
               stopId: _stopId,
             })
           );

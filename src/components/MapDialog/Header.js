@@ -3,7 +3,6 @@ import { Close as CloseIcon } from "@mui/icons-material";
 import { DialogTitle, Grid, IconButton, styled } from "@mui/material";
 import { getCoByStopObj } from "../../Utils/Utils";
 import { companyMap, companyColor } from "../../constants/Constants";
-import { useCorrectBound } from "../../hooks/Bound";
 import { EtaContext } from "../../context/EtaContext";
 import { etaExcluded, routeMap } from "../../constants/Mtr";
 import { StopEta } from "../Search/StopEta";
@@ -13,9 +12,6 @@ import { DbContext } from "../../context/DbContext";
 export const Header = ({ handleDialogOnClose }) => {
   const { currRoute, mapStopIdx } = useContext(EtaContext);
   const { gStopList } = useContext(DbContext);
-  const { correctBound, isBoundLoading } = useCorrectBound({
-    routeObj: currRoute,
-  });
 
   const currRouteStopIdList = useMemo(
     () => currRoute.stops && currRoute.stops[Object.keys(currRoute.stops)[0]],
@@ -80,8 +76,6 @@ export const Header = ({ handleDialogOnClose }) => {
                 seq={mapStopIdx + 1}
                 routeObj={currRoute}
                 stopObj={currRouteStopList[mapStopIdx]}
-                bound={correctBound}
-                isBoundLoading={isBoundLoading}
                 StopEtaRoot={StopEtaRoot}
               />
             ))}
