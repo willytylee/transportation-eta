@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useState, useContext } from "react";
 import AsyncSelect from "react-select/async";
 import proj4 from "proj4";
@@ -24,23 +23,22 @@ import { routeMap } from "../constants/Mtr";
 import { companyColor, companyMap } from "../constants/Constants";
 
 export const Direction = () => {
-  const EXTRA_DISTANCE = 5;
   const { gRouteList, gStopList } = useContext(DbContext);
   const [destLocation, setDestLocation] = useState({});
   const [sortingDialogOpen, setSortingDialogOpen] = useState(false);
   const { location: currentLocation } = useLocation({ time: 60000 });
   const { stopIdsNearby: origStopIdsNearby } = useStopIdsNearBy({
     maxDistance: 600,
-    // lat: currentLocation.lat,
-    // lng: currentLocation.lng,
-    lat: 22.3259600561132,
-    lng: 114.20354750813009,
+    lat: currentLocation.lat,
+    lng: currentLocation.lng,
   });
   const { stopIdsNearby: destStopIdsNearby } = useStopIdsNearBy({
     maxDistance: 600,
     lat: destLocation?.lat,
     lng: destLocation?.lng,
   });
+
+  const getWalkTime = (meter) => Math.round(meter / 40);
 
   const loadOptions = async (input, callback) => {
     callback(
@@ -155,50 +153,26 @@ export const Direction = () => {
 
       if (i >= e.nearbyOrigStopSeq - 1 && i < e.nearbyDestStopSeq - 1) {
         actualTransportDistance += distance;
-        if (e.route === "297") {
-          console.log("hi");
-        }
       }
     }
 
-    if (e.route === "297") {
-      console.log(totalTransportDistance);
-      console.log(actualTransportDistance);
-      console.log(e.jt);
-    }
-
-    // ---------------------------------
-
-    let transportDistance = 0;
-    for (let i = e.nearbyOrigStopSeq; i < e.nearbyDestStopSeq; i += 1) {
-      const stopId = e?.stops[company][i - 1];
-      const nextStopId = e?.stops[company][i];
-      const { location } = gStopList[stopId];
-      const { location: nextLocation } = gStopList[nextStopId];
-      const distance = getPreciseDistance(
-        { latitude: location?.lat, longitude: location?.lng },
-        { latitude: nextLocation?.lat, longitude: nextLocation?.lng }
-      );
-      transportDistance += distance;
-      if (e.route === "297") {
-        console.log("bye");
-      }
-    }
     return {
       ...e,
-      transportDistance,
+      origWalkTime: getWalkTime(e.origWalkDistance),
+      destWalkTime: getWalkTime(e.destWalkDistance),
+      transportTime: Math.round(
+        e.jt * (actualTransportDistance / totalTransportDistance)
+      ),
     };
   });
 
   const sortedRouteList = nearbyRouteList.sort(
     (a, b) =>
-      a.transportDistance +
-      a.origWalkDistance +
-      a.destWalkDistance -
-      (b.transportDistance + b.origWalkDistance + b.destWalkDistance)
+      a.origWalkTime +
+      a.transportTime +
+      a.destWalkTime -
+      (b.origWalkTime + b.transportTime + b.destWalkTime)
   );
-
-  console.log(sortedRouteList);
 
   return (
     <>
@@ -251,11 +225,13 @@ export const Direction = () => {
                     </div>
                   </div>
                   <div className="right">
-                    <Eta seq={e.nearbyOrigStopSeq} routeObj={e} slice={1} />
-                    {Math.round(e.transportDistance / 370)}
+                    約{e.origWalkTime + e.transportTime + e.destWalkTime}分鐘
                   </div>
                 </div>
                 <div className="detail">
+                  <div>
+                    <Eta seq={e.nearbyOrigStopSeq} routeObj={e} slice={1} />
+                  </div>
                   <div className="walkDistance">
                     {e.origWalkDistance <= 400 && <DirectionsWalkIcon />}
                     {e.origWalkDistance > 400 && e.origWalkDistance <= 600 && (
