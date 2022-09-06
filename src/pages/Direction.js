@@ -1,25 +1,43 @@
+/* eslint-disable no-console */
 import { useState, useContext } from "react";
 import AsyncSelect from "react-select/async";
 import proj4 from "proj4";
-import { styled } from "@mui/material";
+import { IconButton, styled } from "@mui/material";
+import {
+  DirectionsWalk as DirectionsWalkIcon,
+  DirectionsRun as DirectionsRunIcon,
+  Sort as SortIcon,
+} from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
 import { fetchLocation } from "../fetch/Location";
 import { useStopIdsNearBy } from "../hooks/Stop";
 import { DbContext } from "../context/DbContext";
-import { basicFiltering, getCoPriorityId } from "../Utils/Utils";
+import {
+  basicFiltering,
+  getCoByStopObj,
+  getCoPriorityId,
+} from "../Utils/Utils";
 import { useLocation } from "../hooks/Location";
+import { SortingDialog } from "../components/SortingDialog";
+import { Eta } from "../components/Search/RouteList/Eta";
+import { routeMap } from "../constants/Mtr";
+import { companyColor, companyMap } from "../constants/Constants";
 
 export const Direction = () => {
+  const EXTRA_DISTANCE = 5;
   const { gRouteList, gStopList } = useContext(DbContext);
   const [destLocation, setDestLocation] = useState({});
+  const [sortingDialogOpen, setSortingDialogOpen] = useState(false);
   const { location: currentLocation } = useLocation({ time: 60000 });
   const { stopIdsNearby: origStopIdsNearby } = useStopIdsNearBy({
     maxDistance: 600,
-    lat: currentLocation.lat,
-    lng: currentLocation.lng,
+    // lat: currentLocation.lat,
+    // lng: currentLocation.lng,
+    lat: 22.3259600561132,
+    lng: 114.20354750813009,
   });
   const { stopIdsNearby: destStopIdsNearby } = useStopIdsNearBy({
-    maxDistance: 500,
+    maxDistance: 600,
     lat: destLocation?.lat,
     lng: destLocation?.lng,
   });
@@ -101,51 +119,234 @@ export const Direction = () => {
         e.nearbyDestStopSeq =
           e.stops[company].findIndex((f) => f === _destStopId) + 1;
 
-        e.origDistance = origStopIdsNearby[_origStopId];
-        e.destDistance = destStopIdsNearby[_destStopId];
+        e.origWalkDistance = origStopIdsNearby[_origStopId];
+        e.destWalkDistance = destStopIdsNearby[_destStopId];
 
-        if (e.nearbyOrigStopSeq < e.nearbyDestStopSeq) {
+        let duplicate = false;
+        filteredRouteList.forEach((f) => {
+          if (e.route === f.route) {
+            duplicate = true;
+          }
+        });
+
+        if (e.nearbyOrigStopSeq < e.nearbyDestStopSeq && !duplicate) {
           filteredRouteList.push(e);
         }
       }
     });
 
-  const routeListNearby = filteredRouteList
-    .map((e) => {
-      const company = getCoPriorityId(e);
-      let totalDistance = 0;
-      for (let i = e.nearbyOrigStopSeq; i < e.nearbyDestStopSeq; i += 1) {
-        const stopId = e?.stops[company][i];
-        const nextStopId = e?.stops[company][i + 1];
-        const { location } = gStopList[stopId];
-        const { location: nextLocation } = gStopList[nextStopId];
-        totalDistance += getPreciseDistance(
-          { latitude: location?.lat, longitude: location?.lng },
-          { latitude: nextLocation?.lat, longitude: nextLocation?.lng }
-        );
+  const nearbyRouteList = filteredRouteList.map((e, j) => {
+    const company = getCoPriorityId(e);
+
+    let totalTransportDistance = 0;
+    let actualTransportDistance = 0;
+    for (let i = 0; i < e?.stops[company].length - 1; i += 1) {
+      const stopId = e?.stops[company][i];
+      const nextStopId = e?.stops[company][i + 1];
+      const { location } = gStopList[stopId];
+      const { location: nextLocation } = gStopList[nextStopId];
+
+      const distance = getPreciseDistance(
+        { latitude: location?.lat, longitude: location?.lng },
+        { latitude: nextLocation?.lat, longitude: nextLocation?.lng }
+      );
+
+      totalTransportDistance += distance;
+
+      if (i >= e.nearbyOrigStopSeq - 1 && i < e.nearbyDestStopSeq - 1) {
+        actualTransportDistance += distance;
+        if (e.route === "297") {
+          console.log("hi");
+        }
       }
-      return { ...e, routeDistance: totalDistance };
-    })
-    .sort((a, b) => a.routeDistance - b.routeDistance);
+    }
+
+    if (e.route === "297") {
+      console.log(totalTransportDistance);
+      console.log(actualTransportDistance);
+      console.log(e.jt);
+    }
+
+    // ---------------------------------
+
+    let transportDistance = 0;
+    for (let i = e.nearbyOrigStopSeq; i < e.nearbyDestStopSeq; i += 1) {
+      const stopId = e?.stops[company][i - 1];
+      const nextStopId = e?.stops[company][i];
+      const { location } = gStopList[stopId];
+      const { location: nextLocation } = gStopList[nextStopId];
+      const distance = getPreciseDistance(
+        { latitude: location?.lat, longitude: location?.lng },
+        { latitude: nextLocation?.lat, longitude: nextLocation?.lng }
+      );
+      transportDistance += distance;
+      if (e.route === "297") {
+        console.log("bye");
+      }
+    }
+    return {
+      ...e,
+      transportDistance,
+    };
+  });
+
+  const sortedRouteList = nearbyRouteList.sort(
+    (a, b) =>
+      a.transportDistance +
+      a.origWalkDistance +
+      a.destWalkDistance -
+      (b.transportDistance + b.origWalkDistance + b.destWalkDistance)
+  );
+
+  console.log(sortedRouteList);
 
   return (
     <>
       <DirectionRoot>
-        <AsyncSelect
-          isClearable
-          loadOptions={loadOptions}
-          onChange={onChange}
-        />
+        <div className="topBar">
+          <AsyncSelect
+            isClearable
+            loadOptions={loadOptions}
+            onChange={onChange}
+            className="asyncSelect"
+          />
+          <IconButton onClick={() => setSortingDialogOpen(true)}>
+            <SortIcon />
+          </IconButton>
+        </div>
+        <div className="routeList">
+          {sortedRouteList?.length > 0 &&
+            sortedRouteList.map((e, i) => (
+              <div key={i} className="routeItem">
+                <div className="firstRow">
+                  <div className="left">
+                    <div className="walkDistance">
+                      {e.origWalkDistance <= 400 && <DirectionsWalkIcon />}
+                      {e.origWalkDistance > 400 &&
+                        e.origWalkDistance <= 600 && <DirectionsRunIcon />}
+                      {e.origWalkDistance}米
+                    </div>
+                    →
+                    <div className="company">
+                      {getCoByStopObj(e)
+                        .map((companyId, j) => (
+                          <span key={j} className={companyId}>
+                            {companyId !== "mtr" && companyMap[companyId]}
+                            {companyId === "mtr" && (
+                              <span className={`${e.route}`}>
+                                {" "}
+                                {routeMap[e.route]}
+                              </span>
+                            )}
+                          </span>
+                        ))
+                        .reduce((a, b) => [a, " + ", b])}
+                    </div>
+                    <div className="route">{e.route} </div> →
+                    <div className="walkDistance">
+                      {e.destWalkDistance <= 400 && <DirectionsWalkIcon />}
+                      {e.destWalkDistance > 400 &&
+                        e.destWalkDistance <= 600 && <DirectionsRunIcon />}
+                      {e.destWalkDistance}米
+                    </div>
+                  </div>
+                  <div className="right">
+                    <Eta seq={e.nearbyOrigStopSeq} routeObj={e} slice={1} />
+                    {Math.round(e.transportDistance / 370)}
+                  </div>
+                </div>
+                <div className="detail">
+                  <div className="walkDistance">
+                    {e.origWalkDistance <= 400 && <DirectionsWalkIcon />}
+                    {e.origWalkDistance > 400 && e.origWalkDistance <= 600 && (
+                      <DirectionsRunIcon />
+                    )}
+                    {e.origWalkDistance}米
+                  </div>
+                  → <div>{gStopList[e.nearbyOrigStopId].name.zh}</div> →
+                  <div>{e.nearbyDestStopSeq - e.nearbyOrigStopSeq}個站</div> →{" "}
+                  <div>{gStopList[e.nearbyDestStopId].name.zh}</div> →
+                  <div className="walkDistance">
+                    {e.destWalkDistance <= 400 && <DirectionsWalkIcon />}
+                    {e.destWalkDistance > 400 && e.destWalkDistance <= 600 && (
+                      <DirectionsRunIcon />
+                    )}
+                    {e.destWalkDistance}米
+                  </div>
+                </div>
+              </div>
+            ))}
+        </div>
       </DirectionRoot>
-      {routeListNearby?.length > 0 &&
-        routeListNearby.map((e, i) => (
-          <div key={i}>
-            {e.route} {gStopList[e.nearbyOrigStopId].name.zh} →{" "}
-            {gStopList[e.nearbyDestStopId].name.zh}
-          </div>
-        ))}
+      <SortingDialog
+        sortingDialogOpen={sortingDialogOpen}
+        setSortingDialogOpen={setSortingDialogOpen}
+      />
     </>
   );
 };
 
-const DirectionRoot = styled("div")({});
+const DirectionRoot = styled("div")({
+  fontSize: "12px",
+  display: "flex",
+  flexDirection: "column",
+  overflow: "hidden",
+  height: "100%",
+  ".topBar": {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    margin: "14px",
+    ".asyncSelect": {
+      width: "100%",
+    },
+  },
+  ".routeList": {
+    overflow: "auto",
+    ".routeItem": {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      padding: "8px 10px",
+      borderBottom: "1px solid lightgrey",
+      gap: "4px",
+      ".firstRow": {
+        display: "flex",
+        justifyContent: "space-between",
+        width: "100%",
+        ".left": {
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+          ".company": {
+            ...companyColor,
+          },
+          ".route": {
+            fontWeight: 900,
+          },
+          ".walkDistance": {
+            display: "flex",
+            alignItems: "center",
+            svg: { fontSize: "12px" },
+          },
+        },
+        ".right": {
+          display: "flex",
+          gap: "12px",
+        },
+      },
+      ".detail": {
+        display: "flex",
+        alignItems: "center",
+        flexWrap: "wrap",
+        flexDirection: "row",
+        gap: "4px",
+        ".walkDistance": {
+          display: "flex",
+          alignItems: "center",
+          svg: { fontSize: "12px" },
+        },
+      },
+    },
+  },
+});
