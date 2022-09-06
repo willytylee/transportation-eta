@@ -47,15 +47,16 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
       const _stopId = filitedStopId.reduce((prev, curr) =>
         stopIdsNearby[prev] < stopIdsNearby[curr] ? prev : curr
       );
-      e.nearbyStopId = _stopId;
-      e.nearbyStopSeq = e.stops[company].findIndex((f) => f === _stopId) + 1;
+      e.nearbyOrigStopId = _stopId;
+      e.nearbyOrigStopSeq =
+        e.stops[company].findIndex((f) => f === _stopId) + 1;
       e.distance = stopIdsNearby[_stopId];
       filteredRouteList.push(e);
     }
   });
 
   const nearbyRouteList = _(filteredRouteList)
-    .groupBy((x) => x.nearbyStopId)
+    .groupBy((x) => x.nearbyOrigStopId)
     .map((value, key) => ({
       stopId: key,
       routes: value,
@@ -114,7 +115,11 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
                       </div>
                     </div>
                     <div className="eta">
-                      <Eta routeObj={routeObj} />
+                      <Eta
+                        seq={routeObj.nearbyOrigStopSeq}
+                        routeObj={routeObj}
+                        slice={1}
+                      />
                     </div>
                   </div>
                 ))}
