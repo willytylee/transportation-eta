@@ -1,38 +1,18 @@
-import { etaTimeConverter } from "../../Utils/Utils";
-import { useEtas } from "../../hooks/Etas";
+import { Eta } from "./RouteList/Eta";
 
 export const StopEta = ({
   seq,
   stopObj: { name, stopId },
   routeObj,
   StopEtaRoot,
-}) => {
-  const { eta, isEtaLoading } = useEtas({
-    seq,
-    routeObj,
-  });
-
-  return (
-    <StopEtaRoot>
-      <div className="seq">{seq}.</div>
-      <div className="stop" title={stopId}>
-        {name.zh}
-      </div>
-      <div className="etas">
-        {isEtaLoading ? (
-          <div className="eta">載入中...</div>
-        ) : eta.length !== 0 ? (
-          eta
-            .map((e, i) => (
-              <div key={i} className="eta" title={e.seq}>
-                {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
-              </div>
-            ))
-            .slice(0, 3)
-        ) : (
-          <div>沒有班次</div>
-        )}
-      </div>
-    </StopEtaRoot>
-  );
-};
+}) => (
+  <StopEtaRoot>
+    <div className="seq">{seq}.</div>
+    <div className="stop" title={stopId}>
+      {name.zh}
+    </div>
+    <div className="etas">
+      <Eta seq={seq} routeObj={routeObj} slice={3} />
+    </div>
+  </StopEtaRoot>
+);

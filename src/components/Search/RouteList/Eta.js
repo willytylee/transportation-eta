@@ -2,10 +2,9 @@ import React from "react";
 import { useEtas } from "../../../hooks/Etas";
 import { etaTimeConverter } from "../../../Utils/Utils";
 
-export const Eta = ({ routeObj }) => {
+export const Eta = ({ seq, routeObj, slice }) => {
   const { eta, isEtaLoading } = useEtas({
-    seq: routeObj.nearbyStopSeq,
-
+    seq,
     routeObj,
   });
 
@@ -18,7 +17,7 @@ export const Eta = ({ routeObj }) => {
           {etaTimeConverter(e.eta, e.rmk_tc).etaIntervalStr}
         </div>
       ))
-      .slice(0, 1)
+      .slice(0, slice)
   ) : (
     <div>沒有班次</div>
   );
