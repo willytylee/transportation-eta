@@ -7,11 +7,22 @@ import {
 import { companyColor, companyMap } from "../../constants/Constants";
 import { routeMap } from "../../constants/Mtr";
 import { getCoByStopObj } from "../../Utils/Utils";
-import { Eta } from "../Search/RouteList/Eta";
 import { DbContext } from "../../context/DbContext";
+import { useEtas } from "../../hooks/Etas";
 
 export const DirectionItem = ({ e }) => {
   const { gStopList } = useContext(DbContext);
+
+  const { eta, isEtaLoading } = useEtas({
+    seq: e.nearbyOrigStopSeq,
+    routeObj: e,
+  });
+
+  let time = "";
+
+  if (eta.length > 0) {
+    time = eta[0].eta;
+  }
 
   return (
     <DirectionItemRoot>
@@ -53,8 +64,9 @@ export const DirectionItem = ({ e }) => {
         </div>
       </div>
       <div className="eta">
-        <Eta seq={e.nearbyOrigStopSeq} routeObj={e} slice={1} /> 後到達{" "}
-        {gStopList[e.nearbyOrigStopId].name.zh}
+        {isEtaLoading
+          ? "載入中"
+          : `${time}分鐘 後到達 ${gStopList[e.nearbyOrigStopId].name.zh}`}
       </div>
       <div className="detail">
         <div className="walkDistance">
