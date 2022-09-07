@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchEtas } from "../fetch/transports";
 
-export const useEtas = ({ seq, routeObj }) => {
+export const useEtas = ({ seq, routeObj, callback }) => {
   const [eta, setEta] = useState([]);
   const [isEtaLoading, setIsEtaLoading] = useState(true);
 
@@ -15,6 +15,9 @@ export const useEtas = ({ seq, routeObj }) => {
       fetchEtas(_routeObj).then((response) => {
         setIsEtaLoading(false);
         setEta(response);
+        if (callback) {
+          callback(response);
+        }
       });
     };
 

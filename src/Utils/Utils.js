@@ -5,7 +5,7 @@ import {
 } from "lzutf8-light";
 import { coPriority } from "../constants/Constants";
 
-export const etaTimeConverter = (etaStr, remark) => {
+export const etaTimeConverter = ({ etaStr, remark }) => {
   let etaIntervalStr, remarkStr;
 
   if (moment(etaStr, "YYYY-MM-DD HH:mm:ss").isValid()) {
@@ -29,6 +29,13 @@ export const etaTimeConverter = (etaStr, remark) => {
   }
 
   return { etaIntervalStr, remarkStr };
+};
+
+export const etaTimePhaser = (etaStr) => {
+  if (moment(etaStr, "YYYY-MM-DD HH:mm:ss").isValid()) {
+    return moment(etaStr).diff(moment(), "minutes");
+  }
+  return null;
 };
 
 export const getLocalStorage = (key) => {

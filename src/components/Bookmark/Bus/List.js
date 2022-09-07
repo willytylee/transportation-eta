@@ -54,7 +54,10 @@ export const List = ({ sectionData, longList }) => {
 
   result.forEach((e, i) => {
     const { eta, rmk_tc } = e;
-    result[i].eta = etaTimeConverter(eta, rmk_tc).etaIntervalStr;
+    result[i].eta = etaTimeConverter({
+      etaStr: eta,
+      remark: rmk_tc,
+    }).etaIntervalStr;
   });
 
   const etaRouteNum =

@@ -5,6 +5,7 @@ export const StopEta = ({
   stopObj: { name, stopId },
   routeObj,
   StopEtaRoot,
+  callback,
 }) => (
   <StopEtaRoot>
     <div className="seq">{seq}.</div>
@@ -12,7 +13,7 @@ export const StopEta = ({
       {name.zh}
     </div>
     <div className="etas">
-      <Eta seq={seq} routeObj={routeObj} slice={3} />
+      <Eta seq={seq} routeObj={routeObj} slice={3} callback={callback} />
     </div>
   </StopEtaRoot>
 );

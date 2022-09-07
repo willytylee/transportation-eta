@@ -13,6 +13,7 @@ import { useStopIdsNearBy } from "../hooks/Stop";
 import { DbContext } from "../context/DbContext";
 import {
   basicFiltering,
+  etaTimePhaser,
   getCoByStopObj,
   getCoPriorityId,
 } from "../Utils/Utils";
@@ -25,6 +26,7 @@ import { companyColor, companyMap } from "../constants/Constants";
 export const Direction = () => {
   const { gRouteList, gStopList } = useContext(DbContext);
   const [destLocation, setDestLocation] = useState({});
+  const [etaDetail] = useState([]);
   const [sortingDialogOpen, setSortingDialogOpen] = useState(false);
   const { location: currentLocation } = useLocation({ time: 60000 });
   const { stopIdsNearby: origStopIdsNearby } = useStopIdsNearBy({
@@ -39,6 +41,15 @@ export const Direction = () => {
   });
 
   const getWalkTime = (meter) => Math.round(meter / 40);
+
+  const handleEtaCallback = (i, response) => {
+    const newEtaDetail = [...etaDetail];
+    if (response.length > 0) {
+      newEtaDetail[i] = etaTimePhaser(response[0].eta);
+    }
+
+    // setEtaDetail(newEtaDetail);
+  };
 
   const loadOptions = async (input, callback) => {
     callback(
@@ -192,13 +203,13 @@ export const Direction = () => {
           {sortedRouteList?.length > 0 &&
             sortedRouteList.map((e, i) => (
               <div key={i} className="routeItem">
-                <div className="firstRow">
+                <div className="result">
                   <div className="left">
                     <div className="walkDistance">
                       {e.origWalkDistance <= 400 && <DirectionsWalkIcon />}
                       {e.origWalkDistance > 400 &&
                         e.origWalkDistance <= 600 && <DirectionsRunIcon />}
-                      {e.origWalkDistance}米
+                      {e.origWalkTime}分鐘
                     </div>
                     →
                     <div className="company">
@@ -221,23 +232,34 @@ export const Direction = () => {
                       {e.destWalkDistance <= 400 && <DirectionsWalkIcon />}
                       {e.destWalkDistance > 400 &&
                         e.destWalkDistance <= 600 && <DirectionsRunIcon />}
-                      {e.destWalkDistance}米
+                      {e.destWalkTime}分鐘
                     </div>
                   </div>
                   <div className="right">
-                    約{e.origWalkTime + e.transportTime + e.destWalkTime}分鐘
+                    {e.transportTime !== 0
+                      ? `≈${
+                          e.origWalkTime + e.transportTime + e.destWalkTime
+                        }分鐘`
+                      : ""}
                   </div>
                 </div>
+                <div>
+                  <Eta
+                    seq={e.nearbyOrigStopSeq}
+                    routeObj={e}
+                    slice={1}
+                    callback={(response) => {
+                      handleEtaCallback(i, response);
+                    }}
+                  />
+                </div>
                 <div className="detail">
-                  <div>
-                    <Eta seq={e.nearbyOrigStopSeq} routeObj={e} slice={1} />
-                  </div>
                   <div className="walkDistance">
                     {e.origWalkDistance <= 400 && <DirectionsWalkIcon />}
                     {e.origWalkDistance > 400 && e.origWalkDistance <= 600 && (
                       <DirectionsRunIcon />
                     )}
-                    {e.origWalkDistance}米
+                    {e.origWalkTime}分鐘
                   </div>
                   → <div>{gStopList[e.nearbyOrigStopId].name.zh}</div> →
                   <div>{e.nearbyDestStopSeq - e.nearbyOrigStopSeq}個站</div> →{" "}
@@ -247,7 +269,7 @@ export const Direction = () => {
                     {e.destWalkDistance > 400 && e.destWalkDistance <= 600 && (
                       <DirectionsRunIcon />
                     )}
-                    {e.destWalkDistance}米
+                    {e.destWalkTime}分鐘
                   </div>
                 </div>
               </div>
@@ -286,7 +308,7 @@ const DirectionRoot = styled("div")({
       padding: "8px 10px",
       borderBottom: "1px solid lightgrey",
       gap: "4px",
-      ".firstRow": {
+      ".result": {
         display: "flex",
         justifyContent: "space-between",
         width: "100%",

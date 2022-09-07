@@ -70,6 +70,10 @@ export const StopList = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const handleEtaCallback = (i, response) => {
+    // TODO
+  };
+
   // When the route number is changed
   useEffect(() => {
     setStopList([]);
@@ -166,6 +170,9 @@ export const StopList = () => {
                       routeObj={currRoute}
                       stopObj={e}
                       StopEtaRoot={StopEtaRoot}
+                      callback={(response) => {
+                        handleEtaCallback(i, response);
+                      }}
                     />
                   )}
                 </AccordionSummary>

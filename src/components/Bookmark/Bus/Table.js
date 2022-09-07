@@ -29,7 +29,11 @@ export const Table = ({ sectionData }) => {
         etas.length === 0
           ? ["沒有班次"]
           : etas
-              .map((f) => etaTimeConverter(f.eta, f.rmk_tc).etaIntervalStr)
+              .map(
+                (f) =>
+                  etaTimeConverter({ etaStr: f.eta, remark: f.rmk_tc })
+                    .etaIntervalStr
+              )
               .slice(0, 3),
       stopName,
       latLngUrl: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
