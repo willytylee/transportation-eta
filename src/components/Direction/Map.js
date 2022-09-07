@@ -19,6 +19,7 @@ import { EtaContext } from "../../context/EtaContext";
 import { mtrLineColor } from "../../constants/Mtr";
 import { DbContext } from "../../context/DbContext";
 import { useLocation } from "../../hooks/Location";
+import { Eta } from "../Search/RouteList/Eta";
 
 const currLocationIconPath = require("../../assets/icons/currentLocation.png");
 const stopIconPath = require("../../assets/icons/stop.png");
@@ -27,7 +28,7 @@ const endIconPath = require("../../assets/icons/end.png");
 
 export const Map = ({ destination, expanded }) => {
   const { currRoute, mapStopIdx } = useContext(EtaContext);
-  const { location: currentLocation } = useLocation({ interval: 10000 });
+  const { location: currentLocation } = useLocation({ interval: 100000 });
   const { gStopList } = useContext(DbContext);
   const [navBtnType, setNavBtnType] = useState("normal");
   const [map, setMap] = useState(null);
@@ -125,13 +126,22 @@ export const Map = ({ destination, expanded }) => {
       className: "stopMarker",
     });
 
+    const stopList = currRoute.stops[Object.keys(currRoute.stops)[0]];
+    const stopId = currRouteStopIdList[i];
+    const stopIdx = stopList.findIndex((e) => e === stopId);
+
     return (
       <Marker
         key={i}
         position={[stop.location.lat, stop.location.lng]}
         icon={stopIcon}
       >
-        <Popup>{currRouteStopList[i].name.zh}</Popup>
+        <Popup>
+          {currRouteStopList[i].name.zh}
+          <div className="eta">
+            <Eta seq={stopIdx + 1} routeObj={currRoute} slice={2} />
+          </div>
+        </Popup>
       </Marker>
     );
   };
@@ -197,6 +207,8 @@ export const Map = ({ destination, expanded }) => {
         attribution=""
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+
+      {/* Current Location Marker */}
       <Marker
         position={[currentLocation.lat, currentLocation.lng]}
         icon={currLocationIcon}
@@ -207,14 +219,23 @@ export const Map = ({ destination, expanded }) => {
         currRoute.stops &&
         expanded && (
           <>
+            {/* Start Point Marker */}
             <Marker
               position={[currentLocation.lat, currentLocation.lng]}
               icon={startIcon}
             />
+            {/* End Point Marker */}
             <Marker
               position={[destination.location.lat, destination.location.lng]}
               icon={endIcon}
             />
+            {/* Transport Stop Marker */}
+            {currRouteStopIdList.map((e, i) => {
+              const stop = gStopList[e];
+              return <CustomMarker stop={stop} key={i} i={i} />;
+            })}
+
+            {/* Line of Transport */}
             <Polyline
               pathOptions={{
                 color: `${
@@ -224,10 +245,34 @@ export const Map = ({ destination, expanded }) => {
               }}
               positions={routeLine}
             />
-            {currRouteStopIdList.map((e, i) => {
-              const stop = gStopList[e];
-              return <CustomMarker stop={stop} key={i} i={i} />;
-            })}
+            {/* Line of Start Point to First Transport Stop */}
+            <Polyline
+              pathOptions={{
+                color: "grey",
+                opacity: "0.75",
+              }}
+              positions={[
+                [currentLocation.lat, currentLocation.lng],
+                [
+                  currRouteStopList[0].location.lat,
+                  currRouteStopList[0].location.lng,
+                ],
+              ]}
+            />
+            {/* Line of End Point to Last Transport Stop */}
+            <Polyline
+              pathOptions={{
+                color: "grey",
+                opacity: "0.75",
+              }}
+              positions={[
+                [destination.location.lat, destination.location.lng],
+                [
+                  currRouteStopList[currRouteStopList.length - 1].location.lat,
+                  currRouteStopList[currRouteStopList.length - 1].location.lng,
+                ],
+              ]}
+            />
           </>
         )}
 
