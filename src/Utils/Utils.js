@@ -31,12 +31,21 @@ export const etaTimeConverter = (etaStr, remark) => {
   return { etaIntervalStr, remarkStr };
 };
 
+export const phaseEtaTime = (etaStr) => {
+  if (moment(etaStr, "YYYY-MM-DD HH:mm:ss").isValid()) {
+    return moment(etaStr).diff(moment(), "minutes");
+  }
+  return null;
+};
+
 export const getLocalStorage = (key) => {
   if (localStorage.getItem(key) != null) {
     return JSON.parse(
       decompressJson(localStorage.getItem(key), {
         inputEncoding: "Base64",
-      }).replaceAll("／", "/")
+      })
+        .replaceAll("／", "/")
+        .replaceAll("　", " ")
     );
   }
 };

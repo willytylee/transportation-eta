@@ -6,7 +6,7 @@ import {
 } from "@mui/icons-material";
 import { companyColor, companyMap } from "../../constants/Constants";
 import { routeMap } from "../../constants/Mtr";
-import { getCoByStopObj } from "../../Utils/Utils";
+import { getCoByStopObj, phaseEtaTime } from "../../Utils/Utils";
 import { DbContext } from "../../context/DbContext";
 import { useEtas } from "../../hooks/Etas";
 
@@ -18,10 +18,10 @@ export const DirectionItem = ({ e }) => {
     routeObj: e,
   });
 
-  let time = "";
+  let waitingTime = "";
 
   if (eta.length > 0) {
-    time = eta[0].eta;
+    waitingTime = phaseEtaTime(eta[0].eta);
   }
 
   return (
@@ -59,14 +59,21 @@ export const DirectionItem = ({ e }) => {
         </div>
         <div className="right">
           {e.transportTime !== 0 &&
-            `≈
-                  ${e.origWalkTime + e.transportTime + e.destWalkTime}分鐘`}
+            `≈ ${
+              e.origWalkTime + waitingTime + e.transportTime + e.destWalkTime
+            }分鐘`}
         </div>
+      </div>
+      <div className="formula">
+        {e.origWalkTime} + {waitingTime} + {e.transportTime} + {e.destWalkTime}
       </div>
       <div className="eta">
         {isEtaLoading
           ? "載入中"
-          : `${time}分鐘 後到達 ${gStopList[e.nearbyOrigStopId].name.zh}`}
+          : waitingTime !== "" &&
+            `${waitingTime}分鐘 後到達 ${
+              gStopList[e.nearbyOrigStopId].name.zh
+            }`}
       </div>
       <div className="detail">
         <div className="walkDistance">
