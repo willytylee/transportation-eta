@@ -31,7 +31,7 @@ export const etaTimeConverter = ({ etaStr, remark }) => {
   return { etaIntervalStr, remarkStr };
 };
 
-export const etaTimePhaser = (etaStr) => {
+export const phaseEtaTime = (etaStr) => {
   if (moment(etaStr, "YYYY-MM-DD HH:mm:ss").isValid()) {
     return moment(etaStr).diff(moment(), "minutes");
   }
@@ -43,7 +43,9 @@ export const getLocalStorage = (key) => {
     return JSON.parse(
       decompressJson(localStorage.getItem(key), {
         inputEncoding: "Base64",
-      }).replaceAll("／", "/")
+      })
+        .replaceAll("／", "/")
+        .replaceAll("　", " ")
     );
   }
 };

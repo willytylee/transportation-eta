@@ -1,20 +1,15 @@
-import { useContext } from "react";
 import {
   Grid,
   IconButton,
   DialogTitle,
   styled,
-  DialogContent,
   Dialog,
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { EtaContext } from "../context/EtaContext";
-import { serviceDate } from "../constants/Constants";
 
 export const SortingDialog = ({ sortingDialogOpen, setSortingDialogOpen }) => {
   const handleDialogOnClose = () => {
