@@ -9,11 +9,8 @@ export const AppProvider = ({ children }) => {
   const dbVersionLocal = localStorage.getItem("dbVersion");
 
   const [dbVersion, setDbVersion] = useState(dbVersionLocal);
-
   const [appVersion, setAppVersion] = useState("");
   const [serVersion, setSerVersion] = useState("");
-
-  /* eslint-disable react-hooks/exhaustive-deps */
 
   const initAppVersion = useCallback(() => {
     fetchVersion().then((version) => {
@@ -57,8 +54,6 @@ export const AppProvider = ({ children }) => {
         });
     }
   }, []);
-
-  /* eslint-disable react-hooks/exhaustive-deps */
 
   const value = useMemo(
     () => ({

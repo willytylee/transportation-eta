@@ -7,6 +7,7 @@ export const Eta = ({ seq, routeObj, slice, callback }) => {
     seq,
     routeObj,
     callback,
+    interval: 10000,
   });
 
   return isEtaLoading ? (

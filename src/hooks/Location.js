@@ -1,28 +1,39 @@
 import { useState, useEffect } from "react";
 
-export const useLocation = ({ time }) => {
+export const useLocation = ({ interval }) => {
   const [location, setLocation] = useState({
     lat: 0,
     lng: 0,
   });
 
   useEffect(() => {
-    const intervalContent = async () => {
-      const success = (position) => {
-        setLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
+    if (interval > 0) {
+      const intervalContent = async () => {
+        const success = (position) => {
+          setLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        };
+
+        navigator.geolocation.getCurrentPosition(success);
       };
+      intervalContent();
+      const intervalID = setInterval(intervalContent, interval);
 
-      navigator.geolocation.getCurrentPosition(success);
-    };
-    intervalContent();
-    const interval = setInterval(intervalContent, time);
+      return () => {
+        clearInterval(intervalID);
+      };
+    }
 
-    return () => {
-      clearInterval(interval);
+    const success = (position) => {
+      setLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
     };
+
+    navigator.geolocation.getCurrentPosition(success);
   }, []);
 
   return { location };

@@ -26,7 +26,6 @@ const App = () => {
   useEffect(() => {
     initDb();
     initAppVersion();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -6,7 +6,7 @@ import { Sort as SortIcon } from "@mui/icons-material";
 import { fetchLocation } from "../../fetch/Location";
 import { SortingDialog } from "./SortingDialog";
 
-export const SearchBar = ({ setDestLocation }) => {
+export const SearchBar = ({ setDestination }) => {
   const [sortingDialogOpen, setSortingDialogOpen] = useState(false);
 
   const loadOptions = async (input, callback) => {
@@ -44,8 +44,9 @@ export const SearchBar = ({ setDestLocation }) => {
   };
 
   const onChange = (e) => {
-    setDestLocation(e?.location);
+    setDestination(e);
   };
+
   return (
     <SearchBarRoot>
       <AsyncSelect

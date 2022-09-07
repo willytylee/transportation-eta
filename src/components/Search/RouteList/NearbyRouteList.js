@@ -19,7 +19,7 @@ import { Eta } from "./Eta";
 
 export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
   const { gRouteList, gStopList } = useContext(DbContext);
-  const { location: currentLocation } = useLocation({ time: 60000 });
+  const { location: currentLocation } = useLocation({ interval: 60000 });
   const { stopIdsNearby } = useStopIdsNearBy({
     maxDistance: 500,
     lat: currentLocation.lat,

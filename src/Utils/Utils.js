@@ -31,11 +31,18 @@ export const etaTimeConverter = ({ etaStr, remark }) => {
   return { etaIntervalStr, remarkStr };
 };
 
-export const phaseEtaTime = (etaStr) => {
+export const phaseEtaToWaitingMins = (etaStr) => {
   if (moment(etaStr, "YYYY-MM-DD HH:mm:ss").isValid()) {
     return moment(etaStr).diff(moment(), "minutes");
   }
   return null;
+};
+
+export const phaseEtaToTime = (etaStr) => {
+  if (moment(etaStr, "YYYY-MM-DD HH:mm:ss").isValid()) {
+    return moment(etaStr).format("HH:mm");
+  }
+  return "";
 };
 
 export const getLocalStorage = (key) => {

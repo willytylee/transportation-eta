@@ -27,7 +27,7 @@ import { BookmarkDialog } from "./BookmarkDialog";
 import { MtrRouteOptionDialog } from "./MtrRouteOptionDialog";
 
 export const StopList = () => {
-  const { location: currentLocation } = useLocation({ time: 60000 });
+  const { location: currentLocation } = useLocation({ interval: 60000 });
   const [stopList, setStopList] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
@@ -123,7 +123,6 @@ export const StopList = () => {
         updateNearestStopId("");
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currRoute, currentLocation.lat, currentLocation.lng]);
 
   useEffect(() => {

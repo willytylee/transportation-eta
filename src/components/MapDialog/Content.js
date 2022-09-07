@@ -26,7 +26,7 @@ const currentLocationIcon = require("../../assets/icons/currentLocation.png");
 const markerIcon = require("../../assets/icons/marker-icon-2x.png");
 
 export const Content = () => {
-  const { location: currentLocation } = useLocation({ time: 1000 });
+  const { location: currentLocation } = useLocation({ interval: 1000 });
   const {
     currRoute,
     nearestStopId,
@@ -50,12 +50,10 @@ export const Content = () => {
     if (!mapLocation) {
       updateMapStopIdx(nearestStopIdx);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const currRouteStopList = useMemo(
     () => currRouteStopIdList?.map((e) => gStopList[e]),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [currRoute]
   );
 
@@ -102,7 +100,6 @@ export const Content = () => {
             mapStopIdx > -1 && i > mapStopIdx && "forward"
           }`,
         }),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       []
     );
 
@@ -118,7 +115,6 @@ export const Content = () => {
           });
         },
       }),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       []
     );
 

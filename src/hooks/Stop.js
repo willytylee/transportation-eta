@@ -5,7 +5,7 @@ import { useLocation } from "./Location";
 
 export const useStopIdsNearBy = ({ maxDistance, lat, lng }) => {
   const { gStopList } = useContext(DbContext);
-  const { location: currentLocation } = useLocation({ time: 60000 });
+  const { location: currentLocation } = useLocation({ interval: 60000 });
 
   const stopIdsNearby = useMemo(
     // use useMemo prevent flicker on the list
@@ -33,7 +33,6 @@ export const useStopIdsNearBy = ({ maxDistance, lat, lng }) => {
               {}
             )
         : {},
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentLocation.lat, currentLocation.lng, lat, lng]
   );
 

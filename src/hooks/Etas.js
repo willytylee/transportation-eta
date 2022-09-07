@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchEtas } from "../fetch/transports";
 
-export const useEtas = ({ seq, routeObj, callback }) => {
+export const useEtas = ({ seq, routeObj, callback, interval }) => {
   const [eta, setEta] = useState([]);
   const [isEtaLoading, setIsEtaLoading] = useState(true);
 
@@ -23,10 +23,10 @@ export const useEtas = ({ seq, routeObj, callback }) => {
 
     intervalContent();
 
-    const interval = setInterval(intervalContent, 10000);
+    const intervalID = setInterval(intervalContent, interval);
 
     return () => {
-      clearInterval(interval);
+      clearInterval(intervalID);
     };
   }, [routeObj, seq]);
 

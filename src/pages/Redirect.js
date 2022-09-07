@@ -30,6 +30,5 @@ export const Redirect = () => {
         navigate("/search", { replace: true });
         break;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };

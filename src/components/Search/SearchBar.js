@@ -21,7 +21,6 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
     if (!route) {
       updateCurrRoute({});
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route]);
 
   const handleMapDialogOnClose = () => {
