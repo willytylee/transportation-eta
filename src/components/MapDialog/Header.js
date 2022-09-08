@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { DialogTitle, Grid, IconButton, styled } from "@mui/material";
-import { getCoByStopObj } from "../../Utils/Utils";
+import { getCoByRouteObj } from "../../Utils/Utils";
 import { companyMap, companyColor } from "../../constants/Constants";
 import { EtaContext } from "../../context/EtaContext";
 import { etaExcluded, routeMap } from "../../constants/Mtr";
@@ -28,7 +28,7 @@ export const Header = ({ handleDialogOnClose }) => {
       <Grid>
         <div className="headerWrapper">
           <div className="coRoute">
-            {getCoByStopObj(currRoute)
+            {getCoByRouteObj(currRoute)
               .map((e, i) => (
                 <span className={e} key={i}>
                   {companyMap[e]}

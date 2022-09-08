@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { styled } from "@mui/material";
-import { getCoByStopObj } from "../../../Utils/Utils";
+import { getCoByRouteObj } from "../../../Utils/Utils";
 import { companyColor, companyMap } from "../../../constants/Constants";
 import { EtaContext } from "../../../context/EtaContext";
 import { etaExcluded, routeMap } from "../../../constants/Mtr";
@@ -32,7 +32,7 @@ export const SimpleRouteList = ({
       </div>
       <div className="companyOrigDest">
         <div className="company">
-          {getCoByStopObj(e)
+          {getCoByRouteObj(e)
             .map((companyId, j) => (
               <span key={j} className={companyId}>
                 {companyId !== "mtr" && companyMap[companyId]}

@@ -95,7 +95,7 @@ export const getHeatIndex = (temperature, humidity) => {
   return (heatIndex - 32) / 1.8;
 };
 
-export const getCoByStopObj = (routeObj) =>
+export const getCoByRouteObj = (routeObj) =>
   routeObj.co.reduce((prev, curr) => {
     if (Object.keys(routeObj.stops).includes(curr)) {
       prev.push(curr);
@@ -124,8 +124,8 @@ export const basicFiltering = (e) =>
   e.dest.zh !== e.orig.zh;
 
 export const sortByCompany = (a, b) => {
-  const coA = coPriority.indexOf(getCoByStopObj(a)[0]);
-  const coB = coPriority.indexOf(getCoByStopObj(b)[0]);
+  const coA = coPriority.indexOf(getCoByRouteObj(a)[0]);
+  const coB = coPriority.indexOf(getCoByRouteObj(b)[0]);
   if (coA < coB) {
     return -1;
   }

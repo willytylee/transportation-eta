@@ -2,7 +2,7 @@ import { useContext } from "react";
 import _ from "lodash";
 import { styled } from "@mui/material";
 import {
-  getCoByStopObj,
+  getCoByRouteObj,
   basicFiltering,
   getCoPriorityId,
 } from "../../../Utils/Utils";
@@ -89,7 +89,7 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
                     onClick={() => handleRouteListItemOnClick(routeObj)}
                   >
                     <div className="company">
-                      {getCoByStopObj(routeObj)
+                      {getCoByRouteObj(routeObj)
                         .map((companyId, k) => (
                           <span key={k} className={companyId}>
                             {companyId !== "mtr" && companyMap[companyId]}

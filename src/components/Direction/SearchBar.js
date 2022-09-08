@@ -6,7 +6,7 @@ import { Sort as SortIcon } from "@mui/icons-material";
 import { fetchLocation } from "../../fetch/Location";
 import { SortingDialog } from "./SortingDialog";
 
-export const SearchBar = ({ setDestination }) => {
+export const SearchBar = ({ setDestination, setSortingMethod }) => {
   const [sortingDialogOpen, setSortingDialogOpen] = useState(false);
 
   const loadOptions = async (input, callback) => {
@@ -61,6 +61,7 @@ export const SearchBar = ({ setDestination }) => {
       <SortingDialog
         sortingDialogOpen={sortingDialogOpen}
         setSortingDialogOpen={setSortingDialogOpen}
+        setSortingMethod={setSortingMethod}
       />
     </SearchBarRoot>
   );

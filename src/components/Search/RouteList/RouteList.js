@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Card, styled } from "@mui/material";
 import {
-  getCoByStopObj,
+  getCoByRouteObj,
   basicFiltering,
   sortByCompany,
   isMatchRoute,
@@ -76,7 +76,7 @@ export const RouteList = () => {
             }`}
           >
             <div className="company">
-              {getCoByStopObj(e)
+              {getCoByRouteObj(e)
                 .map((companyId, j) => (
                   <span key={j} className={companyId}>
                     {companyId !== "mtr" && companyMap[companyId]}

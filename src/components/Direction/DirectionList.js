@@ -8,7 +8,12 @@ import { basicFiltering, getCoPriorityId } from "../../Utils/Utils";
 import { EtaContext } from "../../context/EtaContext";
 import { DirectionItem } from "./DirectionItem";
 
-export const DirectionList = ({ destination, expanded, setExpanded }) => {
+export const DirectionList = ({
+  destination,
+  expanded,
+  setExpanded,
+  sortingMethod,
+}) => {
   const { gRouteList, gStopList } = useContext(DbContext);
   const { updateCurrRoute } = useContext(EtaContext);
   const [sortedRouteList, setSortedRouteList] = useState([]);
@@ -122,22 +127,36 @@ export const DirectionList = ({ destination, expanded, setExpanded }) => {
         transportTime:
           e.jt !== null
             ? Math.round(
-                e.jt * (actualTransportDistance / totalTransportDistance)
+                e.jt * (actualTransportDistance / totalTransportDistance) +
+                  (e.nearbyDestStopSeq - e.nearbyOrigStopSeq) // Topup for extra time in each stop
               )
             : null,
       };
     });
 
-    setSortedRouteList(
-      nearbyRouteList.sort(
-        (a, b) =>
-          a.origWalkTime +
-          a.transportTime +
-          a.destWalkTime -
-          (b.origWalkTime + b.transportTime + b.destWalkTime)
-      )
-    );
-  }, [destination]);
+    if (sortingMethod === "最短步行時間") {
+      setSortedRouteList(
+        nearbyRouteList.sort(
+          (a, b) =>
+            a.origWalkTime + a.destWalkTime - (b.origWalkTime + b.destWalkTime)
+        )
+      );
+    } else if (sortingMethod === "最短步行時間") {
+      setSortedRouteList(
+        nearbyRouteList.sort((a, b) => a.transportTime + -b.transportTime)
+      );
+    } else {
+      setSortedRouteList(
+        nearbyRouteList.sort(
+          (a, b) =>
+            a.origWalkTime +
+            a.transportTime +
+            a.destWalkTime -
+            (b.origWalkTime + b.transportTime + b.destWalkTime)
+        )
+      );
+    }
+  }, [destination, sortingMethod]);
 
   return (
     <DirectionListRoot>

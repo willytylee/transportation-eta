@@ -11,12 +11,17 @@ import {
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
 
-export const SortingDialog = ({ sortingDialogOpen, setSortingDialogOpen }) => {
+export const SortingDialog = ({
+  sortingDialogOpen,
+  setSortingDialogOpen,
+  setSortingMethod,
+}) => {
   const handleDialogOnClose = () => {
     setSortingDialogOpen(false);
   };
 
-  const handleListItemOnClick = () => {
+  const handleListItemOnClick = (method) => {
+    setSortingMethod(method);
     setSortingDialogOpen(false);
   };
 
@@ -40,28 +45,28 @@ export const SortingDialog = ({ sortingDialogOpen, setSortingDialogOpen }) => {
         <ListItem disablePadding>
           <ListItemButton
             onClick={() => {
-              handleListItemOnClick("最短總距離");
+              handleListItemOnClick("最短總時間");
             }}
           >
-            <ListItemText primary="最短總距離" />
+            <ListItemText primary="最短總時間" secondary="等候時間不計算在內" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton
             onClick={() => {
-              handleListItemOnClick("最短步行距離");
+              handleListItemOnClick("最短步行時間");
             }}
           >
-            <ListItemText primary="最短步行距離" />
+            <ListItemText primary="最短步行時間" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton
             onClick={() => {
-              handleListItemOnClick("最短交通距離");
+              handleListItemOnClick("最短交通時間");
             }}
           >
-            <ListItemText primary="最短交通距離" />
+            <ListItemText primary="最短交通時間" />
           </ListItemButton>
         </ListItem>
       </List>

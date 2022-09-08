@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -8,6 +8,8 @@ import {
 import {
   DirectionsWalk as DirectionsWalkIcon,
   DirectionsRun as DirectionsRunIcon,
+  ExpandMore as ExpandMoreIcon,
+  ExpandLess as ExpandLessIcon,
 } from "@mui/icons-material";
 import {
   companyColor,
@@ -16,7 +18,7 @@ import {
 } from "../../constants/Constants";
 import { routeMap } from "../../constants/Mtr";
 import {
-  getCoByStopObj,
+  getCoByRouteObj,
   phaseEtaToTime,
   phaseEtaToWaitingMins,
 } from "../../Utils/Utils";
@@ -31,8 +33,8 @@ export const DirectionItem = ({
   expanded,
   handleChange,
 }) => {
+  const [stopList, setStopList] = useState([]);
   const { gStopList } = useContext(DbContext);
-
   const { eta, isEtaLoading } = useEtas({
     seq: e.nearbyOrigStopSeq,
     routeObj: e,
@@ -63,6 +65,34 @@ export const DirectionItem = ({
     waitingTimeStr = "沒有班次";
   }
 
+  let estimateTravelTime = null;
+  let estimateTravelTimeStr = "";
+
+  if (e.transportTime !== null && eta.length > 0) {
+    const waitingTimeArr = eta.map((f) => phaseEtaToWaitingMins(f.eta));
+
+    if (waitingTimeArr[0] > e.origWalkTime) {
+      estimateTravelTime = waitingTimeArr[0] + e.transportTime + e.destWalkTime;
+    } else if (waitingTimeArr[1] > e.origWalkTime) {
+      estimateTravelTime = waitingTimeArr[1] + e.transportTime + e.destWalkTime;
+    } else {
+      estimateTravelTime = waitingTimeArr[2] + e.transportTime + e.destWalkTime;
+    }
+    estimateTravelTimeStr = `≈ ${estimateTravelTime}分鐘`;
+  }
+
+  const handleStopListBtnOnClick = () => {
+    if (stopList.length === 0) {
+      const _stopList = [];
+      for (let j = e.nearbyOrigStopSeq; j < e.nearbyDestStopSeq - 1; j += 1) {
+        _stopList.push(gStopList[e.stops[getCoByRouteObj(e)[0]][j]]);
+      }
+      setStopList(_stopList);
+    } else {
+      setStopList([]);
+    }
+  };
+
   return (
     <DirectionItemRoot>
       <Accordion
@@ -81,7 +111,7 @@ export const DirectionItem = ({
               </div>
               →
               <div className="company">
-                {getCoByStopObj(e)
+                {getCoByRouteObj(e)
                   .map((companyId, j) => (
                     <span key={j} className={companyId}>
                       {companyId !== "mtr" && companyMap[companyId]}
@@ -108,13 +138,7 @@ export const DirectionItem = ({
               {isEtaLoading ? "載入中" : waitingTimeStr}
             </div>
           </div>
-          <div className="right">
-            {e.transportTime !== 0 &&
-              waitingTime !== null &&
-              `≈ ${
-                e.origWalkTime + waitingTime + e.transportTime + e.destWalkTime
-              }分鐘`}
-          </div>
+          <div className="right">{estimateTravelTimeStr}</div>
         </AccordionSummary>
         <AccordionDetails>
           <div className="detail">
@@ -145,7 +169,28 @@ export const DirectionItem = ({
             <div className="detailItem">
               <div className="transportNotice">
                 <div>{gStopList[e.nearbyOrigStopId].name.zh}</div>
-                <div>{e.nearbyDestStopSeq - e.nearbyOrigStopSeq}個站</div>{" "}
+                <div>
+                  <button
+                    className="stopListBtn"
+                    type="button"
+                    onClick={handleStopListBtnOnClick}
+                  >
+                    <div>搭{e.nearbyDestStopSeq - e.nearbyOrigStopSeq}個站</div>
+                    {stopList.length === 0 ? (
+                      <ExpandMoreIcon />
+                    ) : (
+                      <ExpandLessIcon />
+                    )}
+                  </button>
+                </div>
+                <div
+                  className="stopList"
+                  style={stopList.length === 0 ? { display: "none" } : null}
+                >
+                  {stopList.map((f, j) => (
+                    <div key={j}>{f.name.zh}</div>
+                  ))}
+                </div>
                 <div>{gStopList[e.nearbyDestStopId].name.zh}</div>
               </div>
               <div className="time">
@@ -251,6 +296,20 @@ const DirectionItemRoot = styled("div")({
         ".transportNotice": {
           display: "flex",
           flexDirection: "column",
+          gap: "6px",
+          ".stopListBtn": {
+            display: "flex",
+            alignItems: "center",
+            border: "none",
+            padding: "0",
+            background: "unset",
+            fontSize: "12px",
+          },
+          ".stopList": {
+            display: "flex",
+            flexDirection: "column",
+            gap: "4px",
+          },
         },
         ".waitingNotice": {
           ".eta": {

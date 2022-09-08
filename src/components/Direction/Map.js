@@ -13,7 +13,7 @@ import {
   Polyline,
   Popup,
 } from "react-leaflet";
-import { getCoByStopObj } from "../../Utils/Utils";
+import { getCoByRouteObj } from "../../Utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { EtaContext } from "../../context/EtaContext";
 import { mtrLineColor } from "../../constants/Mtr";
@@ -36,7 +36,7 @@ export const Map = ({ destination, expanded }) => {
   const currRouteStopIdList = useMemo(
     () =>
       currRoute.stops &&
-      currRoute.stops[Object.keys(currRoute.stops)[0]].slice(
+      currRoute.stops[getCoByRouteObj(currRoute)[0]].slice(
         currRoute.nearbyOrigStopSeq - 1,
         currRoute.nearbyDestStopSeq
       ),
@@ -53,8 +53,21 @@ export const Map = ({ destination, expanded }) => {
     e.location.lng,
   ]);
 
+  let routeLineWithStartEnd = [];
+
+  if (map && routeLine && destination) {
+    routeLineWithStartEnd = [...routeLine];
+    routeLineWithStartEnd.push([currentLocation.lat, currentLocation.lng]);
+    routeLineWithStartEnd.push([
+      destination.location.lat,
+      destination.location.lng,
+    ]);
+  }
+
   useEffect(() => {
-    map && routeLine && map.fitBounds(routeLine);
+    if (map && routeLine) {
+      map.fitBounds(routeLineWithStartEnd);
+    }
   }, [currRoute]);
 
   // const nearestStopIdx = currRouteStopIdList?.findIndex(
@@ -93,7 +106,7 @@ export const Map = ({ destination, expanded }) => {
     iconUrl: startIconPath,
     iconRetinaUrl: startIconPath,
     iconAnchor: null,
-    popupAnchor: null,
+    popupAnchor: [0, 0],
     shadowUrl: null,
     shadowSize: null,
     shadowAnchor: null,
@@ -105,7 +118,7 @@ export const Map = ({ destination, expanded }) => {
     iconUrl: endIconPath,
     iconRetinaUrl: endIconPath,
     iconAnchor: null,
-    popupAnchor: null,
+    popupAnchor: [0, 0],
     shadowUrl: null,
     shadowSize: null,
     shadowAnchor: null,
@@ -126,7 +139,7 @@ export const Map = ({ destination, expanded }) => {
       className: "stopMarker",
     });
 
-    const stopList = currRoute.stops[Object.keys(currRoute.stops)[0]];
+    const stopList = currRoute.stops[getCoByRouteObj(currRoute)[0]];
     const stopId = currRouteStopIdList[i];
     const stopIdx = stopList.findIndex((e) => e === stopId);
 
@@ -137,9 +150,9 @@ export const Map = ({ destination, expanded }) => {
         icon={stopIcon}
       >
         <Popup>
-          {currRouteStopList[i].name.zh}
+          <div className="title">{currRouteStopList[i].name.zh}</div>
           <div className="eta">
-            <Eta seq={stopIdx + 1} routeObj={currRoute} slice={2} />
+            <Eta seq={stopIdx + 1} routeObj={currRoute} slice={3} />
           </div>
         </Popup>
       </Marker>
@@ -150,7 +163,7 @@ export const Map = ({ destination, expanded }) => {
     const _map = useMap();
 
     const handleIconOnClick = () => {
-      _map.fitBounds(routeLine);
+      _map.fitBounds(routeLineWithStartEnd);
       setNavBtnType("normal");
     };
 
@@ -228,7 +241,9 @@ export const Map = ({ destination, expanded }) => {
             <Marker
               position={[destination.location.lat, destination.location.lng]}
               icon={endIcon}
-            />
+            >
+              <Popup>{destination.label}</Popup>
+            </Marker>
             {/* Transport Stop Marker */}
             {currRouteStopIdList.map((e, i) => {
               const stop = gStopList[e];
@@ -239,7 +254,7 @@ export const Map = ({ destination, expanded }) => {
             <Polyline
               pathOptions={{
                 color: `${
-                  companyColor["." + getCoByStopObj(currRoute)[0]].color
+                  companyColor["." + getCoByRouteObj(currRoute)[0]].color
                 }`,
                 opacity: "0.75",
               }}
@@ -298,6 +313,11 @@ const MapContainerRoot = styled(MapContainer)({
         ...companyColor,
         ...mtrLineColor,
       },
+    },
+  },
+  ".leaflet-popup-pane": {
+    ".title": {
+      fontWeight: 900,
     },
   },
   ".MuiAvatar-root": {

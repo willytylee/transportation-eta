@@ -7,15 +7,20 @@ import { DirectionList } from "../components/Direction/DirectionList";
 export const Direction = () => {
   const [destination, setDestination] = useState(null);
   const [expanded, setExpanded] = useState(false);
+  const [sortingMethod, setSortingMethod] = useState("");
 
   return (
     <DirectionRoot>
-      <SearchBar setDestination={setDestination} />
+      <SearchBar
+        setDestination={setDestination}
+        setSortingMethod={setSortingMethod}
+      />
       <Map destination={destination} expanded={expanded} />
       <DirectionList
         destination={destination}
         expanded={expanded}
         setExpanded={setExpanded}
+        sortingMethod={sortingMethod}
       />
     </DirectionRoot>
   );
