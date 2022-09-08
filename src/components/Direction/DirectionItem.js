@@ -50,20 +50,16 @@ export const DirectionItem = ({
     waitingTime = phaseEtaToWaitingMins(eta[0].eta);
     arriveTime = phaseEtaToTime(eta[0].eta);
     if (waitingTime > 0) {
-      waitingTimeStr = `${e.route} 將於 ${waitingTime}分鐘 後抵達 ${
+      waitingTimeStr = `將於 ${waitingTime}分鐘 後抵達 ${
         gStopList[e.nearbyOrigStopId].name.zh
       } (${arriveTime})`;
     } else if (waitingTime === 0) {
-      waitingTimeStr = `${e.route} 準備抵達 ${
-        gStopList[e.nearbyOrigStopId].name.zh
-      }`;
+      waitingTimeStr = `準備抵達 ${gStopList[e.nearbyOrigStopId].name.zh}`;
     } else {
-      waitingTimeStr = `${e.route} 已抵達 ${
-        gStopList[e.nearbyOrigStopId].name.zh
-      }`;
+      waitingTimeStr = `已抵達 ${gStopList[e.nearbyOrigStopId].name.zh}`;
     }
   } else {
-    waitingTimeStr = "沒有班次";
+    waitingTimeStr = " 沒有班次";
   }
 
   let estimateTravelTime = null;
@@ -136,7 +132,14 @@ export const DirectionItem = ({
               </div>
             </div>
             <div className="eta">
-              {isEtaLoading ? "載入中" : waitingTimeStr}
+              {isEtaLoading ? (
+                "載入中"
+              ) : (
+                <>
+                  <div className={`${getCoPriorityId(e)}`}>{e.route}</div>{" "}
+                  {waitingTimeStr}
+                </>
+              )}
             </div>
           </div>
           <div className="right">{estimateTravelTimeStr}</div>
@@ -269,9 +272,11 @@ const DirectionItemRoot = styled("div")({
               },
             },
           },
-        },
-        ".eta": {
-          display: "flex",
+          ".eta": {
+            display: "flex",
+            alignItems: "center",
+            ...companyColor,
+          },
         },
       },
     },
