@@ -177,5 +177,8 @@ export const DirectionList = ({
 };
 
 const DirectionListRoot = styled("div")({
+  display: "flex",
+  flex: "1",
+  flexDirection: "column",
   overflow: "auto",
 });

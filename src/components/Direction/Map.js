@@ -298,8 +298,7 @@ export const Map = ({ destination, expanded }) => {
 };
 
 const MapContainerRoot = styled(MapContainer)({
-  flexBasis: "60%",
-  maxHeight: "30%",
+  flex: 1,
   zIndex: 0,
   ".leaflet-control-container": {
     ".leaflet-top, .leaflet-bottom": {

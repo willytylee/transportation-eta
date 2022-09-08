@@ -19,6 +19,7 @@ import {
 import { routeMap } from "../../constants/Mtr";
 import {
   getCoByRouteObj,
+  getCoPriorityId,
   phaseEtaToTime,
   phaseEtaToWaitingMins,
 } from "../../Utils/Utils";
@@ -169,20 +170,22 @@ export const DirectionItem = ({
             <div className="detailItem">
               <div className="transportNotice">
                 <div>{gStopList[e.nearbyOrigStopId].name.zh}</div>
-                <div>
+                {e.nearbyDestStopSeq - e.nearbyOrigStopSeq > 1 && (
                   <button
                     className="stopListBtn"
                     type="button"
                     onClick={handleStopListBtnOnClick}
                   >
-                    <div>搭{e.nearbyDestStopSeq - e.nearbyOrigStopSeq}個站</div>
+                    <div className={`${getCoPriorityId(e)}`}>
+                      搭{e.nearbyDestStopSeq - e.nearbyOrigStopSeq}個站
+                    </div>
                     {stopList.length === 0 ? (
                       <ExpandMoreIcon />
                     ) : (
                       <ExpandLessIcon />
                     )}
                   </button>
-                </div>
+                )}
                 <div
                   className="stopList"
                   style={stopList.length === 0 ? { display: "none" } : null}
@@ -304,6 +307,7 @@ const DirectionItemRoot = styled("div")({
             padding: "0",
             background: "unset",
             fontSize: "12px",
+            ...companyColor,
           },
           ".stopList": {
             display: "flex",
