@@ -26,12 +26,15 @@ const stopIconPath = require("../../assets/icons/stop.png");
 const startIconPath = require("../../assets/icons/start.png");
 const endIconPath = require("../../assets/icons/end.png");
 
-export const Map = ({ destination, expanded }) => {
+export const Map = ({ origination, destination, expanded }) => {
   const { currRoute, mapStopIdx } = useContext(EtaContext);
   const { location: currentLocation } = useLocation({ interval: 100000 });
   const { gStopList } = useContext(DbContext);
   const [navBtnType, setNavBtnType] = useState("normal");
   const [map, setMap] = useState(null);
+
+  const startLocation = origination?.location || currentLocation;
+  const endLocation = destination?.location;
 
   const currRouteStopIdList = useMemo(
     () =>
@@ -45,7 +48,7 @@ export const Map = ({ destination, expanded }) => {
 
   const currRouteStopList = useMemo(
     () => currRouteStopIdList?.map((e) => gStopList[e]),
-    [currRoute]
+    [currRouteStopIdList]
   );
 
   const routeLine = currRouteStopList?.map((e) => [
@@ -57,11 +60,8 @@ export const Map = ({ destination, expanded }) => {
 
   if (map && routeLine && destination) {
     routeLineWithStartEnd = [...routeLine];
-    routeLineWithStartEnd.push([currentLocation.lat, currentLocation.lng]);
-    routeLineWithStartEnd.push([
-      destination.location.lat,
-      destination.location.lng,
-    ]);
+    routeLineWithStartEnd.push([startLocation.lat, startLocation.lng]);
+    routeLineWithStartEnd.push([endLocation.lat, endLocation.lng]);
   }
 
   useEffect(() => {
@@ -69,6 +69,15 @@ export const Map = ({ destination, expanded }) => {
       map.fitBounds(routeLineWithStartEnd);
     }
   }, [currRoute]);
+
+  useEffect(() => {
+    if (startLocation && destination) {
+      map.fitBounds([
+        [startLocation.lat, startLocation.lng],
+        [endLocation.lat, endLocation.lng],
+      ]);
+    }
+  }, [startLocation, destination]);
 
   // const nearestStopIdx = currRouteStopIdList?.findIndex(
   //   (e) => e === nearestStopId
@@ -227,19 +236,39 @@ export const Map = ({ destination, expanded }) => {
         icon={currLocationIcon}
       />
 
-      {destination &&
+      {startLocation && (
+        <>
+          {/* Start Point Marker */}
+          <Marker
+            position={[startLocation.lat, startLocation.lng]}
+            icon={startIcon}
+          />
+        </>
+      )}
+
+      {destination && (
+        <>
+          {/* End Point Marker */}
+          <Marker position={[endLocation.lat, endLocation.lng]} icon={endIcon}>
+            <Popup>{destination.label}</Popup>
+          </Marker>
+        </>
+      )}
+
+      {startLocation &&
+        destination &&
         Object.keys(currRoute).length > 0 &&
         currRoute.stops &&
         expanded && (
           <>
             {/* Start Point Marker */}
             <Marker
-              position={[currentLocation.lat, currentLocation.lng]}
+              position={[startLocation.lat, startLocation.lng]}
               icon={startIcon}
             />
             {/* End Point Marker */}
             <Marker
-              position={[destination.location.lat, destination.location.lng]}
+              position={[endLocation.lat, endLocation.lng]}
               icon={endIcon}
             >
               <Popup>{destination.label}</Popup>
@@ -267,7 +296,7 @@ export const Map = ({ destination, expanded }) => {
                 opacity: "0.75",
               }}
               positions={[
-                [currentLocation.lat, currentLocation.lng],
+                [startLocation.lat, startLocation.lng],
                 [
                   currRouteStopList[0].location.lat,
                   currRouteStopList[0].location.lng,
@@ -281,7 +310,7 @@ export const Map = ({ destination, expanded }) => {
                 opacity: "0.75",
               }}
               positions={[
-                [destination.location.lat, destination.location.lng],
+                [endLocation.lat, endLocation.lng],
                 [
                   currRouteStopList[currRouteStopList.length - 1].location.lat,
                   currRouteStopList[currRouteStopList.length - 1].location.lng,
@@ -298,7 +327,7 @@ export const Map = ({ destination, expanded }) => {
 };
 
 const MapContainerRoot = styled(MapContainer)({
-  flex: 1,
+  flex: 4,
   zIndex: 0,
   ".leaflet-control-container": {
     ".leaflet-top, .leaflet-bottom": {

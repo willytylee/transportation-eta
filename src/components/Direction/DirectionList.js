@@ -9,6 +9,7 @@ import { EtaContext } from "../../context/EtaContext";
 import { DirectionItem } from "./DirectionItem";
 
 export const DirectionList = ({
+  origination,
   destination,
   expanded,
   setExpanded,
@@ -27,8 +28,8 @@ export const DirectionList = ({
   const { location: currentLocation } = useLocation({ interval: 60000 });
   const { stopIdsNearby: origStopIdsNearby } = useStopIdsNearBy({
     maxDistance: 600,
-    lat: currentLocation.lat,
-    lng: currentLocation.lng,
+    lat: origination ? origination.location.lat : currentLocation.lat,
+    lng: origination ? origination.location.lng : currentLocation.lng,
     // lat: 22.325945173233077,
     // lng: 114.20357432861586,
   });
@@ -39,6 +40,7 @@ export const DirectionList = ({
   });
 
   useEffect(() => {
+    setExpanded(false);
     // use useEffect prevent reload on setExpanded
     const getWalkTime = (meter) => Math.round(meter / 50);
 
@@ -156,7 +158,7 @@ export const DirectionList = ({
         )
       );
     }
-  }, [destination, sortingMethod]);
+  }, [origination, destination, sortingMethod]);
 
   return (
     <DirectionListRoot>
@@ -178,7 +180,7 @@ export const DirectionList = ({
 
 const DirectionListRoot = styled("div")({
   display: "flex",
-  flex: "1",
+  flex: "5",
   flexDirection: "column",
   overflow: "auto",
 });

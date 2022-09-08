@@ -1,13 +1,12 @@
-import { useState } from "react";
+import { useContext } from "react";
 import AsyncSelect from "react-select/async";
 import proj4 from "proj4";
-import { IconButton, styled } from "@mui/material";
-import { Sort as SortIcon } from "@mui/icons-material";
+import { styled } from "@mui/material";
 import { fetchLocation } from "../../fetch/Location";
-import { SortingDialog } from "./SortingDialog";
+import { EtaContext } from "../../context/EtaContext";
 
-export const SearchBar = ({ setDestination, setSortingMethod }) => {
-  const [sortingDialogOpen, setSortingDialogOpen] = useState(false);
+export const SearchBar = ({ setOrigination, setDestination }) => {
+  const { updateCurrRoute } = useContext(EtaContext);
 
   const loadOptions = async (input, callback) => {
     callback(
@@ -43,8 +42,14 @@ export const SearchBar = ({ setDestination, setSortingMethod }) => {
     );
   };
 
-  const onChange = (e) => {
+  const onDestChange = (e) => {
     setDestination(e);
+    updateCurrRoute({});
+  };
+
+  const onOrigChange = (e) => {
+    setOrigination(e);
+    updateCurrRoute({});
   };
 
   return (
@@ -52,16 +57,16 @@ export const SearchBar = ({ setDestination, setSortingMethod }) => {
       <AsyncSelect
         isClearable
         loadOptions={loadOptions}
-        onChange={onChange}
+        onChange={onOrigChange}
+        placeholder="你的位置"
         className="asyncSelect"
       />
-      <IconButton onClick={() => setSortingDialogOpen(true)}>
-        <SortIcon />
-      </IconButton>
-      <SortingDialog
-        sortingDialogOpen={sortingDialogOpen}
-        setSortingDialogOpen={setSortingDialogOpen}
-        setSortingMethod={setSortingMethod}
+      <AsyncSelect
+        isClearable
+        loadOptions={loadOptions}
+        onChange={onDestChange}
+        placeholder="目的地"
+        className="asyncSelect"
       />
     </SearchBarRoot>
   );
@@ -71,7 +76,7 @@ const SearchBarRoot = styled("div")({
   display: "flex",
   alignItems: "center",
   gap: "12px",
-  margin: "14px",
+  margin: "0 14px",
   ".asyncSelect": {
     width: "100%",
   },
