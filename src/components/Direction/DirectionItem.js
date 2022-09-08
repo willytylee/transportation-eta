@@ -13,12 +13,13 @@ import {
 } from "@mui/icons-material";
 import {
   companyColor,
-  companyMap,
+  companyIconMap,
   primaryColor,
 } from "../../constants/Constants";
-import { routeMap } from "../../constants/Mtr";
+import { mtrIconColor } from "../../constants/Mtr";
 import {
   getCoByRouteObj,
+  getCoIconByRouteObj,
   getCoPriorityId,
   phaseEtaToTime,
   phaseEtaToWaitingMins,
@@ -90,6 +91,10 @@ export const DirectionItem = ({
     }
   };
 
+  // if (e.route === "N121") {
+  //   console.log(e);
+  // }
+
   return (
     <DirectionItemRoot>
       <Accordion
@@ -107,22 +112,15 @@ export const DirectionItem = ({
                 <div className="time">{e.origWalkTime}</div>
               </div>
               →
-              <div className="company">
-                {getCoByRouteObj(e)
-                  .map((companyId, j) => (
-                    <span key={j} className={companyId}>
-                      {companyId !== "mtr" && companyMap[companyId]}
-                      {companyId === "mtr" && (
-                        <span className={`${e.route}`}>
-                          {" "}
-                          {routeMap[e.route]}
-                        </span>
-                      )}
-                    </span>
-                  ))
-                  .reduce((a, b) => [a, " + ", b])}
+              <div className="transportIconWrapper">
+                <img
+                  className={`transportIcon ${e.route}`}
+                  src={companyIconMap[getCoIconByRouteObj(e)]}
+                  alt=""
+                />
+                <div className="route">{e.route} </div>
               </div>
-              <div className="route">{e.route} </div> →
+              →
               <div className="walkDistance">
                 {e.destWalkDistance <= 400 && <DirectionsWalkIcon />}
                 {e.destWalkDistance > 400 && e.destWalkDistance <= 600 && (
@@ -132,14 +130,7 @@ export const DirectionItem = ({
               </div>
             </div>
             <div className="eta">
-              {isEtaLoading ? (
-                "載入中"
-              ) : (
-                <>
-                  <div className={`${getCoPriorityId(e)}`}>{e.route}</div>{" "}
-                  {waitingTimeStr}
-                </>
-              )}
+              {isEtaLoading ? "載入中" : waitingTimeStr}
             </div>
           </div>
           <div className="right">{estimateTravelTimeStr}</div>
@@ -161,7 +152,19 @@ export const DirectionItem = ({
             </div>
             <div className="detailItem">
               <div className="waitingNotice">
-                <div>到站時間: {arriveTime}</div>
+                <div className="arriveTimeMsgWrapper">
+                  <div className="transportIconWrapper">
+                    <img
+                      className={`transportIcon ${e.route}`}
+                      src={companyIconMap[getCoIconByRouteObj(e)]}
+                      alt=""
+                    />
+                  </div>
+                  <div className="arriveTimeMsg">
+                    <div className="route">{e.route}</div> 到站時間:{" "}
+                    {arriveTime}
+                  </div>
+                </div>
                 <div className="eta">
                   <Eta seq={e.nearbyOrigStopSeq} routeObj={e} slice={3} />
                 </div>
@@ -171,8 +174,8 @@ export const DirectionItem = ({
               </div>
             </div>
             <div className="detailItem">
-              <div className="transportNotice">
-                <div>{gStopList[e.nearbyOrigStopId].name.zh}</div>
+              <ul className="transportNotice">
+                <li>{gStopList[e.nearbyOrigStopId].name.zh}</li>
                 {e.nearbyDestStopSeq - e.nearbyOrigStopSeq > 1 && (
                   <button
                     className="stopListBtn"
@@ -189,16 +192,16 @@ export const DirectionItem = ({
                     )}
                   </button>
                 )}
-                <div
+                <li
                   className="stopList"
                   style={stopList.length === 0 ? { display: "none" } : null}
                 >
                   {stopList.map((f, j) => (
-                    <div key={j}>{f.name.zh}</div>
+                    <li key={j}>{f.name.zh}</li>
                   ))}
-                </div>
-                <div>{gStopList[e.nearbyDestStopId].name.zh}</div>
-              </div>
+                </li>
+                <li>{gStopList[e.nearbyDestStopId].name.zh}</li>
+              </ul>
               <div className="time">
                 {e.transportTime !== null && `${e.transportTime}分鐘`}
               </div>
@@ -257,8 +260,13 @@ const DirectionItemRoot = styled("div")({
             display: "flex",
             alignItems: "center",
             gap: "6px",
-            ".company": {
-              ...companyColor,
+            ".transportIconWrapper": {
+              display: "flex",
+              alignItems: "center",
+              ...mtrIconColor,
+              ".transportIcon": {
+                height: "18px",
+              },
             },
             ".route": {
               fontWeight: 900,
@@ -266,7 +274,7 @@ const DirectionItemRoot = styled("div")({
             ".walkDistance": {
               display: "flex",
               alignItems: "baseline",
-              svg: { fontSize: "14px" },
+              svg: { fontSize: "18px" },
               ".time": {
                 fontSize: "10px",
               },
@@ -305,6 +313,8 @@ const DirectionItemRoot = styled("div")({
           display: "flex",
           flexDirection: "column",
           gap: "6px",
+          borderLeft: "3px solid",
+          paddingLeft: "9px",
           ".stopListBtn": {
             display: "flex",
             alignItems: "center",
@@ -321,6 +331,24 @@ const DirectionItemRoot = styled("div")({
           },
         },
         ".waitingNotice": {
+          ".arriveTimeMsgWrapper": {
+            display: "flex",
+            alignItems: "center",
+            ".transportIconWrapper": {
+              display: "flex",
+              ...mtrIconColor,
+              ".transportIcon": {
+                height: "14px",
+              },
+            },
+          },
+          ".arriveTimeMsg": {
+            display: "flex",
+            alignItems: "center",
+            ".route": {
+              fontWeight: 900,
+            },
+          },
           ".eta": {
             display: "flex",
             gap: "12px",
