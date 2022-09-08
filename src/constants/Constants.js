@@ -80,6 +80,10 @@ export const navbarDetail = {
     title: "最新功能",
     prevPage: "/settings/about",
   },
+  "/settings/about/lab": {
+    title: "實驗功能",
+    prevPage: "/settings/about",
+  },
   "/settings/bookmarkModify": {
     title: "書籤設定",
     prevPage: "/settings",

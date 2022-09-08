@@ -19,6 +19,7 @@ import { Redirect } from "./pages/Redirect";
 import { Playground } from "./pages/Playground";
 import { BookmarkModify } from "./pages/Settings/BookmarkModify";
 import { Direction } from "./pages/Direction";
+import { Lab } from "./pages/Settings/Lab";
 
 const App = () => {
   const { initDb, initAppVersion } = useContext(AppContext);
@@ -45,6 +46,7 @@ const App = () => {
           <Route path="/settings/bookmarkModify" element={<BookmarkModify />} />
           <Route path="/settings/about" element={<About />} />
           <Route path="/settings/about/changeLog" element={<ChangeLog />} />
+          <Route path="/settings/about/lab" element={<Lab />} />
           <Route path="/settings/install" element={<Install />} />
           <Route path="/settings/update" element={<Update />} />
         </Routes>

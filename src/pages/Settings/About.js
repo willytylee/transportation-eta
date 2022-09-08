@@ -15,6 +15,7 @@ import {
   Announcement as AnnouncementIcon,
   Info as InfoIcon,
   GitHub as GitHubIcon,
+  Science as ScienceIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
@@ -38,6 +39,18 @@ export const About = () => {
             primary="最新功能"
             secondary="加入歷史紀錄功能"
           />
+        </ListItemButton>
+      </ListItem>
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={() => navigate("/settings/about/lab", { replace: true })}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <ScienceIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="實驗功能" />
         </ListItemButton>
       </ListItem>
       <Divider />
