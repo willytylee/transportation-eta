@@ -1,3 +1,11 @@
+import ctb_kmb from "../assets/transports/ctb_kmb.png";
+import ctb from "../assets/transports/ctb.png";
+import gmb from "../assets/transports/gmb.png";
+import kmb_nwfb from "../assets/transports/kmb_nwfb.png";
+import kmb from "../assets/transports/kmb.png";
+import nwfb from "../assets/transports/nwfb.png";
+import mtr from "../assets/transports/mtr.png";
+
 import { mtrLineColor } from "./Mtr";
 
 export const companyMap = {
@@ -7,6 +15,16 @@ export const companyMap = {
   mtr: "港鐵",
   gmb: "小巴",
   nlb: "嶼巴",
+};
+
+export const companyIconMap = {
+  kmb,
+  ctb,
+  nwfb,
+  ctb_kmb,
+  kmb_nwfb,
+  mtr,
+  gmb,
 };
 
 export const companyColor = {

@@ -2,17 +2,13 @@ import { useContext } from "react";
 import _ from "lodash";
 import { styled } from "@mui/material";
 import {
-  getCoByRouteObj,
   basicFiltering,
   getCoPriorityId,
+  getCoIconByRouteObj,
 } from "../../../Utils/Utils";
 import { DbContext } from "../../../context/DbContext";
-import {
-  companyColor,
-  companyMap,
-  primaryColor,
-} from "../../../constants/Constants";
-import { routeMap } from "../../../constants/Mtr";
+import { companyIconMap, primaryColor } from "../../../constants/Constants";
+import { mtrIconColor } from "../../../constants/Mtr";
 import { useLocation } from "../../../hooks/Location";
 import { useStopIdsNearBy } from "../../../hooks/Stop";
 import { Eta } from "./Eta";
@@ -88,20 +84,12 @@ export const NearbyRouteList = ({ handleRouteListItemOnClick }) => {
                     className="routeItems"
                     onClick={() => handleRouteListItemOnClick(routeObj)}
                   >
-                    <div className="company">
-                      {getCoByRouteObj(routeObj)
-                        .map((companyId, k) => (
-                          <span key={k} className={companyId}>
-                            {companyId !== "mtr" && companyMap[companyId]}
-                            {companyId === "mtr" && (
-                              <span className={`${routeObj.route}`}>
-                                {" "}
-                                {routeMap[routeObj.route]}
-                              </span>
-                            )}
-                          </span>
-                        ))
-                        .reduce((a, b) => [a, " + ", b])}
+                    <div className="transportIconWrapper">
+                      <img
+                        className={`transportIcon ${routeObj.route}`}
+                        src={companyIconMap[getCoIconByRouteObj(routeObj)]}
+                        alt=""
+                      />
                     </div>
                     <div className="route">{routeObj.route}</div>
                     <div className="nearStopDest">
@@ -156,16 +144,20 @@ const NearbyRouteListRoot = styled("div")({
       alignItems: "center",
       padding: "4px 0",
       borderBottom: "1px solid lightgrey",
-      ".company": {
-        ...companyColor,
-        width: "22.5%",
+      ".transportIconWrapper": {
+        width: "10%",
+        display: "flex",
+        ...mtrIconColor,
+        ".transportIcon": {
+          height: "18px",
+        },
       },
       ".route": {
         fontWeight: "900",
         width: "12.5%",
       },
       ".nearStopDest": {
-        width: "60%",
+        width: "57.5%",
         ".special": {
           fontSize: "10px",
         },

@@ -30,8 +30,6 @@ export const DirectionList = ({
     maxDistance: 600,
     lat: origination ? origination.location.lat : currentLocation.lat,
     lng: origination ? origination.location.lng : currentLocation.lng,
-    // lat: 22.325945173233077,
-    // lng: 114.20357432861586,
   });
   const { stopIdsNearby: destStopIdsNearby } = useStopIdsNearBy({
     maxDistance: 600,
@@ -145,7 +143,7 @@ export const DirectionList = ({
       );
     } else if (sortingMethod === "最短步行時間") {
       setSortedRouteList(
-        nearbyRouteList.sort((a, b) => a.transportTime + -b.transportTime)
+        nearbyRouteList.sort((a, b) => a.transportTime - b.transportTime)
       );
     } else {
       setSortedRouteList(

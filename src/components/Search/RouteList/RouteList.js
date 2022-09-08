@@ -1,15 +1,20 @@
 import { useContext } from "react";
 import { Card, styled } from "@mui/material";
 import {
-  getCoByRouteObj,
   basicFiltering,
   sortByCompany,
   isMatchRoute,
   setRouteListHistory,
+  getCoIconByRouteObj,
 } from "../../../Utils/Utils";
 import { EtaContext } from "../../../context/EtaContext";
-import { companyMap, companyColor } from "../../../constants/Constants";
-import { etaExcluded, routeMap } from "../../../constants/Mtr";
+import { companyIconMap } from "../../../constants/Constants";
+import {
+  etaExcluded,
+  mtrIconColor,
+  mtrLineColor,
+  routeMap,
+} from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
 
 export const RouteList = () => {
@@ -75,34 +80,36 @@ export const RouteList = () => {
               isMatchRoute(currRoute, e) ? "matched" : ""
             }`}
           >
-            <div className="company">
-              {getCoByRouteObj(e)
-                .map((companyId, j) => (
-                  <span key={j} className={companyId}>
-                    {companyId !== "mtr" && companyMap[companyId]}
-                    {companyId === "mtr" && (
-                      <span className={`${e.route}`}> {routeMap[e.route]}</span>
-                    )}
-                  </span>
-                ))
-                .reduce((a, b) => [a, " + ", b])}
-            </div>
-            <div className="origDest">
-              {e.orig.zh}{" "}
-              {e.co[0] === "mtr" ? (
-                <> ←→ {e.dest.zh}</>
-              ) : (
-                <>
-                  → <span className="dest">{e.dest.zh}</span>
-                </>
+            <div className="companyOrigDest">
+              <div className="transportIconWrapper">
+                <img
+                  className={`transportIcon ${e.route}`}
+                  src={companyIconMap[getCoIconByRouteObj(e)]}
+                  alt=""
+                />
+              </div>
+              {e.co[0] === "mtr" && (
+                <div className="routeWrapper">
+                  <div className={e.route}>{routeMap[e.route]}</div>
+                </div>
               )}
-              <span className="special">
-                {" "}
-                {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
-                {etaExcluded.includes(e.route) && (
-                  <span className="star">沒有相關班次資料</span>
+              <div>
+                {e.orig.zh}{" "}
+                {e.co[0] === "mtr" ? (
+                  <> ←→ {e.dest.zh}</>
+                ) : (
+                  <>
+                    → <span className="dest">{e.dest.zh}</span>
+                  </>
                 )}
-              </span>
+                <span className="special">
+                  {" "}
+                  {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
+                  {etaExcluded.includes(e.route) && (
+                    <span className="star">沒有相關班次資料</span>
+                  )}
+                </span>
+              </div>
             </div>
           </div>
         </Card>
@@ -121,7 +128,7 @@ const RouteListRoot = styled("div")({
     border: "0.5px solid lightgrey",
     ".routeTitle": {
       padding: "4px",
-      fontSize: "13px",
+      fontSize: "12px",
       display: "flex",
       float: "left",
       width: "100%",
@@ -132,14 +139,24 @@ const RouteListRoot = styled("div")({
         width: "10%",
         fontWeight: "900",
       },
-      ".company": {
-        ...companyColor,
-        width: "20%",
-      },
-      ".origDest": {
-        width: "80%",
+      ".companyOrigDest": {
+        gap: "4px",
+        alignItems: "center",
+        width: "100%",
+        display: "flex",
+        ".routeWrapper": {
+          ...mtrLineColor,
+        },
+        ".transportIconWrapper": {
+          display: "flex",
+          ...mtrIconColor,
+          ".transportIcon": {
+            height: "18px",
+          },
+        },
         ".dest": {
           fontWeight: "900",
+          fontSize: "14px",
         },
         ".special": {
           fontSize: "10px",

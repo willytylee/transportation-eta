@@ -103,6 +103,16 @@ export const getCoByRouteObj = (routeObj) =>
     return prev;
   }, []);
 
+export const getCoIconByRouteObj = (routeObj) => {
+  const companyList = routeObj.co.reduce((prev, curr) => {
+    if (Object.keys(routeObj.stops).includes(curr)) {
+      prev.push(curr);
+    }
+    return prev;
+  }, []);
+  return companyList.sort((a, b) => (a > b ? 1 : -1)).join("_");
+};
+
 export const getCoPriorityId = (currRoute) => {
   let companyId = "";
   for (const e of coPriority) {

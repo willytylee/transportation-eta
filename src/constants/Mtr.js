@@ -79,6 +79,49 @@ export const stationMap = {
   CHW: "柴灣",
 };
 
+export const mtrIconColor = {
+  ".TML": {
+    filter:
+      "invert(12%) sepia(93%) saturate(6476%) hue-rotate(42deg) brightness(95%) contrast(104%)",
+  },
+  ".AEL": {
+    filter:
+      "invert(34%) sepia(74%) saturate(2374%) hue-rotate(159deg) brightness(86%) contrast(103%)",
+  },
+  ".DRL": {
+    filter:
+      "invert(65%) sepia(16%) saturate(6001%) hue-rotate(297deg) brightness(100%) contrast(85%)",
+  },
+  ".EAL": {
+    filter:
+      "invert(61%) sepia(77%) saturate(314%) hue-rotate(160deg) brightness(94%) contrast(93%)",
+  },
+  ".ISL": {
+    filter:
+      "invert(34%) sepia(85%) saturate(1179%) hue-rotate(177deg) brightness(86%) contrast(106%)",
+  },
+  ".KTL": {
+    filter:
+      "invert(40%) sepia(98%) saturate(1584%) hue-rotate(117deg) brightness(86%) contrast(101%)",
+  },
+  ".SIL": {
+    filter:
+      "invert(89%) sepia(80%) saturate(5922%) hue-rotate(3deg) brightness(83%) contrast(99%)",
+  },
+  ".TCL": {
+    filter:
+      "invert(71%) sepia(49%) saturate(2097%) hue-rotate(339deg) brightness(99%) contrast(92%)",
+  },
+  ".TKL": {
+    filter:
+      "invert(28%) sepia(26%) saturate(2271%) hue-rotate(249deg) brightness(96%) contrast(89%)",
+  },
+  ".TWL": {
+    filter:
+      "invert(34%) sepia(100%) saturate(7384%) hue-rotate(349deg) brightness(85%) contrast(116%)",
+  },
+};
+
 export const mtrLineColor = {
   ".TML": {
     color: "#9c2e00",

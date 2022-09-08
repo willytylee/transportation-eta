@@ -1,9 +1,14 @@
 import { useContext } from "react";
 import { styled } from "@mui/material";
-import { getCoByRouteObj } from "../../../Utils/Utils";
-import { companyColor, companyMap } from "../../../constants/Constants";
+import { getCoIconByRouteObj } from "../../../Utils/Utils";
+import { companyIconMap } from "../../../constants/Constants";
 import { EtaContext } from "../../../context/EtaContext";
-import { etaExcluded, routeMap } from "../../../constants/Mtr";
+import {
+  etaExcluded,
+  mtrIconColor,
+  mtrLineColor,
+  routeMap,
+} from "../../../constants/Mtr";
 
 export const SimpleRouteList = ({
   mode,
@@ -19,30 +24,37 @@ export const SimpleRouteList = ({
       className={`${route === e.route && mode === "search" && "match"}`}
     >
       <div className="route">
+        <div className="transportIconWrapper">
+          <img
+            className={`transportIcon ${e.route}`}
+            src={companyIconMap[getCoIconByRouteObj(e)]}
+            alt=""
+          />
+        </div>
         {mode === "search" ? (
-          <>
-            <span className="boldRoute">
-              {e.route.substring(0, route.length)}
-            </span>
-            {e.route.substring(route.length, e.route.length)}
-          </>
+          e.co[0] !== "mtr" ? (
+            // highlight matched char
+            <div>
+              <span className="boldRoute">
+                {e.route.substring(0, route.length)}
+              </span>
+              {e.route.substring(route.length, e.route.length)}
+            </div>
+          ) : (
+            // co === mtr, bold all
+            <span className="boldRoute">{e.route}</span>
+          )
         ) : (
+          // mode === history
           <span className="boldRoute">{e.route}</span>
         )}
       </div>
       <div className="companyOrigDest">
-        <div className="company">
-          {getCoByRouteObj(e)
-            .map((companyId, j) => (
-              <span key={j} className={companyId}>
-                {companyId !== "mtr" && companyMap[companyId]}
-                {companyId === "mtr" && (
-                  <span className={`${e.route}`}> {routeMap[e.route]}</span>
-                )}
-              </span>
-            ))
-            .reduce((a, b) => [a, " + ", b])}
-        </div>
+        {e.co[0] === "mtr" && (
+          <div className="routeWrapper">
+            <div className={e.route}>{routeMap[e.route]}</div>
+          </div>
+        )}
         <div className="origDest">
           {e.orig.zh}{" "}
           {e.co[0] === "mtr" ? (
@@ -74,21 +86,32 @@ const SearchRouteListRoot = styled("div")({
     background: "#ffffe5",
   },
   ".route": {
-    width: "40px",
+    width: "60px",
+    display: "flex",
+    alignItems: "center",
+    gap: "4px",
     ".boldRoute": {
       fontWeight: 900,
     },
+    ".transportIconWrapper": {
+      display: "flex",
+      ...mtrIconColor,
+      ".transportIcon": {
+        height: "18px",
+      },
+    },
   },
+
   ".companyOrigDest": {
     display: "flex",
     flexDirection: "column",
-    ".company": {
-      ...companyColor,
+    ".routeWrapper": {
+      ...mtrLineColor,
     },
-
     ".origDest": {
       ".dest": {
         fontWeight: "900",
+        fontSize: "14px",
       },
       ".special": {
         fontSize: "10px",
