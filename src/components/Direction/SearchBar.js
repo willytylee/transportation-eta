@@ -1,13 +1,19 @@
 import { useContext } from "react";
 import AsyncSelect from "react-select/async";
 import proj4 from "proj4";
-import { styled } from "@mui/material";
+import { IconButton, styled } from "@mui/material";
+import { CompareArrows as CompareArrowsIcon } from "@mui/icons-material";
 import { fetchLocation } from "../../fetch/Location";
 import { DirectionContext } from "../../context/DirectionContext";
 
 export const SearchBar = () => {
-  const { updateCurrRoute, updateOrigination, updateDestination } =
-    useContext(DirectionContext);
+  const {
+    origination,
+    destination,
+    updateCurrRoute,
+    updateOrigination,
+    updateDestination,
+  } = useContext(DirectionContext);
 
   const loadOptions = async (input, callback) => {
     callback(
@@ -53,6 +59,13 @@ export const SearchBar = () => {
     updateCurrRoute({});
   };
 
+  const handleExchangeOnClick = () => {
+    const _origination = origination;
+    const _destination = destination;
+    updateDestination(_origination);
+    updateOrigination(_destination);
+  };
+
   return (
     <SearchBarRoot>
       <AsyncSelect
@@ -62,6 +75,9 @@ export const SearchBar = () => {
         placeholder="你的位置"
         className="asyncSelect"
       />
+      <IconButton onClick={handleExchangeOnClick}>
+        <CompareArrowsIcon />
+      </IconButton>
       <AsyncSelect
         isClearable
         loadOptions={loadOptions}
