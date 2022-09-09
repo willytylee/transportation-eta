@@ -1,8 +1,8 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useMemo } from "react";
 import { styled } from "@mui/material";
 import { getPreciseDistance } from "geolib";
 import { DbContext } from "../../context/DbContext";
-import { useLocation } from "../../hooks/Location";
+import { useLocationOnce } from "../../hooks/Location";
 import { useStopIdsNearBy } from "../../hooks/Stop";
 import { basicFiltering, getCoPriorityId } from "../../Utils/Utils";
 import { DirectionContext } from "../../context/DirectionContext";
@@ -20,13 +20,22 @@ export const DirectionList = () => {
   } = useContext(DirectionContext);
   const [sortedRouteList, setSortedRouteList] = useState([]);
 
+  const routeList = useMemo(
+    () =>
+      gRouteList &&
+      Object.keys(gRouteList)
+        .map((e) => gRouteList[e])
+        .filter((e) => basicFiltering(e)),
+    []
+  );
+
   const handleChange = (panel, currRoute) => (event, isExpanded) => {
     updateExpanded(isExpanded ? panel : false);
     updateCurrRoute(currRoute);
   };
 
   // eslint-disable-next-line no-unused-vars
-  const { location: currentLocation } = useLocation({ interval: 60000 });
+  const { location: currentLocation } = useLocationOnce();
   const { stopIdsNearby: origStopIdsNearby } = useStopIdsNearBy({
     maxDistance: 600,
     lat: origination ? origination.location.lat : currentLocation.lat,
@@ -42,12 +51,6 @@ export const DirectionList = () => {
     updateExpanded(false);
     // use useEffect prevent reload on setExpanded
     const getWalkTime = (meter) => Math.round(meter / 50);
-
-    const routeList =
-      gRouteList &&
-      Object.keys(gRouteList)
-        .map((e) => gRouteList[e])
-        .filter((e) => basicFiltering(e));
 
     const filteredRouteList = [];
 
@@ -161,18 +164,30 @@ export const DirectionList = () => {
 
   return (
     <DirectionListRoot>
-      {sortedRouteList?.length > 0 &&
+      {origination &&
         destination &&
-        sortedRouteList.map((e, i) => (
-          <DirectionItem
-            key={i}
-            e={e}
-            i={i}
-            handleChange={handleChange}
-            destination={destination}
-            expanded={expanded}
-          />
+        (sortedRouteList?.length > 0 ? (
+          sortedRouteList.map((e, i) => (
+            <DirectionItem
+              key={i}
+              e={e}
+              i={i}
+              handleChange={handleChange}
+              destination={destination}
+              expanded={expanded}
+            />
+          ))
+        ) : (
+          <div className="emptyMsg">沒有路線</div>
         ))}
+
+      {!origination && !destination ? (
+        <div className="emptyMsg">載入中...</div>
+      ) : !origination ? (
+        <div className="emptyMsg">請輸入起點</div>
+      ) : (
+        !destination && <div className="emptyMsg">請輸入目的地</div>
+      )}
     </DirectionListRoot>
   );
 };
@@ -182,4 +197,9 @@ const DirectionListRoot = styled("div")({
   flex: "5",
   flexDirection: "column",
   overflow: "auto",
+  ".emptyMsg": {
+    fontSize: "14px",
+    textAlign: "center",
+    paddingTop: "14px",
+  },
 });

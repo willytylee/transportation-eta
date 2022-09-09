@@ -15,6 +15,7 @@ import {
   Announcement as AnnouncementIcon,
   Info as InfoIcon,
   GitHub as GitHubIcon,
+  // eslint-disable-next-line no-unused-vars
   Science as ScienceIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -41,7 +42,7 @@ export const About = () => {
           />
         </ListItemButton>
       </ListItem>
-      <ListItem disablePadding>
+      {/* <ListItem disablePadding>
         <ListItemButton
           onClick={() => navigate("/settings/about/lab", { replace: true })}
         >
@@ -52,7 +53,7 @@ export const About = () => {
           </ListItemAvatar>
           <ListItemText primary="實驗功能" />
         </ListItemButton>
-      </ListItem>
+      </ListItem> */}
       <Divider />
       <ListItem disablePadding>
         <ListItemButton

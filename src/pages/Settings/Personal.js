@@ -27,6 +27,7 @@ import {
   Filter9 as Filter9Icon,
   ManageSearch as ManageSearchIcon,
   SavedSearch as SavedSearchIcon,
+  Directions as DirectionsIcon,
 } from "@mui/icons-material";
 import { SimpleSettingDialog } from "../../components/Settings/SimpleSettingDialog";
 
@@ -50,6 +51,7 @@ export const Personal = () => {
     { primary: "路線搜尋", icon: <DirectionsBusIcon /> },
     { primary: "交通消息", icon: <AnnouncementIcon /> },
     { primary: "書籤", icon: <BookmarkIcon /> },
+    { primary: "規劃路線", icon: <DirectionsIcon /> },
     { primary: "天氣", icon: <ThermostatIcon /> },
   ];
 

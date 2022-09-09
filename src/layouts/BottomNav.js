@@ -9,9 +9,9 @@ import {
 import {
   DirectionsBus as DirectionsBusIcon,
   Settings as SettingsIcon,
-  Thermostat as ThermostatIcon,
   Bookmark as BookmarkIcon,
   Announcement as AnnouncementIcon,
+  Directions as DirectionsIcon,
 } from "@mui/icons-material";
 import { AppContext } from "../context/AppContext";
 import { primaryColor } from "../constants/Constants";
@@ -50,9 +50,9 @@ export const BottomNav = () => {
       <BottomNavigationAction
         component={NavLink}
         style={({ isActive }) => (isActive ? activeStyle : undefined)}
-        to="/weather"
-        label="天氣"
-        icon={<ThermostatIcon />}
+        to="/direction"
+        label="規劃路線"
+        icon={<DirectionsIcon />}
       />
       <BottomNavigationAction
         label="設定"

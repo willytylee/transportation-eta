@@ -37,14 +37,10 @@ export const Map = () => {
   } = useContext(DirectionContext);
   const { gStopList } = useContext(DbContext);
   const { location: currentLocation } = useLocation({ interval: 1000 });
-  const [startLocation, setStartLocation] = useState({ lat: 0, lng: 0 });
   const [navBtnType, setNavBtnType] = useState("normal");
   const [map, setMap] = useState(null);
 
-  useEffect(() => {
-    setStartLocation(origination?.location || currentLocation);
-  }, [origination, destination]);
-
+  const startLocation = origination?.location;
   const endLocation = destination?.location;
 
   const currRouteStopIdList = useMemo(
@@ -62,29 +58,42 @@ export const Map = () => {
     [currRouteStopIdList]
   );
 
-  const routeLine = currRouteStopList?.map((e) => [
-    e.location.lat,
-    e.location.lng,
-  ]);
+  const routeLine = useMemo(
+    () => currRouteStopList?.map((e) => [e.location.lat, e.location.lng]),
+    [currRouteStopList]
+  );
 
-  const routeLineWithStartEnd = map &&
-    routeLine &&
-    destination && [
-      [startLocation.lat, startLocation.lng],
-      ...routeLine,
-      [endLocation.lat, endLocation.lng],
-    ];
+  const routeLineWithStartEnd = useMemo(
+    () =>
+      map &&
+      routeLine &&
+      startLocation &&
+      endLocation && [
+        [startLocation.lat, startLocation.lng],
+        ...routeLine,
+        [endLocation.lat, endLocation.lng],
+      ],
+    [routeLine, startLocation, endLocation]
+  );
 
-  const startWalkLine = map &&
-    routeLine &&
-    destination && [[startLocation.lat, startLocation.lng], routeLine[0]];
+  const startWalkLine = useMemo(
+    () =>
+      map &&
+      routeLine &&
+      startLocation && [[startLocation.lat, startLocation.lng], routeLine[0]],
+    [routeLine, startLocation]
+  );
 
-  const endWalkLine = map &&
-    routeLine &&
-    destination && [
-      routeLine[routeLine.length - 1],
-      [endLocation.lat, endLocation.lng],
-    ];
+  const endWalkLine = useMemo(
+    () =>
+      map &&
+      routeLine &&
+      endLocation && [
+        routeLine[routeLine.length - 1],
+        [endLocation.lat, endLocation.lng],
+      ],
+    [routeLine, endLocation]
+  );
 
   useEffect(() => {
     if (map && routeLineWithStartEnd) {
@@ -94,13 +103,10 @@ export const Map = () => {
 
   useEffect(() => {
     if (map && startLocation && endLocation) {
-      map.flyToBounds(
-        [
-          [startLocation.lat, startLocation.lng],
-          [endLocation.lat, endLocation.lng],
-        ],
-        { duration: 1, padding: [10, 10] }
-      );
+      map.fitBounds([
+        [startLocation.lat, startLocation.lng],
+        [endLocation.lat, endLocation.lng],
+      ]);
     }
   }, [startLocation, destination]);
 
@@ -121,41 +127,53 @@ export const Map = () => {
     }
   }, [fitBoundMode]);
 
-  const currLocationIcon = new L.Icon({
-    iconUrl: currLocationIconPath,
-    iconRetinaUrl: currLocationIconPath,
-    iconAnchor: null,
-    popupAnchor: null,
-    shadowUrl: null,
-    shadowSize: null,
-    shadowAnchor: null,
-    iconSize: new L.Point(20, 20),
-    className: "currLocationMarker",
-  });
+  const currLocationIcon = useMemo(
+    () =>
+      new L.Icon({
+        iconUrl: currLocationIconPath,
+        iconRetinaUrl: currLocationIconPath,
+        iconAnchor: null,
+        popupAnchor: null,
+        shadowUrl: null,
+        shadowSize: null,
+        shadowAnchor: null,
+        iconSize: new L.Point(20, 20),
+        className: "currLocationMarker",
+      }),
+    []
+  );
 
-  const startIcon = new L.Icon({
-    iconUrl: startIconPath,
-    iconRetinaUrl: startIconPath,
-    iconAnchor: null,
-    popupAnchor: [0, 0],
-    shadowUrl: null,
-    shadowSize: null,
-    shadowAnchor: null,
-    iconSize: new L.Point(15, 15),
-    className: "currLocationMarker",
-  });
+  const startIcon = useMemo(
+    () =>
+      new L.Icon({
+        iconUrl: startIconPath,
+        iconRetinaUrl: startIconPath,
+        iconAnchor: null,
+        popupAnchor: [0, 0],
+        shadowUrl: null,
+        shadowSize: null,
+        shadowAnchor: null,
+        iconSize: new L.Point(15, 15),
+        className: "currLocationMarker",
+      }),
+    []
+  );
 
-  const endIcon = new L.Icon({
-    iconUrl: endIconPath,
-    iconRetinaUrl: endIconPath,
-    iconAnchor: null,
-    popupAnchor: [0, 0],
-    shadowUrl: null,
-    shadowSize: null,
-    shadowAnchor: null,
-    iconSize: new L.Point(15, 15),
-    className: "currLocationMarker",
-  });
+  const endIcon = useMemo(
+    () =>
+      new L.Icon({
+        iconUrl: endIconPath,
+        iconRetinaUrl: endIconPath,
+        iconAnchor: null,
+        popupAnchor: [0, 0],
+        shadowUrl: null,
+        shadowSize: null,
+        shadowAnchor: null,
+        iconSize: new L.Point(15, 15),
+        className: "currLocationMarker",
+      }),
+    []
+  );
 
   const CustomMarker = ({ stop, i }) => {
     const stopIcon = new L.Icon({
@@ -255,12 +273,6 @@ export const Map = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {/* Current Location Marker */}
-      <Marker
-        position={[currentLocation.lat, currentLocation.lng]}
-        icon={currLocationIcon}
-      />
-
       {startLocation && (
         <>
           {/* Start Point Marker */}
@@ -286,11 +298,16 @@ export const Map = () => {
         currRoute.stops &&
         expanded && (
           <>
-            {/* Start Point Marker */}
-            <Marker
-              position={[startLocation.lat, startLocation.lng]}
-              icon={startIcon}
-            />
+            {
+              /* Start Point Marker */
+              startLocation.lat !== 0 && startLocation.lng !== 0 && (
+                <Marker
+                  position={[startLocation.lat, startLocation.lng]}
+                  icon={startIcon}
+                />
+              )
+            }
+
             {/* End Point Marker */}
             <Marker
               position={[endLocation.lat, endLocation.lng]}
@@ -344,6 +361,12 @@ export const Map = () => {
             />
           </>
         )}
+
+      {/* Current Location Marker */}
+      <Marker
+        position={[currentLocation.lat, currentLocation.lng]}
+        icon={currLocationIcon}
+      />
 
       <RouteBoundBtn />
       <NavBtn />

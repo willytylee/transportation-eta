@@ -1,10 +1,11 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AsyncSelect from "react-select/async";
 import proj4 from "proj4";
 import { IconButton, styled } from "@mui/material";
 import { CompareArrows as CompareArrowsIcon } from "@mui/icons-material";
 import { fetchLocation } from "../../fetch/Location";
 import { DirectionContext } from "../../context/DirectionContext";
+import { useLocationOnce } from "../../hooks/Location";
 
 export const SearchBar = () => {
   const {
@@ -14,6 +15,15 @@ export const SearchBar = () => {
     updateOrigination,
     updateDestination,
   } = useContext(DirectionContext);
+  const { location: currentLocation } = useLocationOnce();
+
+  useEffect(() => {
+    updateOrigination({
+      label: "你的位置",
+      value: "你的位置",
+      location: currentLocation,
+    });
+  }, [currentLocation]);
 
   const loadOptions = async (input, callback) => {
     callback(
@@ -60,28 +70,68 @@ export const SearchBar = () => {
   };
 
   const handleExchangeOnClick = () => {
+    updateCurrRoute({});
     const _origination = origination;
     const _destination = destination;
     updateDestination(_origination);
     updateOrigination(_destination);
   };
 
+  const defaultOptions = [
+    {
+      label: "你的位置",
+      value: "你的位置",
+      location: currentLocation,
+    },
+    // {
+    //   label: "康華苑 - 連德道   2號",
+    //   value: "康華苑 - 連德道   2號",
+    //   location: {
+    //     lat: 22.31387909231962,
+    //     lng: 114.24009654515417,
+    //   },
+    // },
+    // {
+    //   label: "富邦大廈 - 漆咸道北   451-455A號",
+    //   value: "富邦大廈 - 漆咸道北   451-455A號",
+    //   location: {
+    //     lat: 22.31307838747235,
+    //     lng: 114.18655077345633,
+    //   },
+    // },
+    // {
+    //   label: "機電工程署總部大樓 - 啓成街   3號",
+    //   value: "機電工程署總部大樓 - 啓成街   3號",
+    //   location: {
+    //     lat: 22.325746394805208,
+    //     lng: 114.20358639601292,
+    //   },
+    // },
+  ];
+
   return (
     <SearchBarRoot>
       <AsyncSelect
-        isClearable
         loadOptions={loadOptions}
         onChange={onOrigChange}
-        placeholder="你的位置"
+        defaultOptions={defaultOptions}
+        defaultValue={{
+          label: "你的位置",
+          value: "你的位置",
+          location: currentLocation,
+        }}
+        value={origination}
+        placeholder="起點"
         className="asyncSelect"
       />
       <IconButton onClick={handleExchangeOnClick}>
         <CompareArrowsIcon />
       </IconButton>
       <AsyncSelect
-        isClearable
         loadOptions={loadOptions}
+        defaultOptions={defaultOptions}
         onChange={onDestChange}
+        value={destination}
         placeholder="目的地"
         className="asyncSelect"
       />
@@ -92,7 +142,6 @@ export const SearchBar = () => {
 const SearchBarRoot = styled("div")({
   display: "flex",
   alignItems: "center",
-  gap: "12px",
   margin: "0",
   ".asyncSelect": {
     width: "100%",

@@ -22,6 +22,10 @@ export const Redirect = () => {
         navigate("/bookmark", { replace: true });
         break;
 
+      case "規劃路線":
+        navigate("/direction", { replace: true });
+        break;
+
       case "天氣":
         navigate("/weather", { replace: true });
         break;
