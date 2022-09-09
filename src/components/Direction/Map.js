@@ -3,7 +3,6 @@ import L from "leaflet";
 import {
   Route as RouteIcon,
   Navigation as NavigationIcon,
-  LocalConvenienceStoreOutlined,
 } from "@mui/icons-material";
 import { IconButton, styled, Avatar } from "@mui/material";
 import {

@@ -1,12 +1,8 @@
 import { useContext, useMemo } from "react";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { DialogTitle, Grid, IconButton, styled } from "@mui/material";
-import { getCoByRouteObj, getCoIconByRouteObj } from "../../Utils/Utils";
-import {
-  companyMap,
-  companyColor,
-  companyIconMap,
-} from "../../constants/Constants";
+import { getCoIconByRouteObj } from "../../Utils/Utils";
+import { companyIconMap } from "../../constants/Constants";
 import { EtaContext } from "../../context/EtaContext";
 import { etaExcluded, mtrIconColor, routeMap } from "../../constants/Mtr";
 import { StopEta } from "../Search/StopEta";
