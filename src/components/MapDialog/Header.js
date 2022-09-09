@@ -1,10 +1,14 @@
 import { useContext, useMemo } from "react";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { DialogTitle, Grid, IconButton, styled } from "@mui/material";
-import { getCoByRouteObj } from "../../Utils/Utils";
-import { companyMap, companyColor } from "../../constants/Constants";
+import { getCoByRouteObj, getCoIconByRouteObj } from "../../Utils/Utils";
+import {
+  companyMap,
+  companyColor,
+  companyIconMap,
+} from "../../constants/Constants";
 import { EtaContext } from "../../context/EtaContext";
-import { etaExcluded, routeMap } from "../../constants/Mtr";
+import { etaExcluded, mtrIconColor, routeMap } from "../../constants/Mtr";
 import { StopEta } from "../Search/StopEta";
 import { MtrStopEta } from "../Search/MtrStopEta";
 import { DbContext } from "../../context/DbContext";
@@ -28,19 +32,20 @@ export const Header = ({ handleDialogOnClose }) => {
       <Grid>
         <div className="headerWrapper">
           <div className="coRoute">
-            {getCoByRouteObj(currRoute)
-              .map((e, i) => (
-                <span className={e} key={i}>
-                  {companyMap[e]}
-                  {currRoute.co[0] === "mtr" && (
-                    <span className={`${currRoute.route}`}>
-                      {" "}
-                      {routeMap[currRoute.route]}
-                    </span>
-                  )}
-                </span>
-              ))
-              .reduce((a, b) => [a, " + ", b])}{" "}
+            <div className="transportIconWrapper">
+              <img
+                className={`transportIcon ${currRoute.route}`}
+                src={companyIconMap[getCoIconByRouteObj(currRoute)]}
+                alt=""
+              />
+            </div>
+            {currRoute.co[0] === "mtr" && (
+              <div className="routeWrapper">
+                <div className={currRoute.route}>
+                  {routeMap[currRoute.route]}
+                </div>
+              </div>
+            )}
             <span className="route">
               {currRoute.co[0] !== "mtr" && currRoute.route}
             </span>
@@ -104,7 +109,15 @@ const DialogTitleRoot = styled(DialogTitle)({
     ".headerWrapper": {
       width: "100%",
       ".coRoute": {
-        ...companyColor,
+        display: "flex",
+        alignItems: "center",
+        ".transportIconWrapper": {
+          display: "flex",
+          ...mtrIconColor,
+          ".transportIcon": {
+            height: "18px",
+          },
+        },
         ".route": {
           fontWeight: "900",
         },
@@ -112,6 +125,7 @@ const DialogTitleRoot = styled(DialogTitle)({
       ".destSpecial": {
         ".dest": {
           fontWeight: 900,
+          fontSize: "16px",
         },
         ".special": {
           fontSize: "12px",

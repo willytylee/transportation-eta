@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import {
   Grid,
   IconButton,
@@ -10,19 +11,19 @@ import {
   ListItemText,
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
+import { DirectionContext } from "../../context/DirectionContext";
 
-export const SortingDialog = ({
-  sortingDialogOpen,
-  setSortingDialogOpen,
-  setSortingMethod,
-}) => {
+export const SortingDialog = () => {
+  const { sortingDialogOpen, updateSortingDialogOpen, updateSortingMethod } =
+    useContext(DirectionContext);
+
   const handleDialogOnClose = () => {
-    setSortingDialogOpen(false);
+    updateSortingDialogOpen(false);
   };
 
   const handleListItemOnClick = (method) => {
-    setSortingMethod(method);
-    setSortingDialogOpen(false);
+    updateSortingMethod(method);
+    updateSortingDialogOpen(false);
   };
 
   return (

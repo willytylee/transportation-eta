@@ -3,10 +3,11 @@ import AsyncSelect from "react-select/async";
 import proj4 from "proj4";
 import { styled } from "@mui/material";
 import { fetchLocation } from "../../fetch/Location";
-import { EtaContext } from "../../context/EtaContext";
+import { DirectionContext } from "../../context/DirectionContext";
 
-export const SearchBar = ({ setOrigination, setDestination }) => {
-  const { updateCurrRoute } = useContext(EtaContext);
+export const SearchBar = () => {
+  const { updateCurrRoute, updateOrigination, updateDestination } =
+    useContext(DirectionContext);
 
   const loadOptions = async (input, callback) => {
     callback(
@@ -43,12 +44,12 @@ export const SearchBar = ({ setOrigination, setDestination }) => {
   };
 
   const onDestChange = (e) => {
-    setDestination(e);
+    updateDestination(e);
     updateCurrRoute({});
   };
 
   const onOrigChange = (e) => {
-    setOrigination(e);
+    updateOrigination(e);
     updateCurrRoute({});
   };
 
@@ -76,7 +77,7 @@ const SearchBarRoot = styled("div")({
   display: "flex",
   alignItems: "center",
   gap: "12px",
-  margin: "0 14px",
+  margin: "0",
   ".asyncSelect": {
     width: "100%",
   },

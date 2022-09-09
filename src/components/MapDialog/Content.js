@@ -183,15 +183,13 @@ export const Content = () => {
     const map = useMap();
 
     const handleIconOnClick = () => {
-      map.fitBounds(routeLine);
+      map.flyToBounds(routeLine, { duration: 1 });
       setNavBtnType("normal");
     };
 
     return (
-      <Avatar
-        className={`routeBoundBtnAvatar ${mapStopIdx === 0 ? "disabled" : ""}`}
-      >
-        <IconButton disabled={mapStopIdx === 0} onClick={handleIconOnClick}>
+      <Avatar className="routeBoundBtnAvatar">
+        <IconButton onClick={handleIconOnClick}>
           <RouteIcon />
         </IconButton>
       </Avatar>

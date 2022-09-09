@@ -27,15 +27,12 @@ import {
 import { DbContext } from "../../context/DbContext";
 import { useEtas } from "../../hooks/Etas";
 import { Eta } from "../Search/RouteList/Eta";
+import { DirectionContext } from "../../context/DirectionContext";
 
-export const DirectionItem = ({
-  e,
-  destination,
-  i,
-  expanded,
-  handleChange,
-}) => {
+export const DirectionItem = ({ e, i, handleChange }) => {
   const [stopList, setStopList] = useState([]);
+  const { destination, expanded, updateFitBoundMode } =
+    useContext(DirectionContext);
   const { gStopList } = useContext(DbContext);
   const { eta, isEtaLoading } = useEtas({
     seq: e.nearbyOrigStopSeq,
@@ -137,7 +134,11 @@ export const DirectionItem = ({
         </AccordionSummary>
         <AccordionDetails>
           <div className="detail">
-            <div className="detailItem">
+            <button
+              type="button"
+              className="detailItem"
+              onClick={() => updateFitBoundMode("startWalk")}
+            >
               <div className="walkNotice">
                 {e.origWalkDistance <= 400 && <DirectionsWalkIcon />}
                 {e.origWalkDistance > 400 && e.origWalkDistance <= 600 && (
@@ -149,7 +150,7 @@ export const DirectionItem = ({
                 </div>
               </div>
               <div className="time">{e.origWalkTime}分鐘</div>
-            </div>
+            </button>
             <div className="detailItem">
               <div className="waitingNotice">
                 <div className="arriveTimeMsgWrapper">
@@ -192,21 +193,25 @@ export const DirectionItem = ({
                     )}
                   </button>
                 )}
-                <li
+                <div
                   className="stopList"
                   style={stopList.length === 0 ? { display: "none" } : null}
                 >
                   {stopList.map((f, j) => (
                     <li key={j}>{f.name.zh}</li>
                   ))}
-                </li>
+                </div>
                 <li>{gStopList[e.nearbyDestStopId].name.zh}</li>
               </ul>
               <div className="time">
                 {e.transportTime !== null && `${e.transportTime}分鐘`}
               </div>
             </div>
-            <div className="detailItem">
+            <button
+              type="button"
+              className="detailItem"
+              onClick={() => updateFitBoundMode("endWalk")}
+            >
               <div className="walkNotice">
                 {e.destWalkDistance <= 400 && <DirectionsWalkIcon />}
                 {e.destWalkDistance > 400 && e.destWalkDistance <= 600 && (
@@ -217,7 +222,7 @@ export const DirectionItem = ({
                 </div>
               </div>
               <div className="time">{e.destWalkTime}分鐘</div>
-            </div>
+            </button>
           </div>
         </AccordionDetails>
       </Accordion>
@@ -305,6 +310,7 @@ const DirectionItemRoot = styled("div")({
         background: "white",
         borderRadius: "4px",
         alignItems: "center",
+        border: "none",
         svg: { fontSize: "14px" },
         ".walkNotice": {
           display: "flex",
@@ -314,7 +320,7 @@ const DirectionItemRoot = styled("div")({
           flexDirection: "column",
           gap: "6px",
           borderLeft: "3px solid",
-          paddingLeft: "9px",
+          paddingLeft: "12px",
           ".stopListBtn": {
             display: "flex",
             alignItems: "center",

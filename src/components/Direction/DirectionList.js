@@ -5,22 +5,23 @@ import { DbContext } from "../../context/DbContext";
 import { useLocation } from "../../hooks/Location";
 import { useStopIdsNearBy } from "../../hooks/Stop";
 import { basicFiltering, getCoPriorityId } from "../../Utils/Utils";
-import { EtaContext } from "../../context/EtaContext";
+import { DirectionContext } from "../../context/DirectionContext";
 import { DirectionItem } from "./DirectionItem";
 
-export const DirectionList = ({
-  origination,
-  destination,
-  expanded,
-  setExpanded,
-  sortingMethod,
-}) => {
+export const DirectionList = () => {
   const { gRouteList, gStopList } = useContext(DbContext);
-  const { updateCurrRoute } = useContext(EtaContext);
+  const {
+    updateCurrRoute,
+    origination,
+    destination,
+    expanded,
+    sortingMethod,
+    updateExpanded,
+  } = useContext(DirectionContext);
   const [sortedRouteList, setSortedRouteList] = useState([]);
 
   const handleChange = (panel, currRoute) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
+    updateExpanded(isExpanded ? panel : false);
     updateCurrRoute(currRoute);
   };
 
@@ -38,7 +39,7 @@ export const DirectionList = ({
   });
 
   useEffect(() => {
-    setExpanded(false);
+    updateExpanded(false);
     // use useEffect prevent reload on setExpanded
     const getWalkTime = (meter) => Math.round(meter / 50);
 

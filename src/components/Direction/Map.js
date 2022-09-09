@@ -3,6 +3,7 @@ import L from "leaflet";
 import {
   Route as RouteIcon,
   Navigation as NavigationIcon,
+  LocalConvenienceStoreOutlined,
 } from "@mui/icons-material";
 import { IconButton, styled, Avatar } from "@mui/material";
 import {
@@ -15,25 +16,36 @@ import {
 } from "react-leaflet";
 import { getCoByRouteObj } from "../../Utils/Utils";
 import { companyColor } from "../../constants/Constants";
-import { EtaContext } from "../../context/EtaContext";
 import { mtrLineColor } from "../../constants/Mtr";
 import { DbContext } from "../../context/DbContext";
 import { useLocation } from "../../hooks/Location";
 import { Eta } from "../Search/RouteList/Eta";
+import { DirectionContext } from "../../context/DirectionContext";
 
 const currLocationIconPath = require("../../assets/icons/currentLocation.png");
 const stopIconPath = require("../../assets/icons/stop.png");
 const startIconPath = require("../../assets/icons/start.png");
 const endIconPath = require("../../assets/icons/end.png");
 
-export const Map = ({ origination, destination, expanded }) => {
-  const { currRoute, mapStopIdx } = useContext(EtaContext);
-  const { location: currentLocation } = useLocation({ interval: 100000 });
+export const Map = () => {
+  const {
+    currRoute,
+    origination,
+    destination,
+    expanded,
+    fitBoundMode,
+    updateFitBoundMode,
+  } = useContext(DirectionContext);
   const { gStopList } = useContext(DbContext);
+  const { location: currentLocation } = useLocation({ interval: 1000 });
+  const [startLocation, setStartLocation] = useState({ lat: 0, lng: 0 });
   const [navBtnType, setNavBtnType] = useState("normal");
   const [map, setMap] = useState(null);
 
-  const startLocation = origination?.location || currentLocation;
+  useEffect(() => {
+    setStartLocation(origination?.location || currentLocation);
+  }, [origination, destination]);
+
   const endLocation = destination?.location;
 
   const currRouteStopIdList = useMemo(
@@ -56,48 +68,59 @@ export const Map = ({ origination, destination, expanded }) => {
     e.location.lng,
   ]);
 
-  let routeLineWithStartEnd = [];
+  const routeLineWithStartEnd = map &&
+    routeLine &&
+    destination && [
+      [startLocation.lat, startLocation.lng],
+      ...routeLine,
+      [endLocation.lat, endLocation.lng],
+    ];
 
-  if (map && routeLine && destination) {
-    routeLineWithStartEnd = [...routeLine];
-    routeLineWithStartEnd.push([startLocation.lat, startLocation.lng]);
-    routeLineWithStartEnd.push([endLocation.lat, endLocation.lng]);
-  }
+  const startWalkLine = map &&
+    routeLine &&
+    destination && [[startLocation.lat, startLocation.lng], routeLine[0]];
+
+  const endWalkLine = map &&
+    routeLine &&
+    destination && [
+      routeLine[routeLine.length - 1],
+      [endLocation.lat, endLocation.lng],
+    ];
 
   useEffect(() => {
-    if (map && routeLine) {
+    if (map && routeLineWithStartEnd) {
       map.fitBounds(routeLineWithStartEnd);
     }
   }, [currRoute]);
 
   useEffect(() => {
-    if (startLocation && destination) {
-      map.fitBounds([
-        [startLocation.lat, startLocation.lng],
-        [endLocation.lat, endLocation.lng],
-      ]);
+    if (map && startLocation && endLocation) {
+      map.flyToBounds(
+        [
+          [startLocation.lat, startLocation.lng],
+          [endLocation.lat, endLocation.lng],
+        ],
+        { duration: 1, padding: [10, 10] }
+      );
     }
   }, [startLocation, destination]);
 
-  // const nearestStopIdx = currRouteStopIdList?.findIndex(
-  //   (e) => e === nearestStopId
-  // );
-
-  // useEffect(() => {
-  //   if (!mapLocation) {
-  //     updateMapStopIdx(nearestStopIdx);
-  //   }
-  // }, []);
-
-  // let location = {};
-
-  // if (mapLocation) {
-  //   location = mapLocation;
-  // } else if (currRouteStopList[nearestStopIdx]) {
-  //   location = currRouteStopList[nearestStopIdx].location;
-  // } else {
-  // location = { lat: 0, lng: 0 };
-  // }
+  useEffect(() => {
+    if (map) {
+      if (fitBoundMode === "startWalk" && startWalkLine) {
+        map.flyToBounds(startWalkLine, { duration: 1, padding: [10, 10] });
+        setTimeout(() => {
+          updateFitBoundMode("");
+        }, 1500);
+      }
+      if (fitBoundMode === "endWalk" && endWalkLine) {
+        map.flyToBounds(endWalkLine, { duration: 1, padding: [10, 10] });
+        setTimeout(() => {
+          updateFitBoundMode("");
+        }, 1500);
+      }
+    }
+  }, [fitBoundMode]);
 
   const currLocationIcon = new L.Icon({
     iconUrl: currLocationIconPath,
@@ -172,15 +195,18 @@ export const Map = ({ origination, destination, expanded }) => {
     const _map = useMap();
 
     const handleIconOnClick = () => {
-      _map.fitBounds(routeLineWithStartEnd);
-      setNavBtnType("normal");
+      if (routeLineWithStartEnd) {
+        _map.flyToBounds(routeLineWithStartEnd, {
+          duration: 1,
+          padding: [10, 10],
+        });
+        setNavBtnType("normal");
+      }
     };
 
     return (
-      <Avatar
-        className={`routeBoundBtnAvatar ${mapStopIdx === 0 ? "disabled" : ""}`}
-      >
-        <IconButton disabled={mapStopIdx === 0} onClick={handleIconOnClick}>
+      <Avatar className="routeBoundBtnAvatar">
+        <IconButton onClick={handleIconOnClick}>
           <RouteIcon />
         </IconButton>
       </Avatar>
@@ -363,20 +389,6 @@ const MapContainerRoot = styled(MapContainer)({
     },
     ".MuiButtonBase-root": {
       color: "black",
-    },
-    "&.prevBtnAvatar": {
-      top: "50%",
-      width: "35px",
-      height: "35px",
-      marginTop: "-35px", // equal to width and height
-      left: "10px",
-    },
-    "&.nextBtnAvatar": {
-      top: "50%",
-      width: "35px",
-      height: "35px",
-      marginTop: "-35px", // equal to width and height
-      right: "10px",
     },
     "&.routeBoundBtnAvatar": {
       right: "55px",
