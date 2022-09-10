@@ -1,24 +1,31 @@
 import { Fab, styled } from "@mui/material";
-import { Sort as SortIcon } from "@mui/icons-material";
+import { Settings as SettingsIcon } from "@mui/icons-material";
 import { useContext } from "react";
 import { SearchBar } from "../components/Direction/SearchBar";
 import { Map } from "../components/Direction/Map";
 import { DirectionList } from "../components/Direction/DirectionList";
 import { SortingDialog } from "../components/Direction/SortingDialog";
 import { DirectionContext } from "../context/DirectionContext";
+import { SettingDialog } from "../components/Direction/SettingDialog";
+import { DisplayDialog } from "../components/Direction/DisplayDialog";
 
 export const Direction = () => {
-  const { updateSortingDialogOpen } = useContext(DirectionContext);
+  const { updateSettingDialogOpen } = useContext(DirectionContext);
 
   return (
     <DirectionRoot>
       <Map />
       <SearchBar />
       <DirectionList />
-      <Fab onClick={() => updateSortingDialogOpen(true)}>
-        <SortIcon />
+      <Fab
+        className="settingsFab"
+        onClick={() => updateSettingDialogOpen(true)}
+      >
+        <SettingsIcon />
       </Fab>
       <SortingDialog />
+      <SettingDialog />
+      <DisplayDialog />
     </DirectionRoot>
   );
 };
@@ -32,9 +39,11 @@ const DirectionRoot = styled("div")({
   position: "relative",
   ".MuiFab-root": {
     position: "absolute",
-    right: "10px",
     width: "35px",
     height: "35px",
-    top: "5px",
+    top: "10px",
+    "&.settingsFab": {
+      right: "10px",
+    },
   },
 });

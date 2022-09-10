@@ -47,6 +47,7 @@ a {
 .MuiDialogTitle-root {
   background: #2f305c;
   color: white;
+  padding: 12px 24px !important;
 }
 
 .MuiDialogTitle-root .MuiGrid-root {

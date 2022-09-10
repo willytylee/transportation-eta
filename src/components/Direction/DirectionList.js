@@ -18,6 +18,7 @@ export const DirectionList = () => {
     sortingMethod,
     updateExpanded,
   } = useContext(DirectionContext);
+  const [nearbyRouteList, setNearbyRouteList] = useState([]);
   const [sortedRouteList, setSortedRouteList] = useState([]);
 
   const routeList = useMemo(
@@ -101,43 +102,47 @@ export const DirectionList = () => {
         }
       });
 
-    const nearbyRouteList = filteredRouteList.map((e, j) => {
-      const company = getCoPriorityId(e);
+    setNearbyRouteList(
+      filteredRouteList.map((e, j) => {
+        const company = getCoPriorityId(e);
 
-      let totalTransportDistance = 0;
-      let actualTransportDistance = 0;
-      for (let i = 0; i < e?.stops[company].length - 1; i += 1) {
-        const stopId = e?.stops[company][i];
-        const nextStopId = e?.stops[company][i + 1];
-        const { location } = gStopList[stopId];
-        const { location: nextLocation } = gStopList[nextStopId];
+        let totalTransportDistance = 0;
+        let actualTransportDistance = 0;
+        for (let i = 0; i < e?.stops[company].length - 1; i += 1) {
+          const stopId = e?.stops[company][i];
+          const nextStopId = e?.stops[company][i + 1];
+          const { location } = gStopList[stopId];
+          const { location: nextLocation } = gStopList[nextStopId];
 
-        const distance = getPreciseDistance(
-          { latitude: location?.lat, longitude: location?.lng },
-          { latitude: nextLocation?.lat, longitude: nextLocation?.lng }
-        );
+          const distance = getPreciseDistance(
+            { latitude: location?.lat, longitude: location?.lng },
+            { latitude: nextLocation?.lat, longitude: nextLocation?.lng }
+          );
 
-        totalTransportDistance += distance;
+          totalTransportDistance += distance;
 
-        if (i >= e.nearbyOrigStopSeq - 1 && i < e.nearbyDestStopSeq - 1) {
-          actualTransportDistance += distance;
+          if (i >= e.nearbyOrigStopSeq - 1 && i < e.nearbyDestStopSeq - 1) {
+            actualTransportDistance += distance;
+          }
         }
-      }
 
-      return {
-        ...e,
-        origWalkTime: getWalkTime(e.origWalkDistance),
-        destWalkTime: getWalkTime(e.destWalkDistance),
-        transportTime:
-          e.jt !== null
-            ? Math.round(
-                e.jt * (actualTransportDistance / totalTransportDistance) +
-                  (e.nearbyDestStopSeq - e.nearbyOrigStopSeq) // Topup for extra time in each stop
-              )
-            : null,
-      };
-    });
+        return {
+          ...e,
+          origWalkTime: getWalkTime(e.origWalkDistance),
+          destWalkTime: getWalkTime(e.destWalkDistance),
+          transportTime:
+            e.jt !== null
+              ? Math.round(
+                  e.jt * (actualTransportDistance / totalTransportDistance) +
+                    (e.nearbyDestStopSeq - e.nearbyOrigStopSeq) // Topup for extra time in each stop
+                )
+              : null,
+        };
+      })
+    );
+  }, [origination, destination]);
 
+  useEffect(() => {
     if (sortingMethod === "最短步行時間") {
       setSortedRouteList(
         nearbyRouteList.sort(
@@ -145,7 +150,7 @@ export const DirectionList = () => {
             a.origWalkTime + a.destWalkTime - (b.origWalkTime + b.destWalkTime)
         )
       );
-    } else if (sortingMethod === "最短步行時間") {
+    } else if (sortingMethod === "最短交通時間") {
       setSortedRouteList(
         nearbyRouteList.sort((a, b) => a.transportTime - b.transportTime)
       );
@@ -160,7 +165,7 @@ export const DirectionList = () => {
         )
       );
     }
-  }, [origination, destination, sortingMethod]);
+  }, [nearbyRouteList, sortingMethod]);
 
   return (
     <DirectionListRoot>

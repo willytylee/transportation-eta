@@ -102,7 +102,13 @@ export const Map = () => {
   }, [currRoute]);
 
   useEffect(() => {
-    if (map && startLocation && endLocation) {
+    if (
+      map &&
+      startLocation &&
+      startLocation.lat !== 0 &&
+      startLocation.lng !== 0 &&
+      endLocation
+    ) {
       map.fitBounds([
         [startLocation.lat, startLocation.lng],
         [endLocation.lat, endLocation.lng],
@@ -113,13 +119,13 @@ export const Map = () => {
   useEffect(() => {
     if (map) {
       if (fitBoundMode === "startWalk" && startWalkLine) {
-        map.flyToBounds(startWalkLine, { duration: 1, padding: [10, 10] });
+        map.flyToBounds(startWalkLine, { duration: 1, padding: [15, 15] });
         setTimeout(() => {
           updateFitBoundMode("");
         }, 1500);
       }
       if (fitBoundMode === "endWalk" && endWalkLine) {
-        map.flyToBounds(endWalkLine, { duration: 1, padding: [10, 10] });
+        map.flyToBounds(endWalkLine, { duration: 1, padding: [15, 15] });
         setTimeout(() => {
           updateFitBoundMode("");
         }, 1500);
@@ -215,7 +221,7 @@ export const Map = () => {
       if (routeLineWithStartEnd) {
         _map.flyToBounds(routeLineWithStartEnd, {
           duration: 1,
-          padding: [10, 10],
+          padding: [15, 15],
         });
         setNavBtnType("normal");
       }
@@ -273,14 +279,12 @@ export const Map = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {startLocation && (
-        <>
-          {/* Start Point Marker */}
-          <Marker
-            position={[startLocation.lat, startLocation.lng]}
-            icon={startIcon}
-          />
-        </>
+      {startLocation && startLocation.lat !== 0 && startLocation.lng !== 0 && (
+        /* Start Point Marker */
+        <Marker
+          position={[startLocation.lat, startLocation.lng]}
+          icon={startIcon}
+        />
       )}
 
       {destination && (
@@ -298,23 +302,6 @@ export const Map = () => {
         currRoute.stops &&
         expanded && (
           <>
-            {
-              /* Start Point Marker */
-              startLocation.lat !== 0 && startLocation.lng !== 0 && (
-                <Marker
-                  position={[startLocation.lat, startLocation.lng]}
-                  icon={startIcon}
-                />
-              )
-            }
-
-            {/* End Point Marker */}
-            <Marker
-              position={[endLocation.lat, endLocation.lng]}
-              icon={endIcon}
-            >
-              <Popup>{destination.label}</Popup>
-            </Marker>
             {/* Transport Stop Marker */}
             {currRouteStopIdList.map((e, i) => {
               const stop = gStopList[e];
@@ -331,6 +318,7 @@ export const Map = () => {
               }}
               positions={routeLine}
             />
+
             {/* Line of Start Point to First Transport Stop */}
             <Polyline
               pathOptions={{
@@ -362,11 +350,15 @@ export const Map = () => {
           </>
         )}
 
-      {/* Current Location Marker */}
-      <Marker
-        position={[currentLocation.lat, currentLocation.lng]}
-        icon={currLocationIcon}
-      />
+      {
+        /* Current Location Marker */
+        currentLocation.lat !== 0 && currentLocation.lng !== 0 && (
+          <Marker
+            position={[currentLocation.lat, currentLocation.lng]}
+            icon={currLocationIcon}
+          />
+        )
+      }
 
       <RouteBoundBtn />
       <NavBtn />

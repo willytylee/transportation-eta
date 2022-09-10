@@ -73,7 +73,7 @@ export const navbarDetail = {
     title: "書籤",
   },
   "/direction": {
-    title: "規劃路線",
+    title: "點對點規劃路線",
   },
   "/settings": {
     title: "設定",

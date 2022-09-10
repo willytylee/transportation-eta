@@ -13,25 +13,25 @@ import {
 import { Close as CloseIcon } from "@mui/icons-material";
 import { DirectionContext } from "../../context/DirectionContext";
 
-export const SortingDialog = () => {
+export const DisplayDialog = () => {
   const {
-    sortingDialogOpen,
-    updateSortingDialogOpen,
-    updateSortingMethod,
-    sortingMethod,
+    displayDialogOpen,
+    updateDisplayDialogOpen,
+    updateDisplayMode,
+    displayMode,
   } = useContext(DirectionContext);
 
   const handleDialogOnClose = () => {
-    updateSortingDialogOpen(false);
+    updateDisplayDialogOpen(false);
   };
 
   const handleRadioChange = (e) => {
-    updateSortingMethod(e.target.value);
+    updateDisplayMode(e.target.value);
   };
 
   return (
     <DialogRoot
-      open={sortingDialogOpen}
+      open={displayDialogOpen}
       onClose={handleDialogOnClose}
       fullWidth
     >
@@ -50,23 +50,18 @@ export const SortingDialog = () => {
         <RadioGroup
           aria-labelledby="demo-controlled-radio-buttons-group"
           name="controlled-radio-buttons-group"
-          value={sortingMethod}
+          value={displayMode}
           onChange={handleRadioChange}
         >
           <FormControlLabel
-            value="最短總時間"
+            value="只顯示現時有班次路線"
             control={<Radio />}
-            label="最短總時間"
+            label="只顯示現時有班次路線"
           />
           <FormControlLabel
-            value="最短步行時間"
+            value="顯示所有路線"
             control={<Radio />}
-            label="最短步行時間"
-          />
-          <FormControlLabel
-            value="最短交通時間"
-            control={<Radio />}
-            label="最短交通時間"
+            label="顯示所有路線"
           />
         </RadioGroup>
       </FormControl>
