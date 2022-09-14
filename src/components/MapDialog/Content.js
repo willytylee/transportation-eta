@@ -15,7 +15,7 @@ import {
   useMap,
   Polyline,
 } from "react-leaflet";
-import { getCoByRouteObj } from "../../Utils/Utils";
+import { getCoPriorityId } from "../../Utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { EtaContext } from "../../context/EtaContext";
 import { mtrLineColor } from "../../constants/Mtr";
@@ -275,7 +275,7 @@ export const Content = () => {
           className: `${
             currRoute.co[0] === "mtr"
               ? currRoute.route
-              : getCoByRouteObj(currRoute)[0]
+              : getCoPriorityId(currRoute)
           }`,
           opacity: "0.75",
         }}

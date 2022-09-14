@@ -16,9 +16,8 @@ import {
   companyIconMap,
   primaryColor,
 } from "../../constants/Constants";
-import { mtrIconColor } from "../../constants/Mtr";
+import { mtrIconColor, routeMap } from "../../constants/Mtr";
 import {
-  getCoByRouteObj,
   getCoIconByRouteObj,
   getCoPriorityId,
   phaseEtaToTime,
@@ -80,7 +79,7 @@ export const DirectionItemAccordion = ({
     if (stopList.length === 0) {
       const _stopList = [];
       for (let j = e.nearbyOrigStopSeq; j < e.nearbyDestStopSeq - 1; j += 1) {
-        _stopList.push(gStopList[e.stops[getCoByRouteObj(e)[0]][j]]);
+        _stopList.push(gStopList[e.stops[getCoPriorityId(e)][j]]);
       }
       setStopList(_stopList);
     } else {
@@ -98,9 +97,7 @@ export const DirectionItemAccordion = ({
           <div className="simpleStep">
             <div className="walkDistance">
               {e.origWalkDistance <= 400 && <DirectionsWalkIcon />}
-              {e.origWalkDistance > 400 && e.origWalkDistance <= 600 && (
-                <DirectionsRunIcon />
-              )}
+              {e.origWalkDistance > 400 && <DirectionsRunIcon />}
               <div className="time">{e.origWalkTime}</div>
             </div>
             →
@@ -110,14 +107,16 @@ export const DirectionItemAccordion = ({
                 src={companyIconMap[getCoIconByRouteObj(e)]}
                 alt=""
               />
-              <div className="route">{e.route} </div>
+              {e.co[0] === "mtr" ? (
+                <div className={e.route}>{routeMap[e.route]}</div>
+              ) : (
+                <div className="route">{e.route} </div>
+              )}
             </div>
             →
             <div className="walkDistance">
               {e.destWalkDistance <= 400 && <DirectionsWalkIcon />}
-              {e.destWalkDistance > 400 && e.destWalkDistance <= 600 && (
-                <DirectionsRunIcon />
-              )}
+              {e.destWalkDistance > 400 && <DirectionsRunIcon />}
               <div className="time">{e.destWalkTime}</div>
             </div>
           </div>
@@ -155,7 +154,12 @@ export const DirectionItemAccordion = ({
                   />
                 </div>
                 <div className="arriveTimeMsg">
-                  <div className="route">{e.route}</div> 到站時間: {arriveTime}
+                  {e.co[0] === "mtr" ? (
+                    <div className={e.route}>{routeMap[e.route]}</div>
+                  ) : (
+                    <div className="route">{e.route} </div>
+                  )}
+                  到站時間: {arriveTime}
                 </div>
               </div>
               <div className="eta">
@@ -175,7 +179,11 @@ export const DirectionItemAccordion = ({
                   type="button"
                   onClick={handleStopListBtnOnClick}
                 >
-                  <div className={`${getCoPriorityId(e)}`}>
+                  <div
+                    className={
+                      e.co[0] === "mtr" ? `${e.route}` : `${getCoPriorityId(e)}`
+                    }
+                  >
                     搭{e.nearbyDestStopSeq - e.nearbyOrigStopSeq}個站
                   </div>
                   {stopList.length === 0 ? (
@@ -304,6 +312,7 @@ const AccordionRoot = styled(Accordion)({
           gap: "6px",
           borderLeft: "3px solid",
           paddingLeft: "12px",
+          margin: 0,
           ".stopListBtn": {
             display: "flex",
             alignItems: "center",
@@ -312,6 +321,7 @@ const AccordionRoot = styled(Accordion)({
             background: "unset",
             fontSize: "12px",
             ...companyColor,
+            ...mtrIconColor,
           },
           ".stopList": {
             display: "flex",
@@ -334,6 +344,7 @@ const AccordionRoot = styled(Accordion)({
           ".arriveTimeMsg": {
             display: "flex",
             alignItems: "center",
+            ...mtrIconColor,
             ".route": {
               fontWeight: 900,
             },

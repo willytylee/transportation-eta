@@ -95,14 +95,6 @@ export const getHeatIndex = (temperature, humidity) => {
   return (heatIndex - 32) / 1.8;
 };
 
-export const getCoByRouteObj = (routeObj) =>
-  routeObj.co.reduce((prev, curr) => {
-    if (Object.keys(routeObj.stops).includes(curr)) {
-      prev.push(curr);
-    }
-    return prev;
-  }, []);
-
 export const getCoIconByRouteObj = (routeObj) => {
   const companyList = routeObj.co.reduce((prev, curr) => {
     if (Object.keys(routeObj.stops).includes(curr)) {
@@ -113,10 +105,10 @@ export const getCoIconByRouteObj = (routeObj) => {
   return companyList.sort((a, b) => (a > b ? 1 : -1)).join("_");
 };
 
-export const getCoPriorityId = (currRoute) => {
+export const getCoPriorityId = (routeObj) => {
   let companyId = "";
   for (const e of coPriority) {
-    if (Object.keys(currRoute.stops).includes(e)) {
+    if (Object.keys(routeObj.stops).includes(e)) {
       companyId = e;
       break;
     }
@@ -134,8 +126,8 @@ export const basicFiltering = (e) =>
   e.dest.zh !== e.orig.zh;
 
 export const sortByCompany = (a, b) => {
-  const coA = coPriority.indexOf(getCoByRouteObj(a)[0]);
-  const coB = coPriority.indexOf(getCoByRouteObj(b)[0]);
+  const coA = coPriority.indexOf(getCoPriorityId(a));
+  const coB = coPriority.indexOf(getCoPriorityId(b));
   if (coA < coB) {
     return -1;
   }
