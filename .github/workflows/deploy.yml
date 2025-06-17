@@ -36,7 +36,7 @@ jobs:
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
-          server: ftp.willytylee.com
+          server: www.willytylee.com
           username: willytylee
           password: ${{ secrets.ftp_password }}
           local-dir: ./build/
