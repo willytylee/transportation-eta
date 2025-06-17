@@ -12,8 +12,7 @@ body {
   height: 100%;
   overflow-x: hidden;
   overscroll-behavior-y: contain;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right)
-    env(safe-area-inset-bottom) env(safe-area-inset-left);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   display: flex;
   justify-content: center;
 }
@@ -31,8 +30,7 @@ a {
 }
 
 .SnackbarContainer-bottom {
-  padding: env(safe-area-inset-top) env(safe-area-inset-right)
-    env(safe-area-inset-bottom) env(safe-area-inset-left);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   bottom: 60px !important;
 }
 
@@ -42,6 +40,10 @@ a {
 
 .SnackbarContainer-bottom button.deleteBtn {
   color: red;
+}
+
+.SnackbarContainer-bottom button.confirmBtn {
+  color: rgb(0, 255, 0);
 }
 
 .MuiDialogTitle-root {

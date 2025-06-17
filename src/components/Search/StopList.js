@@ -1,18 +1,7 @@
 /* eslint-disable no-unused-vars  */
 import { useState, useEffect, useContext, useRef } from "react";
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  styled,
-  IconButton,
-} from "@mui/material";
-import {
-  Directions as DirectionsIcon,
-  Map as MapIcon,
-  BookmarkAdd as BookmarkAddIcon,
-  Streetview as StreetviewIcon,
-} from "@mui/icons-material";
+import { Accordion, AccordionSummary, AccordionDetails, styled, IconButton } from "@mui/material";
+import { Directions as DirectionsIcon, Map as MapIcon, BookmarkAdd as BookmarkAddIcon, Streetview as StreetviewIcon } from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
 import { getCoPriorityId } from "../../Utils/Utils";
 import { EtaContext } from "../../context/EtaContext";
@@ -31,19 +20,11 @@ export const StopList = () => {
   const [stopList, setStopList] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
-  const [mtrRouteOptionDialogOpen, setMtrRouteOptionDialogOpen] =
-    useState(false);
+  const [mtrRouteOptionDialogOpen, setMtrRouteOptionDialogOpen] = useState(false);
   const [bookmarkDialogMode, setBookmarkDialogMode] = useState(null);
   const [bookmarkRouteObj, setBookmarkRouteObj] = useState({});
   const { gStopList } = useContext(DbContext);
-  const {
-    route,
-    currRoute,
-    nearestStopId,
-    updateNearestStopId,
-    updateMapLocation,
-    updateMapStopIdx,
-  } = useContext(EtaContext);
+  const { route, currRoute, nearestStopId, updateNearestStopId, updateMapLocation, updateMapStopIdx } = useContext(EtaContext);
 
   const stopListRef = useRef(null);
 
@@ -140,10 +121,7 @@ export const StopList = () => {
       <StopListRoot>
         {Object.keys(currRoute).length !== 0 &&
           stopList?.map((e, i) => {
-            const isNearestStop =
-              gStopList[nearestStopId]?.name === e.name &&
-              currentLocation.lat !== -1 &&
-              currentLocation.lng !== -1;
+            const isNearestStop = gStopList[nearestStopId]?.name === e.name && currentLocation.lat !== -1 && currentLocation.lng !== -1;
             const {
               location: { lat, lng },
             } = e;
@@ -157,12 +135,7 @@ export const StopList = () => {
               >
                 <AccordionSummary className="accordionSummary">
                   {currRoute.co[0] === "mtr" ? (
-                    <MtrStopEta
-                      seq={i + 1}
-                      routeObj={currRoute}
-                      stopObj={e}
-                      MtrStopEtaRoot={MtrStopEtaRoot}
-                    />
+                    <MtrStopEta seq={i + 1} routeObj={currRoute} stopObj={e} MtrStopEtaRoot={MtrStopEtaRoot} />
                   ) : (
                     <StopEta
                       seq={i + 1}
@@ -230,6 +203,7 @@ export const StopList = () => {
                             co: getCoPriorityId(currRoute), // use currRoute.stops' company as standard
                             route: currRoute.route,
                             stopId: e.stopId,
+                            dest: currRoute.dest.zh,
                           });
                         }
                       }}
@@ -243,15 +217,8 @@ export const StopList = () => {
             );
           })}
       </StopListRoot>
-      <MapDialog
-        mapDialogOpen={mapDialogOpen}
-        handleMapDialogOnClose={handleMapDialogOnClose}
-      />
-      <BookmarkDialog
-        bookmarkDialogMode={bookmarkDialogMode}
-        setBookmarkDialogMode={setBookmarkDialogMode}
-        bookmarkRouteObj={bookmarkRouteObj}
-      />
+      <MapDialog mapDialogOpen={mapDialogOpen} handleMapDialogOnClose={handleMapDialogOnClose} />
+      <BookmarkDialog bookmarkDialogMode={bookmarkDialogMode} setBookmarkDialogMode={setBookmarkDialogMode} bookmarkRouteObj={bookmarkRouteObj} />
       <MtrRouteOptionDialog
         mtrRouteOptionDialogOpen={mtrRouteOptionDialogOpen}
         setBookmarkDialogMode={setBookmarkDialogMode}

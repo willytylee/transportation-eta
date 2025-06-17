@@ -4,7 +4,7 @@
     "react-hooks/exhaustive-deps": "off",
     "no-console": "error",
     "global-require": "error",
-    "arrow-body-style": "error",
+    "arrow-body-style": "warn",
     "no-restricted-syntax": "error",
     "import/newline-after-import": "error",
     "react/self-closing-comp": "error",

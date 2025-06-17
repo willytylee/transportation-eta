@@ -9,6 +9,8 @@ import { AppContext } from "./context/AppContext";
 import { Settings } from "./pages/Settings";
 import { Weather } from "./pages/Weather";
 import { Bookmark } from "./pages/Bookmark";
+import { StationMode } from "./pages/StationMode";
+import { More } from "./pages/More";
 import { About } from "./pages/Settings/About";
 import { Install } from "./pages/Settings/Install";
 import { News } from "./pages/News";
@@ -39,6 +41,8 @@ const App = () => {
           <Route path="/news" element={<News />} />
           <Route path="/weather" element={<Weather />} />
           <Route path="/direction" element={<Direction />} />
+          <Route path="/more" element={<More />} />
+          <Route path="/stationMode" element={<StationMode />} />
           <Route path="/bookmark" element={<Bookmark />} />
           <Route path="/bookmark/:userId" element={<Playground />} />
           <Route path="/settings" element={<Settings />} />

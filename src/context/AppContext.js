@@ -32,26 +32,18 @@ export const AppProvider = ({ children }) => {
     const routeListLocal = localStorage.getItem("routeList");
     const stopListLocal = localStorage.getItem("stopList");
 
-    if (
-      !dbVersionLocal ||
-      !stopMapLocal ||
-      !routeListLocal ||
-      !stopListLocal ||
-      dbVersionLocal !== "0.0.1"
-    ) {
+    if (!dbVersionLocal || !stopMapLocal || !routeListLocal || !stopListLocal || dbVersionLocal !== "0.0.1") {
       localStorage.removeItem("dbVersion");
       localStorage.removeItem("stopMap");
       localStorage.removeItem("routeList");
       localStorage.removeItem("stopList");
       localStorage.setItem("dbVersion", "0.0.1");
-      axios
-        .get("https://hkbus.github.io/hk-bus-crawling/routeFareList.min.json")
-        .then((response) => {
-          setDbVersion("0.0.1");
-          setLocalStorage("stopMap", response.data.stopMap);
-          setLocalStorage("routeList", response.data.routeList);
-          setLocalStorage("stopList", response.data.stopList);
-        });
+      axios.get("https://data.hkbus.app/routeFareList.min.json").then((response) => {
+        setDbVersion("0.0.1");
+        setLocalStorage("stopMap", response.data.stopMap);
+        setLocalStorage("routeList", response.data.routeList);
+        setLocalStorage("stopList", response.data.stopList);
+      });
     }
   }, []);
 

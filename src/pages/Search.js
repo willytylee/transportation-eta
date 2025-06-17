@@ -8,13 +8,12 @@ import { TabPanel } from "../components/TabPanel";
 import { NearbyRouteList } from "../components/Search/RouteList/NearbyRouteList";
 import { SearchRouteList } from "../components/Search/RouteList/SearchRouteList";
 import { HistoryRouteList } from "../components/Search/RouteList/HistoryRouteList";
-import { setRouteListHistory } from "../Utils/Utils";
+import { setRouteListHistory, a11yProps } from "../Utils/Utils";
 import { primaryColor } from "../constants/Constants";
 import { AppContext } from "../context/AppContext";
 
 export const Search = () => {
-  const searchMethod =
-    JSON.parse(localStorage.getItem("settings"))?.searchMethod || "搜尋路線";
+  const searchMethod = JSON.parse(localStorage.getItem("settings"))?.searchMethod || "搜尋路線";
 
   const [tabIdx, setTabIdx] = useState(searchMethod === "搜尋路線" ? 0 : 1);
   const { updateCurrRoute, updateRoute } = useContext(EtaContext);
@@ -43,63 +42,29 @@ export const Search = () => {
     setTabIdx(1);
   };
 
-  const a11yProps = (index) => ({
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  });
-
   return (
     <SearchRoot>
-      <SearchBar
-        handleFormChange={handleFormChange}
-        handleFormKeyPress={handleFormKeyPress}
-      />
+      <SearchBar handleFormChange={handleFormChange} handleFormKeyPress={handleFormKeyPress} />
 
       <SearchResult>
-        <Tabs
-          value={tabIdx}
-          onChange={handleTabChange}
-          TabIndicatorProps={{ style: { background: `${primaryColor}` } }}
-        >
-          <Tab
-            disabled={dbVersion === null}
-            label="搜尋路線"
-            {...a11yProps(0)}
-          />
-          <Tab
-            disabled={dbVersion === null}
-            label="交通路線"
-            {...a11yProps(1)}
-          />
-          <Tab
-            disabled={dbVersion === null}
-            label="附近路線"
-            {...a11yProps(2)}
-          />
-          <Tab
-            disabled={dbVersion === null}
-            label="歷史紀錄"
-            {...a11yProps(3)}
-          />
+        <Tabs value={tabIdx} onChange={handleTabChange} TabIndicatorProps={{ style: { background: `${primaryColor}` } }}>
+          <Tab disabled={dbVersion === null} label="搜尋路線" {...a11yProps(0)} />
+          <Tab disabled={dbVersion === null} label="交通路線" {...a11yProps(1)} />
+          <Tab disabled={dbVersion === null} label="附近路線" {...a11yProps(2)} />
+          <Tab disabled={dbVersion === null} label="歷史紀錄" {...a11yProps(3)} />
         </Tabs>
         <TabPanelRoot value={tabIdx} index={0}>
-          <SearchRouteList
-            handleRouteListItemOnClick={handleRouteListItemOnClick}
-          />
+          <SearchRouteList handleRouteListItemOnClick={handleRouteListItemOnClick} />
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={1}>
           <RouteList />
           <StopList />
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={2}>
-          <NearbyRouteList
-            handleRouteListItemOnClick={handleRouteListItemOnClick}
-          />
+          <NearbyRouteList handleRouteListItemOnClick={handleRouteListItemOnClick} />
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={3}>
-          <HistoryRouteList
-            handleRouteListItemOnClick={handleRouteListItemOnClick}
-          />
+          <HistoryRouteList handleRouteListItemOnClick={handleRouteListItemOnClick} />
         </TabPanelRoot>
       </SearchResult>
     </SearchRoot>
@@ -138,6 +103,6 @@ const TabPanelRoot = styled(TabPanel)({
   ".emptyMsg": {
     fontSize: "14px",
     textAlign: "center",
-    paddingTop: "14px",
+    padding: "14px",
   },
 });

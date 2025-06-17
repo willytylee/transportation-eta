@@ -44,18 +44,7 @@ export const EtaProvider = ({ children }) => {
       mapStopIdx,
       updateMapStopIdx,
     }),
-    [
-      route,
-      updateRoute,
-      currRoute,
-      updateCurrRoute,
-      nearestStopId,
-      updateNearestStopId,
-      mapLocation,
-      updateMapLocation,
-      mapStopIdx,
-      updateMapStopIdx,
-    ]
+    [route, updateRoute, currRoute, updateCurrRoute, nearestStopId, updateNearestStopId, mapLocation, updateMapLocation, mapStopIdx, updateMapStopIdx]
   );
 
   return <EtaContext.Provider value={value}>{children}</EtaContext.Provider>;

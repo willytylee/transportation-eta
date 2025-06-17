@@ -1,9 +1,7 @@
 import moment from "moment";
-import {
-  compress as compressJson,
-  decompress as decompressJson,
-} from "lzutf8-light";
+import { compress as compressJson, decompress as decompressJson } from "lzutf8-light";
 import { coPriority } from "../constants/Constants";
+import { fetchEtas } from "../fetch/transports";
 
 export const etaTimeConverter = ({ etaStr, remark }) => {
   let etaIntervalStr, remarkStr;
@@ -23,6 +21,8 @@ export const etaTimeConverter = ({ etaStr, remark }) => {
     } else {
       etaIntervalStr = "沒有班次";
     }
+  } else if (etaStr === false) {
+    etaIntervalStr = "路線錯誤, 請刪除及重新將路線加入書籤";
   }
   if (remark) {
     remarkStr = `${remark}`;
@@ -53,6 +53,8 @@ export const getLocalStorage = (key) => {
       })
         .replaceAll("／", "/")
         .replaceAll("　", " ")
+        .replaceAll("（", "(")
+        .replaceAll("）", ")")
     );
   }
 };
@@ -117,11 +119,7 @@ export const getCoPriorityId = (routeObj) => {
 };
 
 export const basicFiltering = (e) =>
-  (e.co.includes("kmb") ||
-    e.co.includes("nwfb") ||
-    e.co.includes("ctb") ||
-    e.co.includes("gmb") ||
-    e.co.includes("mtr")) &&
+  (e.co.includes("kmb") || e.co.includes("nwfb") || e.co.includes("ctb") || e.co.includes("gmb") || e.co.includes("mtr")) &&
   e.dest.en !== e.orig.en &&
   e.dest.zh !== e.orig.zh;
 
@@ -138,11 +136,7 @@ export const sortByCompany = (a, b) => {
 };
 
 export const parseMtrEtas = (e) =>
-  parseInt(e.ttnt, 10) === 0
-    ? "準備埋站"
-    : parseInt(e.ttnt, 10) >= 60
-    ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:mm")
-    : `${e.ttnt}分鐘`;
+  parseInt(e.ttnt, 10) === 0 ? "準備埋站" : parseInt(e.ttnt, 10) >= 60 ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:mm") : `${e.ttnt}分鐘`;
 
 export const isMatchRoute = (a, b) =>
   JSON.stringify(a.bound) === JSON.stringify(b.bound) &&
@@ -180,7 +174,77 @@ export const setRouteListHistory = (routeObj) => {
   }
 };
 
-export const findNearestNumber = (goal, arr) =>
-  arr.reduce((prev, curr) =>
-    Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev
-  );
+export const findNearestNumber = (goal, arr) => arr.reduce((prev, curr) => (Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev));
+
+export const handleTableResult = (sectionData) =>
+  sectionData.map((e) => {
+    const {
+      co,
+      etas,
+      route,
+      stopName,
+      location: { lat, lng },
+    } = e;
+
+    return {
+      co: etas ? co : "error",
+      route,
+      etas: etas
+        ? etas.length === 0
+          ? ["沒有班次"]
+          : etas.map((f) => etaTimeConverter({ etaStr: f.eta, remark: f.rmk_tc }).etaIntervalStr).slice(0, 3)
+        : ["路線錯誤, 請刪除及重新將路線加入書籤!!!!"],
+
+      stopName,
+      latLngUrl: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
+    };
+  });
+
+export const fetchBusEta = async (gStopList, gRouteList, section) => {
+  const allPromises = [];
+
+  for (let i = 0; i < section.length; i += 1) {
+    const { co, route, stopId, seq, gtfsId } = section[i];
+
+    // Required field: route, company, seq and stopID
+    let routeObj = Object.keys(gRouteList)
+      .map((e) => gRouteList[e])
+      .filter(
+        (e) =>
+          (route ? e.route === route : true) && // For bus
+          (gtfsId ? e.gtfsId === gtfsId : true) && // For Gmb
+          Object.keys(e.stops).includes(co) && // Use routeObj.stops's company as standard
+          (e.stops[co] ? e.stops[co][seq - 1] === stopId : true)
+      )[0];
+    // Even if there are more than one result, the ETAs should be the same,
+    // so [0] can be applied here
+
+    if (!routeObj) {
+      routeObj = { error: true };
+    }
+
+    const promise = fetchEtas({ ...routeObj, seq: parseInt(seq, 10) });
+    allPromises.push(promise);
+  }
+
+  const etas = await Promise.all(allPromises);
+
+  return etas.map((e, i) => {
+    const { route, stopId, co } = section[i];
+    const stopName = gStopList[stopId].name.zh;
+    const { location } = gStopList[stopId];
+    return {
+      etas: e,
+      route,
+      stopName,
+      location,
+      stopId,
+      co,
+    };
+  });
+};
+
+export const a11yProps = (index) => ({
+  id: `simple-tab-${index}`,
+  "aria-controls": `simple-tabpanel-${index}`,
+});

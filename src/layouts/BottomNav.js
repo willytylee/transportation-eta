@@ -1,16 +1,11 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Badge,
-  styled,
-} from "@mui/material/";
+import { BottomNavigation, BottomNavigationAction, Badge, styled } from "@mui/material/";
 import {
   DirectionsBus as DirectionsBusIcon,
-  Settings as SettingsIcon,
+  Menu as MenuIcon,
   Bookmark as BookmarkIcon,
-  Announcement as AnnouncementIcon,
+  DepartureBoard as DepartureBoardIcon,
   Directions as DirectionsIcon,
 } from "@mui/icons-material";
 import { AppContext } from "../context/AppContext";
@@ -36,9 +31,9 @@ export const BottomNav = () => {
       <BottomNavigationAction
         component={NavLink}
         style={({ isActive }) => (isActive ? activeStyle : undefined)}
-        to="/news"
-        label="交通消息"
-        icon={<AnnouncementIcon />}
+        to="/direction"
+        label="規劃路線"
+        icon={<DirectionsIcon />}
       />
       <BottomNavigationAction
         component={NavLink}
@@ -50,26 +45,32 @@ export const BottomNav = () => {
       <BottomNavigationAction
         component={NavLink}
         style={({ isActive }) => (isActive ? activeStyle : undefined)}
-        to="/direction"
-        label="規劃路線"
-        icon={<DirectionsIcon />}
+        to="/stationMode"
+        label="車站模式"
+        icon={<DepartureBoardIcon />}
       />
       <BottomNavigationAction
+        component={NavLink}
+        style={({ isActive }) => (isActive ? activeStyle : undefined)}
+        to="/more"
+        label="更多"
+        icon={
+          <Badge color="primary" variant="dot" overlap="circular" invisible={appVersion === serVersion}>
+            <MenuIcon />
+          </Badge>
+        }
+      />
+      {/* <BottomNavigationAction
         label="設定"
         component={NavLink}
         style={({ isActive }) => (isActive ? activeStyle : undefined)}
         to="/settings"
         icon={
-          <Badge
-            color="primary"
-            variant="dot"
-            overlap="circular"
-            invisible={appVersion === serVersion}
-          >
+          <Badge color="primary" variant="dot" overlap="circular" invisible={appVersion === serVersion}>
             <SettingsIcon />
           </Badge>
         }
-      />
+      /> */}
     </BottomNavigationRoot>
   );
 };

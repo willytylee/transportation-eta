@@ -3,17 +3,17 @@ import { styled, IconButton } from "@mui/material";
 import {
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
+  DepartureBoard as DepartureBoardIcon,
+  DepartureBoardOutlined as DepartureBoardOutlinedIcon,
 } from "@mui/icons-material";
-import { fetchEtas } from "../../../fetch/transports";
 import { DbContext } from "../../../context/DbContext";
+import { fetchBusEta } from "../../../Utils/Utils";
 import { Table } from "./Table";
 import { List } from "./List";
 
 // Works for KMB, NWFB, CTB and GMB
-export const Buses = ({ section }) => {
-  const bookmarkDisplay =
-    JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay ||
-    "簡短班次排序";
+export const Buses = ({ section, categoryKey, sectionKey }) => {
+  const bookmarkDisplay = JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay || "簡短班次排序";
 
   let viewInit;
 
@@ -31,53 +31,21 @@ export const Buses = ({ section }) => {
       break;
   }
 
-  const [view, setView] = useState(viewInit);
   const { gStopList, gRouteList } = useContext(DbContext);
+  const [view, setView] = useState(viewInit);
   const [sectionData, setSectionData] = useState([]);
+  const [stationBtnOn, setStationBtnOn] = useState(false);
 
   useEffect(() => {
+    const stationMode = JSON.parse(localStorage.getItem("stationMode")) || [];
+
+    if (stationMode.find((item) => item.position[0] === categoryKey && item.position[1] === sectionKey)) {
+      setStationBtnOn(true);
+    }
+
     const intervalContent = async () => {
-      const allPromises = [];
-
-      for (let i = 0; i < section.length; i += 1) {
-        const { co, route, stopId, seq, gtfsId } = section[i];
-
-        // Required field: route, company, seq and stopID
-        const routeObj = Object.keys(gRouteList)
-          .map((e) => gRouteList[e])
-          .filter(
-            (e) =>
-              (route ? e.route === route : true) && // For bus
-              (gtfsId ? e.gtfsId === gtfsId : true) && // For Gmb
-              Object.keys(e.stops).includes(co) && // Use routeObj.stops's company as standard
-              (e.stops[co] ? e.stops[co][seq - 1] === stopId : true)
-          )[0];
-        // Even if there are more than one result, the ETAs should be the same,
-        // so [0] can be applied here
-
-        if (routeObj) {
-          const promise = fetchEtas({ ...routeObj, seq: parseInt(seq, 10) });
-          allPromises.push(promise);
-        }
-      }
-
-      const etas = await Promise.all(allPromises);
-
-      setSectionData(
-        etas.map((e, i) => {
-          const { route, stopId, co } = section[i];
-          const stopName = gStopList[stopId].name.zh;
-          const { location } = gStopList[stopId];
-          return {
-            etas: e,
-            route,
-            stopName,
-            location,
-            stopId,
-            co,
-          };
-        })
-      );
+      const etas = await fetchBusEta(gStopList, gRouteList, section);
+      setSectionData(etas);
     };
 
     intervalContent();
@@ -96,18 +64,35 @@ export const Buses = ({ section }) => {
     }
   };
 
+  const handleStationBtnOnClick = () => {
+    const stationMode = JSON.parse(localStorage.getItem("stationMode")) || [];
+    if (stationMode.find((item) => item.position[0] === categoryKey && item.position[1] === sectionKey)) {
+      const data = stationMode.filter((item) => !(item.position[0] === categoryKey && item.position[1] === sectionKey));
+      localStorage.setItem("stationMode", JSON.stringify(data));
+      setStationBtnOn(false);
+    } else {
+      const data = [
+        ...stationMode,
+        {
+          title: gStopList[section[0].stopId].name.zh,
+          position: [categoryKey, sectionKey],
+        },
+      ];
+      setStationBtnOn(true);
+      localStorage.setItem("stationMode", JSON.stringify(data));
+    }
+  };
+
   return (
     <BusesRoot>
       <div className="topBtnGroup">
-        <button
-          type="button"
-          className="switchBtn"
-          onClick={() => handleSwitchBtnOnClick(view)}
-        >
-          {view === "list" && "簡短班次排序"}
-          {view === "longList" && "所有班次排序"}
-          {view === "table" && "詳細路線班次"}
-        </button>
+        <div className="buttonWrapper">
+          <button type="button" className="switchBtn" onClick={() => handleSwitchBtnOnClick(view)}>
+            {view === "list" && "簡短班次排序"}
+            {view === "longList" && "所有班次排序"}
+            {view === "table" && "詳細路線班次"}
+          </button>
+        </div>
         {view === "list" && (
           <IconButton
             className="expandBtn"
@@ -128,6 +113,9 @@ export const Buses = ({ section }) => {
             <ExpandLessIcon fontSize="small" />
           </IconButton>
         )}
+        <IconButton onClick={() => handleStationBtnOnClick()}>
+          {stationBtnOn ? <DepartureBoardIcon fontSize="small" /> : <DepartureBoardOutlinedIcon fontSize="small" color="disabled" />}
+        </IconButton>
       </div>
 
       {view === "list" && <List sectionData={sectionData} longList={false} />}
@@ -143,15 +131,18 @@ const BusesRoot = styled("div")({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    ".switchBtn": {
-      borderRadius: "22px",
-      color: "#136ac1",
-      borderWidth: "0",
-      padding: "2px 0",
-      fontSize: "13px",
-      margin: "2px 0",
-      width: "145px",
-      height: "22px",
+    ".buttonWrapper": {
+      flex: 1,
+      ".switchBtn": {
+        borderRadius: "22px",
+        color: "#136ac1",
+        borderWidth: "0",
+        padding: "2px 0",
+        fontSize: "13px",
+        margin: "2px 0",
+        width: "145px",
+        height: "22px",
+      },
     },
     ".expandBtn, .expandLessBtn": {
       padding: "3px",

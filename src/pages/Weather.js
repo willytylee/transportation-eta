@@ -4,6 +4,7 @@ import { CurrentWeater } from "../components/Weather/CurrentWeater";
 import { NineDays } from "../components/Weather/NineDays";
 import { TabPanel } from "../components/TabPanel";
 import { primaryColor } from "../constants/Constants";
+import { a11yProps } from "../Utils/Utils";
 
 export const Weather = () => {
   const [tabIdx, setTabIdx] = useState(0);
@@ -12,18 +13,9 @@ export const Weather = () => {
     setTabIdx(value);
   };
 
-  const a11yProps = (index) => ({
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  });
-
   return (
     <WeatherRoot>
-      <Tabs
-        value={tabIdx}
-        onChange={handleChange}
-        TabIndicatorProps={{ style: { background: `${primaryColor}` } }}
-      >
+      <Tabs value={tabIdx} onChange={handleChange} TabIndicatorProps={{ style: { background: `${primaryColor}` } }}>
         <Tab label="本港現時天氣及預報" {...a11yProps(0)} />
         <Tab label="九天天氣預報" {...a11yProps(1)} />
       </Tabs>

@@ -1,44 +1,13 @@
 import { useState } from "react";
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  styled,
-  IconButton,
-} from "@mui/material";
+import { Accordion, AccordionSummary, AccordionDetails, styled, IconButton } from "@mui/material";
 import { Directions as DirectionsIcon } from "@mui/icons-material";
-import { etaTimeConverter } from "../../../Utils/Utils";
+import { handleTableResult } from "../../../Utils/Utils";
 import { companyColor, primaryColor } from "../../../constants/Constants";
 
 export const Table = ({ sectionData }) => {
   const [expanded, setExpanded] = useState(false);
 
-  const result = sectionData.map((e) => {
-    const {
-      co,
-      etas,
-      route,
-      stopName,
-      location: { lat, lng },
-    } = e;
-
-    return {
-      co,
-      route,
-      etas:
-        etas.length === 0
-          ? ["沒有班次"]
-          : etas
-              .map(
-                (f) =>
-                  etaTimeConverter({ etaStr: f.eta, remark: f.rmk_tc })
-                    .etaIntervalStr
-              )
-              .slice(0, 3),
-      stopName,
-      latLngUrl: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
-    };
-  });
+  const result = handleTableResult(sectionData);
 
   const handleChange = (panel) => (e, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -47,16 +16,12 @@ export const Table = ({ sectionData }) => {
   return (
     <TableView>
       {result.map((e, i) => (
-        <Accordion
-          key={i}
-          expanded={expanded === `panel${i}`}
-          onChange={handleChange(`panel${i}`)}
-        >
+        <Accordion key={i} expanded={expanded === `panel${i}`} onChange={handleChange(`panel${i}`)}>
           <AccordionSummary className="accordionSummary">
             <div className="route">
               <span className={`${e.co}`}>{e.route}</span>
             </div>
-            <div className="stopName" title={e?.stopId}>
+            <div className={`stopName ${e.co === "error" ? "error" : ""}`} title={e?.stopId}>
               {e.stopName}
             </div>
             {e.etas.map((eta, j) => (
@@ -66,12 +31,7 @@ export const Table = ({ sectionData }) => {
             ))}
           </AccordionSummary>
           <AccordionDetails>
-            <IconButton
-              className="directionIconBtn"
-              component="a"
-              href={e.latLngUrl}
-              target="_blank"
-            >
+            <IconButton className="directionIconBtn" component="a" href={e.latLngUrl} target="_blank">
               <DirectionsIcon />
             </IconButton>
           </AccordionDetails>
@@ -84,6 +44,10 @@ export const Table = ({ sectionData }) => {
 const TableView = styled("div")({
   fontSize: "12px",
   width: "100%",
+  ".error": {
+    color: "#808080",
+    textDecoration: "line-through",
+  },
   ".MuiPaper-root": {
     "&:before": {
       backgroundColor: "unset",

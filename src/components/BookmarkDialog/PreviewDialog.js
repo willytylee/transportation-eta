@@ -1,16 +1,7 @@
 import { useContext } from "react";
 import { decompress as decompressJson } from "lzutf8-light";
-import {
-  Grid,
-  IconButton,
-  DialogTitle,
-  styled,
-  DialogContent,
-} from "@mui/material/";
-import {
-  Close as CloseIcon,
-  ArrowBackIosNew as ArrowBackIosNewIcon,
-} from "@mui/icons-material";
+import { Grid, IconButton, DialogTitle, styled, DialogContent } from "@mui/material/";
+import { Close as CloseIcon, ArrowBackIosNew as ArrowBackIosNewIcon } from "@mui/icons-material";
 import { DbContext } from "../../context/DbContext";
 import { companyColor } from "../../constants/Constants";
 
@@ -54,9 +45,7 @@ export const PreviewDialog = ({ data, setImportExportMode, previewFrom }) => {
                   {section.map((routes, k) => (
                     <div key={k} className="routes">
                       <div className={`route ${routes.co}`}>{routes.route}</div>
-                      <div className="stopId">
-                        {gStopList[routes.stopId].name.zh}
-                      </div>
+                      <div className="stopId">{gStopList[routes.stopId].name.zh}</div>
                     </div>
                   ))}
                 </div>
@@ -98,6 +87,6 @@ const PreviewDialogRoot = styled("div")({
   ".emptyMsg": {
     fontSize: "14px",
     textAlign: "center",
-    paddingTop: "14px",
+    padding: "14px",
   },
 });

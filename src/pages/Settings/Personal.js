@@ -1,13 +1,5 @@
 import { useState } from "react";
-import {
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  ListSubheader,
-} from "@mui/material/";
+import { List, ListItem, ListItemButton, ListItemText, ListItemAvatar, Avatar, ListSubheader } from "@mui/material/";
 import {
   DirectionsBus as DirectionsBusIcon,
   Thermostat as ThermostatIcon,
@@ -37,15 +29,10 @@ export const Personal = () => {
   const [dialogOptions, setDialogOptions] = useState([]);
   const [dialogKey, setDialogKey] = useState("");
 
-  const defaultScreen =
-    JSON.parse(localStorage.getItem("settings"))?.defaultScreen || "路線搜尋";
-  const bookmarkDisplay =
-    JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay ||
-    "簡短班次排序";
-  const etaRouteNum =
-    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "5個";
-  const searchMethod =
-    JSON.parse(localStorage.getItem("settings"))?.searchMethod || "搜尋路線";
+  const defaultScreen = JSON.parse(localStorage.getItem("settings"))?.defaultScreen || "路線搜尋";
+  const bookmarkDisplay = JSON.parse(localStorage.getItem("settings"))?.bookmarkDisplay || "簡短班次排序";
+  const etaRouteNum = JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "5個";
+  const searchMethod = JSON.parse(localStorage.getItem("settings"))?.searchMethod || "搜尋路線";
 
   const defaultScreenOptions = [
     { primary: "路線搜尋", icon: <DirectionsBusIcon /> },
@@ -53,6 +40,7 @@ export const Personal = () => {
     { primary: "書籤", icon: <BookmarkIcon /> },
     { primary: "規劃路線", icon: <DirectionsIcon /> },
     { primary: "天氣", icon: <ThermostatIcon /> },
+    { primary: "車站模式", icon: <DepartureBoardIcon /> },
   ];
 
   const bookmarkDisplayOptions = [
@@ -120,13 +108,7 @@ export const Personal = () => {
         <ListItem disablePadding>
           <ListItemButton onClick={handleDefaltScreenItemOnClick}>
             <ListItemAvatar>
-              <Avatar>
-                {
-                  defaultScreenOptions.filter(
-                    (e) => e.primary === defaultScreen
-                  )[0]?.icon
-                }
-              </Avatar>
+              <Avatar>{defaultScreenOptions.filter((e) => e.primary === defaultScreen)[0]?.icon}</Avatar>
             </ListItemAvatar>
             <ListItemText primary="預設版面" secondary={defaultScreen} />
           </ListItemButton>
@@ -136,13 +118,7 @@ export const Personal = () => {
         <ListItem disablePadding>
           <ListItemButton onClick={handleSearchMethodItemOnClick}>
             <ListItemAvatar>
-              <Avatar>
-                {
-                  searchMethodOptions.filter(
-                    (e) => e.primary === searchMethod
-                  )[0]?.icon
-                }
-              </Avatar>
+              <Avatar>{searchMethodOptions.filter((e) => e.primary === searchMethod)[0]?.icon}</Avatar>
             </ListItemAvatar>
             <ListItemText primary="路線搜尋模式" secondary={searchMethod} />
           </ListItemButton>
@@ -152,36 +128,17 @@ export const Personal = () => {
         <ListItem disablePadding>
           <ListItemButton onClick={handleBookmarkDisplayItemOnClick}>
             <ListItemAvatar>
-              <Avatar>
-                {
-                  bookmarkDisplayOptions.filter(
-                    (e) => e.primary === bookmarkDisplay
-                  )[0]?.icon
-                }
-              </Avatar>
+              <Avatar>{bookmarkDisplayOptions.filter((e) => e.primary === bookmarkDisplay)[0]?.icon}</Avatar>
             </ListItemAvatar>
             <ListItemText primary="顯示模式" secondary={bookmarkDisplay} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton
-            onClick={handleEtaRouteNumItemOnClick}
-            disabled={bookmarkDisplay === "所有班次排序"}
-          >
+          <ListItemButton onClick={handleEtaRouteNumItemOnClick} disabled={bookmarkDisplay === "所有班次排序"}>
             <ListItemAvatar>
-              <Avatar>
-                {
-                  etaRouteNumOptions.filter((e) => e.primary === etaRouteNum)[0]
-                    ?.icon
-                }
-              </Avatar>
+              <Avatar>{etaRouteNumOptions.filter((e) => e.primary === etaRouteNum)[0]?.icon}</Avatar>
             </ListItemAvatar>
-            <ListItemText
-              primary="簡短班次路線顯示數目"
-              secondary={
-                bookmarkDisplay === "所有班次排序" ? "不適用" : etaRouteNum
-              }
-            />
+            <ListItemText primary="簡短班次路線顯示數目" secondary={bookmarkDisplay === "所有班次排序" ? "不適用" : etaRouteNum} />
           </ListItemButton>
         </ListItem>
       </List>

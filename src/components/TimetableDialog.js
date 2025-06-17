@@ -1,20 +1,10 @@
 import { useContext } from "react";
-import {
-  Grid,
-  IconButton,
-  DialogTitle,
-  styled,
-  DialogContent,
-  Dialog,
-} from "@mui/material/";
+import { Grid, IconButton, DialogTitle, styled, DialogContent, Dialog } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { EtaContext } from "../context/EtaContext";
 import { serviceDate } from "../constants/Constants";
 
-export const TimetableDialog = ({
-  timetableDialogOpen,
-  setTimetableDialogOpen,
-}) => {
+export const TimetableDialog = ({ timetableDialogOpen, setTimetableDialogOpen }) => {
   const { currRoute } = useContext(EtaContext);
 
   const handleDialogOnClose = () => {
@@ -26,11 +16,7 @@ export const TimetableDialog = ({
   const current = parseInt(d.getHours() + "" + d.getMinutes(), 10);
 
   return (
-    <DialogRoot
-      open={timetableDialogOpen}
-      onClose={handleDialogOnClose}
-      fullWidth
-    >
+    <DialogRoot open={timetableDialogOpen} onClose={handleDialogOnClose} fullWidth>
       <DialogTitle>
         <Grid>
           <div className="title">班次時間表</div>
@@ -46,7 +32,7 @@ export const TimetableDialog = ({
           Object.keys(currRoute.freq).length > 0 &&
           Object.keys(currRoute.freq).map((date, i) => (
             <div key={i} className="dateWrapper">
-              <div className="date">{serviceDate[date].string}:</div>
+              <div className="date">{serviceDate[date]?.string ?? ""}</div>
               <div className="timeFreqGroup">
                 {Object.keys(currRoute.freq[date])
                   .sort()
@@ -58,11 +44,7 @@ export const TimetableDialog = ({
                         <div
                           key={j}
                           className={`timeFreqWrapper ${
-                            serviceDate[date].day.includes(day) &&
-                            parseInt(startTime, 10) < current &&
-                            parseInt(endTime, 10) > current
-                              ? "bold"
-                              : ""
+                            serviceDate[date]?.day.includes(day) && parseInt(startTime, 10) < current && parseInt(endTime, 10) > current ? "bold" : ""
                           }`}
                         >
                           <div className="timeRange">

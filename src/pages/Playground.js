@@ -21,6 +21,6 @@ const BookmarkRoot = styled("div")({
   ".emptyMsg": {
     fontSize: "14px",
     textAlign: "center",
-    paddingTop: "14px",
+    padding: "14px",
   },
 });

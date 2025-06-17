@@ -120,6 +120,7 @@ export const SearchBar = () => {
           value: "你的位置",
           location: currentLocation,
         }}
+        cacheOptions
         value={origination}
         placeholder="起點"
         className="asyncSelect"
@@ -128,6 +129,7 @@ export const SearchBar = () => {
         <CompareArrowsIcon />
       </IconButton>
       <AsyncSelect
+        cacheOptions
         loadOptions={loadOptions}
         defaultOptions={defaultOptions}
         onChange={onDestChange}

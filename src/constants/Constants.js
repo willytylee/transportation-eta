@@ -75,6 +75,9 @@ export const navbarDetail = {
   "/direction": {
     title: "點對點規劃路線",
   },
+  "/stationMode": {
+    title: "車站模式",
+  },
   "/settings": {
     title: "設定",
   },
@@ -125,4 +128,16 @@ export const serviceDate = {
   448: { string: "星期日及公眾假期", day: "7" },
   511: { string: "所有日子", day: "1234567" },
   111: { string: "除星期三外", day: "124567" },
+  1: { string: "星期一", day: "1" },
+  2: { string: "星期二", day: "2" },
+  4: { string: "星期三", day: "3" },
+  8: { string: "星期四", day: "4" },
+  16: { string: "星期五", day: "5" },
+  32: { string: "星期六", day: "6" },
+  64: { string: "星期日", day: "7" },
+  257: { string: "星期一", day: "1" },
+  258: { string: "星期二", day: "2" },
+  260: { string: "星期三", day: "3" },
+  264: { string: "星期四", day: "4" },
+  999: { string: "未知日子", day: "0" },
 };

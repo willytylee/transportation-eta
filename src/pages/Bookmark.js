@@ -24,13 +24,12 @@ export const Bookmark = () => {
     <BookmarkRoot>
       {bookmark ? (
         transportData?.length > 0 ? (
-          transportData?.map((e, i) => <Category key={i} category={e} />)
+          transportData?.map((e, i) => <Category key={i} category={e} categoryKey={i} />)
         ) : (
           <div className="emptyMsg">
             <p>未有書籤。</p>
             <p>
-              請先到<Link to="/search">路線搜尋</Link>, 選擇巴士路線,
-              再選擇巴士站, 然後新增書籤。
+              請先到<Link to="/search">路線搜尋</Link>, 選擇巴士路線, 再選擇巴士站, 然後新增書籤。
             </p>
           </div>
         )
@@ -41,8 +40,7 @@ export const Bookmark = () => {
             現有用戶, 請到<Link to="/settings">設定</Link>, 載入用戶書籤。
           </p>
           <p>
-            新用戶, 請先到<Link to="/search">路線搜尋</Link>, 選擇巴士路線,
-            再選擇巴士站, 然後新增書籤。
+            新用戶, 請先到<Link to="/search">路線搜尋</Link>, 選擇巴士路線, 再選擇巴士站, 然後新增書籤。
           </p>
         </div>
       )}
@@ -55,6 +53,6 @@ const BookmarkRoot = styled("div")({
   ".emptyMsg": {
     fontSize: "14px",
     textAlign: "center",
-    paddingTop: "14px",
+    padding: "14px",
   },
 });

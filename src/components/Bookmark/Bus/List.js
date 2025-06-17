@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  styled,
-  IconButton,
-} from "@mui/material";
+import { Accordion, AccordionSummary, AccordionDetails, styled, IconButton } from "@mui/material";
 import { Directions as DirectionsIcon } from "@mui/icons-material";
 import { etaTimeConverter, sortEtaObj } from "../../../Utils/Utils";
 import { companyColor, primaryColor } from "../../../constants/Constants";
@@ -32,7 +26,7 @@ export const List = ({ sectionData, longList }) => {
         });
       } else {
         etas.forEach((f) => {
-          eta = f.eta ? f.eta : "";
+          eta = f.eta ?? "";
           const { rmk_tc } = f;
           result.push({
             co,
@@ -45,6 +39,15 @@ export const List = ({ sectionData, longList }) => {
           });
         });
       }
+    } else {
+      result.push({
+        co: "error",
+        route,
+        eta: false,
+        stopName,
+        stopId,
+        latLngUrl: `https://www.google.com.hk/maps/dir/?api=1&destination=${location?.lat},${location?.lng}&travelmode=walking`,
+      });
     }
   });
 
@@ -60,8 +63,7 @@ export const List = ({ sectionData, longList }) => {
     }).etaIntervalStr;
   });
 
-  const etaRouteNum =
-    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "5個";
+  const etaRouteNum = JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "5個";
 
   if (!longList) {
     result = result.slice(0, etaRouteNum[0]);
@@ -74,28 +76,18 @@ export const List = ({ sectionData, longList }) => {
   return (
     <ListView>
       {result.map((e, i) => (
-        <Accordion
-          key={i}
-          className="etaWrapper"
-          expanded={expanded === `panel${i}`}
-          onChange={handleChange(`panel${i}`)}
-        >
+        <Accordion key={i} className="etaWrapper" expanded={expanded === `panel${i}`} onChange={handleChange(`panel${i}`)}>
           <AccordionSummary className="accordionSummary">
             <div className="route">
               <span className={`${e.co}`}>{e?.route}</span>
             </div>
-            <div className="stopName" title={e?.stopId}>
+            <div className={`stopName ${e.co === "error" ? "error" : ""}`} title={e?.stopId}>
               {e?.stopName}
             </div>
             <div className="eta">{e?.eta}</div>
           </AccordionSummary>
           <AccordionDetails>
-            <IconButton
-              className="iconBtn directionIconBtn"
-              component="a"
-              href={e?.latLngUrl}
-              target="_blank"
-            >
+            <IconButton className="iconBtn directionIconBtn" component="a" href={e?.latLngUrl} target="_blank">
               <DirectionsIcon />
               <div>路線</div>
             </IconButton>
@@ -109,6 +101,10 @@ export const List = ({ sectionData, longList }) => {
 const ListView = styled("div")({
   fontSize: "12px",
   width: "100%",
+  ".error": {
+    color: "#808080",
+    textDecoration: "line-through",
+  },
   ".MuiPaper-root": {
     "&:before": {
       backgroundColor: "unset",

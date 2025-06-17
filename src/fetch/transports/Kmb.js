@@ -1,16 +1,8 @@
 import axios from "axios";
 import { findNearestNumber } from "../../Utils/Utils";
 
-export const fetchKmbEtas = async ({
-  stopId,
-  route,
-  serviceType,
-  seq,
-  bound,
-}) => {
-  const response = await axios.get(
-    `https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`
-  );
+export const fetchKmbEtas = async ({ stopId, route, serviceType, seq, bound }) => {
+  const response = await axios.get(`https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${route}/${serviceType}`);
 
   const { data } = response.data;
 

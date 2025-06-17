@@ -5,9 +5,7 @@ export const Redirect = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const defaultScreen = JSON.parse(
-      localStorage.getItem("settings")
-    )?.defaultScreen;
+    const defaultScreen = JSON.parse(localStorage.getItem("settings"))?.defaultScreen;
 
     switch (defaultScreen) {
       case "路線搜尋":
@@ -28,6 +26,10 @@ export const Redirect = () => {
 
       case "天氣":
         navigate("/weather", { replace: true });
+        break;
+
+      case "車站模式":
+        navigate("/stationMode", { replace: true });
         break;
 
       default:
