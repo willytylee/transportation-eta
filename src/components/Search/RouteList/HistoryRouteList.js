@@ -9,6 +9,13 @@ export const HistoryRouteList = () => {
 
   let routeList;
 
+  try {
+    JSON.parse(localStorage.getItem("routeListHistory"));
+  } catch (error) {
+    routeList = [];
+    localStorage.removeItem("routeListHistory");
+  }
+
   if (Array.isArray(JSON.parse(localStorage.getItem("routeListHistory")))) {
     const routeListHistory = JSON.parse(localStorage.getItem("routeListHistory"));
     routeList = routeListHistory.map((e) => gRouteList[e]).filter((e) => (route ? route === e.route.substring(0, route.length) : true));

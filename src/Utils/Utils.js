@@ -149,13 +149,19 @@ export const isMatchRoute = (a, b) => {
       JSON.stringify(a.seq) === JSON.stringify(b.seq) &&
       JSON.stringify(a.serviceType) === JSON.stringify(b.serviceType)
     );
-  } 
-    return false;
-  
+  }
+  return false;
 };
 
 export const setRouteListHistory = (routeKey) => {
   let routeListHistory;
+
+  try {
+    JSON.parse(localStorage.getItem("routeListHistory"));
+  } catch (error) {
+    routeListHistory = [];
+    localStorage.removeItem("routeListHistory");
+  }
 
   if (Array.isArray(JSON.parse(localStorage.getItem("routeListHistory")))) {
     routeListHistory = JSON.parse(localStorage.getItem("routeListHistory"));
