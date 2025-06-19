@@ -1,12 +1,13 @@
 import { useContext } from "react";
+import { useParams } from "react-router-dom";
 import { Dialog, styled } from "@mui/material";
 import { EtaContext } from "../../context/EtaContext";
 import { Header } from "./Header";
 import { Content } from "./Content";
 
 export const MapDialog = ({ mapDialogOpen, handleMapDialogOnClose }) => {
-  const { currRoute, updateMapStopIdx, updateMapLocation } =
-    useContext(EtaContext);
+  const { updateMapStopIdx, updateMapLocation } = useContext(EtaContext);
+  const { routeKey } = useParams();
 
   const handleDialogOnClose = () => {
     updateMapStopIdx(-1);
@@ -16,7 +17,7 @@ export const MapDialog = ({ mapDialogOpen, handleMapDialogOnClose }) => {
 
   return (
     <DialogRoot onClose={handleDialogOnClose} open={mapDialogOpen} fullWidth>
-      {Object.keys(currRoute).length !== 0 && (
+      {routeKey && (
         <>
           <Header handleDialogOnClose={handleDialogOnClose} />
           <Content />

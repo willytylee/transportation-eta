@@ -1,27 +1,32 @@
 import { useContext, useRef, useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { TextField, styled, IconButton, InputAdornment } from "@mui/material";
-import {
-  Map as MapIcon,
-  Close as CloseIcon,
-  AccessTime as AccessTimeIcon,
-} from "@mui/icons-material";
+import { Map as MapIcon, Close as CloseIcon, AccessTime as AccessTimeIcon } from "@mui/icons-material";
 import { AppContext } from "../../context/AppContext";
 import { MapDialog } from "../MapDialog/MapDialog";
 import { EtaContext } from "../../context/EtaContext";
+import { DbContext } from "../../context/DbContext";
 import { TimetableDialog } from "../TimetableDialog";
 
-export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
+export const SearchBar = ({ handleFormKeyPress }) => {
+  const { routeKey } = useParams();
   const { dbVersion } = useContext(AppContext);
-  const { currRoute, updateCurrRoute, route } = useContext(EtaContext);
+  const textInput = useRef(null);
+  const navigate = useNavigate();
+  const { updateRoute, route } = useContext(EtaContext);
+  const { gRouteList } = useContext(DbContext);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const [timetableDialogOpen, setTimetableDialogOpen] = useState(false);
-  const textInput = useRef(null);
 
   useEffect(() => {
-    if (!route) {
-      updateCurrRoute({});
+    if (gRouteList[routeKey]) {
+      updateRoute(routeKey.split("+")[0]);
     }
-  }, [route]);
+  }, [routeKey]);
+
+  const handleFormChange = (text) => {
+    updateRoute(text.toUpperCase());
+  };
 
   const handleMapDialogOnClose = () => {
     setMapDialogOpen(false);
@@ -30,11 +35,7 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
   return (
     <SearchBarWraper>
       <IconButton
-        className={`timetableIconButton ${
-          Object.keys(currRoute).length === 0 || currRoute.co[0] === "mtr"
-            ? "hide"
-            : ""
-        }`}
+        className={`timetableIconButton ${!routeKey || gRouteList[routeKey].co[0] === "mtr" ? "hide" : ""}`}
         disabled={dbVersion === null}
         onClick={() => setTimetableDialogOpen(true)}
       >
@@ -52,6 +53,7 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
           name="category"
           value={route}
           onChange={(e) => handleFormChange(e.target.value)}
+          onClick={() => navigate("/search", { replace: true })}
           onKeyPress={(e) => handleFormKeyPress(e)}
           autoComplete="off"
           inputRef={textInput}
@@ -70,24 +72,12 @@ export const SearchBar = ({ handleFormChange, handleFormKeyPress }) => {
           }}
         />
       </div>
-      <IconButton
-        className={`mapIconButton ${
-          Object.keys(currRoute).length === 0 ? "hide" : ""
-        }`}
-        disabled={dbVersion === null}
-        onClick={() => setMapDialogOpen(true)}
-      >
+      <IconButton className={`mapIconButton ${!routeKey ? "hide" : ""}`} disabled={dbVersion === null} onClick={() => setMapDialogOpen(true)}>
         <MapIcon />
         <div>地圖</div>
       </IconButton>
-      <MapDialog
-        mapDialogOpen={mapDialogOpen}
-        handleMapDialogOnClose={handleMapDialogOnClose}
-      />
-      <TimetableDialog
-        timetableDialogOpen={timetableDialogOpen}
-        setTimetableDialogOpen={setTimetableDialogOpen}
-      />
+      <MapDialog mapDialogOpen={mapDialogOpen} handleMapDialogOnClose={handleMapDialogOnClose} />
+      <TimetableDialog timetableDialogOpen={timetableDialogOpen} setTimetableDialogOpen={setTimetableDialogOpen} />
     </SearchBarWraper>
   );
 };

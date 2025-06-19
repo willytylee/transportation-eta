@@ -1,15 +1,16 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Accordion, AccordionSummary, AccordionDetails, styled, IconButton } from "@mui/material";
-import { Directions as DirectionsIcon } from "@mui/icons-material";
+import { Directions as DirectionsIcon, DirectionsBus as DirectionsBusIcon } from "@mui/icons-material";
 import { etaTimeConverter, sortEtaObj } from "../../../Utils/Utils";
 import { companyColor, primaryColor } from "../../../constants/Constants";
 
-export const List = ({ sectionData, longList }) => {
+export const List = ({ section, sectionData, longList }) => {
   const [expanded, setExpanded] = useState(false);
-
+  const navigate = useNavigate();
   let result = [];
 
-  sectionData.forEach((e) => {
+  sectionData.forEach((e, i) => {
     const { co, etas, route, stopName, stopId, location } = e;
 
     let eta;
@@ -89,8 +90,19 @@ export const List = ({ sectionData, longList }) => {
           <AccordionDetails>
             <IconButton className="iconBtn directionIconBtn" component="a" href={e?.latLngUrl} target="_blank">
               <DirectionsIcon />
-              <div>路線</div>
+              <div>規劃路線</div>
             </IconButton>
+            {section[i]?.routeKey && (
+              <IconButton
+                className="iconBtn"
+                onClick={() => {
+                  navigate("/search/" + section[i].routeKey + "/" + section[i].stopId, { replace: true });
+                }}
+              >
+                <DirectionsBusIcon />
+                <div>巴士路線</div>
+              </IconButton>
+            )}
           </AccordionDetails>
         </Accordion>
       ))}
@@ -151,8 +163,8 @@ const ListView = styled("div")({
       ".iconBtn": {
         flexDirection: "column",
         fontSize: "10px",
-        height: "50px",
-        width: "50px",
+        height: "58px",
+        width: "58px",
       },
     },
   },

@@ -1,43 +1,32 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material";
 import { getCoIconByRouteObj } from "../../../Utils/Utils";
 import { companyIconMap } from "../../../constants/Constants";
 import { EtaContext } from "../../../context/EtaContext";
-import {
-  etaExcluded,
-  mtrIconColor,
-  mtrLineColor,
-  routeMap,
-} from "../../../constants/Mtr";
+import { etaExcluded, mtrIconColor, mtrLineColor, routeMap } from "../../../constants/Mtr";
 
-export const SimpleRouteList = ({
-  mode,
-  routeList,
-  handleRouteListItemOnClick,
-}) => {
+export const SimpleRouteList = ({ mode, routeList }) => {
   const { route } = useContext(EtaContext);
+  const navigate = useNavigate();
 
   return routeList?.map((e, i) => (
     <SearchRouteListRoot
-      onClick={() => handleRouteListItemOnClick(e)}
+      onClick={() => {
+        navigate("/search/" + e.key, { replace: true });
+      }}
       key={i}
       className={`${route === e.route && mode === "search" && "match"}`}
     >
       <div className="route">
         <div className="transportIconWrapper">
-          <img
-            className={`transportIcon ${e.route}`}
-            src={companyIconMap[getCoIconByRouteObj(e)]}
-            alt=""
-          />
+          <img className={`transportIcon ${e.route}`} src={companyIconMap[getCoIconByRouteObj(e)]} alt="" />
         </div>
         {mode === "search" ? (
           e.co[0] !== "mtr" ? (
             // highlight matched char
             <div>
-              <span className="boldRoute">
-                {e.route.substring(0, route.length)}
-              </span>
+              <span className="boldRoute">{e.route.substring(0, route.length)}</span>
               {e.route.substring(route.length, e.route.length)}
             </div>
           ) : (
@@ -67,9 +56,7 @@ export const SimpleRouteList = ({
           <span className="special">
             {" "}
             {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
-            {etaExcluded.includes(e.route) && (
-              <span className="star">沒有相關班次資料</span>
-            )}
+            {etaExcluded.includes(e.route) && <span className="star">沒有相關班次資料</span>}
           </span>
         </div>
       </div>

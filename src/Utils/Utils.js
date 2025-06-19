@@ -138,39 +138,40 @@ export const sortByCompany = (a, b) => {
 export const parseMtrEtas = (e) =>
   parseInt(e.ttnt, 10) === 0 ? "準備埋站" : parseInt(e.ttnt, 10) >= 60 ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:mm") : `${e.ttnt}分鐘`;
 
-export const isMatchRoute = (a, b) =>
-  JSON.stringify(a.bound) === JSON.stringify(b.bound) &&
-  JSON.stringify(a.co) === JSON.stringify(b.co) &&
-  JSON.stringify(a.orig) === JSON.stringify(b.orig) &&
-  JSON.stringify(a.dest) === JSON.stringify(b.dest) &&
-  JSON.stringify(a.route) === JSON.stringify(b.route) &&
-  JSON.stringify(a.seq) === JSON.stringify(b.seq) &&
-  JSON.stringify(a.serviceType) === JSON.stringify(b.serviceType);
+export const isMatchRoute = (a, b) => {
+  if (a && b) {
+    return (
+      JSON.stringify(a.bound) === JSON.stringify(b.bound) &&
+      JSON.stringify(a.co) === JSON.stringify(b.co) &&
+      JSON.stringify(a.orig) === JSON.stringify(b.orig) &&
+      JSON.stringify(a.dest) === JSON.stringify(b.dest) &&
+      JSON.stringify(a.route) === JSON.stringify(b.route) &&
+      JSON.stringify(a.seq) === JSON.stringify(b.seq) &&
+      JSON.stringify(a.serviceType) === JSON.stringify(b.serviceType)
+    );
+  } 
+    return false;
+  
+};
 
-export const setRouteListHistory = (routeObj) => {
+export const setRouteListHistory = (routeKey) => {
   let routeListHistory;
 
-  try {
-    routeListHistory = JSON.parse(
-      decompressJson(localStorage.getItem("routeListHistory") || "W10=", {
-        // "W10=" = compressed []
-        inputEncoding: "Base64",
-      })
-    );
-  } catch (error) {
-    // Reset routeListHistory LocalStorage
-    localStorage.removeItem("routeListHistory");
+  if (Array.isArray(JSON.parse(localStorage.getItem("routeListHistory")))) {
+    routeListHistory = JSON.parse(localStorage.getItem("routeListHistory"));
+  } else {
     routeListHistory = [];
+    localStorage.removeItem("routeListHistory");
   }
 
-  const isInHistory = routeListHistory.filter((e) => isMatchRoute(e, routeObj));
+  const isInHistory = routeListHistory.filter((e) => e === routeKey);
 
   if (isInHistory.length === 0) {
     if (routeListHistory.length >= 10) {
       routeListHistory.pop();
     }
-    routeListHistory.unshift(routeObj);
-    setLocalStorage("routeListHistory", routeListHistory);
+    routeListHistory.unshift(routeKey);
+    localStorage.setItem("routeListHistory", JSON.stringify(routeListHistory));
   }
 };
 

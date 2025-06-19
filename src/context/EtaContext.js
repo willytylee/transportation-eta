@@ -3,22 +3,22 @@ import { createContext, useState, useMemo, useCallback } from "react";
 export const EtaContext = createContext();
 
 export const EtaProvider = ({ children }) => {
-  const [currRoute, setCurrRoute] = useState({});
   const [route, setRoute] = useState("");
+  const [stopId, setStopId] = useState("");
   const [nearestStopId, setNearestStopId] = useState("");
   const [mapLocation, setMapLocation] = useState(undefined);
   const [mapStopIdx, setMapStopIdx] = useState(-1);
 
-  const updateRoute = useCallback((routeStr) => {
-    setRoute(routeStr);
+  const updateRoute = useCallback((_route) => {
+    setRoute(_route);
   }, []);
 
-  const updateCurrRoute = useCallback((routeObj) => {
-    setCurrRoute(routeObj);
-  }, []);
+  const updateStopId = useCallback((_stopId) => {
+    setStopId(_stopId);
+  });
 
-  const updateNearestStopId = useCallback((stopId) => {
-    setNearestStopId(stopId);
+  const updateNearestStopId = useCallback((_stopId) => {
+    setNearestStopId(_stopId);
   }, []);
 
   const updateMapLocation = useCallback((location) => {
@@ -35,8 +35,8 @@ export const EtaProvider = ({ children }) => {
     () => ({
       route,
       updateRoute,
-      currRoute,
-      updateCurrRoute,
+      stopId,
+      updateStopId,
       nearestStopId,
       updateNearestStopId,
       mapLocation,
@@ -44,7 +44,7 @@ export const EtaProvider = ({ children }) => {
       mapStopIdx,
       updateMapStopIdx,
     }),
-    [route, updateRoute, currRoute, updateCurrRoute, nearestStopId, updateNearestStopId, mapLocation, updateMapLocation, mapStopIdx, updateMapStopIdx]
+    [route, updateRoute, stopId, updateStopId, nearestStopId, updateNearestStopId, mapLocation, updateMapLocation, mapStopIdx, updateMapStopIdx]
   );
 
   return <EtaContext.Provider value={value}>{children}</EtaContext.Provider>;

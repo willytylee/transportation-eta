@@ -1,4 +1,5 @@
 import { useContext, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { DialogTitle, Grid, IconButton, styled } from "@mui/material";
 import { getCoIconByRouteObj } from "../../Utils/Utils";
@@ -10,18 +11,13 @@ import { MtrStopEta } from "../Search/MtrStopEta";
 import { DbContext } from "../../context/DbContext";
 
 export const Header = ({ handleDialogOnClose }) => {
-  const { currRoute, mapStopIdx } = useContext(EtaContext);
-  const { gStopList } = useContext(DbContext);
+  const { mapStopIdx } = useContext(EtaContext);
+  const { gRouteList, gStopList } = useContext(DbContext);
+  const { routeKey } = useParams();
 
-  const currRouteStopIdList = useMemo(
-    () => currRoute.stops && currRoute.stops[Object.keys(currRoute.stops)[0]],
-    [currRoute]
-  );
-
-  const currRouteStopList = useMemo(
-    () => currRouteStopIdList?.map((e) => gStopList[e]),
-    [currRoute]
-  );
+  const _currRoute = gRouteList[routeKey];
+  const currRouteStopIdList = useMemo(() => _currRoute.stops && _currRoute.stops[Object.keys(_currRoute.stops)[0]], [routeKey]);
+  const currRouteStopList = useMemo(() => currRouteStopIdList?.map((e) => gStopList[e]), [routeKey]);
 
   return (
     <DialogTitleRoot>
@@ -29,55 +25,32 @@ export const Header = ({ handleDialogOnClose }) => {
         <div className="headerWrapper">
           <div className="coRoute">
             <div className="transportIconWrapper">
-              <img
-                className={`transportIcon ${currRoute.route}`}
-                src={companyIconMap[getCoIconByRouteObj(currRoute)]}
-                alt=""
-              />
+              <img className={`transportIcon ${_currRoute.route}`} src={companyIconMap[getCoIconByRouteObj(_currRoute)]} alt="" />
             </div>
-            {currRoute.co[0] === "mtr" && (
+            {_currRoute.co[0] === "mtr" && (
               <div className="routeWrapper">
-                <div className={currRoute.route}>
-                  {routeMap[currRoute.route]}
-                </div>
+                <div className={_currRoute.route}>{routeMap[_currRoute.route]}</div>
               </div>
             )}
-            <span className="route">
-              {currRoute.co[0] !== "mtr" && currRoute.route}
-            </span>
+            <span className="route">{_currRoute.co[0] !== "mtr" && _currRoute.route}</span>
           </div>
           <div className="destSpecial">
-            {currRoute.orig?.zh}{" "}
-            {currRoute.co[0] === "mtr" ? (
-              <> ←→ {currRoute.dest?.zh}</>
+            {_currRoute.orig?.zh}{" "}
+            {_currRoute.co[0] === "mtr" ? (
+              <> ←→ {_currRoute.dest?.zh}</>
             ) : (
               <>
-                → <span className="dest">{currRoute.dest?.zh}</span>
+                → <span className="dest">{_currRoute.dest?.zh}</span>
               </>
             )}
-            {etaExcluded.includes(currRoute.route) && (
-              <span className="star"> 沒有相關班次資料</span>
-            )}
-            <span className="special">
-              {" "}
-              {parseInt(currRoute.serviceType, 10) !== 1 && "特別班次"}
-            </span>
+            {etaExcluded.includes(_currRoute.route) && <span className="star"> 沒有相關班次資料</span>}
+            <span className="special"> {parseInt(_currRoute.serviceType, 10) !== 1 && "特別班次"}</span>
           </div>
           {mapStopIdx !== -1 &&
-            (currRoute.co[0] === "mtr" ? (
-              <MtrStopEta
-                seq={mapStopIdx + 1}
-                routeObj={currRoute}
-                stopObj={currRouteStopList[mapStopIdx]}
-                MtrStopEtaRoot={MtrStopEtaRoot}
-              />
+            (_currRoute.co[0] === "mtr" ? (
+              <MtrStopEta seq={mapStopIdx + 1} routeObj={_currRoute} stopObj={currRouteStopList[mapStopIdx]} MtrStopEtaRoot={MtrStopEtaRoot} />
             ) : (
-              <StopEta
-                seq={mapStopIdx + 1}
-                routeObj={currRoute}
-                stopObj={currRouteStopList[mapStopIdx]}
-                StopEtaRoot={StopEtaRoot}
-              />
+              <StopEta seq={mapStopIdx + 1} routeObj={_currRoute} stopObj={currRouteStopList[mapStopIdx]} StopEtaRoot={StopEtaRoot} />
             ))}
         </div>
         <IconButton className="closeBtn" onClick={handleDialogOnClose}>

@@ -38,6 +38,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Redirect />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/search/:routeKey" element={<Search />} />
+          <Route path="/search/:routeKey/:stopId" element={<Search />} />
           <Route path="/news" element={<News />} />
           <Route path="/weather" element={<Weather />} />
           <Route path="/direction" element={<Direction />} />

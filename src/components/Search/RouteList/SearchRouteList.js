@@ -4,7 +4,7 @@ import { DbContext } from "../../../context/DbContext";
 import { EtaContext } from "../../../context/EtaContext";
 import { SimpleRouteList } from "./SimpleRouteList";
 
-export const SearchRouteList = ({ handleRouteListItemOnClick }) => {
+export const SearchRouteList = () => {
   const { gRouteList } = useContext(DbContext);
   const { route } = useContext(EtaContext);
 
@@ -24,7 +24,10 @@ export const SearchRouteList = ({ handleRouteListItemOnClick }) => {
     gRouteList &&
     (route === "M" || route === "MT" || route === "MTR"
       ? Object.keys(gRouteList)
-          .map((e) => gRouteList[e])
+          .map((e) => {
+            gRouteList[e].key = e;
+            return gRouteList[e];
+          })
           .filter((e) => e.co.includes("mtr"))
           .filter(
             // Combine same route
@@ -37,18 +40,13 @@ export const SearchRouteList = ({ handleRouteListItemOnClick }) => {
               })
           )
       : Object.keys(gRouteList)
-          .map((e) => gRouteList[e])
+          .map((e) => {
+            gRouteList[e].key = e;
+            return gRouteList[e];
+          })
           .filter((e) => basicFiltering(e))
           .filter((e) => route && route === e.route.substring(0, route.length))
           .sort((a, b) => sortByRouteThenCo(a, b)));
 
-  return routeList?.length > 0 ? (
-    <SimpleRouteList
-      mode="search"
-      routeList={routeList}
-      handleRouteListItemOnClick={handleRouteListItemOnClick}
-    />
-  ) : (
-    <div className="emptyMsg">請輸入路線</div>
-  );
+  return routeList?.length > 0 ? <SimpleRouteList mode="search" routeList={routeList} /> : <div className="emptyMsg">請輸入路線</div>;
 };

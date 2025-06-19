@@ -1,9 +1,9 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { styled, Tabs, Tab } from "@mui/material";
 import { SearchBar } from "../components/Search/SearchBar";
 import { RouteList } from "../components/Search/RouteList/RouteList";
 import { StopList } from "../components/Search/StopList";
-import { EtaContext } from "../context/EtaContext";
 import { TabPanel } from "../components/TabPanel";
 import { NearbyRouteList } from "../components/Search/RouteList/NearbyRouteList";
 import { SearchRouteList } from "../components/Search/RouteList/SearchRouteList";
@@ -11,21 +11,15 @@ import { HistoryRouteList } from "../components/Search/RouteList/HistoryRouteLis
 import { setRouteListHistory, a11yProps } from "../Utils/Utils";
 import { primaryColor } from "../constants/Constants";
 import { AppContext } from "../context/AppContext";
+import { DbContext } from "../context/DbContext";
 
 export const Search = () => {
+  const { routeKey } = useParams();
   const searchMethod = JSON.parse(localStorage.getItem("settings"))?.searchMethod || "搜尋路線";
 
   const [tabIdx, setTabIdx] = useState(searchMethod === "搜尋路線" ? 0 : 1);
-  const { updateCurrRoute, updateRoute } = useContext(EtaContext);
+  const { gRouteList } = useContext(DbContext);
   const { dbVersion } = useContext(AppContext);
-
-  const handleFormChange = (text) => {
-    updateRoute(text.toUpperCase());
-    updateCurrRoute({});
-    if (tabIdx !== 0 && tabIdx !== 1) {
-      setTabIdx(searchMethod === "搜尋路線" ? 0 : 1);
-    }
-  };
 
   const handleFormKeyPress = (e) => {
     e.key === "Enter" && setTabIdx(1);
@@ -35,16 +29,16 @@ export const Search = () => {
     setTabIdx(value);
   };
 
-  const handleRouteListItemOnClick = (e) => {
-    updateCurrRoute(e);
-    updateRoute(e.route);
-    setRouteListHistory(e);
-    setTabIdx(1);
-  };
+  useEffect(() => {
+    if (routeKey && gRouteList[routeKey]) {
+      setTabIdx(1);
+      setRouteListHistory(routeKey);
+    }
+  }, [routeKey]);
 
   return (
     <SearchRoot>
-      <SearchBar handleFormChange={handleFormChange} handleFormKeyPress={handleFormKeyPress} />
+      <SearchBar handleFormKeyPress={handleFormKeyPress} />
 
       <SearchResult>
         <Tabs value={tabIdx} onChange={handleTabChange} TabIndicatorProps={{ style: { background: `${primaryColor}` } }}>
@@ -54,17 +48,17 @@ export const Search = () => {
           <Tab disabled={dbVersion === null} label="歷史紀錄" {...a11yProps(3)} />
         </Tabs>
         <TabPanelRoot value={tabIdx} index={0}>
-          <SearchRouteList handleRouteListItemOnClick={handleRouteListItemOnClick} />
+          <SearchRouteList />
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={1}>
           <RouteList />
           <StopList />
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={2}>
-          <NearbyRouteList handleRouteListItemOnClick={handleRouteListItemOnClick} />
+          <NearbyRouteList />
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={3}>
-          <HistoryRouteList handleRouteListItemOnClick={handleRouteListItemOnClick} />
+          <HistoryRouteList />
         </TabPanelRoot>
       </SearchResult>
     </SearchRoot>

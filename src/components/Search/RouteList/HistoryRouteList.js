@@ -1,29 +1,21 @@
-import { decompress as decompressJson } from "lzutf8-light";
+import { useContext } from "react";
+import { DbContext } from "../../../context/DbContext";
+import { EtaContext } from "../../../context/EtaContext";
 import { SimpleRouteList } from "./SimpleRouteList";
 
-export const HistoryRouteList = ({ handleRouteListItemOnClick }) => {
+export const HistoryRouteList = () => {
+  const { gRouteList } = useContext(DbContext);
+  const { route } = useContext(EtaContext);
+
   let routeList;
 
-  try {
-    routeList = JSON.parse(
-      decompressJson(localStorage.getItem("routeListHistory") || "W10=", {
-        // "W10=" = compressed []
-        inputEncoding: "Base64",
-      })
-    );
-  } catch (error) {
-    // Reset routeListHistory LocalStorage
+  if (Array.isArray(JSON.parse(localStorage.getItem("routeListHistory")))) {
+    const routeListHistory = JSON.parse(localStorage.getItem("routeListHistory"));
+    routeList = routeListHistory.map((e) => gRouteList[e]).filter((e) => (route ? route === e.route.substring(0, route.length) : true));
+  } else {
     localStorage.removeItem("routeListHistory");
     routeList = [];
   }
 
-  return routeList?.length > 0 ? (
-    <SimpleRouteList
-      mode="history"
-      routeList={routeList}
-      handleRouteListItemOnClick={handleRouteListItemOnClick}
-    />
-  ) : (
-    <div className="emptyMsg">未有歷史紀錄</div>
-  );
+  return routeList?.length > 0 ? <SimpleRouteList mode="history" routeList={routeList} /> : <div className="emptyMsg">未有歷史紀錄</div>;
 };

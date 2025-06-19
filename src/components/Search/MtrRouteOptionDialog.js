@@ -14,8 +14,9 @@ import {
   Button,
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
+import { useParams } from "react-router-dom";
 import { stationDestMap, stationMap } from "../../constants/Mtr";
-import { EtaContext } from "../../context/EtaContext";
+import { DbContext } from "../../context/DbContext";
 
 export const MtrRouteOptionDialog = ({
   mtrRouteOptionDialogOpen,
@@ -24,9 +25,12 @@ export const MtrRouteOptionDialog = ({
   setBookmarkRouteObj,
   setMtrRouteOptionDialogOpen,
 }) => {
-  const { currRoute } = useContext(EtaContext);
+  const { routeKey } = useParams();
   const [bound, setBound] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
+
+  const { gRouteList } = useContext(DbContext);
+  const _currRoute = gRouteList[routeKey];
 
   const handleCloseBtnOnClick = () => {
     setBound([]);
@@ -57,11 +61,7 @@ export const MtrRouteOptionDialog = ({
   };
 
   return (
-    <DialogRoot
-      onClose={handleCloseBtnOnClick}
-      open={mtrRouteOptionDialogOpen}
-      fullWidth
-    >
+    <DialogRoot onClose={handleCloseBtnOnClick} open={mtrRouteOptionDialogOpen} fullWidth>
       <DialogTitle>
         <Grid>
           <div className="title">請選擇方向</div>
@@ -77,20 +77,12 @@ export const MtrRouteOptionDialog = ({
         <FormGroup>
           <FormControlLabel
             control={<Checkbox onChange={handleFormChange} name="up" />}
-            label={`${stationMap[bookmarkRouteObj.stopId]} → ${stationDestMap[
-              currRoute?.route
-            ]?.up
-              .map((dest) => stationMap[dest])
-              .join(" / ")}`}
+            label={`${stationMap[bookmarkRouteObj.stopId]} → ${stationDestMap[_currRoute?.route]?.up.map((dest) => stationMap[dest]).join(" / ")}`}
           />
 
           <FormControlLabel
             control={<Checkbox onChange={handleFormChange} name="down" />}
-            label={`${stationMap[bookmarkRouteObj.stopId]} → ${stationDestMap[
-              currRoute?.route
-            ]?.down
-              .map((dest) => stationMap[dest])
-              .join(" / ")}`}
+            label={`${stationMap[bookmarkRouteObj.stopId]} → ${stationDestMap[_currRoute?.route]?.down.map((dest) => stationMap[dest]).join(" / ")}`}
           />
         </FormGroup>
       </FormControl>

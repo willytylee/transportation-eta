@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars  */
 import { useState, useEffect, useContext, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Accordion, AccordionSummary, AccordionDetails, styled, IconButton } from "@mui/material";
 import { Directions as DirectionsIcon, Map as MapIcon, BookmarkAdd as BookmarkAddIcon, Streetview as StreetviewIcon } from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
@@ -16,6 +17,9 @@ import { BookmarkDialog } from "./BookmarkDialog";
 import { MtrRouteOptionDialog } from "./MtrRouteOptionDialog";
 
 export const StopList = () => {
+  const { routeKey, stopId } = useParams();
+  const navigate = useNavigate();
+  const { gStopList, gRouteList } = useContext(DbContext);
   const { location: currentLocation } = useLocation({ interval: 60000 });
   const [stopList, setStopList] = useState([]);
   const [expanded, setExpanded] = useState(false);
@@ -23,8 +27,7 @@ export const StopList = () => {
   const [mtrRouteOptionDialogOpen, setMtrRouteOptionDialogOpen] = useState(false);
   const [bookmarkDialogMode, setBookmarkDialogMode] = useState(null);
   const [bookmarkRouteObj, setBookmarkRouteObj] = useState({});
-  const { gStopList } = useContext(DbContext);
-  const { route, currRoute, nearestStopId, updateNearestStopId, updateMapLocation, updateMapStopIdx } = useContext(EtaContext);
+  const { nearestStopId, updateNearestStopId, updateMapLocation, updateMapStopIdx } = useContext(EtaContext);
 
   const stopListRef = useRef(null);
 
@@ -47,26 +50,24 @@ export const StopList = () => {
     }
   };
 
-  const handleChange = (panel) => (e, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
+  const handleChange = (_stopId) => (e, isExpanded) => {
+    navigate("/search/" + routeKey, { replace: true });
+    setExpanded(isExpanded ? _stopId : false);
   };
+
+  const _currRoute = gRouteList[routeKey];
 
   const handleEtaCallback = (i, response) => {
     // TODO
   };
 
-  // When the route number is changed
-  useEffect(() => {
-    setStopList([]);
-  }, [route]);
-
   // When the currRoute in AppContext changed
   useEffect(() => {
-    if (Object.keys(currRoute).length !== 0) {
+    if (routeKey) {
       // Find the company Id which appear in currRoute.stops
 
-      const companyId = getCoPriorityId(currRoute);
-      const expandStopIdArr = currRoute.stops[companyId];
+      const companyId = getCoPriorityId(_currRoute);
+      const expandStopIdArr = _currRoute.stops[companyId];
 
       setStopList(expandStopIdArr.map((e) => ({ ...gStopList[e], stopId: e })));
 
@@ -104,7 +105,7 @@ export const StopList = () => {
         updateNearestStopId("");
       }
     }
-  }, [currRoute, currentLocation.lat, currentLocation.lng]);
+  }, [routeKey, currentLocation.lat, currentLocation.lng]);
 
   useEffect(() => {
     if (stopList.length > 0) {
@@ -119,7 +120,7 @@ export const StopList = () => {
   return (
     <>
       <StopListRoot>
-        {Object.keys(currRoute).length !== 0 &&
+        {routeKey &&
           stopList?.map((e, i) => {
             const isNearestStop = gStopList[nearestStopId]?.name === e.name && currentLocation.lat !== -1 && currentLocation.lng !== -1;
             const {
@@ -127,19 +128,19 @@ export const StopList = () => {
             } = e;
             return (
               <Accordion
-                expanded={expanded === `panel${i}`}
-                onChange={handleChange(`panel${i}`)}
+                expanded={stopId ? stopId === e.stopId : expanded === e.stopId}
+                onChange={handleChange(e.stopId)}
                 key={i}
                 className={isNearestStop ? "highlighted" : ""}
                 ref={isNearestStop ? stopListRef : null}
               >
                 <AccordionSummary className="accordionSummary">
-                  {currRoute.co[0] === "mtr" ? (
-                    <MtrStopEta seq={i + 1} routeObj={currRoute} stopObj={e} MtrStopEtaRoot={MtrStopEtaRoot} />
+                  {_currRoute.co[0] === "mtr" ? (
+                    <MtrStopEta seq={i + 1} routeObj={_currRoute} stopObj={e} MtrStopEtaRoot={MtrStopEtaRoot} />
                   ) : (
                     <StopEta
                       seq={i + 1}
-                      routeObj={currRoute}
+                      routeObj={_currRoute}
                       stopObj={e}
                       StopEtaRoot={StopEtaRoot}
                       callback={(response) => {
@@ -168,7 +169,7 @@ export const StopList = () => {
                     target="_blank"
                   >
                     <DirectionsIcon />
-                    <div>路線</div>
+                    <div>規劃路線</div>
                   </IconButton>
                   <IconButton
                     className="iconBtn"
@@ -179,31 +180,32 @@ export const StopList = () => {
                     <StreetviewIcon />
                     <div>街景</div>
                   </IconButton>
-                  {!etaExcluded.includes(currRoute.route) && (
+                  {!etaExcluded.includes(_currRoute.route) && (
                     <IconButton
                       className="iconBtn"
                       onClick={() => {
-                        if (currRoute.co[0] === "gmb") {
+                        if (_currRoute.co[0] === "gmb") {
                           handleBookmarkAddIconOnClick({
                             seq: i + 1,
                             co: "gmb",
-                            route: currRoute.route,
+                            route: _currRoute.route,
                             stopId: e.stopId,
-                            gtfsId: currRoute.gtfsId,
+                            gtfsId: _currRoute.gtfsId,
                           });
-                        } else if (currRoute.co[0] === "mtr") {
+                        } else if (_currRoute.co[0] === "mtr") {
                           handleBookmarkAddIconOnClick({
-                            co: "mtr", // use currRoute.stops' company as standard
-                            route: currRoute.route,
+                            co: "mtr", // use _currRoute.stops' company as standard
+                            route: _currRoute.route,
                             stopId: e.stopId,
                           });
                         } else {
                           handleBookmarkAddIconOnClick({
                             seq: i + 1,
-                            co: getCoPriorityId(currRoute), // use currRoute.stops' company as standard
-                            route: currRoute.route,
+                            co: getCoPriorityId(_currRoute), // use _currRoute.stops' company as standard
+                            route: _currRoute.route,
                             stopId: e.stopId,
-                            dest: currRoute.dest.zh,
+                            dest: _currRoute.dest.zh,
+                            routeKey,
                           });
                         }
                       }}
@@ -262,8 +264,8 @@ const StopListRoot = styled("div")({
         ".iconBtn": {
           flexDirection: "column",
           fontSize: "10px",
-          height: "50px",
-          width: "50px",
+          height: "58px",
+          width: "58px",
         },
       },
     },

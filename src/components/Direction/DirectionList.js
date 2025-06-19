@@ -18,7 +18,10 @@ export const DirectionList = () => {
     () =>
       gRouteList &&
       Object.keys(gRouteList)
-        .map((e) => gRouteList[e])
+        .map((e) => {
+          gRouteList[e].key = e;
+          return gRouteList[e];
+        })
         .filter((e) => basicFiltering(e)),
     []
   );

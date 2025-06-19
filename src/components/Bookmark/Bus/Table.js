@@ -4,7 +4,7 @@ import { Directions as DirectionsIcon } from "@mui/icons-material";
 import { handleTableResult } from "../../../Utils/Utils";
 import { companyColor, primaryColor } from "../../../constants/Constants";
 
-export const Table = ({ sectionData }) => {
+export const Table = ({ section, sectionData }) => {
   const [expanded, setExpanded] = useState(false);
 
   const result = handleTableResult(sectionData);
@@ -31,8 +31,9 @@ export const Table = ({ sectionData }) => {
             ))}
           </AccordionSummary>
           <AccordionDetails>
-            <IconButton className="directionIconBtn" component="a" href={e.latLngUrl} target="_blank">
+            <IconButton className="iconBtn directionIconBtn" component="a" href={e.latLngUrl} target="_blank">
               <DirectionsIcon />
+              <div>規劃路線</div>
             </IconButton>
           </AccordionDetails>
         </Accordion>
@@ -90,6 +91,12 @@ const TableView = styled("div")({
       paddingTop: "6px",
       ".directionIconBtn": {
         marginLeft: "-10px",
+      },
+      ".iconBtn": {
+        flexDirection: "column",
+        fontSize: "10px",
+        height: "58px",
+        width: "58px",
       },
     },
   },

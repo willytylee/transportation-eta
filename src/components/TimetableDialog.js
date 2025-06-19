@@ -1,11 +1,13 @@
 import { useContext } from "react";
+import { useParams } from "react-router-dom";
 import { Grid, IconButton, DialogTitle, styled, DialogContent, Dialog } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { EtaContext } from "../context/EtaContext";
+import { DbContext } from "../context/DbContext";
 import { serviceDate } from "../constants/Constants";
 
 export const TimetableDialog = ({ timetableDialogOpen, setTimetableDialogOpen }) => {
-  const { currRoute } = useContext(EtaContext);
+  const { routeKey } = useParams();
+  const { gRouteList } = useContext(DbContext);
 
   const handleDialogOnClose = () => {
     setTimetableDialogOpen(false);
@@ -14,6 +16,8 @@ export const TimetableDialog = ({ timetableDialogOpen, setTimetableDialogOpen })
   const d = new Date();
   const day = d.getDay();
   const current = parseInt(d.getHours() + "" + d.getMinutes(), 10);
+
+  const _currRoute = gRouteList[routeKey];
 
   return (
     <DialogRoot open={timetableDialogOpen} onClose={handleDialogOnClose} fullWidth>
@@ -28,18 +32,19 @@ export const TimetableDialog = ({ timetableDialogOpen, setTimetableDialogOpen })
         </Grid>
       </DialogTitle>
       <DialogContent>
-        {currRoute.freq &&
-          Object.keys(currRoute.freq).length > 0 &&
-          Object.keys(currRoute.freq).map((date, i) => (
+        {_currRoute &&
+          _currRoute.freq &&
+          Object.keys(_currRoute.freq).length > 0 &&
+          Object.keys(_currRoute.freq).map((date, i) => (
             <div key={i} className="dateWrapper">
               <div className="date">{serviceDate[date]?.string ?? ""}</div>
               <div className="timeFreqGroup">
-                {Object.keys(currRoute.freq[date])
+                {Object.keys(_currRoute.freq[date])
                   .sort()
                   .map((startTime, j) => {
-                    if (currRoute.freq[date][startTime] !== null) {
-                      const endTime = currRoute.freq[date][startTime][0];
-                      const interval = currRoute.freq[date][startTime][1] / 60;
+                    if (_currRoute.freq[date][startTime] !== null) {
+                      const endTime = _currRoute.freq[date][startTime][0];
+                      const interval = _currRoute.freq[date][startTime][1] / 60;
                       return (
                         <div
                           key={j}

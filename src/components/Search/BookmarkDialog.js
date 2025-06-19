@@ -5,11 +5,7 @@ import { FormDialog } from "../BookmarkDialog/FormDialog";
 import { getLocalStorage, setLocalStorage } from "../../Utils/Utils";
 import { ListDialog } from "../BookmarkDialog/ListDialog";
 
-export const BookmarkDialog = ({
-  bookmarkDialogMode,
-  setBookmarkDialogMode,
-  bookmarkRouteObj,
-}) => {
+export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode, bookmarkRouteObj }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [categoryIdx, setCategoryIdx] = useState(-1);
   const [categoryValue, setCategoryValue] = useState("");
@@ -71,19 +67,11 @@ export const BookmarkDialog = ({
     setTransportData(_transportData);
     setLocalStorage("bookmark", _transportData);
     if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-      localStorage.setItem(
-        "bookmark_nocompress",
-        JSON.stringify(_transportData)
-      );
+      localStorage.setItem("bookmark_nocompress", JSON.stringify(_transportData));
     }
-    enqueueSnackbar(
-      `成功加入路線 ${bookmarkRouteObj.route} 到: ${
-        transportData[categoryIdx].title
-      } → 組合${i + 1}`,
-      {
-        variant: "success",
-      }
-    );
+    enqueueSnackbar(`成功加入路線 ${bookmarkRouteObj.route} 到: ${transportData[categoryIdx].title} → 組合${i + 1}`, {
+      variant: "success",
+    });
     setCategoryIdx(-1);
     setBookmarkDialogMode(null);
   };
@@ -94,10 +82,7 @@ export const BookmarkDialog = ({
     setLocalStorage("bookmark", _transportData);
 
     if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-      localStorage.setItem(
-        "bookmark_nocompress",
-        JSON.stringify(_transportData)
-      );
+      localStorage.setItem("bookmark_nocompress", JSON.stringify(_transportData));
     }
   };
 
@@ -106,11 +91,7 @@ export const BookmarkDialog = ({
   };
 
   return (
-    <DialogRoot
-      onClose={handleDialogCloseBtnOnClick}
-      open={bookmarkDialogMode !== null}
-      fullWidth
-    >
+    <DialogRoot onClose={handleDialogCloseBtnOnClick} open={bookmarkDialogMode !== null} fullWidth>
       {bookmarkDialogMode === "category" && (
         <ListDialog
           title="加入書籤"

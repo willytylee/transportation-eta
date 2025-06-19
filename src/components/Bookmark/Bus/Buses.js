@@ -118,9 +118,9 @@ export const Buses = ({ section, categoryKey, sectionKey }) => {
         </IconButton>
       </div>
 
-      {view === "list" && <List sectionData={sectionData} longList={false} />}
-      {view === "longList" && <List sectionData={sectionData} longList />}
-      {view === "table" && <Table sectionData={sectionData} />}
+      {view === "list" && <List section={section} sectionData={sectionData} longList={false} />}
+      {view === "longList" && <List section={section} sectionData={sectionData} longList />}
+      {view === "table" && <Table section={section} sectionData={sectionData} />}
     </BusesRoot>
   );
 };
