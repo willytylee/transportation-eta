@@ -30,7 +30,7 @@ export const MtrRouteOptionDialog = ({
   const { enqueueSnackbar } = useSnackbar();
 
   const { gRouteList } = useContext(DbContext);
-  const _currRoute = gRouteList[routeKey];
+  const _currRoute = routeKey ? gRouteList[routeKey] : [];
 
   const handleCloseBtnOnClick = () => {
     setBound([]);

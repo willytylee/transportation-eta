@@ -19,7 +19,7 @@ export const SearchBar = ({ handleFormKeyPress }) => {
   const [timetableDialogOpen, setTimetableDialogOpen] = useState(false);
 
   useEffect(() => {
-    if (gRouteList[routeKey]) {
+    if (routeKey && gRouteList[routeKey]) {
       updateRoute(routeKey.split("+")[0]);
     }
   }, [routeKey]);

@@ -55,7 +55,7 @@ export const StopList = () => {
     setExpanded(isExpanded ? _stopId : false);
   };
 
-  const _currRoute = gRouteList[routeKey];
+  const _currRoute = routeKey ? gRouteList[routeKey] : [];
 
   const handleEtaCallback = (i, response) => {
     // TODO

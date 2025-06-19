@@ -34,12 +34,12 @@ export const DirectionList = () => {
   // eslint-disable-next-line no-unused-vars
   const { location: currentLocation } = useLocationOnce();
   const { stopIdsNearby: origStopIdsNearby } = useStopIdsNearBy({
-    maxDistance: 700,
+    maxDistance: 1200,
     lat: origination ? origination.location.lat : currentLocation.lat,
     lng: origination ? origination.location.lng : currentLocation.lng,
   });
   const { stopIdsNearby: destStopIdsNearby } = useStopIdsNearBy({
-    maxDistance: 700,
+    maxDistance: 1200,
     lat: destination?.location?.lat,
     lng: destination?.location?.lng,
   });

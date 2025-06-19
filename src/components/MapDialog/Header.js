@@ -15,7 +15,7 @@ export const Header = ({ handleDialogOnClose }) => {
   const { gRouteList, gStopList } = useContext(DbContext);
   const { routeKey } = useParams();
 
-  const _currRoute = gRouteList[routeKey];
+  const _currRoute = routeKey ? gRouteList[routeKey] : [];
   const currRouteStopIdList = useMemo(() => _currRoute.stops && _currRoute.stops[Object.keys(_currRoute.stops)[0]], [routeKey]);
   const currRouteStopList = useMemo(() => currRouteStopIdList?.map((e) => gStopList[e]), [routeKey]);
 

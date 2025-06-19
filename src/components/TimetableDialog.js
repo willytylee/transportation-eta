@@ -17,7 +17,7 @@ export const TimetableDialog = ({ timetableDialogOpen, setTimetableDialogOpen })
   const day = d.getDay();
   const current = parseInt(d.getHours() + "" + d.getMinutes(), 10);
 
-  const _currRoute = gRouteList[routeKey];
+  const _currRoute = routeKey ? gRouteList[routeKey] : [];
 
   return (
     <DialogRoot open={timetableDialogOpen} onClose={handleDialogOnClose} fullWidth>

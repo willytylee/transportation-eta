@@ -27,7 +27,7 @@ export const Content = () => {
   const { gRouteList, gStopList } = useContext(DbContext);
   const [navBtnType, setNavBtnType] = useState("normal");
 
-  const _currRoute = gRouteList[routeKey];
+  const _currRoute = routeKey ? gRouteList[routeKey] : [];
 
   const currRouteStopIdList = useMemo(() => _currRoute.stops && _currRoute.stops[Object.keys(_currRoute.stops)[0]], [routeKey]);
 
