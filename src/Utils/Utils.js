@@ -51,10 +51,10 @@ export const getLocalStorage = (key) => {
       decompressJson(localStorage.getItem(key), {
         inputEncoding: "Base64",
       })
-        .replaceAll("／", "/")
-        .replaceAll("　", " ")
-        .replaceAll("（", "(")
-        .replaceAll("）", ")")
+      // .replaceAll("／", "/")
+      // .replaceAll("　", " ")
+      // .replaceAll("（", "(")
+      // .replaceAll("）", ")")
     );
   }
 };
