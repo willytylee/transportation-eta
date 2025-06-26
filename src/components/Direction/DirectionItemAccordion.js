@@ -19,7 +19,7 @@ import {
 import { mtrIconColor, routeMap } from "../../constants/Mtr";
 import {
   getCoIconByRouteObj,
-  getCoPriorityId,
+  getFirstCoByRouteObj,
   phaseEtaToTime,
   phaseEtaToWaitingMins,
 } from "../../Utils/Utils";
@@ -79,7 +79,7 @@ export const DirectionItemAccordion = ({
     if (stopList.length === 0) {
       const _stopList = [];
       for (let j = e.nearbyOrigStopSeq; j < e.nearbyDestStopSeq - 1; j += 1) {
-        _stopList.push(gStopList[e.stops[getCoPriorityId(e)][j]]);
+        _stopList.push(gStopList[e.stops[getFirstCoByRouteObj(e)][j]]);
       }
       setStopList(_stopList);
     } else {
@@ -181,7 +181,9 @@ export const DirectionItemAccordion = ({
                 >
                   <div
                     className={
-                      e.co[0] === "mtr" ? `${e.route}` : `${getCoPriorityId(e)}`
+                      e.co[0] === "mtr"
+                        ? `${e.route}`
+                        : `${getFirstCoByRouteObj(e)}`
                     }
                   >
                     搭{e.nearbyDestStopSeq - e.nearbyOrigStopSeq}個站

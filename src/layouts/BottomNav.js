@@ -1,12 +1,17 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import { BottomNavigation, BottomNavigationAction, Badge, styled } from "@mui/material/";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Badge,
+  styled,
+} from "@mui/material/";
 import {
   DirectionsBus as DirectionsBusIcon,
-  Menu as MenuIcon,
   Bookmark as BookmarkIcon,
-  DepartureBoard as DepartureBoardIcon,
+  Announcement as AnnouncementIcon,
   Directions as DirectionsIcon,
+  Settings as SettingsIcon,
 } from "@mui/icons-material";
 import { AppContext } from "../context/AppContext";
 import { primaryColor } from "../constants/Constants";
@@ -31,9 +36,9 @@ export const BottomNav = () => {
       <BottomNavigationAction
         component={NavLink}
         style={({ isActive }) => (isActive ? activeStyle : undefined)}
-        to="/direction"
-        label="規劃路線"
-        icon={<DirectionsIcon />}
+        to="/news"
+        label="交通消息"
+        icon={<AnnouncementIcon />}
       />
       <BottomNavigationAction
         component={NavLink}
@@ -45,32 +50,49 @@ export const BottomNav = () => {
       <BottomNavigationAction
         component={NavLink}
         style={({ isActive }) => (isActive ? activeStyle : undefined)}
+        to="/direction"
+        label="規劃路線"
+        icon={<DirectionsIcon />}
+      />
+      {/* <BottomNavigationAction
+        component={NavLink}
+        style={({ isActive }) => (isActive ? activeStyle : undefined)}
         to="/stationMode"
         label="車站模式"
         icon={<DepartureBoardIcon />}
-      />
-      <BottomNavigationAction
+      /> */}
+      {/* <BottomNavigationAction
         component={NavLink}
         style={({ isActive }) => (isActive ? activeStyle : undefined)}
         to="/more"
         label="更多"
         icon={
-          <Badge color="primary" variant="dot" overlap="circular" invisible={appVersion === serVersion}>
+          <Badge
+            color="primary"
+            variant="dot"
+            overlap="circular"
+            invisible={appVersion === serVersion}
+          >
             <MenuIcon />
           </Badge>
         }
-      />
-      {/* <BottomNavigationAction
+      /> */}
+      <BottomNavigationAction
         label="設定"
         component={NavLink}
         style={({ isActive }) => (isActive ? activeStyle : undefined)}
         to="/settings"
         icon={
-          <Badge color="primary" variant="dot" overlap="circular" invisible={appVersion === serVersion}>
+          <Badge
+            color="primary"
+            variant="dot"
+            overlap="circular"
+            invisible={appVersion === serVersion}
+          >
             <SettingsIcon />
           </Badge>
         }
-      /> */}
+      />
     </BottomNavigationRoot>
   );
 };

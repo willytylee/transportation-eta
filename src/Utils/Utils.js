@@ -1,5 +1,8 @@
 import moment from "moment";
-import { compress as compressJson, decompress as decompressJson } from "lzutf8-light";
+import {
+  compress as compressJson,
+  decompress as decompressJson,
+} from "lzutf8-light";
 import { coPriority } from "../constants/Constants";
 import { fetchEtas } from "../fetch/transports";
 
@@ -8,12 +11,14 @@ export const etaTimeConverter = ({ etaStr, remark }) => {
 
   if (moment(etaStr, "YYYY-MM-DD HH:mm:ss").isValid()) {
     const mintuesLeft = moment(etaStr).diff(moment(), "minutes");
-    if (mintuesLeft === 0) {
+    if (mintuesLeft <= 0) {
       etaIntervalStr = "準備埋站";
-    } else if (mintuesLeft <= 0) {
+    } else if (mintuesLeft === 0) {
       etaIntervalStr = "已埋站";
-    } else {
+    } else if (mintuesLeft >= 0 && mintuesLeft <= 60) {
       etaIntervalStr = `${mintuesLeft}分鐘`;
+    } else if (mintuesLeft > 60) {
+      etaIntervalStr = moment(etaStr).format("HH:mm");
     }
   } else if (etaStr === "") {
     if (remark) {
@@ -22,7 +27,7 @@ export const etaTimeConverter = ({ etaStr, remark }) => {
       etaIntervalStr = "沒有班次";
     }
   } else if (etaStr === false) {
-    etaIntervalStr = "路線錯誤, 請刪除及重新將路線加入書籤";
+    etaIntervalStr = "路線已更變, 請刪除及重新將路線加入書籤";
   }
   if (remark) {
     remarkStr = `${remark}`;
@@ -51,10 +56,6 @@ export const getLocalStorage = (key) => {
       decompressJson(localStorage.getItem(key), {
         inputEncoding: "Base64",
       })
-      // .replaceAll("／", "/")
-      // .replaceAll("　", " ")
-      // .replaceAll("（", "(")
-      // .replaceAll("）", ")")
     );
   }
 };
@@ -107,7 +108,9 @@ export const getCoIconByRouteObj = (routeObj) => {
   return companyList.sort((a, b) => (a > b ? 1 : -1)).join("_");
 };
 
-export const getCoPriorityId = (routeObj) => {
+export const getFirstCoByRouteObj = (routeObj) => {
+  // Method: If the routeObj's stops included the company,
+  // get the first match from coPriority
   let companyId = "";
   for (const e of coPriority) {
     if (Object.keys(routeObj.stops).includes(e)) {
@@ -119,13 +122,15 @@ export const getCoPriorityId = (routeObj) => {
 };
 
 export const basicFiltering = (e) =>
-  (e.co.includes("kmb") || e.co.includes("nwfb") || e.co.includes("ctb") || e.co.includes("gmb") || e.co.includes("mtr")) &&
-  e.dest.en !== e.orig.en &&
-  e.dest.zh !== e.orig.zh;
+  e.co.includes("kmb") ||
+  e.co.includes("nwfb") ||
+  e.co.includes("ctb") ||
+  e.co.includes("gmb") ||
+  e.co.includes("mtr");
 
-export const sortByCompany = (a, b) => {
-  const coA = coPriority.indexOf(getCoPriorityId(a));
-  const coB = coPriority.indexOf(getCoPriorityId(b));
+export const sortByCompany = (routeObjA, routeObjB) => {
+  const coA = coPriority.indexOf(getFirstCoByRouteObj(routeObjA));
+  const coB = coPriority.indexOf(getFirstCoByRouteObj(routeObjB));
   if (coA < coB) {
     return -1;
   }
@@ -136,7 +141,11 @@ export const sortByCompany = (a, b) => {
 };
 
 export const parseMtrEtas = (e) =>
-  parseInt(e.ttnt, 10) === 0 ? "準備埋站" : parseInt(e.ttnt, 10) >= 60 ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:mm") : `${e.ttnt}分鐘`;
+  parseInt(e.ttnt, 10) === 0
+    ? "準備埋站"
+    : parseInt(e.ttnt, 10) >= 60
+    ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:mm")
+    : `${e.ttnt}分鐘`;
 
 export const isMatchRoute = (a, b) => {
   if (a && b) {
@@ -173,7 +182,7 @@ export const setRouteListHistory = (routeKey) => {
   const isInHistory = routeListHistory.filter((e) => e === routeKey);
 
   if (isInHistory.length === 0) {
-    if (routeListHistory.length >= 10) {
+    if (routeListHistory.length >= 20) {
       routeListHistory.pop();
     }
     routeListHistory.unshift(routeKey);
@@ -181,71 +190,114 @@ export const setRouteListHistory = (routeKey) => {
   }
 };
 
-export const findNearestNumber = (goal, arr) => arr.reduce((prev, curr) => (Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev));
+export const findNearestNumber = (goal, arr) =>
+  arr.reduce((prev, curr) =>
+    Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev
+  );
 
-export const handleTableResult = (sectionData) =>
-  sectionData.map((e) => {
+export const handleTableResult = (sectionEtaResult) =>
+  sectionEtaResult.map((e) => {
     const {
       co,
       etas,
       route,
       stopName,
+      stopId,
+      routeKey,
       location: { lat, lng },
     } = e;
 
     return {
       co: etas ? co : "error",
       route,
+      routeKey,
+      stopId,
       etas: etas
         ? etas.length === 0
-          ? ["沒有班次"]
-          : etas.map((f) => etaTimeConverter({ etaStr: f.eta, remark: f.rmk_tc }).etaIntervalStr).slice(0, 3)
-        : ["路線錯誤, 請刪除及重新將路線加入書籤!!!!"],
+          ? [{ minutes: "沒有班次" }]
+          : etas
+              .map((f) => ({
+                  minutes: etaTimeConverter({ etaStr: f.eta, remark: f.rmk_tc })
+                    .etaIntervalStr,
+                  dest: f.dest,
+                }))
+              .slice(0, 3)
+        : [{ minutes: "路線已更變, 請刪除及重新將路線加入書籤" }],
 
       stopName,
       latLngUrl: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
     };
   });
 
-export const fetchBusEta = async (gStopList, gRouteList, section) => {
+export const buildRouteObjForEta = async (gStopList, gRouteList, category) => {
   const allPromises = [];
 
-  for (let i = 0; i < section.length; i += 1) {
-    const { co, route, stopId, seq, gtfsId } = section[i];
+  for (let i = 0; i < category.length; i += 1) {
+    // category = bookmark data
+    // All: routeKey
+    // Non-MTR: stopId, seq
+    // MTR: stopId, bound
+    const { routeKey, stopId, seq, bound } = category[i];
 
-    // Required field: route, company, seq and stopID
-    let routeObj = Object.keys(gRouteList)
-      .map((e) => gRouteList[e])
-      .filter(
-        (e) =>
-          (route ? e.route === route : true) && // For bus
-          (gtfsId ? e.gtfsId === gtfsId : true) && // For Gmb
-          Object.keys(e.stops).includes(co) && // Use routeObj.stops's company as standard
-          (e.stops[co] ? e.stops[co][seq - 1] === stopId : true)
-      )[0];
-    // Even if there are more than one result, the ETAs should be the same,
-    // so [0] can be applied here
+    if (routeKey) {
+      const routeData = gRouteList[routeKey];
+      const co = getFirstCoByRouteObj(routeData);
 
-    if (!routeObj) {
-      routeObj = { error: true };
+      let routeObj;
+
+      if (co === "mtr") {
+        // Fetch MTR eta needs stopId and custom bound format (string)
+        routeObj = { ...routeData, stopId, bound };
+      } else if (routeData.stops[co][seq - 1] !== stopId && co !== "mtr") {
+        // For non-mtr, check if the seq and the stopId are matched,
+        // If not match, it means the official database has been changed,
+        // User needs to update the bookmark.
+        routeObj = { error: true };
+      } else {
+        routeObj = routeData;
+      }
+
+      const promise = fetchEtas({
+        ...routeObj,
+        stopId,
+        seq: parseInt(seq, 10),
+      });
+      allPromises.push(promise);
+    } else {
+      const promise = fetchEtas({ error: true });
+      allPromises.push(promise);
     }
-
-    const promise = fetchEtas({ ...routeObj, seq: parseInt(seq, 10) });
-    allPromises.push(promise);
   }
 
-  const etas = await Promise.all(allPromises);
+  const categoryEtas = await Promise.all(allPromises);
 
-  return etas.map((e, i) => {
-    const { route, stopId, co } = section[i];
+  return categoryEtas.map((e, i) => {
+    const { stopId, routeKey } = category[i];
     const stopName = gStopList[stopId].name.zh;
     const { location } = gStopList[stopId];
+
+    if (routeKey) {
+      const routeData = gRouteList[routeKey];
+      const co = getFirstCoByRouteObj(routeData);
+      const { route } = routeData;
+
+      return {
+        etas: e,
+        route,
+        stopName,
+        location,
+        stopId,
+        co,
+        routeKey,
+      };
+    }
+    const { route, co } = category[i];
     return {
       etas: e,
-      route,
       stopName,
       location,
       stopId,
+      route,
       co,
     };
   });
@@ -255,3 +307,65 @@ export const a11yProps = (index) => ({
   id: `simple-tab-${index}`,
   "aria-controls": `simple-tabpanel-${index}`,
 });
+
+export const upgradeBookmark = (bookmark) => {
+  const routeList = getLocalStorage("routeList");
+  const bookmarkV2 = [];
+  bookmark.forEach((e) => {
+    e.data.forEach((f) => {
+      f.forEach((g) => {
+        if (!g.routeKey) {
+          if (g.co === "mtr") {
+            g.bound.forEach((h) => {
+              if (h === "up") {
+                const routeKey = Object.keys(routeList).find(
+                  (key) =>
+                    routeList[key].route === g.route &&
+                    routeList[key].bound["mtr"] === "UT" &&
+                    routeList[key].stops["mtr"].includes(g.stopId)
+                );
+                if (routeKey) {
+                  g.routeKey = routeKey;
+                  g.bound = "UT";
+                  delete g.co;
+                  delete g.route;
+                }
+              } else if (h === "down") {
+                const routeKey = Object.keys(routeList).find(
+                  (key) =>
+                    routeList[key].route === g.route &&
+                    routeList[key].bound["mtr"] === "DT" &&
+                    routeList[key].stops["mtr"].includes(g.stopId)
+                );
+                if (routeKey) {
+                  g.routeKey = routeKey;
+                  g.bound = "DT";
+                  delete g.co;
+                  delete g.route;
+                }
+              }
+            });
+          } else {
+            const routeKey = Object.keys(routeList).find(
+              (key) =>
+                routeList[key].route === g.route &&
+                routeList[key].co.includes(g.co) &&
+                routeList[key].stops[g.co][g.seq - 1] === g.stopId
+            );
+            if (routeKey) {
+              g.routeKey = routeKey;
+              delete g.co;
+              delete g.route;
+            }
+          }
+        }
+      });
+      bookmarkV2.push({
+        title: e.title,
+        data: f,
+      });
+    });
+  });
+
+  return bookmarkV2;
+};

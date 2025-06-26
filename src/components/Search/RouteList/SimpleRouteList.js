@@ -4,64 +4,87 @@ import { styled } from "@mui/material";
 import { getCoIconByRouteObj } from "../../../Utils/Utils";
 import { companyIconMap } from "../../../constants/Constants";
 import { EtaContext } from "../../../context/EtaContext";
-import { etaExcluded, mtrIconColor, mtrLineColor, routeMap } from "../../../constants/Mtr";
+import {
+  etaExcluded,
+  mtrIconColor,
+  mtrLineColor,
+  routeMap,
+} from "../../../constants/Mtr";
+import { DbContext } from "../../../context/DbContext";
 
-export const SimpleRouteList = ({ mode, routeList }) => {
+export const SimpleRouteList = ({ mode, routeKeyList }) => {
+  const { gRouteList } = useContext(DbContext);
   const { route } = useContext(EtaContext);
   const navigate = useNavigate();
 
-  return routeList?.map((e, i) => (
-    <SearchRouteListRoot
-      onClick={() => {
-        navigate("/search/" + e.key, { replace: true });
-      }}
-      key={i}
-      className={`${route === e.route && mode === "search" && "match"}`}
-    >
-      <div className="route">
-        <div className="transportIconWrapper">
-          <img className={`transportIcon ${e.route}`} src={companyIconMap[getCoIconByRouteObj(e)]} alt="" />
-        </div>
-        {mode === "search" ? (
-          e.co[0] !== "mtr" ? (
-            // highlight matched char
-            <div>
-              <span className="boldRoute">{e.route.substring(0, route.length)}</span>
-              {e.route.substring(route.length, e.route.length)}
-            </div>
-          ) : (
-            // co === mtr, bold all
-            <span className="boldRoute">{e.route}</span>
-          )
-        ) : (
-          // mode === history
-          <span className="boldRoute">{e.route}</span>
-        )}
-      </div>
-      <div className="companyOrigDest">
-        {e.co[0] === "mtr" && (
-          <div className="routeWrapper">
-            <div className={e.route}>{routeMap[e.route]}</div>
+  return routeKeyList?.map((e, i) => {
+    const routeData = gRouteList[e];
+    return (
+      <SearchRouteListRoot
+        onClick={() => {
+          navigate("/search/" + e, { replace: true });
+        }}
+        key={i}
+        className={`${
+          route === routeData.route && mode === "search" && "match"
+        }`}
+      >
+        <div className="route">
+          <div className="transportIconWrapper">
+            <img
+              className={`transportIcon ${routeData.route}`}
+              src={companyIconMap[getCoIconByRouteObj(routeData)]}
+              alt=""
+            />
           </div>
-        )}
-        <div className="origDest">
-          {e.orig.zh}{" "}
-          {e.co[0] === "mtr" ? (
-            <> ←→ {e.dest.zh}</>
+          {mode === "search" ? (
+            routeData.co[0] !== "mtr" ? (
+              // highlight matched char
+              <div>
+                <span className="boldRoute">
+                  {routeData.route.substring(0, route.length)}
+                </span>
+                {routeData.route.substring(
+                  route.length,
+                  routeData.route.length
+                )}
+              </div>
+            ) : (
+              // co === mtr, bold all
+              <span className="boldRoute">{routeData.route}</span>
+            )
           ) : (
-            <>
-              → <span className="dest">{e.dest.zh}</span>
-            </>
+            // mode === history
+            <span className="boldRoute">{routeData.route}</span>
           )}
-          <span className="special">
-            {" "}
-            {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
-            {etaExcluded.includes(e.route) && <span className="star">沒有相關班次資料</span>}
-          </span>
         </div>
-      </div>
-    </SearchRouteListRoot>
-  ));
+        <div className="companyOrigDest">
+          {routeData.co[0] === "mtr" && (
+            <div className="routeWrapper">
+              <div className={routeData.route}>{routeMap[routeData.route]}</div>
+            </div>
+          )}
+          <div className="origDest">
+            {routeData.orig.zh}{" "}
+            {routeData.co[0] === "mtr" ? (
+              <> ←→ {routeData.dest.zh}</>
+            ) : (
+              <>
+                → <span className="dest">{routeData.dest.zh}</span>
+              </>
+            )}
+            <span className="special">
+              {" "}
+              {parseInt(routeData.serviceType, 10) !== 1 && "特別班次"}
+              {etaExcluded.includes(routeData.route) && (
+                <span className="star">沒有相關班次資料</span>
+              )}
+            </span>
+          </div>
+        </div>
+      </SearchRouteListRoot>
+    );
+  });
 };
 
 const SearchRouteListRoot = styled("div")({

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { fetchNwfbCtbRouteStop } from "../fetch/transports/NwfbCtb";
-import { getCoPriorityId } from "../Utils/Utils";
+import { getFirstCoByRouteObj } from "../Utils/Utils";
 
 export const useCorrectBound = ({ routeObj }) => {
   const [scoreI, setScoreI] = useState(-1);
@@ -14,7 +14,7 @@ export const useCorrectBound = ({ routeObj }) => {
     setScoreO(-1);
     const fetchRouteStop = async () => {
       if (routeObj && Object.keys(routeObj).length !== 0) {
-        const companyId = getCoPriorityId(routeObj);
+        const companyId = getFirstCoByRouteObj(routeObj);
         const expandStopIdArr = routeObj.stops[companyId];
 
         if (

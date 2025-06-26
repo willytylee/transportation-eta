@@ -5,34 +5,51 @@ import { FormDialog } from "../BookmarkDialog/FormDialog";
 import { getLocalStorage, setLocalStorage } from "../../Utils/Utils";
 import { ListDialog } from "../BookmarkDialog/ListDialog";
 
-export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode, bookmarkRouteObj }) => {
+export const BookmarkDialog = ({
+  bookmarkDialogMode,
+  setBookmarkDialogMode,
+  bookmarkData,
+}) => {
   const { enqueueSnackbar } = useSnackbar();
-  const [categoryIdx, setCategoryIdx] = useState(-1);
   const [categoryValue, setCategoryValue] = useState("");
   const [transportData, setTransportData] = useState("");
 
   let _transportData = "";
 
   try {
-    _transportData = getLocalStorage("bookmark") || [];
+    _transportData = getLocalStorage("bookmarkV2") || [];
   } catch (error) {
     _transportData = [];
   }
 
   useEffect(() => {
     setTransportData(_transportData);
-  }, [localStorage.getItem("bookmark")]);
+  }, [localStorage.getItem("bookmarkV2")]);
 
   const handleDialogCloseBtnOnClick = () => {
-    setCategoryIdx(-1);
     setBookmarkDialogMode(null);
   };
 
   // -------------------- Category --------------------
 
   const handleCategoryItemOnClick = (i) => {
-    setCategoryIdx(i);
-    setBookmarkDialogMode("section");
+    _transportData[i].data.push(bookmarkData);
+    setTransportData(_transportData);
+    setLocalStorage("bookmarkV2", _transportData);
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+      localStorage.setItem(
+        "bookmarkV2_nocompress",
+        JSON.stringify(_transportData)
+      );
+    }
+    enqueueSnackbar(
+      `成功加入路線 ${bookmarkData.routeKey.split("+")[0]} 到: ${
+        transportData[i].title
+      }`,
+      {
+        variant: "success",
+      }
+    );
   };
 
   const handleCategoryAddBtnOnClick = () => {
@@ -51,7 +68,7 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode, book
       data: [],
     });
     setTransportData(_transportData);
-    setLocalStorage("bookmark", _transportData);
+    setLocalStorage("bookmarkV2", _transportData);
     setBookmarkDialogMode("category");
     setCategoryValue("");
   };
@@ -60,38 +77,12 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode, book
     e.key === "Enter" && handleCategoryConfirmBtnOnClick();
   };
 
-  // -------------------- Section --------------------
-
-  const handleSectionItemOnClick = (i) => {
-    _transportData[categoryIdx].data[i].push(bookmarkRouteObj);
-    setTransportData(_transportData);
-    setLocalStorage("bookmark", _transportData);
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-      localStorage.setItem("bookmark_nocompress", JSON.stringify(_transportData));
-    }
-    enqueueSnackbar(`成功加入路線 ${bookmarkRouteObj.route} 到: ${transportData[categoryIdx].title} → 組合${i + 1}`, {
-      variant: "success",
-    });
-    setCategoryIdx(-1);
-    setBookmarkDialogMode(null);
-  };
-
-  const handleSectionAddBtnOnClick = () => {
-    _transportData[categoryIdx].data.push([]);
-    setTransportData(_transportData);
-    setLocalStorage("bookmark", _transportData);
-
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-      localStorage.setItem("bookmark_nocompress", JSON.stringify(_transportData));
-    }
-  };
-
-  const handleSectionBackBtnOnClick = () => {
-    setBookmarkDialogMode("category");
-  };
-
   return (
-    <DialogRoot onClose={handleDialogCloseBtnOnClick} open={bookmarkDialogMode !== null} fullWidth>
+    <DialogRoot
+      onClose={handleDialogCloseBtnOnClick}
+      open={bookmarkDialogMode !== null}
+      fullWidth
+    >
       {bookmarkDialogMode === "category" && (
         <ListDialog
           title="加入書籤"
@@ -100,13 +91,13 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode, book
           handleAddBtnOnClick={handleCategoryAddBtnOnClick}
           data={transportData}
           bookmarkDialogMode={bookmarkDialogMode}
-          emptyMsg="未有類別, 請先新增類別"
+          emptyMsg="未有分類, 請按此新增分類"
         />
       )}
       {bookmarkDialogMode === "categoryAdd" && (
         <FormDialog
-          title="新增類別"
-          label="類別名稱"
+          title="新增分類"
+          label="分類名稱"
           placeholder="上班"
           value={categoryValue}
           setValue={setCategoryValue}
@@ -114,18 +105,6 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode, book
           handleBackBtnOnClick={handleCategoryAddBackBtnOnClick}
           handleConfirmBtnOnClick={handleCategoryConfirmBtnOnClick}
           handleAddKeyPress={handleCategoryAddKeyPress}
-        />
-      )}
-      {bookmarkDialogMode === "section" && (
-        <ListDialog
-          title={_transportData[categoryIdx].title}
-          handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
-          handleItemOnClick={handleSectionItemOnClick}
-          handleAddBtnOnClick={handleSectionAddBtnOnClick}
-          data={transportData[categoryIdx].data}
-          bookmarkDialogMode={bookmarkDialogMode}
-          handleBackBtnOnClick={handleSectionBackBtnOnClick}
-          emptyMsg="未有組合, 請先新增組合"
         />
       )}
     </DialogRoot>

@@ -7,22 +7,28 @@ export const HistoryRouteList = () => {
   const { gRouteList } = useContext(DbContext);
   const { route } = useContext(EtaContext);
 
-  let routeList;
+  let routeKeyList;
+  const routeListHistory = localStorage.getItem("routeListHistory");
 
   try {
-    JSON.parse(localStorage.getItem("routeListHistory"));
+    JSON.parse(routeListHistory);
   } catch (error) {
-    routeList = [];
+    routeKeyList = [];
     localStorage.removeItem("routeListHistory");
   }
 
-  if (Array.isArray(JSON.parse(localStorage.getItem("routeListHistory")))) {
-    const routeListHistory = JSON.parse(localStorage.getItem("routeListHistory"));
-    routeList = routeListHistory.map((e) => gRouteList[e]).filter((e) => (route ? route === e.route.substring(0, route.length) : true));
+  if (Array.isArray(JSON.parse(routeListHistory))) {
+    routeKeyList = JSON.parse(routeListHistory).filter((e) =>
+      route ? route === gRouteList[e].route.substring(0, route.length) : true
+    );
   } else {
     localStorage.removeItem("routeListHistory");
-    routeList = [];
+    routeKeyList = [];
   }
 
-  return routeList?.length > 0 ? <SimpleRouteList mode="history" routeList={routeList} /> : <div className="emptyMsg">未有歷史紀錄</div>;
+  return routeKeyList?.length > 0 ? (
+    <SimpleRouteList mode="history" routeKeyList={routeKeyList} />
+  ) : (
+    <div className="emptyMsg">未有歷史紀錄</div>
+  );
 };

@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { styled, Tabs, Tab } from "@mui/material";
 import { SearchBar } from "../components/Search/SearchBar";
 import { RouteList } from "../components/Search/RouteList/RouteList";
@@ -12,14 +12,17 @@ import { setRouteListHistory, a11yProps } from "../Utils/Utils";
 import { primaryColor } from "../constants/Constants";
 import { AppContext } from "../context/AppContext";
 import { DbContext } from "../context/DbContext";
+import { EtaContext } from "../context/EtaContext";
 
 export const Search = () => {
-  const { routeKey } = useParams();
-  const searchMethod = JSON.parse(localStorage.getItem("settings"))?.searchMethod || "搜尋路線";
-
+  const searchMethod =
+    JSON.parse(localStorage.getItem("settings"))?.searchMethod || "搜尋路線";
   const [tabIdx, setTabIdx] = useState(searchMethod === "搜尋路線" ? 0 : 1);
+  const { routeKey } = useParams();
   const { gRouteList } = useContext(DbContext);
   const { dbVersion } = useContext(AppContext);
+  const { updateRoute } = useContext(EtaContext);
+  const navigate = useNavigate();
 
   const handleFormKeyPress = (e) => {
     e.key === "Enter" && setTabIdx(1);
@@ -27,6 +30,10 @@ export const Search = () => {
 
   const handleTabChange = (e, value) => {
     setTabIdx(value);
+    if (value === 2 || value === 3) {
+      updateRoute("");
+      navigate("/search", { replace: true });
+    }
   };
 
   useEffect(() => {
@@ -41,11 +48,31 @@ export const Search = () => {
       <SearchBar handleFormKeyPress={handleFormKeyPress} />
 
       <SearchResult>
-        <Tabs value={tabIdx} onChange={handleTabChange} TabIndicatorProps={{ style: { background: `${primaryColor}` } }}>
-          <Tab disabled={dbVersion === null} label="搜尋路線" {...a11yProps(0)} />
-          <Tab disabled={dbVersion === null} label="交通路線" {...a11yProps(1)} />
-          <Tab disabled={dbVersion === null} label="附近路線" {...a11yProps(2)} />
-          <Tab disabled={dbVersion === null} label="歷史紀錄" {...a11yProps(3)} />
+        <Tabs
+          value={tabIdx}
+          onChange={handleTabChange}
+          TabIndicatorProps={{ style: { background: `${primaryColor}` } }}
+        >
+          <Tab
+            disabled={dbVersion === null}
+            label="搜尋路線"
+            {...a11yProps(0)}
+          />
+          <Tab
+            disabled={dbVersion === null}
+            label="交通路線"
+            {...a11yProps(1)}
+          />
+          <Tab
+            disabled={dbVersion === null}
+            label="附近路線"
+            {...a11yProps(2)}
+          />
+          <Tab
+            disabled={dbVersion === null}
+            label="歷史紀錄"
+            {...a11yProps(3)}
+          />
         </Tabs>
         <TabPanelRoot value={tabIdx} index={0}>
           <SearchRouteList />

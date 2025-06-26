@@ -7,7 +7,7 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
   const { eta, isEtaLoading } = useEtas({
     seq,
     routeObj,
-    interval: 10000,
+    interval: Math.floor(Math.random() * 10001) + 10000,
   });
 
   const groupedEtas = _(eta)
@@ -31,7 +31,10 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
             groupedEtas.map((destEtas, i) => (
               <div key={i} className="etaWrapper">
                 <div className="arriveText">
-                  → <span className="dest">{stationMap[destEtas.dest]}</span>
+                  →{" "}
+                  <span className="dest" title={destEtas.dest}>
+                    {stationMap[destEtas.dest]}
+                  </span>
                 </div>
                 <div className="ttntWrapper">
                   {destEtas.etas

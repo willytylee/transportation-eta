@@ -2,7 +2,11 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { styled } from "@mui/material";
-import { basicFiltering, getCoPriorityId, getCoIconByRouteObj } from "../../../Utils/Utils";
+import {
+  basicFiltering,
+  getFirstCoByRouteObj,
+  getCoIconByRouteObj,
+} from "../../../Utils/Utils";
 import { DbContext } from "../../../context/DbContext";
 import { EtaContext } from "../../../context/EtaContext";
 import { companyIconMap, primaryColor } from "../../../constants/Constants";
@@ -30,21 +34,28 @@ export const NearbyRouteList = () => {
         return gRouteList[e];
       })
       .filter((e) => basicFiltering(e))
-      .filter((e) => (route ? route === e.route.substring(0, route.length) : true));
+      .filter((e) =>
+        route ? route === e.route.substring(0, route.length) : true
+      );
 
   const filteredRouteList = [];
 
   // Find out the route which contains the near by Stops
   routeList?.forEach((e) => {
-    const company = getCoPriorityId(e);
+    const company = getFirstCoByRouteObj(e);
 
-    const filitedStopId = Object.values(e.stops[company]).filter((f) => Object.keys(stopIdsNearby).includes(f));
+    const filitedStopId = Object.values(e.stops[company]).filter((f) =>
+      Object.keys(stopIdsNearby).includes(f)
+    );
 
     if (filitedStopId?.length > 0) {
       // There may have more than one stopIdsNearby in a route, find the nearest stop in the route stop List
-      const _stopId = filitedStopId.reduce((prev, curr) => (stopIdsNearby[prev] < stopIdsNearby[curr] ? prev : curr));
+      const _stopId = filitedStopId.reduce((prev, curr) =>
+        stopIdsNearby[prev] < stopIdsNearby[curr] ? prev : curr
+      );
       e.nearbyOrigStopId = _stopId;
-      e.nearbyOrigStopSeq = e.stops[company].findIndex((f) => f === _stopId) + 1;
+      e.nearbyOrigStopSeq =
+        e.stops[company].findIndex((f) => f === _stopId) + 1;
       e.distance = stopIdsNearby[_stopId];
       filteredRouteList.push(e);
     }
@@ -69,25 +80,46 @@ export const NearbyRouteList = () => {
           return (
             <NearbyRouteListRoot key={i}>
               <div className="stop">
-                <a href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`} title={e.stopId}>
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
+                  title={e.stopId}
+                >
                   {name} - {e.routes[0].distance}米
                 </a>
               </div>
               <div className="routes">
                 {e.routes.map((routeObj, j) => (
-                  <div key={j} className="routeItems" onClick={() => navigate("/search/" + routeObj.key, { replace: true })}>
+                  <div
+                    key={j}
+                    className="routeItems"
+                    onClick={() =>
+                      navigate("/search/" + routeObj.key, { replace: true })
+                    }
+                  >
                     <div className="transportIconWrapper">
-                      <img className="transportIcon" src={companyIconMap[getCoIconByRouteObj(routeObj)]} alt="" />
+                      <img
+                        className="transportIcon"
+                        src={companyIconMap[getCoIconByRouteObj(routeObj)]}
+                        alt=""
+                      />
                     </div>
                     <div className="route">{routeObj.route}</div>
                     <div className="nearStopDest">
                       <div>
                         <span className="dest">{routeObj.dest.zh}</span>
-                        <span className="special"> {parseInt(routeObj.serviceType, 10) !== 1 && "特別班次"}</span>
+                        <span className="special">
+                          {" "}
+                          {parseInt(routeObj.serviceType, 10) !== 1 &&
+                            "特別班次"}
+                        </span>
                       </div>
                     </div>
                     <div className="eta">
-                      <Eta seq={routeObj.nearbyOrigStopSeq} routeObj={routeObj} slice={1} />
+                      <Eta
+                        seq={routeObj.nearbyOrigStopSeq}
+                        routeObj={routeObj}
+                        slice={1}
+                      />
                     </div>
                   </div>
                 ))}
@@ -96,9 +128,15 @@ export const NearbyRouteList = () => {
           );
         })}
 
-      {currentLocation.lat === 0 && currentLocation.lng === 0 && <div className="emptyMsg">載入中...</div>}
+      {currentLocation.lat === 0 && currentLocation.lng === 0 && (
+        <div className="emptyMsg">載入中...</div>
+      )}
 
-      {currentLocation.lat !== 0 && currentLocation.lng !== 0 && nearbyRouteList?.length === 0 && <div className="emptyMsg">附近未有交通路線</div>}
+      {currentLocation.lat !== 0 &&
+        currentLocation.lng !== 0 &&
+        nearbyRouteList?.length === 0 && (
+          <div className="emptyMsg">附近未有交通路線</div>
+        )}
     </>
   );
 };

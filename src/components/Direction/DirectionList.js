@@ -4,13 +4,20 @@ import { getPreciseDistance } from "geolib";
 import { DbContext } from "../../context/DbContext";
 import { useLocationOnce } from "../../hooks/Location";
 import { useStopIdsNearBy } from "../../hooks/Stop";
-import { basicFiltering, getCoPriorityId } from "../../Utils/Utils";
+import { basicFiltering, getFirstCoByRouteObj } from "../../Utils/Utils";
 import { DirectionContext } from "../../context/DirectionContext";
 import { DirectionItem } from "./DirectionItem";
 
 export const DirectionList = () => {
   const { gRouteList, gStopList } = useContext(DbContext);
-  const { updateCurrRoute, origination, destination, expanded, sortingMethod, updateExpanded } = useContext(DirectionContext);
+  const {
+    updateCurrRoute,
+    origination,
+    destination,
+    expanded,
+    sortingMethod,
+    updateExpanded,
+  } = useContext(DirectionContext);
   const [nearbyRouteList, setNearbyRouteList] = useState([]);
   const [sortedRouteList, setSortedRouteList] = useState([]);
 
@@ -54,23 +61,33 @@ export const DirectionList = () => {
     origStopIdsNearby &&
       destStopIdsNearby &&
       routeList?.forEach((e) => {
-        const company = getCoPriorityId(e);
+        const company = getFirstCoByRouteObj(e);
 
-        const filitedOrigStopId = Object.values(e.stops[company]).filter((f) => Object.keys(origStopIdsNearby).includes(f));
+        const filitedOrigStopId = Object.values(e.stops[company]).filter((f) =>
+          Object.keys(origStopIdsNearby).includes(f)
+        );
 
-        const filitedDestStopId = Object.values(e.stops[company]).filter((f) => Object.keys(destStopIdsNearby).includes(f));
+        const filitedDestStopId = Object.values(e.stops[company]).filter((f) =>
+          Object.keys(destStopIdsNearby).includes(f)
+        );
 
         if (filitedOrigStopId?.length > 0 && filitedDestStopId?.length > 0) {
           // There may have more than one destStopIdsNearby in a route, find the nearest stop in the route stop List
-          const _origStopId = filitedOrigStopId.reduce((prev, curr) => (origStopIdsNearby[prev] < origStopIdsNearby[curr] ? prev : curr));
+          const _origStopId = filitedOrigStopId.reduce((prev, curr) =>
+            origStopIdsNearby[prev] < origStopIdsNearby[curr] ? prev : curr
+          );
 
-          const _destStopId = filitedDestStopId.reduce((prev, curr) => (destStopIdsNearby[prev] < destStopIdsNearby[curr] ? prev : curr));
+          const _destStopId = filitedDestStopId.reduce((prev, curr) =>
+            destStopIdsNearby[prev] < destStopIdsNearby[curr] ? prev : curr
+          );
 
           e.nearbyOrigStopId = _origStopId;
           e.nearbyDestStopId = _destStopId;
 
-          e.nearbyOrigStopSeq = e.stops[company].findIndex((f) => f === _origStopId) + 1;
-          e.nearbyDestStopSeq = e.stops[company].findIndex((f) => f === _destStopId) + 1;
+          e.nearbyOrigStopSeq =
+            e.stops[company].findIndex((f) => f === _origStopId) + 1;
+          e.nearbyDestStopSeq =
+            e.stops[company].findIndex((f) => f === _destStopId) + 1;
 
           e.origWalkDistance = origStopIdsNearby[_origStopId];
           e.destWalkDistance = destStopIdsNearby[_destStopId];
@@ -90,7 +107,7 @@ export const DirectionList = () => {
 
     setNearbyRouteList(
       filteredRouteList.map((e, j) => {
-        const company = getCoPriorityId(e);
+        const company = getFirstCoByRouteObj(e);
 
         let totalTransportDistance = 0;
         let actualTransportDistance = 0;
@@ -119,7 +136,8 @@ export const DirectionList = () => {
           transportTime:
             e.jt !== null
               ? Math.round(
-                  e.jt * (actualTransportDistance / totalTransportDistance) + (e.nearbyDestStopSeq - e.nearbyOrigStopSeq) // Topup for extra time in each stop
+                  e.jt * (actualTransportDistance / totalTransportDistance) +
+                    (e.nearbyDestStopSeq - e.nearbyOrigStopSeq) // Topup for extra time in each stop
                 )
               : null,
         };
@@ -129,12 +147,25 @@ export const DirectionList = () => {
 
   useEffect(() => {
     if (sortingMethod === "最短步行時間") {
-      setSortedRouteList(nearbyRouteList.sort((a, b) => a.origWalkTime + a.destWalkTime - (b.origWalkTime + b.destWalkTime)));
+      setSortedRouteList(
+        nearbyRouteList.sort(
+          (a, b) =>
+            a.origWalkTime + a.destWalkTime - (b.origWalkTime + b.destWalkTime)
+        )
+      );
     } else if (sortingMethod === "最短交通時間") {
-      setSortedRouteList(nearbyRouteList.sort((a, b) => a.transportTime - b.transportTime));
+      setSortedRouteList(
+        nearbyRouteList.sort((a, b) => a.transportTime - b.transportTime)
+      );
     } else {
       setSortedRouteList(
-        nearbyRouteList.sort((a, b) => a.origWalkTime + a.transportTime + a.destWalkTime - (b.origWalkTime + b.transportTime + b.destWalkTime))
+        nearbyRouteList.sort(
+          (a, b) =>
+            a.origWalkTime +
+            a.transportTime +
+            a.destWalkTime -
+            (b.origWalkTime + b.transportTime + b.destWalkTime)
+        )
       );
     }
   }, [nearbyRouteList, sortingMethod]);
@@ -145,7 +176,14 @@ export const DirectionList = () => {
         destination &&
         (sortedRouteList?.length > 0 ? (
           sortedRouteList.map((e, i) => (
-            <DirectionItem key={i} e={e} i={i} handleChange={handleChange} destination={destination} expanded={expanded} />
+            <DirectionItem
+              key={i}
+              e={e}
+              i={i}
+              handleChange={handleChange}
+              destination={destination}
+              expanded={expanded}
+            />
           ))
         ) : (
           <div className="emptyMsg">沒有路線</div>

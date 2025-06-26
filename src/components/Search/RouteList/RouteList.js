@@ -1,10 +1,19 @@
 import { useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, styled } from "@mui/material";
-import { basicFiltering, sortByCompany, getCoIconByRouteObj } from "../../../Utils/Utils";
+import {
+  basicFiltering,
+  sortByCompany,
+  getCoIconByRouteObj,
+} from "../../../Utils/Utils";
 import { EtaContext } from "../../../context/EtaContext";
 import { companyIconMap } from "../../../constants/Constants";
-import { etaExcluded, mtrIconColor, mtrLineColor, routeMap } from "../../../constants/Mtr";
+import {
+  etaExcluded,
+  mtrIconColor,
+  mtrLineColor,
+  routeMap,
+} from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
 
 export const RouteList = () => {
@@ -15,52 +24,54 @@ export const RouteList = () => {
 
   const english = /^[A-Za-z]*$/;
 
-  let routeList;
+  let routeKeyList;
 
   if (gRouteList) {
     if (route === "M" || route === "MT" || route === "MTR") {
-      routeList = Object.keys(gRouteList)
-        .map((e) => {
-          gRouteList[e].key = e;
-          return gRouteList[e];
-        })
-        .filter((e) => e.co.includes("mtr"))
+      routeKeyList = Object.keys(gRouteList)
+        .filter((e) => gRouteList[e].co.includes("mtr"))
         .filter(
           // Combine same route
           (e, idx, self) =>
             idx ===
             self.findIndex((t) => {
-              const eStop = JSON.stringify([...e.stops.mtr].sort());
-              const tStop = JSON.stringify([...t.stops.mtr].sort());
+              const eStop = JSON.stringify([...gRouteList[e].stops.mtr].sort());
+              const tStop = JSON.stringify([...gRouteList[t].stops.mtr].sort());
               return eStop === tStop;
             })
         );
     } else if (route.length === 3 && english.test(route) && route !== "MTR") {
-      routeList = Object.keys(gRouteList)
-        .map((e) => {
-          gRouteList[e].key = e;
-          return gRouteList[e];
-        })
-        .filter((e) => e.co.includes("mtr") && e.route === route)
+      routeKeyList = Object.keys(gRouteList)
+        .filter((e) => gRouteList[e].co.includes("mtr"))
+        .filter(
+          (e) =>
+            gRouteList[e].co.includes("mtr") && gRouteList[e].route === route
+        )
         .filter(
           // Combine same route
           (e, idx, self) =>
             idx ===
             self.findIndex((t) => {
-              const eStop = JSON.stringify([...e.stops.mtr].sort());
-              const tStop = JSON.stringify([...t.stops.mtr].sort());
+              const eStop = JSON.stringify([...gRouteList[e].stops.mtr].sort());
+              const tStop = JSON.stringify([...gRouteList[t].stops.mtr].sort());
               return eStop === tStop;
             })
         );
     } else {
-      routeList = Object.keys(gRouteList)
-        .map((e) => {
-          gRouteList[e].key = e;
-          return gRouteList[e];
-        })
-        .filter((e) => basicFiltering(e))
-        .filter((e) => e.route === route)
-        .sort((a, b) => sortByCompany(a, b));
+      routeKeyList = Object.keys(gRouteList)
+        .filter((e) => basicFiltering(gRouteList[e]))
+        .filter((e) => gRouteList[e].route === route)
+        .sort((a, b) => sortByCompany(gRouteList[a], gRouteList[b]))
+        .filter((e) => {
+          if (routeKey) {
+            return (
+              gRouteList[routeKey].co.sort().join() ===
+              gRouteList[e].co.sort().join()
+            );
+          } 
+            return true;
+          
+        });
     }
   }
 
@@ -68,43 +79,54 @@ export const RouteList = () => {
     navigate("/search/" + e, { replace: true });
   };
 
-  return routeList?.length > 0 ? (
+  return routeKeyList?.length > 0 ? (
     <RouteListRoot>
-      {routeList?.map((e, i) => (
-        <Card key={i} onClick={() => handleCardOnClick(e.key)}>
-          <div
-            // title={JSON.stringify(e.route) + JSON.stringify(e.bound)}
-            // There may have nearestStopId in one of the currRoute
-            className={`routeTitle ${e.key === routeKey ? "matched" : ""}`}
-          >
-            <div className="companyOrigDest">
-              <div className="transportIconWrapper">
-                <img className={`transportIcon ${e.route}`} src={companyIconMap[getCoIconByRouteObj(e)]} alt="" />
-              </div>
-              {e.co[0] === "mtr" && (
-                <div className="routeWrapper">
-                  <div className={e.route}>{routeMap[e.route]}</div>
+      {routeKeyList?.map((e, i) => {
+        const routeData = gRouteList[e];
+        return (
+          <Card key={i} onClick={() => handleCardOnClick(e)}>
+            <div
+              // title={JSON.stringify(e.route) + JSON.stringify(e.bound)}
+              // There may have nearestStopId in one of the currRoute
+              className={`routeTitle ${e === routeKey ? "matched" : ""}`}
+            >
+              <div className="companyOrigDest">
+                <div className="transportIconWrapper">
+                  <img
+                    className={`transportIcon ${routeData.route}`}
+                    src={companyIconMap[getCoIconByRouteObj(routeData)]}
+                    alt=""
+                  />
                 </div>
-              )}
-              <div>
-                {e.orig.zh}{" "}
-                {e.co[0] === "mtr" ? (
-                  <> ←→ {e.dest.zh}</>
-                ) : (
-                  <>
-                    → <span className="dest">{e.dest.zh}</span>
-                  </>
+                {routeData.co[0] === "mtr" && (
+                  <div className="routeWrapper">
+                    <div className={routeData.route}>
+                      {routeMap[routeData.route]}
+                    </div>
+                  </div>
                 )}
-                <span className="special">
-                  {" "}
-                  {parseInt(e.serviceType, 10) !== 1 && "特別班次"}
-                  {etaExcluded.includes(e.route) && <span className="star">沒有相關班次資料</span>}
-                </span>
+                <div>
+                  {routeData.orig.zh}{" "}
+                  {routeData.co[0] === "mtr" ? (
+                    <> ←→ {routeData.dest.zh}</>
+                  ) : (
+                    <>
+                      → <span className="dest">{routeData.dest.zh}</span>
+                    </>
+                  )}
+                  <span className="special">
+                    {" "}
+                    {parseInt(routeData.serviceType, 10) !== 1 && "特別班次"}
+                    {etaExcluded.includes(routeData.route) && (
+                      <span className="star">沒有相關班次資料</span>
+                    )}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        </Card>
-      ))}
+          </Card>
+        );
+      })}
     </RouteListRoot>
   ) : (
     <div className="emptyMsg">請輸入路線</div>

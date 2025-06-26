@@ -7,11 +7,11 @@ import {
   styled,
   Dialog,
   FormControl,
-  FormGroup,
   FormControlLabel,
-  Checkbox,
+  Radio,
   DialogActions,
   Button,
+  RadioGroup,
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
@@ -21,8 +21,8 @@ import { DbContext } from "../../context/DbContext";
 export const MtrRouteOptionDialog = ({
   mtrRouteOptionDialogOpen,
   setBookmarkDialogMode,
-  bookmarkRouteObj,
-  setBookmarkRouteObj,
+  bookmarkData,
+  setBookmarkData,
   setMtrRouteOptionDialogOpen,
 }) => {
   const { routeKey } = useParams();
@@ -30,7 +30,7 @@ export const MtrRouteOptionDialog = ({
   const { enqueueSnackbar } = useSnackbar();
 
   const { gRouteList } = useContext(DbContext);
-  const _currRoute = routeKey ? gRouteList[routeKey] : [];
+  const routeData = routeKey ? gRouteList[routeKey] : [];
 
   const handleCloseBtnOnClick = () => {
     setBound([]);
@@ -38,18 +38,12 @@ export const MtrRouteOptionDialog = ({
   };
 
   const handleFormChange = (e) => {
-    let _bound = [...bound];
-    if (e.target.checked) {
-      _bound.push(e.target.name);
-    } else {
-      _bound = _bound.filter((f) => f !== e.target.name);
-    }
-    setBound(_bound);
+    setBound(e.target.value);
   };
 
   const handleConfirmBtnOnClick = () => {
     if (bound.length > 0) {
-      setBookmarkRouteObj({ ...bookmarkRouteObj, bound });
+      setBookmarkData({ ...bookmarkData, bound });
       setMtrRouteOptionDialogOpen(false);
       setBookmarkDialogMode("category");
       setBound([]);
@@ -61,7 +55,11 @@ export const MtrRouteOptionDialog = ({
   };
 
   return (
-    <DialogRoot onClose={handleCloseBtnOnClick} open={mtrRouteOptionDialogOpen} fullWidth>
+    <DialogRoot
+      onClose={handleCloseBtnOnClick}
+      open={mtrRouteOptionDialogOpen}
+      fullWidth
+    >
       <DialogTitle>
         <Grid>
           <div className="title">請選擇方向</div>
@@ -74,18 +72,28 @@ export const MtrRouteOptionDialog = ({
       </DialogTitle>
 
       <FormControl sx={{ m: 3, mb: 0 }} component="fieldset" variant="standard">
-        <FormGroup>
+        <RadioGroup value={bound} onChange={handleFormChange}>
           <FormControlLabel
-            control={<Checkbox onChange={handleFormChange} name="up" />}
-            label={`${stationMap[bookmarkRouteObj.stopId]} → ${stationDestMap[_currRoute?.route]?.up.map((dest) => stationMap[dest]).join(" / ")}`}
+            value="UT"
+            control={<Radio />}
+            label={`${stationMap[bookmarkData.stopId]} → ${stationDestMap[
+              routeData?.route
+            ]?.up
+              .map((dest) => stationMap[dest])
+              .join(" / ")}`}
           />
-
           <FormControlLabel
-            control={<Checkbox onChange={handleFormChange} name="down" />}
-            label={`${stationMap[bookmarkRouteObj.stopId]} → ${stationDestMap[_currRoute?.route]?.down.map((dest) => stationMap[dest]).join(" / ")}`}
+            value="DT"
+            control={<Radio />}
+            label={`${stationMap[bookmarkData.stopId]} → ${stationDestMap[
+              routeData?.route
+            ]?.down
+              .map((dest) => stationMap[dest])
+              .join(" / ")}`}
           />
-        </FormGroup>
+        </RadioGroup>
       </FormControl>
+
       <DialogActions>
         <Button onClick={handleConfirmBtnOnClick}>確定</Button>
       </DialogActions>

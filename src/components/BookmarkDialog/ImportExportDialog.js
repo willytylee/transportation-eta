@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { decompress as decompressJson } from "lzutf8-light";
+import {
+  compress as compressJson,
+  decompress as decompressJson,
+} from "lzutf8-light";
 import {
   Grid,
   IconButton,
@@ -13,7 +16,7 @@ import {
 } from "@mui/material/";
 import { useSnackbar } from "notistack";
 import { Close as CloseIcon } from "@mui/icons-material";
-
+import { upgradeBookmark, setLocalStorage } from "../../Utils/Utils";
 import { PreviewDialog } from "./PreviewDialog";
 
 export const ImportExportDialog = ({
@@ -26,9 +29,28 @@ export const ImportExportDialog = ({
   const [exportData, setExportData] = useState("");
 
   useEffect(() => {
-    const bookmark = localStorage.getItem("bookmark") || "W10=";
-    setExportData(bookmark);
-  }, [localStorage.getItem("bookmark")]);
+    const bookmark = localStorage.getItem("bookmarkV2") || "W10=";
+    const _bookmark = removeOutdatedData(bookmark);
+    setExportData(_bookmark);
+  }, [localStorage.getItem("bookmarkV2")]);
+
+  const removeOutdatedData = (encodedData) => {
+    try {
+      const decodedData = JSON.parse(
+        decompressJson(encodedData, {
+          inputEncoding: "Base64",
+        })
+      );
+      const cleanDecodedData = decodedData.map((e) => ({ ...e, data: e.data.filter((f) => "routeKey" in f) }));
+      return compressJson(JSON.stringify(cleanDecodedData), {
+        outputEncoding: "Base64",
+      });
+    } catch (error) {
+      enqueueSnackbar("資料錯誤, 請重新匯入或刪除書籤。", {
+        variant: "error",
+      });
+    }
+  };
 
   const handleDialogCloseBtnOnClick = () => {
     setImportExportMode(null);
@@ -36,12 +58,19 @@ export const ImportExportDialog = ({
 
   const handleimportBtnOnClick = () => {
     try {
-      JSON.parse(
+      let _importData = JSON.parse(
         decompressJson(importData, {
           inputEncoding: "Base64",
         })
       );
-      localStorage.setItem("bookmark", importData);
+
+      if (Array.isArray(_importData[0].data[0])) {
+        // Old version bookmark
+        _importData = upgradeBookmark(_importData);
+      }
+
+      setLocalStorage("bookmarkV2", _importData);
+
       enqueueSnackbar("成功匯入書籤。", {
         variant: "success",
       });
@@ -167,7 +196,7 @@ export const ImportExportDialog = ({
                 readOnly: true,
               }}
               multiline
-              maxRows={3}
+              maxRows={8}
             />
           </DialogContent>
           <DialogActions>

@@ -7,7 +7,6 @@ import {
   Divider,
   ListItemButton,
   styled,
-  ListItemText,
 } from "@mui/material/";
 import {
   Close as CloseIcon,
@@ -15,7 +14,6 @@ import {
   ArrowBackIosNew as ArrowBackIosNewIcon,
 } from "@mui/icons-material";
 import { CategoryListItemText } from "./CategoryListItemText";
-import { SectionListItemText } from "./SectionListItemText";
 
 export const ListDialog = ({
   title,
@@ -39,9 +37,6 @@ export const ListDialog = ({
         )}
         <div className="title">{title}</div>
         <div className="rightBtnGroup">
-          <IconButton onClick={handleAddBtnOnClick}>
-            <AddIcon />
-          </IconButton>
           <IconButton onClick={handleCloseBtnOnClick}>
             <CloseIcon />
           </IconButton>
@@ -61,20 +56,22 @@ export const ListDialog = ({
                 {bookmarkDialogMode === "category" && (
                   <CategoryListItemText e={e} />
                 )}
-                {bookmarkDialogMode === "section" && (
-                  <SectionListItemText i={i} e={e} />
-                )}
               </ListItemButton>
             </ListItem>
-            {i !== data.length - 1 ? <Divider /> : null}
+            <Divider />
           </div>
         ))}
+        <ListItem disablePadding>
+          <ListItemButton className="addCategory" onClick={handleAddBtnOnClick}>
+            <AddIcon /> 新增分類
+          </ListItemButton>
+        </ListItem>
       </List>
     ) : (
       <List sx={{ pt: 0 }}>
-        <ListItem className="emptyMsg">
-          <ListItemText primary={emptyMsg} />
-        </ListItem>
+        <ListItemButton onClick={handleAddBtnOnClick}>
+          <div>{emptyMsg}</div>
+        </ListItemButton>
       </List>
     )}
   </ListDialogRoot>
@@ -83,6 +80,9 @@ export const ListDialog = ({
 const ListDialogRoot = styled("div")({
   ".emptyMsg .MuiListItemText-root .MuiListItemText-primary": {
     width: "100%",
+  },
+  ".addCategory": {
+    justifyContent: "center",
   },
   ".MuiListItemText-root": {
     display: "flex",

@@ -1,11 +1,21 @@
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
-import { Grid, IconButton, DialogTitle, styled, DialogContent, Dialog } from "@mui/material/";
+import {
+  Grid,
+  IconButton,
+  DialogTitle,
+  styled,
+  DialogContent,
+  Dialog,
+} from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { DbContext } from "../context/DbContext";
 import { serviceDate } from "../constants/Constants";
 
-export const TimetableDialog = ({ timetableDialogOpen, setTimetableDialogOpen }) => {
+export const TimetableDialog = ({
+  timetableDialogOpen,
+  setTimetableDialogOpen,
+}) => {
   const { routeKey } = useParams();
   const { gRouteList } = useContext(DbContext);
 
@@ -17,10 +27,14 @@ export const TimetableDialog = ({ timetableDialogOpen, setTimetableDialogOpen })
   const day = d.getDay();
   const current = parseInt(d.getHours() + "" + d.getMinutes(), 10);
 
-  const _currRoute = routeKey ? gRouteList[routeKey] : [];
+  const routeData = routeKey ? gRouteList[routeKey] : [];
 
   return (
-    <DialogRoot open={timetableDialogOpen} onClose={handleDialogOnClose} fullWidth>
+    <DialogRoot
+      open={timetableDialogOpen}
+      onClose={handleDialogOnClose}
+      fullWidth
+    >
       <DialogTitle>
         <Grid>
           <div className="title">班次時間表</div>
@@ -32,24 +46,28 @@ export const TimetableDialog = ({ timetableDialogOpen, setTimetableDialogOpen })
         </Grid>
       </DialogTitle>
       <DialogContent>
-        {_currRoute &&
-          _currRoute.freq &&
-          Object.keys(_currRoute.freq).length > 0 &&
-          Object.keys(_currRoute.freq).map((date, i) => (
+        {routeData &&
+          routeData.freq &&
+          Object.keys(routeData.freq).length > 0 &&
+          Object.keys(routeData.freq).map((date, i) => (
             <div key={i} className="dateWrapper">
               <div className="date">{serviceDate[date]?.string ?? ""}</div>
               <div className="timeFreqGroup">
-                {Object.keys(_currRoute.freq[date])
+                {Object.keys(routeData.freq[date])
                   .sort()
                   .map((startTime, j) => {
-                    if (_currRoute.freq[date][startTime] !== null) {
-                      const endTime = _currRoute.freq[date][startTime][0];
-                      const interval = _currRoute.freq[date][startTime][1] / 60;
+                    if (routeData.freq[date][startTime] !== null) {
+                      const endTime = routeData.freq[date][startTime][0];
+                      const interval = routeData.freq[date][startTime][1] / 60;
                       return (
                         <div
                           key={j}
                           className={`timeFreqWrapper ${
-                            serviceDate[date]?.day.includes(day) && parseInt(startTime, 10) < current && parseInt(endTime, 10) > current ? "bold" : ""
+                            serviceDate[date]?.day.includes(day) &&
+                            parseInt(startTime, 10) < current &&
+                            parseInt(endTime, 10) > current
+                              ? "bold"
+                              : ""
                           }`}
                         >
                           <div className="timeRange">

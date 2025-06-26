@@ -6,28 +6,29 @@ import { FormDialog } from "../BookmarkDialog/FormDialog";
 import { getLocalStorage, setLocalStorage } from "../../Utils/Utils";
 import { ListBtnDialog } from "../BookmarkDialog/ListBtnDialog";
 
-export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode }) => {
+export const BookmarkDialog = ({
+  bookmarkDialogMode,
+  setBookmarkDialogMode,
+}) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [categoryIdx, setCategoryIdx] = useState(-1);
-  const [sectionIdx, setSectionIdx] = useState(-1);
   const [formValue, setFormValue] = useState("");
   const [transportData, setTransportData] = useState("");
 
   let _transportData = "";
 
   try {
-    _transportData = getLocalStorage("bookmark") || [];
+    _transportData = getLocalStorage("bookmarkV2") || [];
   } catch (error) {
     _transportData = [];
   }
 
   useEffect(() => {
     setTransportData(_transportData);
-  }, [localStorage.getItem("bookmark")]);
+  }, [localStorage.getItem("bookmarkV2")]);
 
   const handleDialogCloseBtnOnClick = () => {
     setCategoryIdx(-1);
-    setSectionIdx(-1);
     setBookmarkDialogMode(null);
   };
 
@@ -35,7 +36,7 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode }) =>
 
   const handleCategoryItemOnClick = (i) => {
     setCategoryIdx(i);
-    setBookmarkDialogMode("section");
+    setBookmarkDialogMode("route");
   };
 
   const handleCategoryAddBtnOnClick = () => {
@@ -55,9 +56,15 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode }) =>
           onClick={() => {
             _transportData.splice(i, 1);
             setTransportData(_transportData);
-            setLocalStorage("bookmark", _transportData);
-            if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-              localStorage.setItem("bookmark_nocompress", JSON.stringify(_transportData));
+            setLocalStorage("bookmarkV2", _transportData);
+            if (
+              !process.env.NODE_ENV ||
+              process.env.NODE_ENV === "development"
+            ) {
+              localStorage.setItem(
+                "bookmark_nocompress",
+                JSON.stringify(_transportData)
+              );
             }
             closeSnackbar(snackbarId);
           }}
@@ -93,9 +100,12 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode }) =>
       data: [],
     });
     setTransportData(_transportData);
-    setLocalStorage("bookmark", _transportData);
+    setLocalStorage("bookmarkV2", _transportData);
     if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-      localStorage.setItem("bookmark_nocompress", JSON.stringify(_transportData));
+      localStorage.setItem(
+        "bookmark_nocompress",
+        JSON.stringify(_transportData)
+      );
     }
     setBookmarkDialogMode("category");
     setFormValue("");
@@ -114,9 +124,12 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode }) =>
   const handleCategoryEditConfirmBtnOnClick = () => {
     _transportData[categoryIdx].title = formValue;
     setTransportData(_transportData);
-    setLocalStorage("bookmark", _transportData);
+    setLocalStorage("bookmarkV2", _transportData);
     if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-      localStorage.setItem("bookmark_nocompress", JSON.stringify(_transportData));
+      localStorage.setItem(
+        "bookmark_nocompress",
+        JSON.stringify(_transportData)
+      );
     }
     setBookmarkDialogMode("category");
     setFormValue("");
@@ -126,27 +139,16 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode }) =>
     e.key === "Enter" && handleCategoryEditConfirmBtnOnClick();
   };
 
-  // -------------------- Section --------------------
+  // -------------------- Route --------------------
 
-  const handleSectionItemOnClick = (i) => {
-    setSectionIdx(i);
-    setBookmarkDialogMode("route");
-  };
-
-  const handleSectionAddBtnOnClick = () => {
-    _transportData[categoryIdx].data.push([]);
-    setTransportData(_transportData);
-    setLocalStorage("bookmark", _transportData);
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-      localStorage.setItem("bookmark_nocompress", JSON.stringify(_transportData));
-    }
-  };
-
-  const handleSectionBackBtnOnClick = () => {
+  const handleRouteBackBtnOnClick = () => {
     setBookmarkDialogMode("category");
   };
 
-  const handleSectionDeleteBtnOnClick = (i) => {
+  const handleRouteDeleteBtnOnClick = (i) => {
+    const routeData = transportData[categoryIdx].data[i];
+    const { routeKey } = routeData;
+    const route = routeKey ? routeData.routeKey.split("+")[0] : routeData.route;
     const action = (snackbarId) => (
       <>
         <IconButton
@@ -154,9 +156,15 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode }) =>
           onClick={() => {
             _transportData[categoryIdx].data.splice(i, 1);
             setTransportData(_transportData);
-            setLocalStorage("bookmark", _transportData);
-            if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-              localStorage.setItem("bookmark_nocompress", JSON.stringify(_transportData));
+            setLocalStorage("bookmarkV2", _transportData);
+            if (
+              !process.env.NODE_ENV ||
+              process.env.NODE_ENV === "development"
+            ) {
+              localStorage.setItem(
+                "bookmarkV2_nocompress",
+                JSON.stringify(_transportData)
+              );
             }
             closeSnackbar(snackbarId);
           }}
@@ -173,47 +181,7 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode }) =>
       </>
     );
 
-    enqueueSnackbar(`確定刪除 組合${i + 1} ?`, {
-      variant: "warning",
-      autoHideDuration: 5000,
-      action,
-    });
-  };
-
-  // -------------------- Route --------------------
-
-  const handleRouteBackBtnOnClick = () => {
-    setBookmarkDialogMode("section");
-  };
-
-  const handleRouteDeleteBtnOnClick = (i) => {
-    const action = (snackbarId) => (
-      <>
-        <IconButton
-          className="deleteBtn"
-          onClick={() => {
-            _transportData[categoryIdx].data[sectionIdx].splice(i, 1);
-            setTransportData(_transportData);
-            setLocalStorage("bookmark", _transportData);
-            if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-              localStorage.setItem("bookmark_nocompress", JSON.stringify(_transportData));
-            }
-            closeSnackbar(snackbarId);
-          }}
-        >
-          <DeleteIcon fontSize="small" />
-        </IconButton>
-        <IconButton
-          onClick={() => {
-            closeSnackbar(snackbarId);
-          }}
-        >
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      </>
-    );
-
-    enqueueSnackbar(`確定刪除 ${transportData[categoryIdx].data[sectionIdx][i].route} ?`, {
+    enqueueSnackbar(`確定刪除 ${route} ?`, {
       variant: "warning",
       autoHideDuration: 5000,
       action,
@@ -223,11 +191,16 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode }) =>
   // ------------------------------------------------
 
   return (
-    <DialogRoot onClose={handleDialogCloseBtnOnClick} open={bookmarkDialogMode !== null} fullWidth>
+    <DialogRoot
+      onClose={handleDialogCloseBtnOnClick}
+      open={bookmarkDialogMode !== null}
+      fullWidth
+    >
       {bookmarkDialogMode === "category" && (
         <ListBtnDialog
-          title="自訂類別"
-          emptyMsg="未有類別, 請先新增類別"
+          title="設定分類"
+          emptyMsg="未有分類, 請按此新增分類"
+          addLabel="新增分類"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleItemOnClick={handleCategoryItemOnClick}
           handleAddBtnOnClick={handleCategoryAddBtnOnClick}
@@ -239,8 +212,8 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode }) =>
       )}
       {bookmarkDialogMode === "categoryAdd" && (
         <FormDialog
-          title="新增類別"
-          label="類別名稱"
+          title="新增分類"
+          label="分類名稱"
           placeholder="上班"
           value={formValue}
           setValue={setFormValue}
@@ -252,8 +225,8 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode }) =>
       )}
       {bookmarkDialogMode === "categoryEdit" && (
         <FormDialog
-          title="重新命名類別"
-          label="類別名稱"
+          title="重新命名分類"
+          label="分類名稱"
           placeholder="上班"
           value={formValue}
           setValue={setFormValue}
@@ -263,27 +236,14 @@ export const BookmarkDialog = ({ bookmarkDialogMode, setBookmarkDialogMode }) =>
           handleAddKeyPress={handleCategoryEditKeyPress}
         />
       )}
-      {bookmarkDialogMode === "section" && (
-        <ListBtnDialog
-          title={`自訂${_transportData[categoryIdx].title}組合`}
-          emptyMsg="未有組合, 請先新增組合"
-          handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
-          handleItemOnClick={handleSectionItemOnClick}
-          handleAddBtnOnClick={handleSectionAddBtnOnClick}
-          handleBackBtnOnClick={handleSectionBackBtnOnClick}
-          handleDeleteBtnOnClick={handleSectionDeleteBtnOnClick}
-          data={transportData[categoryIdx].data}
-          bookmarkDialogMode={bookmarkDialogMode}
-        />
-      )}
       {bookmarkDialogMode === "route" && (
         <ListBtnDialog
-          title={`自訂${_transportData[categoryIdx].title}組合${sectionIdx + 1}路線`}
+          title={`設定${_transportData[categoryIdx].title} 路線`}
           emptyMsg="未有路線"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleBackBtnOnClick={handleRouteBackBtnOnClick}
           handleDeleteBtnOnClick={handleRouteDeleteBtnOnClick}
-          data={transportData[categoryIdx].data[sectionIdx]}
+          data={transportData[categoryIdx].data}
           bookmarkDialogMode={bookmarkDialogMode}
         />
       )}

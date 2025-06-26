@@ -7,7 +7,6 @@ import {
   Divider,
   ListItemButton,
   styled,
-  ListItemText,
 } from "@mui/material/";
 import {
   Close as CloseIcon,
@@ -17,7 +16,6 @@ import {
   DriveFileRenameOutline as DriveFileRenameOutlineIcon,
 } from "@mui/icons-material";
 import { CategoryListItemText } from "./CategoryListItemText";
-import { SectionListItemText } from "./SectionListItemText";
 import { RouteListItemText } from "./RouteListItemText";
 
 export const ListBtnDialog = ({
@@ -28,6 +26,7 @@ export const ListBtnDialog = ({
   handleAddBtnOnClick,
   data,
   emptyMsg,
+  addLabel,
   handleBackBtnOnClick,
   handleEditBtnOnClick,
   handleDeleteBtnOnClick,
@@ -44,11 +43,6 @@ export const ListBtnDialog = ({
         )}
         <div className="title">{title}</div>
         <div className="rightBtnGroup">
-          {handleAddBtnOnClick && (
-            <IconButton onClick={handleAddBtnOnClick}>
-              <AddIcon />
-            </IconButton>
-          )}
           <IconButton onClick={handleCloseBtnOnClick}>
             <CloseIcon />
           </IconButton>
@@ -88,23 +82,30 @@ export const ListBtnDialog = ({
                 {bookmarkDialogMode === "category" && (
                   <CategoryListItemText e={e} />
                 )}
-                {bookmarkDialogMode === "section" && (
-                  <SectionListItemText i={i} e={e} />
-                )}
                 {bookmarkDialogMode === "route" && (
                   <RouteListItemText i={i} e={e} />
                 )}
               </ListItemButton>
             </ListItem>
-            {i !== data.length - 1 ? <Divider /> : null}
+            <Divider />
           </div>
         ))}
+        {addLabel && (
+          <ListItem disablePadding>
+            <ListItemButton
+              className="addCategory"
+              onClick={handleAddBtnOnClick}
+            >
+              <AddIcon /> {addLabel}
+            </ListItemButton>
+          </ListItem>
+        )}
       </List>
     ) : (
       <List sx={{ pt: 0 }}>
-        <ListItem className="emptyMsg">
-          <ListItemText primary={emptyMsg} />
-        </ListItem>
+        <ListItemButton onClick={handleAddBtnOnClick}>
+          <div>{emptyMsg}</div>
+        </ListItemButton>
       </List>
     )}
   </ListDialogRoot>
@@ -115,6 +116,11 @@ const ListDialogRoot = styled("div", {
 })(({ bookmarkDialogMode }) => ({
   ".emptyMsg .MuiListItemText-root .MuiListItemText-primary": {
     width: "100%",
+  },
+  ".MuiListItemButton-root.addCategory": {
+    justifyContent: "center",
+    paddingRight: "0px !important",
+    paddingLeft: "0px !important",
   },
   ".MuiListItemButton-root": {
     ...(bookmarkDialogMode === "category" && {

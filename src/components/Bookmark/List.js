@@ -1,17 +1,28 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Accordion, AccordionSummary, AccordionDetails, styled, IconButton } from "@mui/material";
-import { Directions as DirectionsIcon, DirectionsBus as DirectionsBusIcon } from "@mui/icons-material";
-import { etaTimeConverter, sortEtaObj } from "../../../Utils/Utils";
-import { companyColor, primaryColor } from "../../../constants/Constants";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  styled,
+  IconButton,
+} from "@mui/material";
+import {
+  Directions as DirectionsIcon,
+  DirectionsBus as DirectionsBusIcon,
+  PriorityHigh as PriorityHighIcon,
+} from "@mui/icons-material";
+import { etaTimeConverter, sortEtaObj } from "../../Utils/Utils";
+import { companyColor, primaryColor } from "../../constants/Constants";
+import { stationMap, mtrLineColor, routeMap } from "../../constants/Mtr";
 
-export const List = ({ section, sectionData, longList }) => {
+export const List = ({ etaResult, longList }) => {
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
   let result = [];
 
-  sectionData.forEach((e, i) => {
-    const { co, etas, route, stopName, stopId, location } = e;
+  etaResult.forEach((e, i) => {
+    const { co, etas, route, stopName, stopId, location, routeKey } = e;
 
     let eta;
 
@@ -23,6 +34,7 @@ export const List = ({ section, sectionData, longList }) => {
           eta: "",
           stopName,
           stopId,
+          routeKey,
           latLngUrl: `https://www.google.com.hk/maps/dir/?api=1&destination=${location?.lat},${location?.lng}&travelmode=walking`,
         });
       } else {
@@ -35,7 +47,9 @@ export const List = ({ section, sectionData, longList }) => {
             eta,
             rmk_tc,
             stopName,
+            dest: f.dest,
             stopId,
+            routeKey,
             latLngUrl: `https://www.google.com.hk/maps/dir/?api=1&destination=${location?.lat},${location?.lng}&travelmode=walking`,
           });
         });
@@ -47,6 +61,7 @@ export const List = ({ section, sectionData, longList }) => {
         eta: false,
         stopName,
         stopId,
+        routeKey,
         latLngUrl: `https://www.google.com.hk/maps/dir/?api=1&destination=${location?.lat},${location?.lng}&travelmode=walking`,
       });
     }
@@ -64,7 +79,8 @@ export const List = ({ section, sectionData, longList }) => {
     }).etaIntervalStr;
   });
 
-  const etaRouteNum = JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "5個";
+  const etaRouteNum =
+    JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "5個";
 
   if (!longList) {
     result = result.slice(0, etaRouteNum[0]);
@@ -77,30 +93,50 @@ export const List = ({ section, sectionData, longList }) => {
   return (
     <ListView>
       {result.map((e, i) => (
-        <Accordion key={i} className="etaWrapper" expanded={expanded === `panel${i}`} onChange={handleChange(`panel${i}`)}>
+        <Accordion
+          key={i}
+          className="etaWrapper"
+          expanded={expanded === `panel${i}`}
+          onChange={handleChange(`panel${i}`)}
+        >
           <AccordionSummary className="accordionSummary">
             <div className="route">
-              <span className={`${e.co}`}>{e?.route}</span>
+              {e.co === "mtr" ? (
+                <span className={`${e.route}`}>{routeMap[e?.route]}</span>
+              ) : (
+                <>
+                  {e.co === "error" && <PriorityHighIcon fontSize="small" />}
+                  <span className={`${e.co}`}>{e?.route}</span>
+                </>
+              )}
             </div>
-            <div className={`stopName ${e.co === "error" ? "error" : ""}`} title={e?.stopId}>
+            <div className={`stopName ${e.co}`} title={e?.stopId}>
               {e?.stopName}
+              {e.dest && ` → ${stationMap[e?.dest]}`}
             </div>
             <div className="eta">{e?.eta}</div>
           </AccordionSummary>
           <AccordionDetails>
-            <IconButton className="iconBtn directionIconBtn" component="a" href={e?.latLngUrl} target="_blank">
+            <IconButton
+              className="iconBtn directionIconBtn"
+              component="a"
+              href={e?.latLngUrl}
+              target="_blank"
+            >
               <DirectionsIcon />
               <div>規劃路線</div>
             </IconButton>
-            {section[i]?.routeKey && (
+            {e.routeKey && (
               <IconButton
                 className="iconBtn"
                 onClick={() => {
-                  navigate("/search/" + section[i].routeKey + "/" + section[i].stopId, { replace: true });
+                  navigate("/search/" + e.routeKey + "/" + e.stopId, {
+                    replace: true,
+                  });
                 }}
               >
                 <DirectionsBusIcon />
-                <div>巴士路線</div>
+                <div>交通路線</div>
               </IconButton>
             )}
           </AccordionDetails>
@@ -115,7 +151,6 @@ const ListView = styled("div")({
   width: "100%",
   ".error": {
     color: "#808080",
-    textDecoration: "line-through",
   },
   ".MuiPaper-root": {
     "&:before": {
@@ -142,13 +177,16 @@ const ListView = styled("div")({
         margin: 0,
         ".route": {
           ...companyColor,
-          width: "10%",
+          ...mtrLineColor,
+          width: "13%",
           fontWeight: "900",
+          display: "flex",
+          alignItems: "center",
         },
         ".stopName": {
           width: "45%",
         },
-        ".eta": { width: "45%" },
+        ".eta": { width: "42%" },
       },
     },
   },

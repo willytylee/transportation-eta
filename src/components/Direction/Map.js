@@ -13,7 +13,7 @@ import {
   Polyline,
   Popup,
 } from "react-leaflet";
-import { getCoPriorityId } from "../../Utils/Utils";
+import { getFirstCoByRouteObj } from "../../Utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { mtrLineColor } from "../../constants/Mtr";
 import { DbContext } from "../../context/DbContext";
@@ -46,7 +46,7 @@ export const Map = () => {
   const currRouteStopIdList = useMemo(
     () =>
       currRoute.stops &&
-      currRoute.stops[getCoPriorityId(currRoute)].slice(
+      currRoute.stops[getFirstCoByRouteObj(currRoute)].slice(
         currRoute.nearbyOrigStopSeq - 1,
         currRoute.nearbyDestStopSeq
       ),
@@ -194,7 +194,7 @@ export const Map = () => {
       className: "stopMarker",
     });
 
-    const stopList = currRoute.stops[getCoPriorityId(currRoute)];
+    const stopList = currRoute.stops[getFirstCoByRouteObj(currRoute)];
     const stopId = currRouteStopIdList[i];
     const stopIdx = stopList.findIndex((e) => e === stopId);
 
@@ -314,7 +314,7 @@ export const Map = () => {
                 color: `${
                   currRoute.co[0] === "mtr"
                     ? mtrLineColor["." + currRoute.route].color
-                    : companyColor["." + getCoPriorityId(currRoute)].color
+                    : companyColor["." + getFirstCoByRouteObj(currRoute)].color
                 }`,
                 opacity: "0.75",
               }}

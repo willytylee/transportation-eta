@@ -4,13 +4,25 @@ import { fetchKmbEtas } from "./Kmb";
 import { fetchMtrEtas } from "./Mtr";
 import { fetchNwfbCtbEtas } from "./NwfbCtb";
 
-export const fetchEtas = async ({ error, bound, co, gtfsId, route, serviceType, seq, stopId, stops }) => {
+export const fetchEtas = async ({
+  error,
+  bound,
+  co,
+  gtfsId,
+  route,
+  serviceType,
+  seq,
+  stopId,
+  stops,
+}) => {
   try {
     if (!error) {
       let etas = [];
 
       for (const company_id of co) {
-        const _stopId = stopId ? stopId : seq && stops[company_id] && stops[company_id][seq - 1];
+        const _stopId = stopId
+          ? stopId
+          : seq && stops[company_id] && stops[company_id][seq - 1];
 
         if (_stopId) {
           if (company_id === "kmb") {
@@ -24,7 +36,10 @@ export const fetchEtas = async ({ error, bound, co, gtfsId, route, serviceType, 
               })
             );
           } else if (company_id === "nwfb" || company_id === "ctb") {
-            const _bound = typeof bound === "string" || bound instanceof String ? bound : bound[company_id];
+            const _bound =
+              typeof bound === "string" || bound instanceof String
+                ? bound
+                : bound[company_id];
 
             etas = etas.concat(
               await fetchNwfbCtbEtas({
@@ -49,6 +64,7 @@ export const fetchEtas = async ({ error, bound, co, gtfsId, route, serviceType, 
               await fetchMtrEtas({
                 route,
                 stopId: _stopId,
+                bound,
               })
             );
           }
@@ -56,9 +72,8 @@ export const fetchEtas = async ({ error, bound, co, gtfsId, route, serviceType, 
       }
 
       return sortEtaObj(etas);
-    } 
-      return false;
-    
+    }
+    return false;
   } catch (err) {
     return [];
   }

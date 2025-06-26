@@ -9,8 +9,14 @@ import {
   Navigation as NavigationIcon,
 } from "@mui/icons-material";
 import { IconButton, styled, Avatar } from "@mui/material";
-import { MapContainer, TileLayer, Marker, useMap, Polyline } from "react-leaflet";
-import { getCoPriorityId } from "../../Utils/Utils";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMap,
+  Polyline,
+} from "react-leaflet";
+import { getFirstCoByRouteObj } from "../../Utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { EtaContext } from "../../context/EtaContext";
 import { mtrLineColor } from "../../constants/Mtr";
@@ -23,15 +29,21 @@ const markerIcon = require("../../assets/icons/marker-icon-2x.png");
 export const Content = () => {
   const { routeKey } = useParams();
   const { location: currentLocation } = useLocation({ interval: 1000 });
-  const { nearestStopId, mapStopIdx, mapLocation, updateMapStopIdx } = useContext(EtaContext);
+  const { nearestStopId, mapStopIdx, mapLocation, updateMapStopIdx } =
+    useContext(EtaContext);
   const { gRouteList, gStopList } = useContext(DbContext);
   const [navBtnType, setNavBtnType] = useState("normal");
 
-  const _currRoute = routeKey ? gRouteList[routeKey] : [];
+  const routeData = routeKey ? gRouteList[routeKey] : [];
 
-  const currRouteStopIdList = useMemo(() => _currRoute.stops && _currRoute.stops[Object.keys(_currRoute.stops)[0]], [routeKey]);
+  const currRouteStopIdList = useMemo(
+    () => routeData.stops && routeData.stops[Object.keys(routeData.stops)[0]],
+    [routeKey]
+  );
 
-  const nearestStopIdx = currRouteStopIdList?.findIndex((e) => e === nearestStopId);
+  const nearestStopIdx = currRouteStopIdList?.findIndex(
+    (e) => e === nearestStopId
+  );
 
   useEffect(() => {
     if (!mapLocation) {
@@ -39,7 +51,10 @@ export const Content = () => {
     }
   }, []);
 
-  const currRouteStopList = useMemo(() => currRouteStopIdList?.map((e) => gStopList[e]), [routeKey]);
+  const currRouteStopList = useMemo(
+    () => currRouteStopIdList?.map((e) => gStopList[e]),
+    [routeKey]
+  );
 
   let location = {};
 
@@ -51,7 +66,10 @@ export const Content = () => {
     location = { lat: 0, lng: 0 };
   }
 
-  const routeLine = currRouteStopList?.map((e) => [e.location.lat, e.location.lng]);
+  const routeLine = currRouteStopList?.map((e) => [
+    e.location.lat,
+    e.location.lng,
+  ]);
 
   const currLocationIcon = new L.Icon({
     iconUrl: currentLocationIcon,
@@ -77,7 +95,9 @@ export const Content = () => {
           shadowSize: null,
           shadowAnchor: null,
           iconSize: new L.Point(40, 40),
-          className: `currStopMarker ${i === mapStopIdx && "selected"} ${mapStopIdx > -1 && i > mapStopIdx && "forward"}`,
+          className: `currStopMarker ${i === mapStopIdx && "selected"} ${
+            mapStopIdx > -1 && i > mapStopIdx && "forward"
+          }`,
         }),
       []
     );
@@ -97,7 +117,14 @@ export const Content = () => {
       []
     );
 
-    return <Marker key={i} position={[stop.location.lat, stop.location.lng]} eventHandlers={eventHandlers} icon={stopIcon} />;
+    return (
+      <Marker
+        key={i}
+        position={[stop.location.lat, stop.location.lng]}
+        eventHandlers={eventHandlers}
+        icon={stopIcon}
+      />
+    );
   };
 
   const PrevStopBtn = () => {
@@ -136,8 +163,15 @@ export const Content = () => {
     };
 
     return (
-      <Avatar className={`nextBtnAvatar ${mapStopIdx === currRouteStopIdList.length - 1 ? "disabled" : ""}`}>
-        <IconButton disabled={mapStopIdx === currRouteStopIdList.length - 1} onClick={handleIconOnClick}>
+      <Avatar
+        className={`nextBtnAvatar ${
+          mapStopIdx === currRouteStopIdList.length - 1 ? "disabled" : ""
+        }`}
+      >
+        <IconButton
+          disabled={mapStopIdx === currRouteStopIdList.length - 1}
+          onClick={handleIconOnClick}
+        >
           <ArrowForwardIosIcon sx={{ fontSize: 15 }} />
         </IconButton>
       </Avatar>
@@ -215,19 +249,33 @@ export const Content = () => {
   };
 
   return (
-    <MapContainerRoot center={[location.lat, location.lng]} zoom={18} scrollWheelZoom={false}>
-      <TileLayer attribution="" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      {_currRoute.stops &&
+    <MapContainerRoot
+      center={[location.lat, location.lng]}
+      zoom={18}
+      scrollWheelZoom={false}
+    >
+      <TileLayer
+        attribution=""
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      {routeData.stops &&
         currRouteStopIdList.map((e, i) => {
           const stop = gStopList[e];
           return <CustomMarker stop={stop} key={i} i={i} />;
         })}
 
-      <Marker position={[currentLocation.lat, currentLocation.lng]} icon={currLocationIcon} />
+      <Marker
+        position={[currentLocation.lat, currentLocation.lng]}
+        icon={currLocationIcon}
+      />
 
       <Polyline
         pathOptions={{
-          className: `${_currRoute.co[0] === "mtr" ? _currRoute.route : getCoPriorityId(_currRoute)}`,
+          className: `${
+            routeData.co[0] === "mtr"
+              ? routeData.route
+              : getFirstCoByRouteObj(routeData)
+          }`,
           opacity: "0.75",
         }}
         positions={routeLine}

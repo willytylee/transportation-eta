@@ -2,31 +2,39 @@ import { useState, useEffect, useContext } from "react";
 import { styled } from "@mui/material";
 import { DbContext } from "../../context/DbContext";
 import { companyColor } from "../../constants/Constants";
-import { getLocalStorage, setLocalStorage, fetchBusEta, handleTableResult } from "../../Utils/Utils";
-import { dataSet } from "../../data/DataSet";
+import { buildRouteObjForEta, handleTableResult } from "../../Utils/Utils";
 
-export const StationModeTabPanel = ({ value, index, stationModeData }) => {
-  const bookmark = localStorage.getItem("bookmark");
-  const userId = JSON.parse(localStorage.getItem("user"))?.userId || null;
+export const StationModeTabPanel = ({
+  value,
+  index,
+  stationModeData,
+  transportData,
+}) => {
   const { gStopList, gRouteList } = useContext(DbContext);
-  const [sectionData, setSectionData] = useState([]);
+  const [sectionEtaResult, setSectionEtaResult] = useState([]);
 
-  let transportData;
-
-  if (bookmark) {
-    transportData = getLocalStorage("bookmark");
-  } else if (userId) {
-    const data = dataSet.find((o) => o.userId === userId);
-    setLocalStorage("bookmark", data.transportData);
-    transportData = data.transportData;
-  }
-
-  const section = transportData[stationModeData.position[0]].data[stationModeData.position[1]];
+  const section =
+    transportData[stationModeData.position[0]].data[
+      stationModeData.position[1]
+    ];
 
   useEffect(() => {
     const intervalContent = async () => {
-      const etas = await fetchBusEta(gStopList, gRouteList, section);
-      setSectionData(etas);
+      // Handle old bookmark format
+      // New bookmark format only have routeKey, seq & stopId
+      section.forEach((f) => {
+        if (!f.co) {
+          const routeData = gRouteList[f.routeKey];
+          f.co = routeData.co[0];
+          f.route = f.routeKey.split("+")[0];
+          f.dest = routeData.dest.zh;
+          if (routeData.co[0] === "gmb") {
+            f.gtfsId = routeData.gtfsId;
+          }
+        }
+      });
+      const etas = await buildRouteObjForEta(gStopList, gRouteList, section);
+      setSectionEtaResult(etas);
     };
 
     intervalContent();
@@ -35,11 +43,15 @@ export const StationModeTabPanel = ({ value, index, stationModeData }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const result = handleTableResult(sectionData);
+  const result = handleTableResult(sectionEtaResult);
 
   return (
     <StationModeTabPanelRoot>
-      <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`}>
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+      >
         {value === index && (
           <div>
             <div className="row">

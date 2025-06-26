@@ -1,12 +1,10 @@
-import React from "react";
 import { useEtas } from "../../../hooks/Etas";
 import { etaTimeConverter } from "../../../Utils/Utils";
 
-export const Eta = ({ seq, routeObj, slice, callback }) => {
+export const Eta = ({ seq, routeObj, slice }) => {
   const { eta, isEtaLoading } = useEtas({
     seq,
     routeObj,
-    callback,
     interval: 10000,
   });
 

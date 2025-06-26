@@ -1,22 +1,37 @@
 import { useContext } from "react";
 import { decompress as decompressJson } from "lzutf8-light";
-import { Grid, IconButton, DialogTitle, styled, DialogContent } from "@mui/material/";
-import { Close as CloseIcon, ArrowBackIosNew as ArrowBackIosNewIcon } from "@mui/icons-material";
+import {
+  Grid,
+  IconButton,
+  DialogTitle,
+  styled,
+  DialogContent,
+} from "@mui/material/";
+import {
+  Close as CloseIcon,
+  ArrowBackIosNew as ArrowBackIosNewIcon,
+} from "@mui/icons-material";
 import { DbContext } from "../../context/DbContext";
 import { companyColor } from "../../constants/Constants";
+import { getFirstCoByRouteObj, upgradeBookmark } from "../../Utils/Utils";
 
 export const PreviewDialog = ({ data, setImportExportMode, previewFrom }) => {
-  const { gStopList } = useContext(DbContext);
+  const { gStopList, gRouteList } = useContext(DbContext);
 
   const handleBackBtnOnClick = () => {
     setImportExportMode(previewFrom);
   };
 
-  const decodedData = JSON.parse(
+  let decodedData = JSON.parse(
     decompressJson(data, {
       inputEncoding: "Base64",
     })
   );
+
+  if (Array.isArray(decodedData[0].data[0])) {
+    // Old version bookmark
+    decodedData = upgradeBookmark(decodedData);
+  }
 
   return (
     <PreviewDialogRoot>
@@ -40,16 +55,22 @@ export const PreviewDialog = ({ data, setImportExportMode, previewFrom }) => {
           decodedData.map((category, i) => (
             <div key={i} className="category">
               <div className="title">{category.title}</div>
-              {category.data.map((section, j) => (
-                <div key={j} className="section">
-                  {section.map((routes, k) => (
-                    <div key={k} className="routes">
-                      <div className={`route ${routes.co}`}>{routes.route}</div>
-                      <div className="stopId">{gStopList[routes.stopId].name.zh}</div>
+              {category.data.map((routes, k) => {
+                const { routeKey } = routes;
+                const routeData = gRouteList[routeKey];
+                const co = routeKey
+                  ? getFirstCoByRouteObj(routeData)
+                  : routes.co;
+                const route = routeKey ? routeData.route : routes.route;
+                return (
+                  <div key={k} className="routes">
+                    <div className={`route ${co}`}>{route}</div>
+                    <div className="stopId">
+                      {gStopList[routes.stopId].name.zh}
                     </div>
-                  ))}
-                </div>
-              ))}
+                  </div>
+                );
+              })}
             </div>
           ))
         ) : (
@@ -67,21 +88,17 @@ const PreviewDialogRoot = styled("div")({
       marginBottom: "4px",
       fontSize: "14px",
     },
-    ".section": {
-      marginBottom: "8px",
-      paddingLeft: "8px",
-      ".routes": {
-        display: "flex",
-        alignItems: "center",
-        ".route": {
-          fontSize: "13px",
-          flexBasis: "42px",
-        },
-        ".stopId": {
-          fontSize: "12px",
-        },
-        ...companyColor,
+    ".routes": {
+      display: "flex",
+      alignItems: "center",
+      ".route": {
+        fontSize: "13px",
+        flexBasis: "42px",
       },
+      ".stopId": {
+        fontSize: "12px",
+      },
+      ...companyColor,
     },
   },
   ".emptyMsg": {

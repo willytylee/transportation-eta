@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import { styled } from "@mui/material";
 import { Category } from "../components/Bookmark/Category";
 import { dataSet } from "../data/DataSet";
@@ -7,13 +8,13 @@ import { getLocalStorage, setLocalStorage } from "../Utils/Utils";
 export const Bookmark = () => {
   // const [transportData, setTransportData] = useState([]);
 
-  const bookmark = localStorage.getItem("bookmark");
+  const bookmark = localStorage.getItem("bookmarkV2");
   const userId = JSON.parse(localStorage.getItem("user"))?.userId || null;
 
   let transportData;
 
   if (bookmark) {
-    transportData = getLocalStorage("bookmark");
+    transportData = getLocalStorage("bookmarkV2");
   } else if (userId) {
     const data = dataSet.find((o) => o.userId === userId);
     setLocalStorage("bookmark", data.transportData);
@@ -24,12 +25,13 @@ export const Bookmark = () => {
     <BookmarkRoot>
       {bookmark ? (
         transportData?.length > 0 ? (
-          transportData?.map((e, i) => <Category key={i} category={e} categoryKey={i} />)
+          transportData?.map((e, i) => <Category key={i} category={e} />)
         ) : (
           <div className="emptyMsg">
             <p>未有書籤。</p>
             <p>
-              請先到<Link to="/search">路線搜尋</Link>, 選擇巴士路線, 再選擇巴士站, 然後新增書籤。
+              請先到<Link to="/search">路線搜尋</Link>, 選擇交通路線,
+              再選擇巴士站, 然後新增書籤。
             </p>
           </div>
         )
@@ -40,7 +42,8 @@ export const Bookmark = () => {
             現有用戶, 請到<Link to="/settings">設定</Link>, 載入用戶書籤。
           </p>
           <p>
-            新用戶, 請先到<Link to="/search">路線搜尋</Link>, 選擇巴士路線, 再選擇巴士站, 然後新增書籤。
+            新用戶, 請先到<Link to="/search">路線搜尋</Link>, 選擇交通路線,
+            再選擇巴士站, 然後新增書籤。
           </p>
         </div>
       )}

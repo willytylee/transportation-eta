@@ -1,7 +1,11 @@
 import { useContext, useRef, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, styled, IconButton, InputAdornment } from "@mui/material";
-import { Map as MapIcon, Close as CloseIcon, AccessTime as AccessTimeIcon } from "@mui/icons-material";
+import {
+  Map as MapIcon,
+  Close as CloseIcon,
+  AccessTime as AccessTimeIcon,
+} from "@mui/icons-material";
 import { AppContext } from "../../context/AppContext";
 import { MapDialog } from "../MapDialog/MapDialog";
 import { EtaContext } from "../../context/EtaContext";
@@ -20,7 +24,7 @@ export const SearchBar = ({ handleFormKeyPress }) => {
 
   useEffect(() => {
     if (routeKey && gRouteList[routeKey]) {
-      updateRoute(routeKey.split("+")[0]);
+      updateRoute(gRouteList[routeKey].route);
     }
   }, [routeKey]);
 
@@ -35,7 +39,9 @@ export const SearchBar = ({ handleFormKeyPress }) => {
   return (
     <SearchBarWraper>
       <IconButton
-        className={`timetableIconButton ${!routeKey || gRouteList[routeKey].co[0] === "mtr" ? "hide" : ""}`}
+        className={`timetableIconButton ${
+          !routeKey || gRouteList[routeKey].co[0] === "mtr" ? "hide" : ""
+        }`}
         disabled={dbVersion === null}
         onClick={() => setTimetableDialogOpen(true)}
       >
@@ -72,12 +78,22 @@ export const SearchBar = ({ handleFormKeyPress }) => {
           }}
         />
       </div>
-      <IconButton className={`mapIconButton ${!routeKey ? "hide" : ""}`} disabled={dbVersion === null} onClick={() => setMapDialogOpen(true)}>
+      <IconButton
+        className={`mapIconButton ${!routeKey ? "hide" : ""}`}
+        disabled={dbVersion === null}
+        onClick={() => setMapDialogOpen(true)}
+      >
         <MapIcon />
         <div>地圖</div>
       </IconButton>
-      <MapDialog mapDialogOpen={mapDialogOpen} handleMapDialogOnClose={handleMapDialogOnClose} />
-      <TimetableDialog timetableDialogOpen={timetableDialogOpen} setTimetableDialogOpen={setTimetableDialogOpen} />
+      <MapDialog
+        mapDialogOpen={mapDialogOpen}
+        handleMapDialogOnClose={handleMapDialogOnClose}
+      />
+      <TimetableDialog
+        timetableDialogOpen={timetableDialogOpen}
+        setTimetableDialogOpen={setTimetableDialogOpen}
+      />
     </SearchBarWraper>
   );
 };
