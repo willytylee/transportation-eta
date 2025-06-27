@@ -3,8 +3,8 @@ import { styled, IconButton } from "@mui/material";
 import { Delete as DeleteIcon } from "@mui/icons-material/";
 import { EtaContext } from "../context/EtaContext";
 import { DbContext } from "../context/DbContext";
-import { getFirstCoByRouteObj } from "../Utils/Utils";
-import { companyColor } from "../constants/Constants";
+import { getCoIconByRouteObj } from "../Utils/Utils";
+import { companyColor, companyIconMap } from "../constants/Constants";
 import { mtrLineColor } from "../constants/Mtr";
 import { Eta } from "./Search/RouteList/Eta";
 
@@ -21,18 +21,28 @@ export const Pin = () => {
       {pinList &&
         pinList.map((e, i) => {
           const routeData = gRouteList[e.routeKey];
-          const co = getFirstCoByRouteObj(routeData);
           return (
             <div className="pinItem" key={i}>
-              <div className={`route ${co}`}>{routeData.route}</div>
-              <div className="stop">
-                <div>
-                  {routeData.orig.zh} → {routeData.dest.zh}
+              <div className="text">
+                <div className="top">
+                  <img
+                    className={`transportIcon ${routeData.route}`}
+                    src={companyIconMap[getCoIconByRouteObj(routeData)]}
+                  />
+                  <div className="route">{routeData.route}</div>
+                  <div className="path">
+                    <span>{routeData.orig.zh}</span>→
+                    <span className="dest">{routeData.dest.zh}</span>
+                  </div>
                 </div>
-                <div>{gStopList[e.stopId].name.zh}</div>
-              </div>
-              <div className="etas">
-                <Eta seq={e.seq} routeObj={routeData} slice={3} />
+                <div className="bottom">
+                  <div className="stop">
+                    <div>{gStopList[e.stopId].name.zh}</div>
+                  </div>
+                  <div className="etas">
+                    <Eta seq={e.seq} routeObj={routeData} slice={3} />
+                  </div>
+                </div>
               </div>
               <IconButton
                 className="delete"
@@ -51,24 +61,51 @@ const PinRoot = styled("div")({
   ".pinItem": {
     padding: "6px",
     display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
     borderBottom: "1px solid rgb(200, 200, 200)",
     fontSize: "12px",
-    alignItems: "center",
     gap: "2px",
     ...companyColor,
     ...mtrLineColor,
-    ".route": {
-      fontSize: "16px",
-      width: "10%",
-    },
-    ".stop": {
-      width: "42%",
-    },
-    ".etas": {
+    ".text": {
       display: "flex",
-      width: "40%",
-      ".eta": {
-        width: "33%",
+      flex: 1,
+      flexDirection: "column",
+      ".top": {
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        paddingBottom: "4px",
+        ".transportIcon": {
+          height: "16px",
+        },
+        ".route": {
+          fontSize: "16px",
+          width: "10%",
+          fontWeight: 900,
+        },
+        ".path": {
+          display: "flex",
+          gap: "2px",
+          alignItems: "center",
+          ".dest": {
+            fontWeight: 900,
+          },
+        },
+      },
+      ".bottom": {
+        display: "flex",
+        ".stop": {
+          width: "50%",
+        },
+        ".etas": {
+          display: "flex",
+          width: "50%",
+          ".eta": {
+            width: "33%",
+          },
+        },
       },
     },
     ".delete": {
