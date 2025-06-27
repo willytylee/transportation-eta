@@ -5,7 +5,7 @@ module.exports = async () => {
   return defineConfig({
     plugins: [react.default()],
     build: {
-      outDir: "../build",
+      outDir: "./build",
     },
   });
 };
