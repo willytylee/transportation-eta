@@ -238,7 +238,7 @@ export const BookmarkDialog = ({
       )}
       {bookmarkDialogMode === "route" && (
         <ListBtnDialog
-          title={`設定${_transportData[categoryIdx].title} 路線`}
+          title={`設定 ${_transportData[categoryIdx].title} 路線`}
           emptyMsg="未有路線"
           handleCloseBtnOnClick={handleDialogCloseBtnOnClick}
           handleBackBtnOnClick={handleRouteBackBtnOnClick}

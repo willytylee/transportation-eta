@@ -77,7 +77,11 @@ export const sortEtaObj = (etaObjArr) => {
     if (b.eta === "" || b.eta === null) {
       return -1;
     }
-    return moment(a.eta).diff(moment(b.eta), "second");
+    if (a.eta && b.eta) {
+      return moment(a.eta).diff(moment(b.eta), "second");
+    } 
+      return false;
+    
   });
 
   return etaObjArr;
@@ -147,21 +151,6 @@ export const parseMtrEtas = (e) =>
     ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:mm")
     : `${e.ttnt}分鐘`;
 
-export const isMatchRoute = (a, b) => {
-  if (a && b) {
-    return (
-      JSON.stringify(a.bound) === JSON.stringify(b.bound) &&
-      JSON.stringify(a.co) === JSON.stringify(b.co) &&
-      JSON.stringify(a.orig) === JSON.stringify(b.orig) &&
-      JSON.stringify(a.dest) === JSON.stringify(b.dest) &&
-      JSON.stringify(a.route) === JSON.stringify(b.route) &&
-      JSON.stringify(a.seq) === JSON.stringify(b.seq) &&
-      JSON.stringify(a.serviceType) === JSON.stringify(b.serviceType)
-    );
-  }
-  return false;
-};
-
 export const setRouteListHistory = (routeKey) => {
   let routeListHistory;
 
@@ -179,9 +168,9 @@ export const setRouteListHistory = (routeKey) => {
     localStorage.removeItem("routeListHistory");
   }
 
-  const isInHistory = routeListHistory.filter((e) => e === routeKey);
+  const isInHistory = routeListHistory.filter((e) => e === routeKey).length > 0;
 
-  if (isInHistory.length === 0) {
+  if (!isInHistory) {
     if (routeListHistory.length >= 20) {
       routeListHistory.pop();
     }
@@ -217,10 +206,10 @@ export const handleTableResult = (sectionEtaResult) =>
           ? [{ minutes: "沒有班次" }]
           : etas
               .map((f) => ({
-                  minutes: etaTimeConverter({ etaStr: f.eta, remark: f.rmk_tc })
-                    .etaIntervalStr,
-                  dest: f.dest,
-                }))
+                minutes: etaTimeConverter({ etaStr: f.eta, remark: f.rmk_tc })
+                  .etaIntervalStr,
+                dest: f.dest,
+              }))
               .slice(0, 3)
         : [{ minutes: "路線已更變, 請刪除及重新將路線加入書籤" }],
 
@@ -234,10 +223,9 @@ export const buildRouteObjForEta = async (gStopList, gRouteList, category) => {
 
   for (let i = 0; i < category.length; i += 1) {
     // category = bookmark data
-    // All: routeKey
-    // Non-MTR: stopId, seq
-    // MTR: stopId, bound
-    const { routeKey, stopId, seq, bound } = category[i];
+    // Non-MTR: routeKey, stopId, seq
+    // MTR: routeKey, stopId
+    const { routeKey, stopId, seq } = category[i];
 
     if (routeKey) {
       const routeData = gRouteList[routeKey];
@@ -247,7 +235,7 @@ export const buildRouteObjForEta = async (gStopList, gRouteList, category) => {
 
       if (co === "mtr") {
         // Fetch MTR eta needs stopId and custom bound format (string)
-        routeObj = { ...routeData, stopId, bound };
+        routeObj = { ...routeData, stopId, bound: routeData.bound.mtr };
       } else if (routeData.stops[co][seq - 1] !== stopId && co !== "mtr") {
         // For non-mtr, check if the seq and the stopId are matched,
         // If not match, it means the official database has been changed,
@@ -326,9 +314,9 @@ export const upgradeBookmark = (bookmark) => {
                 );
                 if (routeKey) {
                   g.routeKey = routeKey;
-                  g.bound = "UT";
                   delete g.co;
                   delete g.route;
+                  delete g.bound;
                 }
               } else if (h === "down") {
                 const routeKey = Object.keys(routeList).find(
@@ -339,9 +327,9 @@ export const upgradeBookmark = (bookmark) => {
                 );
                 if (routeKey) {
                   g.routeKey = routeKey;
-                  g.bound = "DT";
                   delete g.co;
                   delete g.route;
+                  delete g.bound;
                 }
               }
             });

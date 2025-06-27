@@ -88,7 +88,8 @@ const ListDialogRoot = styled("div")({
     display: "flex",
     alignItems: "center",
     ".MuiListItemText-primary": {
-      width: "70px",
+      width: "50%",
+      fontSize: "14px",
     },
   },
 });

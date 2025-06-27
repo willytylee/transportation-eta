@@ -17,7 +17,7 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
       etas: value,
     }))
     .value()
-    .sort((a, b) => (a.etas[0].bound > b.etas[0].bound ? 1 : -1));
+    .sort((a, b) => (a.dest > b.dest ? 1 : -1));
 
   return (
     <MtrStopEtaRoot>
@@ -31,10 +31,7 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
             groupedEtas.map((destEtas, i) => (
               <div key={i} className="etaWrapper">
                 <div className="arriveText">
-                  →{" "}
-                  <span className="dest" title={destEtas.dest}>
-                    {stationMap[destEtas.dest]}
-                  </span>
+                  → <span className="dest">{stationMap[destEtas.dest]}</span>
                 </div>
                 <div className="ttntWrapper">
                   {destEtas.etas

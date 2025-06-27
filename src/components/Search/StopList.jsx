@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars  */
 import { useState, useEffect, useContext, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -13,6 +12,7 @@ import {
   Map as MapIcon,
   BookmarkAdd as BookmarkAddIcon,
   Streetview as StreetviewIcon,
+  PushPin as PushPinIcon,
 } from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
 import { getFirstCoByRouteObj } from "../../Utils/Utils";
@@ -44,6 +44,8 @@ export const StopList = () => {
     updateNearestStopId,
     updateMapLocation,
     updateMapStopIdx,
+    pinList,
+    updatePinList,
   } = useContext(EtaContext);
 
   const stopListRef = useRef(null);
@@ -56,6 +58,17 @@ export const StopList = () => {
     setMapDialogOpen(true);
     updateMapLocation(mapLocation);
     updateMapStopIdx(mapStopIdx);
+  };
+
+  const handlePinIconOnClick = (seq, _routeKey, _stopId) => {
+    const isInList =
+      pinList.filter(
+        (e) => e.routeKey === _routeKey && e.stopId === _stopId && e.seq === seq
+      ).length > 0;
+
+    if (!isInList) {
+      updatePinList([...pinList, { seq, _routeKey, _stopId }]);
+    }
   };
 
   const handleBookmarkAddIconOnClick = (_bookmarkData) => {
@@ -204,6 +217,7 @@ export const StopList = () => {
                     <div>街景</div>
                   </IconButton>
                   {!etaExcluded.includes(routeData.route) && (
+                    // Disallow some route to be added to bookmark
                     <IconButton
                       className="iconBtn"
                       onClick={() => {
@@ -225,6 +239,15 @@ export const StopList = () => {
                       <div>書籤</div>
                     </IconButton>
                   )}
+                  <IconButton
+                    className="iconBtn"
+                    onClick={() =>
+                      handlePinIconOnClick(i + 1, routeKey, e.stopId)
+                    }
+                  >
+                    <PushPinIcon />
+                    <div>置頂</div>
+                  </IconButton>
                 </AccordionDetails>
               </Accordion>
             );
@@ -350,9 +373,8 @@ const StopEtaRoot = styled("div")({
     width: "40%",
     display: "flex",
     flexDirection: "row",
-    div: {
+    ".eta": {
       width: "33.33%",
     },
   },
 });
-/* eslint-disable no-unused-vars  */

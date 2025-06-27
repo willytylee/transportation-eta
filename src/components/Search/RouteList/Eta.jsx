@@ -13,7 +13,7 @@ export const Eta = ({ seq, routeObj, slice }) => {
   ) : eta.length !== 0 ? (
     eta
       .map((e, i) => (
-        <div key={i} title={e.seq}>
+        <div key={i} className="eta">
           {etaTimeConverter({ etaStr: e.eta, remark: e.rmk_tc }).etaIntervalStr}
         </div>
       ))

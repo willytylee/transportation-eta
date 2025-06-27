@@ -75,9 +75,7 @@ export const Category = ({ category }) => {
 
       {view === "list" && <List etaResult={etaResult} longList={false} />}
       {view === "longList" && <List etaResult={etaResult} longList />}
-      {view === "table" && (
-        <Table section={category.data} etaResult={etaResult} />
-      )}
+      {view === "table" && <Table etaResult={etaResult} />}
     </CategoryRoot>
   );
 };

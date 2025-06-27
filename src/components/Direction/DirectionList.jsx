@@ -106,7 +106,7 @@ export const DirectionList = () => {
       });
 
     setNearbyRouteList(
-      filteredRouteList.map((e, j) => {
+      filteredRouteList.map((e) => {
         const company = getFirstCoByRouteObj(e);
 
         let totalTransportDistance = 0;

@@ -22,6 +22,7 @@ import { Playground } from "./pages/Playground";
 import { BookmarkModify } from "./pages/Settings/BookmarkModify";
 import { Direction } from "./pages/Direction";
 import { Lab } from "./pages/Settings/Lab";
+import { Pin } from "./components/Pin";
 
 const App = () => {
   const { initDb, initAppVersion } = useContext(AppContext);
@@ -34,6 +35,7 @@ const App = () => {
   return (
     <>
       <Navbar />
+      <Pin />
       <Container>
         <Routes>
           <Route path="/" element={<Redirect />} />

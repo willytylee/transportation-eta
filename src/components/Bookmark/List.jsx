@@ -21,7 +21,7 @@ export const List = ({ etaResult, longList }) => {
   const navigate = useNavigate();
   let result = [];
 
-  etaResult.forEach((e, i) => {
+  etaResult.forEach((e) => {
     const { co, etas, route, stopName, stopId, location, routeKey } = e;
 
     let eta;
@@ -67,8 +67,7 @@ export const List = ({ etaResult, longList }) => {
     }
   });
 
-  // Sort the eta for same section
-
+  // Sort the eta for same category
   result = sortEtaObj(result);
 
   result.forEach((e, i) => {
@@ -110,7 +109,7 @@ export const List = ({ etaResult, longList }) => {
                 </>
               )}
             </div>
-            <div className={`stopName ${e.co}`} title={e?.stopId}>
+            <div className={`stopName ${e.co}`}>
               {e?.stopName}
               {e.dest && ` → ${stationMap[e?.dest]}`}
             </div>

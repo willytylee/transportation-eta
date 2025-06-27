@@ -111,9 +111,7 @@ export const ListBtnDialog = ({
   </ListDialogRoot>
 );
 
-const ListDialogRoot = styled("div", {
-  shouldForwardProp: (prop) => prop !== "bookmarkDialogMode",
-})(({ bookmarkDialogMode }) => ({
+const ListDialogRoot = styled("div")({
   ".emptyMsg .MuiListItemText-root .MuiListItemText-primary": {
     width: "100%",
   },
@@ -123,23 +121,15 @@ const ListDialogRoot = styled("div", {
     paddingLeft: "0px !important",
   },
   ".MuiListItemButton-root": {
-    ...(bookmarkDialogMode === "category" && {
-      paddingRight: "90px !important",
-    }),
-    ...(bookmarkDialogMode === "section" && {
-      paddingRight: "75px !important",
-    }),
-    ".MuiListItemText-root": {
-      display: "flex",
-      alignItems: "center",
-      ".MuiListItemText-primary": {
-        width: "70px",
-      },
-    },
+    paddingRight: "90px !important",
+  },
+  ".MuiListItemText-root": {
+    display: "flex",
+    alignItems: "center",
   },
   ".MuiListItemSecondaryAction-root": {
     button: {
       marginRight: 0,
     },
   },
-}));
+});

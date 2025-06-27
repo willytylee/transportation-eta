@@ -41,7 +41,10 @@ export const ImportExportDialog = ({
           inputEncoding: "Base64",
         })
       );
-      const cleanDecodedData = decodedData.map((e) => ({ ...e, data: e.data.filter((f) => "routeKey" in f) }));
+      const cleanDecodedData = decodedData.map((e) => ({
+        ...e,
+        data: e.data.filter((f) => "routeKey" in f),
+      }));
       return compressJson(JSON.stringify(cleanDecodedData), {
         outputEncoding: "Base64",
       });

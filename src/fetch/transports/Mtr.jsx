@@ -6,7 +6,6 @@ export const fetchMtrEtas = async ({ stopId, route, bound }) => {
   );
 
   const { data } = response.data;
-
   const etas = data[Object.keys(data)[0]];
 
   if (bound === "UT") {
@@ -16,7 +15,6 @@ export const fetchMtrEtas = async ({ stopId, route, bound }) => {
       seq: e.seq,
       dest: e.dest,
       ttnt: e.ttnt,
-      bound: e.bound,
       stopId,
     }));
   } else if (bound === "DT") {
@@ -26,26 +24,20 @@ export const fetchMtrEtas = async ({ stopId, route, bound }) => {
       seq: e.seq,
       dest: e.dest,
       ttnt: e.ttnt,
-      bound: e.bound,
       stopId,
     }));
-  } 
-    const downArr = etas.DOWN
-      ? etas.DOWN.map((e) => ({ ...e, bound: "down" }))
-      : [];
+  }
 
-    const upArr = etas.UP ? etas.UP.map((e) => ({ ...e, bound: "up" })) : [];
+  const downArr = etas.DOWN || [];
+  const upArr = etas.UP || [];
+  const fullArr = downArr.concat(upArr);
 
-    const fullArr = downArr.concat(upArr);
-
-    return fullArr.map((e) => ({
-      co: "mtr",
-      eta: e.time,
-      seq: e.seq,
-      dest: e.dest,
-      ttnt: e.ttnt,
-      bound: e.bound,
-      stopId,
-    }));
-  
+  return fullArr.map((e) => ({
+    co: "mtr",
+    eta: e.time,
+    seq: e.seq,
+    dest: e.dest,
+    ttnt: e.ttnt,
+    stopId,
+  }));
 };

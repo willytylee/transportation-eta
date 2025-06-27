@@ -22,9 +22,11 @@ import { EtaContext } from "../../context/EtaContext";
 import { mtrLineColor } from "../../constants/Mtr";
 import { DbContext } from "../../context/DbContext";
 import { useLocation } from "../../hooks/Location";
+import currentLocationIcon from "../../assets/icons/currentLocation.png" ;
+import markerIcon from "../../assets/icons/marker-icon-2x.png";
 
-const currentLocationIcon = require("../../assets/icons/currentLocation.png");
-const markerIcon = require("../../assets/icons/marker-icon-2x.png");
+// const currentLocationIcon = require("../../assets/icons/currentLocation.png");
+// const markerIcon = require("../../assets/icons/marker-icon-2x.png");
 
 export const Content = () => {
   const { routeKey } = useParams();

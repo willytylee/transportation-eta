@@ -6,7 +6,9 @@ export const fetch9DForecast = async () => {
       `https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc`
     );
     return response.data;
-  } catch (error) {}
+  } catch (error) {
+    // TODO
+  }
 };
 
 export const fetchLocalForecast = async () => {
@@ -15,7 +17,9 @@ export const fetchLocalForecast = async () => {
       `https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=flw&lang=tc`
     );
     return response.data;
-  } catch (error) {}
+  } catch (error) {
+    // TODO
+  }
 };
 
 export const fetchCurrWeather = async () => {
@@ -24,7 +28,9 @@ export const fetchCurrWeather = async () => {
       `https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc`
     );
     return response.data;
-  } catch (error) {}
+  } catch (error) {
+    // TODO
+  }
 };
 
 export const fetchWarningList = async () => {
@@ -33,5 +39,7 @@ export const fetchWarningList = async () => {
       `https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=tc`
     );
     return response.data;
-  } catch (error) {}
+  } catch (error) {
+    // TODO
+  }
 };

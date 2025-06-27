@@ -82,7 +82,6 @@ export const NearbyRouteList = () => {
               <div className="stop">
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
-                  title={e.stopId}
                 >
                   {name} - {e.routes[0].distance}米
                 </a>

@@ -26,7 +26,7 @@ export const BookmarkModify = () => {
   const [bookmarkDialogMode, setBookmarkDialogMode] = useState(null);
   const [importExportMode, setImportExportMode] = useState(null);
 
-  const handleClearBtnOnClick = (i) => {
+  const handleClearBtnOnClick = () => {
     const action = (snackbarId) => (
       <>
         <IconButton

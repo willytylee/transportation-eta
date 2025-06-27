@@ -6,7 +6,7 @@ import { companyColor } from "../../constants/Constants";
 import { mtrLineColor, routeMap } from "../../constants/Mtr";
 import { getFirstCoByRouteObj } from "../../Utils/Utils";
 
-export const RouteListItemText = ({ i, e }) => {
+export const RouteListItemText = ({ e }) => {
   const { gRouteList, gStopList } = useContext(DbContext);
   const { routeKey } = e;
   const routeData = gRouteList[routeKey];
@@ -39,9 +39,10 @@ export const RouteListItemText = ({ i, e }) => {
 
 const ListItemTextRoot = styled(ListItemText)({
   ".MuiListItemText-primary": {
-    width: "70px",
     ...companyColor,
     ...mtrLineColor,
+    width: "60px",
+    fontSize: "14px",
   },
   ".MuiListItemText-secondary": {
     ...companyColor,

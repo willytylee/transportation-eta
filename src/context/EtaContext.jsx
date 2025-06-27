@@ -8,6 +8,7 @@ export const EtaProvider = ({ children }) => {
   const [nearestStopId, setNearestStopId] = useState("");
   const [mapLocation, setMapLocation] = useState(undefined);
   const [mapStopIdx, setMapStopIdx] = useState(-1);
+  const [pinList, setPinList] = useState([]);
 
   const updateRoute = useCallback((_route) => {
     setRoute(_route);
@@ -31,6 +32,10 @@ export const EtaProvider = ({ children }) => {
     }, 500);
   }, []);
 
+  const updatePinList = useCallback((list) => {
+    setPinList(list);
+  }, []);
+
   const value = useMemo(
     () => ({
       route,
@@ -43,8 +48,23 @@ export const EtaProvider = ({ children }) => {
       updateMapLocation,
       mapStopIdx,
       updateMapStopIdx,
+      pinList,
+      updatePinList,
     }),
-    [route, updateRoute, stopId, updateStopId, nearestStopId, updateNearestStopId, mapLocation, updateMapLocation, mapStopIdx, updateMapStopIdx]
+    [
+      route,
+      updateRoute,
+      stopId,
+      updateStopId,
+      nearestStopId,
+      updateNearestStopId,
+      mapLocation,
+      updateMapLocation,
+      mapStopIdx,
+      updateMapStopIdx,
+      pinList,
+      updatePinList,
+    ]
   );
 
   return <EtaContext.Provider value={value}>{children}</EtaContext.Provider>;

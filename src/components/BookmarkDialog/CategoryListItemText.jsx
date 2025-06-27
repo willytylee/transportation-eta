@@ -45,20 +45,20 @@ export const CategoryListItemText = ({ e }) => {
 };
 
 const ListItemTextRoot = styled(ListItemText)({
+  ".MuiListItemText-primary": {
+    width: "50%",
+    fontSize: "14px",
+    paddingRight: "6px",
+  },
   ".MuiListItemText-secondary": {
     fontSize: "12px",
     display: "flex",
     flexDirection: "column",
     flex: 1,
     listStyleType: "disc",
+    paddingLeft: "6px",
     ...companyColor,
     ...mtrLineColor,
-    ".route": {
-      display: "list-item",
-      "&::marker": {
-        fontSize: "8px",
-      },
-    },
   },
   ".error": {
     fontWeight: 900,

@@ -68,9 +68,8 @@ export const RouteList = () => {
               gRouteList[routeKey].co.sort().join() ===
               gRouteList[e].co.sort().join()
             );
-          } 
-            return true;
-          
+          }
+          return true;
         });
     }
   }
@@ -86,7 +85,6 @@ export const RouteList = () => {
         return (
           <Card key={i} onClick={() => handleCardOnClick(e)}>
             <div
-              // title={JSON.stringify(e.route) + JSON.stringify(e.bound)}
               // There may have nearestStopId in one of the currRoute
               className={`routeTitle ${e === routeKey ? "matched" : ""}`}
             >

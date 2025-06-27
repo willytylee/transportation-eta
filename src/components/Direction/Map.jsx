@@ -20,11 +20,16 @@ import { DbContext } from "../../context/DbContext";
 import { useLocation } from "../../hooks/Location";
 import { Eta } from "../Search/RouteList/Eta";
 import { DirectionContext } from "../../context/DirectionContext";
+import currLocationIconPath from "../../assets/icons/currentLocation.png";
+import stopIconPath from "../../assets/icons/stop.png";
+import startIconPath from "../../assets/icons/start.png";
+import endIconPath from "../../assets/icons/end.png";
 
-const currLocationIconPath = require("../../assets/icons/currentLocation.png");
-const stopIconPath = require("../../assets/icons/stop.png");
-const startIconPath = require("../../assets/icons/start.png");
-const endIconPath = require("../../assets/icons/end.png");
+
+// const currLocationIconPath = require("../../assets/icons/currentLocation.png");
+// const stopIconPath = require("../../assets/icons/stop.png");
+// const startIconPath = require("../../assets/icons/start.png");
+// const endIconPath = require("../../assets/icons/end.png");
 
 export const Map = () => {
   const {

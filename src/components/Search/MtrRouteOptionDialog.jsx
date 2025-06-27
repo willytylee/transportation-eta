@@ -26,14 +26,14 @@ export const MtrRouteOptionDialog = ({
   setMtrRouteOptionDialogOpen,
 }) => {
   const { routeKey } = useParams();
-  const [bound, setBound] = useState([]);
+  const [bound, setBound] = useState("");
   const { enqueueSnackbar } = useSnackbar();
 
   const { gRouteList } = useContext(DbContext);
   const routeData = routeKey ? gRouteList[routeKey] : [];
 
   const handleCloseBtnOnClick = () => {
-    setBound([]);
+    setBound("");
     setMtrRouteOptionDialogOpen(false);
   };
 
@@ -42,11 +42,21 @@ export const MtrRouteOptionDialog = ({
   };
 
   const handleConfirmBtnOnClick = () => {
-    if (bound.length > 0) {
-      setBookmarkData({ ...bookmarkData, bound });
+    if (bound !== "") {
+      // Find the correct direction routeKey
+      const _routeKey = Object.keys(gRouteList)
+        .filter((e) => gRouteList[e].route === routeData.route)
+        .filter((e) => bound === gRouteList[e].bound.mtr)[0];
+
+      const _bookmarkData = {
+        routeKey: _routeKey,
+        stopId: bookmarkData.stopId,
+      };
+
+      setBookmarkData(_bookmarkData);
       setMtrRouteOptionDialogOpen(false);
       setBookmarkDialogMode("category");
-      setBound([]);
+      setBound("");
     } else {
       enqueueSnackbar("請選擇方向", {
         variant: "error",
