@@ -60,7 +60,7 @@ export const SearchBar = ({ handleFormKeyPress }) => {
           value={route}
           onChange={(e) => handleFormChange(e.target.value)}
           onClick={() => navigate("/search", { replace: true })}
-          onKeyPress={(e) => handleFormKeyPress(e)}
+          onKeyDown={(e) => handleFormKeyPress(e)}
           autoComplete="off"
           inputRef={textInput}
           InputProps={{

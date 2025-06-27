@@ -56,14 +56,23 @@ export const SearchRouteList = () => {
             })
         );
     } else {
+      const routeLen = route ? route.length : 0;
       routeKeyList = Object.keys(gRouteList)
-        .filter((e) => basicFiltering(gRouteList[e]))
-        .filter(
-          (e) =>
-            route && route === gRouteList[e].route.substring(0, route.length)
-        )
-        .sort((a, b) => sortByCompany(gRouteList[a], gRouteList[b]))
-        .sort((a, b) => sortByRoute(a, b));
+        .reduce((acc, key) => {
+          const item = gRouteList[key];
+          if (
+            basicFiltering(item) &&
+            route &&
+            route === item.route.substring(0, routeLen)
+          ) {
+            acc.push(key);
+          }
+          return acc;
+        }, [])
+        .sort(
+          (a, b) =>
+            sortByRoute(a, b) || sortByCompany(gRouteList[a], gRouteList[b])
+        );
     }
   }
 
