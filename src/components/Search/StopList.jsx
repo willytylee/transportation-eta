@@ -67,7 +67,10 @@ export const StopList = () => {
       ).length > 0;
 
     if (!isInList) {
-      updatePinList([...pinList, { seq, _routeKey, _stopId }]);
+      updatePinList([
+        ...pinList,
+        { seq, routeKey: _routeKey, stopId: _stopId },
+      ]);
     }
   };
 
