@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export const useLocation = ({ interval }) => {
+export const useLocation = ({ interval, meter }) => {
   const [location, setLocation] = useState({
     lat: 0,
     lng: 0,
@@ -25,7 +25,7 @@ export const useLocation = ({ interval }) => {
         clearInterval(intervalID);
       };
     }
-  }, []);
+  }, [meter]);
 
   return { location };
 };
