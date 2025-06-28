@@ -16,7 +16,7 @@ import { useStopIdsNearBy } from "../../../hooks/Stop";
 import { Eta } from "./Eta";
 
 export const NearbyRouteList = () => {
-  const [meter, setMeter] = useState(50);
+  const [meter, setMeter] = useState(200);
   const { gRouteList, gStopList } = useContext(DbContext);
   const { route } = useContext(EtaContext);
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ export const NearbyRouteList = () => {
     .value()
     .sort((a, b) => a.routes[0].distance - b.routes[0].distance);
 
-  const buttons = [50, 100, 200, 400, 600, 800, 1000];
+  const buttons = [200, 400, 600, 800, 1000];
 
   const handleMeterBtnOnClick = (e) => {
     setMeter(e);
