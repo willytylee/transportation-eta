@@ -113,7 +113,7 @@ export const NearbyRouteList = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="eta">
+                    <div className="etas">
                       <Eta
                         seq={routeObj.nearbyOrigStopSeq}
                         routeObj={routeObj}
@@ -173,7 +173,7 @@ const NearbyRouteListRoot = styled("div")({
           fontSize: "10px",
         },
       },
-      ".eta": {
+      ".etas": {
         width: "20%",
         float: "left",
       },
