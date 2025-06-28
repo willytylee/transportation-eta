@@ -33,6 +33,7 @@ export const SimpleSettingDialog = ({
       }}
       open={dialogOpen}
       fullWidth
+      maxWidth="xl"
     >
       <>
         <DialogTitle>

@@ -34,6 +34,7 @@ export const DisplayDialog = () => {
       open={displayDialogOpen}
       onClose={handleDialogOnClose}
       fullWidth
+      maxWidth="xl"
     >
       <DialogTitle>
         <Grid>

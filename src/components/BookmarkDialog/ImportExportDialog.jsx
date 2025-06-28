@@ -143,6 +143,7 @@ export const ImportExportDialog = ({
       onClose={handleDialogCloseBtnOnClick}
       open={importExportMode !== null}
       fullWidth
+      maxWidth="xl"
     >
       {importExportMode === "import" && (
         <>
@@ -165,6 +166,7 @@ export const ImportExportDialog = ({
               onChange={handleFormChange}
               value={importData}
               fullWidth
+              maxWidth="xl"
               multiline
               maxRows={3}
             />
@@ -195,6 +197,7 @@ export const ImportExportDialog = ({
               defaultValue={exportData}
               autoComplete="off"
               fullWidth
+              maxWidth="xl"
               InputProps={{
                 readOnly: true,
               }}

@@ -34,6 +34,7 @@ export const SortingDialog = () => {
       open={sortingDialogOpen}
       onClose={handleDialogOnClose}
       fullWidth
+      maxWidth="xl"
     >
       <DialogTitle>
         <Grid>

@@ -62,6 +62,7 @@ export const SelectUserDialog = ({
       }}
       open={slctUsrDialogOpen}
       fullWidth
+      maxWidth="xl"
       isPinValid={isPinValid}
     >
       {Object.keys(selectedUser).length === 0 ? (

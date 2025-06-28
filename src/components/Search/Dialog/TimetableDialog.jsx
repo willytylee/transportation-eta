@@ -34,6 +34,7 @@ export const TimetableDialog = ({
       open={timetableDialogOpen}
       onClose={handleDialogOnClose}
       fullWidth
+      maxWidth="xl"
     >
       <DialogTitle>
         <Grid>

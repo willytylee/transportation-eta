@@ -1,5 +1,15 @@
 import { useState, useEffect } from "react";
-import { Grid, IconButton, DialogTitle, styled, DialogContent, DialogActions, TextField, Button, Dialog } from "@mui/material/";
+import {
+  Grid,
+  IconButton,
+  DialogTitle,
+  styled,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  Dialog,
+} from "@mui/material/";
 import { useSnackbar } from "notistack";
 import { Close as CloseIcon } from "@mui/icons-material";
 
@@ -29,7 +39,12 @@ export const StationTitleDialog = ({ title, dialogOpen, setDialogOpen }) => {
   };
 
   return (
-    <DialogRoot onClose={handleDialogCloseBtnOnClick} open={dialogOpen} fullWidth>
+    <DialogRoot
+      onClose={handleDialogCloseBtnOnClick}
+      open={dialogOpen}
+      fullWidth
+      maxWidth="xl"
+    >
       <>
         <DialogTitle>
           <Grid>
@@ -50,6 +65,7 @@ export const StationTitleDialog = ({ title, dialogOpen, setDialogOpen }) => {
             onChange={handleFormChange}
             value={stationTitle}
             fullWidth
+            maxWidth="xl"
             multiline
             maxRows={3}
           />

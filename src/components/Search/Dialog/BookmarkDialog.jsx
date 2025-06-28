@@ -82,6 +82,7 @@ export const BookmarkDialog = ({
       onClose={handleDialogCloseBtnOnClick}
       open={bookmarkDialogMode !== null}
       fullWidth
+      maxWidth="xl"
     >
       {bookmarkDialogMode === "category" && (
         <ListDialog

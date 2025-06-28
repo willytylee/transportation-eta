@@ -69,6 +69,7 @@ export const MtrRouteOptionDialog = ({
       onClose={handleCloseBtnOnClick}
       open={mtrRouteOptionDialogOpen}
       fullWidth
+      maxWidth="xl"
     >
       <DialogTitle>
         <Grid>

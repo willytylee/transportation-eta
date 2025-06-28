@@ -324,13 +324,14 @@ const StopListRoot = styled("div")({
         padding: "0px 16px 0px 5%",
         display: "flex",
         ".mapIconBtn": {
-          marginLeft: "-8px",
+          marginLeft: "-12px",
         },
         ".iconBtn": {
+          padding: "0px",
           flexDirection: "column",
           fontSize: "10px",
-          height: "58px",
-          width: "58px",
+          height: "50px",
+          width: "50px",
         },
       },
     },

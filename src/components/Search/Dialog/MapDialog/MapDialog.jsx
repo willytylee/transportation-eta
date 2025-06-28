@@ -16,7 +16,12 @@ export const MapDialog = ({ mapDialogOpen, handleMapDialogOnClose }) => {
   };
 
   return (
-    <DialogRoot onClose={handleDialogOnClose} open={mapDialogOpen} fullWidth>
+    <DialogRoot
+      onClose={handleDialogOnClose}
+      open={mapDialogOpen}
+      fullWidth
+      maxWidth="xl"
+    >
       {routeKey && (
         <>
           <Header handleDialogOnClose={handleDialogOnClose} />

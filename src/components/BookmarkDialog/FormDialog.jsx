@@ -48,9 +48,10 @@ export const FormDialog = ({
         value={value}
         placeholder={placeholder}
         onChange={(e) => setValue(e.target.value)}
-        onKeyPress={(e) => handleAddKeyPress(e)}
+        onKeyDown={(e) => handleAddKeyPress(e)}
         autoComplete="off"
         fullWidth
+        maxWidth="xl"
       />
     </DialogContent>
     <DialogActions>
