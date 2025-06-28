@@ -83,7 +83,7 @@ export const Category = ({ category }) => {
 const CategoryRoot = styled("div")({
   paddingTop: "6px",
   ".categoryName": {
-    fontSize: "15px",
+    fontSize: "14px",
   },
   ".topBtnGroup": {
     display: "flex",
@@ -93,7 +93,7 @@ const CategoryRoot = styled("div")({
       flex: 1,
       ".switchBtn": {
         borderRadius: "22px",
-        color: "#136ac1",
+        color: "#2f305c",
         borderWidth: "0",
         padding: "2px 0",
         fontSize: "13px",

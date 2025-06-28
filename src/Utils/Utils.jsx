@@ -79,9 +79,8 @@ export const sortEtaObj = (etaObjArr) => {
     }
     if (a.eta && b.eta) {
       return moment(a.eta).diff(moment(b.eta), "second");
-    } 
-      return false;
-    
+    }
+    return false;
   });
 
   return etaObjArr;
@@ -185,38 +184,51 @@ export const findNearestNumber = (goal, arr) =>
   );
 
 export const handleTableResult = (sectionEtaResult) =>
-  sectionEtaResult.map((e) => {
-    const {
-      co,
-      etas,
-      route,
-      stopName,
-      stopId,
-      routeKey,
-      location: { lat, lng },
-    } = e;
+  sectionEtaResult
+    .sort((a, b) => {
+      if (a.etas[0] === "" || a.etas[0] === null) {
+        return 1;
+      }
+      if (b.etas[0] === "" || b.etas[0] === null) {
+        return -1;
+      }
+      if (a.etas[0] && b.etas[0]) {
+        return moment(a.etas[0].eta).diff(moment(b.etas[0].eta));
+      }
+      return false;
+    })
+    .map((e) => {
+      const {
+        co,
+        etas,
+        route,
+        stopName,
+        stopId,
+        routeKey,
+        location: { lat, lng },
+      } = e;
 
-    return {
-      co: etas ? co : "error",
-      route,
-      routeKey,
-      stopId,
-      etas: etas
-        ? etas.length === 0
-          ? [{ minutes: "沒有班次" }]
-          : etas
-              .map((f) => ({
-                minutes: etaTimeConverter({ etaStr: f.eta, remark: f.rmk_tc })
-                  .etaIntervalStr,
-                dest: f.dest,
-              }))
-              .slice(0, 3)
-        : [{ minutes: "路線已更變, 請刪除及重新將路線加入書籤" }],
+      return {
+        co: etas ? co : "error",
+        route,
+        routeKey,
+        stopId,
+        etas: etas
+          ? etas.length === 0
+            ? [{ minutes: "沒有班次" }]
+            : etas
+                .map((f) => ({
+                  minutes: etaTimeConverter({ etaStr: f.eta, remark: f.rmk_tc })
+                    .etaIntervalStr,
+                  dest: f.dest,
+                }))
+                .slice(0, 3)
+          : [{ minutes: "路線已更變, 請刪除及重新將路線加入書籤" }],
 
-      stopName,
-      latLngUrl: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
-    };
-  });
+        stopName,
+        latLngUrl: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
+      };
+    });
 
 export const buildRouteObjForEta = async (gStopList, gRouteList, category) => {
   const allPromises = [];
