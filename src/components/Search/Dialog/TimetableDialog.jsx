@@ -9,8 +9,8 @@ import {
   Dialog,
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { DbContext } from "../context/DbContext";
-import { serviceDate } from "../constants/Constants";
+import { DbContext } from "../../../context/DbContext";
+import { serviceDate } from "../../../constants/Constants";
 
 export const TimetableDialog = ({
   timetableDialogOpen,

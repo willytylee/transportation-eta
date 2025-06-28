@@ -13,19 +13,21 @@ import {
   BookmarkAdd as BookmarkAddIcon,
   Streetview as StreetviewIcon,
   PushPin as PushPinIcon,
+  Radar as RadarIcon,
 } from "@mui/icons-material";
 import { getPreciseDistance } from "geolib";
 import { getFirstCoByRouteObj } from "../../Utils/Utils";
 import { EtaContext } from "../../context/EtaContext";
-import { MapDialog } from "../MapDialog/MapDialog";
 import { DbContext } from "../../context/DbContext";
 import { primaryColor } from "../../constants/Constants";
 import { useLocation } from "../../hooks/Location";
 import { etaExcluded } from "../../constants/Mtr";
+import { MapDialog } from "./Dialog/MapDialog/MapDialog";
 import { MtrStopEta } from "./MtrStopEta";
 import { StopEta } from "./StopEta";
-import { BookmarkDialog } from "./BookmarkDialog";
-import { MtrRouteOptionDialog } from "./MtrRouteOptionDialog";
+import { BookmarkDialog } from "./Dialog/BookmarkDialog";
+import { MtrRouteOptionDialog } from "./Dialog/MtrRouteOptionDialog";
+import { StopNearbyDialog } from "./Dialog/StopNearbyDialog";
 
 export const StopList = () => {
   const { routeKey, stopId } = useParams();
@@ -35,10 +37,12 @@ export const StopList = () => {
   const [stopList, setStopList] = useState([]);
   const [expanded, setExpanded] = useState(false);
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
+  const [nearbyDialogOpen, setNearbyDialogOpen] = useState(false);
   const [mtrRouteOptionDialogOpen, setMtrRouteOptionDialogOpen] =
     useState(false);
   const [bookmarkDialogMode, setBookmarkDialogMode] = useState(null);
   const [bookmarkData, setBookmarkData] = useState({});
+  const [stopLatLng, setStopLatLng] = useState({});
   const {
     nearestStopId,
     updateNearestStopId,
@@ -72,6 +76,11 @@ export const StopList = () => {
         { seq, routeKey: _routeKey, stopId: _stopId },
       ]);
     }
+  };
+
+  const handleNearbyIconOnClick = (_stopId) => {
+    setStopLatLng(gStopList[_stopId].location);
+    setNearbyDialogOpen(true);
   };
 
   const handleBookmarkAddIconOnClick = (_bookmarkData) => {
@@ -251,6 +260,13 @@ export const StopList = () => {
                     <PushPinIcon />
                     <div>置頂</div>
                   </IconButton>
+                  <IconButton
+                    className="iconBtn"
+                    onClick={() => handleNearbyIconOnClick(e.stopId)}
+                  >
+                    <RadarIcon />
+                    <div>附近路線</div>
+                  </IconButton>
                 </AccordionDetails>
               </Accordion>
             );
@@ -271,6 +287,11 @@ export const StopList = () => {
         bookmarkData={bookmarkData}
         setBookmarkData={setBookmarkData}
         setMtrRouteOptionDialogOpen={setMtrRouteOptionDialogOpen}
+      />
+      <StopNearbyDialog
+        nearbyDialogOpen={nearbyDialogOpen}
+        setNearbyDialogOpen={setNearbyDialogOpen}
+        stopLatLng={stopLatLng}
       />
     </>
   );

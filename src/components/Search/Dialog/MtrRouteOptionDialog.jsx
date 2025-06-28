@@ -15,8 +15,8 @@ import {
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
-import { stationDestMap, stationMap } from "../../constants/Mtr";
-import { DbContext } from "../../context/DbContext";
+import { stationDestMap, stationMap } from "../../../constants/Mtr";
+import { DbContext } from "../../../context/DbContext";
 
 export const MtrRouteOptionDialog = ({
   mtrRouteOptionDialogOpen,

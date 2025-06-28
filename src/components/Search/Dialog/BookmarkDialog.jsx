@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
 import { styled, Dialog } from "@mui/material/";
-import { FormDialog } from "../BookmarkDialog/FormDialog";
-import { getLocalStorage, setLocalStorage } from "../../Utils/Utils";
-import { ListDialog } from "../BookmarkDialog/ListDialog";
+import { getLocalStorage, setLocalStorage } from "../../../Utils/Utils";
+import { FormDialog } from "../../BookmarkDialog/FormDialog";
+import { ListDialog } from "../../BookmarkDialog/ListDialog";
 
 export const BookmarkDialog = ({
   bookmarkDialogMode,

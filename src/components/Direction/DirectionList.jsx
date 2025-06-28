@@ -3,7 +3,7 @@ import { styled } from "@mui/material";
 import { getPreciseDistance } from "geolib";
 import { DbContext } from "../../context/DbContext";
 import { useLocationOnce } from "../../hooks/Location";
-import { useStopIdsNearBy } from "../../hooks/Stop";
+import { useStopIdsNearby } from "../../hooks/StopIdsNearBy";
 import { basicFiltering, getFirstCoByRouteObj } from "../../Utils/Utils";
 import { DirectionContext } from "../../context/DirectionContext";
 import { DirectionItem } from "./DirectionItem";
@@ -40,12 +40,12 @@ export const DirectionList = () => {
 
   // eslint-disable-next-line no-unused-vars
   const { location: currentLocation } = useLocationOnce();
-  const { stopIdsNearby: origStopIdsNearby } = useStopIdsNearBy({
+  const { stopIdsNearby: origStopIdsNearby } = useStopIdsNearby({
     maxDistance: 1200,
     lat: origination ? origination.location.lat : currentLocation.lat,
     lng: origination ? origination.location.lng : currentLocation.lng,
   });
-  const { stopIdsNearby: destStopIdsNearby } = useStopIdsNearBy({
+  const { stopIdsNearby: destStopIdsNearby } = useStopIdsNearby({
     maxDistance: 1200,
     lat: destination?.location?.lat,
     lng: destination?.location?.lng,

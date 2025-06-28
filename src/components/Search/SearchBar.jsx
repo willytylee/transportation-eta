@@ -7,10 +7,10 @@ import {
   AccessTime as AccessTimeIcon,
 } from "@mui/icons-material";
 import { AppContext } from "../../context/AppContext";
-import { MapDialog } from "../MapDialog/MapDialog";
 import { EtaContext } from "../../context/EtaContext";
 import { DbContext } from "../../context/DbContext";
-import { TimetableDialog } from "../TimetableDialog";
+import { MapDialog } from "./Dialog/MapDialog/MapDialog";
+import { TimetableDialog } from "./Dialog/TimetableDialog";
 
 export const SearchBar = ({ handleFormKeyPress }) => {
   const { routeKey } = useParams();

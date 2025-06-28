@@ -1,6 +1,7 @@
+// This hook is to get the current location information.
 import { useState, useEffect } from "react";
 
-export const useLocation = ({ interval, meter }) => {
+export const useLocation = ({ interval }) => {
   const [location, setLocation] = useState({
     lat: 0,
     lng: 0,
@@ -25,7 +26,7 @@ export const useLocation = ({ interval, meter }) => {
         clearInterval(intervalID);
       };
     }
-  }, [meter]);
+  }, []);
 
   return { location };
 };

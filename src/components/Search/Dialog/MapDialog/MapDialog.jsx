@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Dialog, styled } from "@mui/material";
-import { EtaContext } from "../../context/EtaContext";
+import { EtaContext } from "../../../../context/EtaContext";
 import { Header } from "./Header";
 import { Content } from "./Content";
 
