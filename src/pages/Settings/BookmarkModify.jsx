@@ -33,6 +33,7 @@ export const BookmarkModify = () => {
           className="deleteBtn"
           onClick={() => {
             localStorage.removeItem("bookmark");
+            localStorage.removeItem("bookmarkV2");
             localStorage.removeItem("user");
             enqueueSnackbar("成功刪除書籤。", {
               variant: "success",

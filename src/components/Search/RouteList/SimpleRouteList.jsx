@@ -53,7 +53,12 @@ export const SimpleRouteList = ({ mode, routeKeyList }) => {
       >
         <div className="route">
           <div className="transportIconWrapper">
-            <img className={`transportIcon ${_route}`} src={iconSrc} alt="" />
+            <img
+              className={`transportIcon ${_route}`}
+              src={iconSrc}
+              alt=""
+              loading="lazy"
+            />
           </div>
           {renderRouteText()}
         </div>

@@ -55,7 +55,7 @@ export const SearchRouteList = () => {
           (e) =>
             debouncedRoute &&
             debouncedRoute ===
-              gRouteList[e].debouncedRoute.substring(0, debouncedRoute.length)
+              gRouteList[e].route.substring(0, debouncedRoute.length)
         )
         .filter(
           // Combine same debouncedRoute
