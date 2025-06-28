@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useDebounce } from "use-debounce";
 import { basicFiltering } from "../../../Utils/Utils";
 import { DbContext } from "../../../context/DbContext";
 import { EtaContext } from "../../../context/EtaContext";
@@ -8,6 +9,7 @@ import { SimpleRouteList } from "./SimpleRouteList";
 export const SearchRouteList = () => {
   const { gRouteList } = useContext(DbContext);
   const { route } = useContext(EtaContext);
+  const [debouncedRoute] = useDebounce(route, 300);
 
   const sortByRoute = (a, b) => {
     let routeReturn = 0;
@@ -25,11 +27,15 @@ export const SearchRouteList = () => {
   const english = /^[A-Za-z]*$/;
 
   if (gRouteList) {
-    if (route === "M" || route === "MT" || route === "MTR") {
+    if (
+      debouncedRoute === "M" ||
+      debouncedRoute === "MT" ||
+      debouncedRoute === "MTR"
+    ) {
       routeKeyList = Object.keys(gRouteList)
         .filter((e) => gRouteList[e].co.includes("mtr"))
         .filter(
-          // Combine same route
+          // Combine same debouncedRoute
           (e, idx, self) =>
             idx ===
             self.findIndex((t) => {
@@ -38,15 +44,21 @@ export const SearchRouteList = () => {
               return eStop === tStop;
             })
         );
-    } else if (route.length === 3 && english.test(route) && route !== "MTR") {
+    } else if (
+      debouncedRoute.length === 3 &&
+      english.test(debouncedRoute) &&
+      debouncedRoute !== "MTR"
+    ) {
       routeKeyList = Object.keys(gRouteList)
         .filter((e) => gRouteList[e].co.includes("mtr"))
         .filter(
           (e) =>
-            route && route === gRouteList[e].route.substring(0, route.length)
+            debouncedRoute &&
+            debouncedRoute ===
+              gRouteList[e].debouncedRoute.substring(0, debouncedRoute.length)
         )
         .filter(
-          // Combine same route
+          // Combine same debouncedRoute
           (e, idx, self) =>
             idx ===
             self.findIndex((t) => {
@@ -56,14 +68,14 @@ export const SearchRouteList = () => {
             })
         );
     } else {
-      const routeLen = route ? route.length : 0;
+      const routeLen = debouncedRoute ? debouncedRoute.length : 0;
       routeKeyList = Object.keys(gRouteList)
         .reduce((acc, key) => {
           const item = gRouteList[key];
           if (
             basicFiltering(item) &&
-            route &&
-            route === item.route.substring(0, routeLen)
+            debouncedRoute &&
+            debouncedRoute === item.route.substring(0, routeLen)
           ) {
             acc.push(key);
           }

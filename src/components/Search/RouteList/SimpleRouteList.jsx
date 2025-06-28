@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material";
 import { getCoIconByRouteObj } from "../../../Utils/Utils";
@@ -16,67 +16,66 @@ export const SimpleRouteList = ({ mode, routeKeyList }) => {
   const { gRouteList } = useContext(DbContext);
   const { route } = useContext(EtaContext);
   const navigate = useNavigate();
+  const routeLen = route ? route.length : 0;
+  const handleOnClick = useCallback(
+    (routeKey) => {
+      navigate("/search/" + routeKey, { replace: true });
+    },
+    [navigate]
+  );
 
-  return routeKeyList?.map((e, i) => {
-    const routeData = gRouteList[e];
+  return routeKeyList?.map((key) => {
+    const routeData = gRouteList[key];
+    const { route: _route, co, orig, dest, serviceType } = routeData;
+    const isMtr = co[0] === "mtr";
+    const isSearchMode = mode === "search";
+    const isMatch = route === _route;
+    const iconSrc = companyIconMap[getCoIconByRouteObj(routeData)];
+
+    const renderRouteText = () => {
+      if (isSearchMode && !isMtr) {
+        return (
+          <div>
+            <span className="boldRoute">{_route.substring(0, routeLen)}</span>
+            {_route.substring(routeLen)}
+          </div>
+        );
+      }
+      // isMtr or mode === history, bold all
+      return <span className="boldRoute">{_route}</span>;
+    };
+
     return (
       <SearchRouteListRoot
-        onClick={() => {
-          navigate("/search/" + e, { replace: true });
-        }}
-        key={i}
-        className={`${
-          route === routeData.route && mode === "search" && "match"
-        }`}
+        onClick={() => handleOnClick(key)}
+        key={key}
+        className={isMatch && isSearchMode ? "match" : ""}
       >
         <div className="route">
           <div className="transportIconWrapper">
-            <img
-              className={`transportIcon ${routeData.route}`}
-              src={companyIconMap[getCoIconByRouteObj(routeData)]}
-              alt=""
-            />
+            <img className={`transportIcon ${_route}`} src={iconSrc} alt="" />
           </div>
-          {mode === "search" ? (
-            routeData.co[0] !== "mtr" ? (
-              // highlight matched char
-              <div>
-                <span className="boldRoute">
-                  {routeData.route.substring(0, route.length)}
-                </span>
-                {routeData.route.substring(
-                  route.length,
-                  routeData.route.length
-                )}
-              </div>
-            ) : (
-              // co === mtr, bold all
-              <span className="boldRoute">{routeData.route}</span>
-            )
-          ) : (
-            // mode === history
-            <span className="boldRoute">{routeData.route}</span>
-          )}
+          {renderRouteText()}
         </div>
         <div className="companyOrigDest">
-          {routeData.co[0] === "mtr" && (
+          {isMtr && (
             <div className="routeWrapper">
-              <div className={routeData.route}>{routeMap[routeData.route]}</div>
+              <div className={_route}>{routeMap[_route]}</div>
             </div>
           )}
           <div className="origDest">
-            {routeData.orig.zh}{" "}
-            {routeData.co[0] === "mtr" ? (
-              <> ←→ {routeData.dest.zh}</>
+            {orig.zh}{" "}
+            {isMtr ? (
+              <> ←→ {dest.zh}</>
             ) : (
               <>
-                → <span className="dest">{routeData.dest.zh}</span>
+                → <span className="dest">{dest.zh}</span>
               </>
             )}
             <span className="special">
               {" "}
-              {parseInt(routeData.serviceType, 10) !== 1 && "特別班次"}
-              {etaExcluded.includes(routeData.route) && (
+              {parseInt(serviceType, 10) !== 1 && "特別班次"}
+              {etaExcluded.includes(_route) && (
                 <span className="star">沒有相關班次資料</span>
               )}
             </span>
