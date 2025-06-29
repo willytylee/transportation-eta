@@ -34,6 +34,9 @@ export const Search = () => {
       updateRoute("");
       navigate("/search", { replace: true });
     }
+    if (value === 0) {
+      navigate("/search", { replace: true });
+    }
   };
 
   useEffect(() => {
