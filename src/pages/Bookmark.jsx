@@ -34,7 +34,7 @@ export const Bookmark = () => {
           variant="text"
           startIcon={<EditIcon fontSize="small" />}
           size="small"
-          onClick={() => handleEditBookmarkOnClick()}
+          onClick={handleEditBookmarkOnClick}
         >
           編輯書籤
         </Button>

@@ -15,6 +15,7 @@ import { Eta } from "./Eta";
 export const StopGroupList = ({
   routeKeyList,
   currentLocation,
+  setNearbyDialogOpen,
   childStyles,
 }) => {
   const { gRouteList, gStopList } = useContext(DbContext);
@@ -67,6 +68,13 @@ export const StopGroupList = ({
     setMaxDistance(e);
   };
 
+  const handleRouteItemOnClick = (routeKey, stopId) => {
+    navigate("/search/" + routeKey + "/" + stopId, { replace: true });
+    if (setNearbyDialogOpen) {
+      setNearbyDialogOpen(false);
+    }
+  };
+
   return (
     <StopGrouListRoot childStyles={childStyles}>
       <div className="btnGroupWrapper">
@@ -103,7 +111,7 @@ export const StopGroupList = ({
                     key={j}
                     className="routeItems"
                     onClick={() =>
-                      navigate("/search/" + routeObj.key, { replace: true })
+                      handleRouteItemOnClick(routeObj.key, e.stopId)
                     }
                   >
                     <div className="transportIconWrapper">

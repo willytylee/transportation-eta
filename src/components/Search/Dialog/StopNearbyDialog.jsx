@@ -53,6 +53,7 @@ export const StopNearbyDialog = ({
           routeKeyList={routeKeyList}
           currentLocation={stopLatLng}
           childStyles={childStyles}
+          setNearbyDialogOpen={setNearbyDialogOpen}
         />
       </DialogContent>
     </DialogRoot>
