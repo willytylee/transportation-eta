@@ -32,7 +32,12 @@ export const StopNearbyDialog = ({
   };
 
   return (
-    <DialogRoot open={nearbyDialogOpen} onClose={handleDialogOnClose} fullWidth>
+    <DialogRoot
+      open={nearbyDialogOpen}
+      onClose={handleDialogOnClose}
+      fullWidth
+      maxWidth="xl"
+    >
       <DialogTitle>
         <Grid>
           <div className="title">附近路線</div>

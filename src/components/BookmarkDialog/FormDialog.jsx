@@ -51,7 +51,6 @@ export const FormDialog = ({
         onKeyDown={(e) => handleAddKeyPress(e)}
         autoComplete="off"
         fullWidth
-        maxWidth="xl"
       />
     </DialogContent>
     <DialogActions>

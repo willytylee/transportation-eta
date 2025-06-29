@@ -25,12 +25,6 @@ import stopIconPath from "../../assets/icons/stop.png";
 import startIconPath from "../../assets/icons/start.png";
 import endIconPath from "../../assets/icons/end.png";
 
-
-// const currLocationIconPath = require("../../assets/icons/currentLocation.png");
-// const stopIconPath = require("../../assets/icons/stop.png");
-// const startIconPath = require("../../assets/icons/start.png");
-// const endIconPath = require("../../assets/icons/end.png");
-
 export const Map = () => {
   const {
     currRoute,

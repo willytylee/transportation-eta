@@ -197,9 +197,9 @@ export const StopList = () => {
                     />
                   )}
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails className="iconWrapper">
                   <IconButton
-                    className="iconBtn mapIconBtn"
+                    className="iconBtn"
                     onClick={() =>
                       handleMapIconOnClick({
                         mapLocation: { lat, lng },
@@ -320,12 +320,12 @@ const StopListRoot = styled("div")({
       },
     },
     ".MuiCollapse-root": {
-      ".MuiAccordionDetails-root": {
+      ".iconWrapper": {
         padding: "0px 16px 0px 5%",
-        display: "flex",
-        ".mapIconBtn": {
-          marginLeft: "-12px",
-        },
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(50px, max-content))",
+        gridGap: "4px",
+        justifyContent: "center",
         ".iconBtn": {
           padding: "0px",
           flexDirection: "column",

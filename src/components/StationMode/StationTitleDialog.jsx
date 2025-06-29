@@ -65,7 +65,6 @@ export const StationTitleDialog = ({ title, dialogOpen, setDialogOpen }) => {
             onChange={handleFormChange}
             value={stationTitle}
             fullWidth
-            maxWidth="xl"
             multiline
             maxRows={3}
           />
