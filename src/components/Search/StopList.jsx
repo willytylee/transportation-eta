@@ -172,13 +172,18 @@ export const StopList = () => {
             const {
               location: { lat, lng },
             } = e;
+
             return (
               <Accordion
-                expanded={stopId ? stopId === e.stopId : expanded === e.stopId}
+                expanded={stopId === e?.stopId || expanded === e?.stopId}
                 onChange={handleChange(e.stopId)}
                 key={i}
                 className={isNearestStop ? "highlighted" : ""}
-                ref={isNearestStop ? stopListRef : null}
+                ref={
+                  stopId === e?.stopId || (!stopId && isNearestStop)
+                    ? stopListRef
+                    : null
+                }
               >
                 <AccordionSummary className="accordionSummary">
                   {routeData.co[0] === "mtr" ? (
@@ -208,7 +213,7 @@ export const StopList = () => {
                     }
                   >
                     <MapIcon />
-                    <div>地圖</div>
+                    <div>路線地圖</div>
                   </IconButton>
                   <IconButton
                     className="iconBtn"
@@ -217,7 +222,7 @@ export const StopList = () => {
                     target="_blank"
                   >
                     <DirectionsIcon />
-                    <div>規劃路線</div>
+                    <div>前往車站</div>
                   </IconButton>
                   <IconButton
                     className="iconBtn"
@@ -321,7 +326,7 @@ const StopListRoot = styled("div")({
     },
     ".MuiCollapse-root": {
       ".iconWrapper": {
-        padding: "0px 16px 0px 5%",
+        padding: "0",
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(50px, max-content))",
         gridGap: "4px",

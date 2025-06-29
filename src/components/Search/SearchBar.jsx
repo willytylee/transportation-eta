@@ -84,7 +84,7 @@ export const SearchBar = ({ handleFormKeyPress }) => {
         onClick={() => setMapDialogOpen(true)}
       >
         <MapIcon />
-        <div>地圖</div>
+        <div>路線地圖</div>
       </IconButton>
       <MapDialog
         mapDialogOpen={mapDialogOpen}
@@ -124,8 +124,8 @@ const SearchBarWraper = styled("div")({
     flexDirection: "column",
     position: "absolute",
     right: 0,
-    width: "55px",
-    height: "55px",
+    width: "60px",
+    height: "60px",
     fontSize: "10px",
     "&.hide": {
       display: "none",
@@ -136,8 +136,8 @@ const SearchBarWraper = styled("div")({
     flexDirection: "column",
     position: "absolute",
     left: 0,
-    width: "55px",
-    height: "55px",
+    width: "60px",
+    height: "60px",
     fontSize: "10px",
     "&.hide": {
       display: "none",

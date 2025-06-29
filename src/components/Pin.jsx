@@ -1,5 +1,12 @@
 import { useContext } from "react";
-import { styled, IconButton } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import {
+  styled,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItem,
+} from "@mui/material";
 import { Delete as DeleteIcon } from "@mui/icons-material/";
 import { EtaContext } from "../context/EtaContext";
 import { DbContext } from "../context/DbContext";
@@ -9,6 +16,7 @@ import { mtrLineColor } from "../constants/Mtr";
 import { Eta } from "./Search/RouteList/Eta";
 
 export const Pin = () => {
+  const navigate = useNavigate();
   const { pinList, updatePinList } = useContext(EtaContext);
   const { gRouteList, gStopList } = useContext(DbContext);
 
@@ -16,43 +24,62 @@ export const Pin = () => {
     updatePinList(pinList.filter((_, i) => i !== index));
   };
 
+  const handlePinItemOnClick = (routeKey, stopId) => {
+    navigate("/search/" + routeKey + "/" + stopId, {
+      replace: true,
+    });
+  };
+
   return (
     <PinRoot>
-      {pinList &&
-        pinList.map((e, i) => {
-          const routeData = gRouteList[e.routeKey];
-          return (
-            <div className="pinItem" key={i}>
-              <div className="text">
-                <div className="top">
-                  <img
-                    className={`transportIcon ${routeData.route}`}
-                    src={companyIconMap[getCoIconByRouteObj(routeData)]}
-                  />
-                  <div className="route">{routeData.route}</div>
-                  <div className="path">
-                    <span>{routeData.orig.zh}</span>→
-                    <span className="dest">{routeData.dest.zh}</span>
-                  </div>
-                </div>
-                <div className="bottom">
-                  <div className="stop">
-                    <div>{gStopList[e.stopId].name.zh}</div>
-                  </div>
-                  <div className="etas">
-                    <Eta seq={e.seq} routeObj={routeData} slice={3} />
-                  </div>
-                </div>
-              </div>
-              <IconButton
-                className="delete"
-                onClick={() => handleRemovePinItem(i)}
+      <List disablePadding>
+        {pinList &&
+          pinList.map((e, i) => {
+            const routeData = gRouteList[e.routeKey];
+            return (
+              <ListItem
+                key={i}
+                disablePadding
+                secondaryAction={
+                  <IconButton
+                    edge="end"
+                    className="delete"
+                    onClick={() => handleRemovePinItem(i)}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                }
               >
-                <DeleteIcon fontSize="small" />
-              </IconButton>
-            </div>
-          );
-        })}
+                <ListItemButton
+                  className="pinItem"
+                  onClick={() => handlePinItemOnClick(e.routeKey, e.stopId)}
+                >
+                  <div className="text">
+                    <div className="top">
+                      <img
+                        className={`transportIcon ${routeData.route}`}
+                        src={companyIconMap[getCoIconByRouteObj(routeData)]}
+                      />
+                      <div className="route">{routeData.route}</div>
+                      <div className="path">
+                        <span>{routeData.orig.zh}</span>→
+                        <span className="dest">{routeData.dest.zh}</span>
+                      </div>
+                    </div>
+                    <div className="bottom">
+                      <div className="stop">
+                        <div>{gStopList[e.stopId].name.zh}</div>
+                      </div>
+                      <div className="etas">
+                        <Eta seq={e.seq} routeObj={routeData} slice={3} />
+                      </div>
+                    </div>
+                  </div>
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+      </List>
     </PinRoot>
   );
 };

@@ -123,7 +123,7 @@ export const List = ({ etaResult, longList }) => {
               target="_blank"
             >
               <DirectionsIcon />
-              <div>規劃路線</div>
+              <div>前往車站</div>
             </IconButton>
             {e.routeKey && (
               <IconButton
