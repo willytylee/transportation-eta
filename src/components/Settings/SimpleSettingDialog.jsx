@@ -47,7 +47,7 @@ export const SimpleSettingDialog = ({
           </Grid>
         </DialogTitle>
 
-        <List sx={{ pt: 0 }}>
+        <List sx={{ pt: 0, pb: 0 }}>
           {dialogOptions.map((e, i) => (
             <ListItem key={i} disablePadding>
               <ListItemButton

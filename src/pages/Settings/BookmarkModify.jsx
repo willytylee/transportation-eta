@@ -70,7 +70,7 @@ export const BookmarkModify = () => {
                 <EditIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="新增, 編輯或刪除" />
+            <ListItemText primary="編輯書籤" />
           </ListItemButton>
         </ListItem>
         <Divider />

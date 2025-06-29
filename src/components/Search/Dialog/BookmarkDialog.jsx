@@ -115,6 +115,5 @@ export const BookmarkDialog = ({
 const DialogRoot = styled(Dialog)({
   ".MuiList-root": {
     overflow: "auto",
-    paddingTop: "8px",
   },
 });

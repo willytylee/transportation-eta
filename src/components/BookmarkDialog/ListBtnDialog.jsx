@@ -31,7 +31,7 @@ export const ListBtnDialog = ({
   handleEditBtnOnClick,
   handleDeleteBtnOnClick,
 }) => (
-  <ListDialogRoot bookmarkDialogMode={bookmarkDialogMode}>
+  <>
     <DialogTitle>
       <Grid>
         {handleBackBtnOnClick && (
@@ -50,7 +50,7 @@ export const ListBtnDialog = ({
       </Grid>
     </DialogTitle>
     {data.length > 0 ? (
-      <List sx={{ pt: 0 }}>
+      <ListRoot sx={{ pt: 0, pb: 0 }}>
         {data.map((e, i) => (
           <div key={i}>
             <ListItem
@@ -91,7 +91,7 @@ export const ListBtnDialog = ({
           </div>
         ))}
         {addLabel && (
-          <ListItem disablePadding>
+          <ListItem>
             <ListItemButton
               className="addCategory"
               onClick={handleAddBtnOnClick}
@@ -100,32 +100,30 @@ export const ListBtnDialog = ({
             </ListItemButton>
           </ListItem>
         )}
-      </List>
+      </ListRoot>
     ) : (
-      <List sx={{ pt: 0 }}>
+      <ListRoot sx={{ pt: 0, pb: 0 }}>
         <ListItemButton onClick={handleAddBtnOnClick}>
           <div>{emptyMsg}</div>
         </ListItemButton>
-      </List>
+      </ListRoot>
     )}
-  </ListDialogRoot>
+  </>
 );
 
-const ListDialogRoot = styled("div")({
+const ListRoot = styled(List)({
   ".emptyMsg .MuiListItemText-root .MuiListItemText-primary": {
     width: "100%",
   },
-  ".MuiListItemButton-root.addCategory": {
-    justifyContent: "center",
-    paddingRight: "0px !important",
-    paddingLeft: "0px !important",
-  },
   ".MuiListItemButton-root": {
     paddingRight: "90px !important",
-  },
-  ".MuiListItemText-root": {
-    display: "flex",
-    alignItems: "center",
+    paddingTop: "3px",
+    paddingBottom: "3px",
+    "&.addCategory": {
+      justifyContent: "center",
+      paddingRight: "0px !important",
+      paddingLeft: "0px !important",
+    },
   },
   ".MuiListItemSecondaryAction-root": {
     button: {

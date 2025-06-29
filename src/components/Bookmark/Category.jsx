@@ -81,7 +81,9 @@ export const Category = ({ category }) => {
 };
 
 const CategoryRoot = styled("div")({
-  paddingTop: "6px",
+  paddingTop: "3px",
+  paddingBottom: "3px",
+  borderTop: "1px solid rgba(0, 0, 0, 0.12)",
   ".categoryName": {
     fontSize: "14px",
   },

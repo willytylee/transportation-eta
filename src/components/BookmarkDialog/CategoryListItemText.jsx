@@ -8,7 +8,7 @@ import { DbContext } from "../../context/DbContext";
 import { getFirstCoByRouteObj } from "../../Utils/Utils";
 
 export const CategoryListItemText = ({ e }) => {
-  const { gRouteList } = useContext(DbContext);
+  const { gRouteList, gStopList } = useContext(DbContext);
   return (
     <ListItemTextRoot
       primary={e.title}
@@ -23,16 +23,19 @@ export const CategoryListItemText = ({ e }) => {
             const route = routeKey ? routeData.route : f.route;
 
             return (
-              <span className="route" key={j}>
-                {co === "mtr" ? (
-                  <span className={route}>{stationMap[f.stopId]}</span>
-                ) : routeKey ? (
-                  <span className={co}>{route}</span>
-                ) : (
-                  <span className="error">
-                    {route} <PriorityHighIcon fontSize="small" />
-                  </span>
-                )}
+              <span key={j} className="routeStopWrapper">
+                <span className="route">
+                  {co === "mtr" ? (
+                    <span className={route}>{stationMap[f.stopId]}</span>
+                  ) : routeKey ? (
+                    <span className={co}>{route}</span>
+                  ) : (
+                    <span className="error">
+                      {route} <PriorityHighIcon fontSize="small" />
+                    </span>
+                  )}
+                </span>
+                <span className="stop">{gStopList[f.stopId].name.zh}</span>
               </span>
             );
           })
@@ -46,7 +49,6 @@ export const CategoryListItemText = ({ e }) => {
 
 const ListItemTextRoot = styled(ListItemText)({
   ".MuiListItemText-primary": {
-    width: "50%",
     fontSize: "14px",
     paddingRight: "6px",
   },
@@ -59,6 +61,12 @@ const ListItemTextRoot = styled(ListItemText)({
     paddingLeft: "6px",
     ...companyColor,
     ...mtrLineColor,
+    ".routeStopWrapper": {
+      display: "flex",
+      ".route": {
+        width: "40px",
+      },
+    },
   },
   ".error": {
     fontWeight: 900,

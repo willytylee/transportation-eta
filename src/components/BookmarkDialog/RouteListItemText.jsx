@@ -38,6 +38,8 @@ export const RouteListItemText = ({ e }) => {
 };
 
 const ListItemTextRoot = styled(ListItemText)({
+  display: "flex",
+  alignItems: "center",
   ".MuiListItemText-primary": {
     ...companyColor,
     ...mtrLineColor,
@@ -45,15 +47,11 @@ const ListItemTextRoot = styled(ListItemText)({
     fontSize: "14px",
   },
   ".MuiListItemText-secondary": {
-    ...companyColor,
-    ...mtrLineColor,
     fontSize: "12px",
     display: "flex",
     flexDirection: "column",
     flex: 1,
     ".route": {
-      ...companyColor,
-      ...mtrLineColor,
       display: "inline-block",
       width: "50px",
     },

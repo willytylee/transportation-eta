@@ -78,7 +78,7 @@ export const SelectUserDialog = ({
             </Grid>
           </DialogTitle>
 
-          <List sx={{ pt: 0 }}>
+          <List sx={{ pt: 0, pb: 0 }}>
             {dataSet
               .filter((e) => e.display)
               .map((e, i) => (

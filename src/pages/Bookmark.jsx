@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-
-import { styled } from "@mui/material";
+import { styled, Button } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { Category } from "../components/Bookmark/Category";
+import { BookmarkDialog } from "../components/Settings/BookmarkDialog";
 import { dataSet } from "../data/DataSet";
 import { getLocalStorage, setLocalStorage } from "../Utils/Utils";
 
 export const Bookmark = () => {
-  // const [transportData, setTransportData] = useState([]);
+  const [bookmarkDialogMode, setBookmarkDialogMode] = useState(null);
 
   const bookmark = localStorage.getItem("bookmarkV2");
   const userId = JSON.parse(localStorage.getItem("user"))?.userId || null;
@@ -21,8 +23,22 @@ export const Bookmark = () => {
     transportData = data.transportData;
   }
 
+  const handleEditBookmarkOnClick = () => {
+    setBookmarkDialogMode("category");
+  };
+
   return (
     <BookmarkRoot>
+      <div className="editBtnWrapper">
+        <Button
+          variant="text"
+          startIcon={<EditIcon fontSize="small" />}
+          size="small"
+          onClick={() => handleEditBookmarkOnClick()}
+        >
+          編輯書籤
+        </Button>
+      </div>
       {bookmark ? (
         transportData?.length > 0 ? (
           transportData?.map((e, i) => <Category key={i} category={e} />)
@@ -47,12 +63,22 @@ export const Bookmark = () => {
           </p>
         </div>
       )}
+      <BookmarkDialog
+        bookmarkDialogMode={bookmarkDialogMode}
+        setBookmarkDialogMode={setBookmarkDialogMode}
+      />
     </BookmarkRoot>
   );
 };
 
 const BookmarkRoot = styled("div")({
   overflow: "auto",
+  ".editBtnWrapper": {
+    textAlign: "right",
+    ".MuiButton-root": {
+      color: "#2f305c",
+    },
+  },
   ".emptyMsg": {
     fontSize: "14px",
     textAlign: "center",

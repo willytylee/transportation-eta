@@ -61,7 +61,7 @@ export const SettingDialog = () => {
         </Grid>
       </DialogTitle>
 
-      <List sx={{ pt: 0 }}>
+      <List sx={{ pt: 0, pb: 0 }}>
         <ListItem disablePadding>
           <ListItemButton
             onClick={() => {

@@ -25,7 +25,7 @@ export const ListDialog = ({
   emptyMsg,
   handleBackBtnOnClick,
 }) => (
-  <ListDialogRoot>
+  <>
     <DialogTitle>
       <Grid>
         {handleBackBtnOnClick && (
@@ -44,7 +44,7 @@ export const ListDialog = ({
       </Grid>
     </DialogTitle>
     {data.length > 0 ? (
-      <List sx={{ pt: 0 }}>
+      <ListRoot sx={{ pt: 0, pb: 0 }}>
         {data.map((e, i) => (
           <div key={i}>
             <ListItem disablePadding>
@@ -61,34 +61,35 @@ export const ListDialog = ({
             <Divider />
           </div>
         ))}
-        <ListItem disablePadding>
+        <ListItem>
           <ListItemButton className="addCategory" onClick={handleAddBtnOnClick}>
             <AddIcon /> 新增分類
           </ListItemButton>
         </ListItem>
-      </List>
+      </ListRoot>
     ) : (
-      <List sx={{ pt: 0 }}>
+      <ListRoot sx={{ pt: 0, pb: 0 }}>
         <ListItemButton onClick={handleAddBtnOnClick}>
           <div>{emptyMsg}</div>
         </ListItemButton>
-      </List>
+      </ListRoot>
     )}
-  </ListDialogRoot>
+  </>
 );
 
-const ListDialogRoot = styled("div")({
+const ListRoot = styled(List)({
   ".emptyMsg .MuiListItemText-root .MuiListItemText-primary": {
     width: "100%",
   },
-  ".addCategory": {
-    justifyContent: "center",
+  ".MuiListItemButton-root": {
+    paddingTop: "3px",
+    paddingBottom: "3px",
+    "&.addCategory": {
+      justifyContent: "center",
+    },
   },
   ".MuiListItemText-root": {
-    display: "flex",
-    alignItems: "center",
     ".MuiListItemText-primary": {
-      width: "50%",
       fontSize: "14px",
     },
   },
