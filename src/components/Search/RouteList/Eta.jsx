@@ -5,7 +5,7 @@ export const Eta = ({ seq, routeObj, slice }) => {
   const { eta, isEtaLoading } = useEtas({
     seq,
     routeObj,
-    interval: 10000,
+    interval: 30000,
   });
 
   return isEtaLoading ? (

@@ -1,6 +1,6 @@
+import { useContext } from "react";
 import { Fab, styled } from "@mui/material";
 import { Settings as SettingsIcon } from "@mui/icons-material";
-import { useContext } from "react";
 import { SearchBar } from "../components/Direction/SearchBar";
 import { Map } from "../components/Direction/Map";
 import { DirectionList } from "../components/Direction/DirectionList";
@@ -10,12 +10,13 @@ import { SettingDialog } from "../components/Direction/SettingDialog";
 import { DisplayDialog } from "../components/Direction/DisplayDialog";
 
 export const Direction = () => {
-  const { updateSettingDialogOpen } = useContext(DirectionContext);
+  const { updateSettingDialogOpen, mapCollapse, updateMapCollapse } =
+    useContext(DirectionContext);
 
   return (
     <DirectionRoot>
-      <Map />
-      <SearchBar />
+      <Map mapCollapse={mapCollapse} />
+      <SearchBar updateMapCollapse={updateMapCollapse} />
       <DirectionList />
       <Fab
         className="settingsFab"

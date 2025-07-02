@@ -24,81 +24,130 @@ import currLocationIconPath from "../../assets/icons/currentLocation.png";
 import stopIconPath from "../../assets/icons/stop.png";
 import startIconPath from "../../assets/icons/start.png";
 import endIconPath from "../../assets/icons/end.png";
+import transitIconPath from "../../assets/icons/transit.png";
 
-export const Map = () => {
+export const Map = ({ mapCollapse }) => {
   const {
     currRoute,
-    origination,
+    origin,
     destination,
     expanded,
     fitBoundMode,
     updateFitBoundMode,
   } = useContext(DirectionContext);
+
   const { gStopList } = useContext(DbContext);
-  const { location: currentLocation } = useLocation({ interval: 1000 });
+  const { location: currentLocation } = useLocation({ interval: 60000 });
   const [navBtnType, setNavBtnType] = useState("normal");
   const [map, setMap] = useState(null);
 
-  const startLocation = origination?.location;
+  const { routeObj: origRouteObj, stopSeq: origStopSeq } =
+    currRoute.origin || {};
+
+  const { routeObj: destRouteObj, stopSeq: destStopSeq } =
+    currRoute.destination || {};
+
+  const {
+    stopSeqOrig: commonStopSeqOrig,
+    stopSeqDest: commonStopSeqDest,
+    stopId: commonStopId,
+  } = currRoute.common || {};
+
+  const startLocation = origin?.location;
   const endLocation = destination?.location;
+  const commonLocation = gStopList[commonStopId]?.location;
 
-  const currRouteStopIdList = useMemo(
+  const isMultiRoute =
+    !!currRoute && currRoute.common && Object.keys(currRoute.common).length > 0;
+
+  const currRouteAStopIdList = useMemo(() => {
+    const endSeq = isMultiRoute ? commonStopSeqOrig : destStopSeq;
+    return (
+      origRouteObj?.stops &&
+      origRouteObj?.stops[getFirstCoByRouteObj(origRouteObj)].slice(
+        origStopSeq - 1,
+        endSeq
+      )
+    );
+  }, [origRouteObj, origStopSeq, commonStopSeqOrig, destStopSeq]);
+
+  const currRouteAStopList = useMemo(
+    () => currRouteAStopIdList?.map((e) => gStopList[e]),
+    [currRouteAStopIdList]
+  );
+
+  const routeALine = useMemo(
+    () => currRouteAStopList?.map((e) => [e.location.lat, e.location.lng]),
+    [currRouteAStopList]
+  );
+
+  // ==============================
+
+  const currRouteBStopIdList = useMemo(
     () =>
-      currRoute.stops &&
-      currRoute.stops[getFirstCoByRouteObj(currRoute)].slice(
-        currRoute.nearbyOrigStopSeq - 1,
-        currRoute.nearbyDestStopSeq
+      destRouteObj?.stops &&
+      destRouteObj?.stops[getFirstCoByRouteObj(destRouteObj)].slice(
+        commonStopSeqDest - 1,
+        destStopSeq
       ),
-    [currRoute]
+    [destRouteObj, commonStopSeqDest, destStopSeq]
   );
 
-  const currRouteStopList = useMemo(
-    () => currRouteStopIdList?.map((e) => gStopList[e]),
-    [currRouteStopIdList]
+  const currRouteBStopList = useMemo(
+    () => currRouteBStopIdList?.map((e) => gStopList[e]),
+    [currRouteBStopIdList]
   );
 
-  const routeLine = useMemo(
-    () => currRouteStopList?.map((e) => [e.location.lat, e.location.lng]),
-    [currRouteStopList]
+  const routeBLine = useMemo(
+    () => currRouteBStopList?.map((e) => [e.location.lat, e.location.lng]),
+    [currRouteBStopList]
   );
 
-  const routeLineWithStartEnd = useMemo(
-    () =>
-      map &&
-      routeLine &&
-      startLocation &&
-      endLocation && [
-        [startLocation.lat, startLocation.lng],
-        ...routeLine,
-        [endLocation.lat, endLocation.lng],
-      ],
-    [routeLine, startLocation, endLocation]
-  );
+  // ===============================
+
+  const routeLineWithStartEnd = useMemo(() => {
+    if (map && routeALine && startLocation && endLocation) {
+      if (isMultiRoute && routeBLine) {
+        return [
+          [startLocation.lat, startLocation.lng],
+          ...routeALine,
+          ...routeBLine,
+          [endLocation.lat, endLocation.lng],
+        ];
+      } 
+        return [
+          [startLocation.lat, startLocation.lng],
+          ...routeALine,
+          [endLocation.lat, endLocation.lng],
+        ];
+      
+    }
+  }, [routeALine, routeBLine, startLocation, endLocation]);
 
   const startWalkLine = useMemo(
     () =>
       map &&
-      routeLine &&
-      startLocation && [[startLocation.lat, startLocation.lng], routeLine[0]],
-    [routeLine, startLocation]
+      routeALine &&
+      startLocation && [[startLocation.lat, startLocation.lng], routeALine[0]],
+    [routeALine, startLocation]
   );
 
   const endWalkLine = useMemo(
     () =>
       map &&
-      routeLine &&
+      routeBLine &&
       endLocation && [
-        routeLine[routeLine.length - 1],
+        routeBLine[routeBLine.length - 1],
         [endLocation.lat, endLocation.lng],
       ],
-    [routeLine, endLocation]
+    [routeBLine, endLocation]
   );
 
   useEffect(() => {
     if (map && routeLineWithStartEnd) {
       map.fitBounds(routeLineWithStartEnd);
     }
-  }, [currRoute]);
+  }, [origRouteObj, destRouteObj]);
 
   useEffect(() => {
     if (
@@ -143,7 +192,6 @@ export const Map = () => {
         shadowSize: null,
         shadowAnchor: null,
         iconSize: new L.Point(20, 20),
-        className: "currLocationMarker",
       }),
     []
   );
@@ -159,7 +207,6 @@ export const Map = () => {
         shadowSize: null,
         shadowAnchor: null,
         iconSize: new L.Point(15, 15),
-        className: "currLocationMarker",
       }),
     []
   );
@@ -175,12 +222,33 @@ export const Map = () => {
         shadowSize: null,
         shadowAnchor: null,
         iconSize: new L.Point(15, 15),
-        className: "currLocationMarker",
       }),
     []
   );
 
-  const CustomMarker = ({ stop, i }) => {
+  const transitIcon = useMemo(
+    () =>
+      new L.Icon({
+        iconUrl: transitIconPath,
+        iconRetinaUrl: transitIconPath,
+        iconAnchor: null,
+        popupAnchor: [0, 0],
+        shadowUrl: null,
+        shadowSize: null,
+        shadowAnchor: null,
+        iconSize: new L.Point(15, 15),
+        className: "transitMarker",
+      }),
+    []
+  );
+
+  const CustomMarker = ({
+    stop,
+    i,
+    routeObj,
+    currRouteStopIdList,
+    currRouteStopList,
+  }) => {
     const stopIcon = new L.Icon({
       iconUrl: stopIconPath,
       iconRetinaUrl: stopIconPath,
@@ -193,7 +261,7 @@ export const Map = () => {
       className: "stopMarker",
     });
 
-    const stopList = currRoute.stops[getFirstCoByRouteObj(currRoute)];
+    const stopList = routeObj.stops[getFirstCoByRouteObj(routeObj)];
     const stopId = currRouteStopIdList[i];
     const stopIdx = stopList.findIndex((e) => e === stopId);
 
@@ -206,7 +274,7 @@ export const Map = () => {
         <Popup>
           <div className="title">{currRouteStopList[i].name.zh}</div>
           <div className="eta">
-            <Eta seq={stopIdx + 1} routeObj={currRoute} slice={3} />
+            <Eta seq={stopIdx + 1} routeObj={routeObj} slice={3} />
           </div>
         </Popup>
       </Marker>
@@ -267,109 +335,193 @@ export const Map = () => {
   };
 
   return (
-    <MapContainerRoot
-      center={[22.382263, 114.11465]}
-      zoom={9}
-      ref={setMap}
-      scrollWheelZoom={false}
-    >
-      <TileLayer
-        attribution=""
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-
-      {startLocation && startLocation.lat !== 0 && startLocation.lng !== 0 && (
-        /* Start Point Marker */
-        <Marker
-          position={[startLocation.lat, startLocation.lng]}
-          icon={startIcon}
+    <MapRoot mapCollapse={mapCollapse}>
+      <MapContainerRoot
+        center={[22.382263, 114.11465]}
+        zoom={9}
+        ref={setMap}
+        style={{ height: "100%", width: "100%" }}
+        scrollWheelZoom={false}
+        whenCreated={setMap} // Store map instance
+      >
+        <TileLayer
+          attribution=""
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-      )}
-
-      {destination && (
-        <>
-          {/* End Point Marker */}
-          <Marker position={[endLocation.lat, endLocation.lng]} icon={endIcon}>
-            <Popup>{destination.label}</Popup>
-          </Marker>
-        </>
-      )}
-
-      {startLocation &&
-        destination &&
-        Object.keys(currRoute).length > 0 &&
-        currRoute.stops &&
-        expanded && (
+        {startLocation &&
+          startLocation.lat !== 0 &&
+          startLocation.lng !== 0 && (
+            /* Start Point Marker */
+            <Marker
+              position={[startLocation.lat, startLocation.lng]}
+              icon={startIcon}
+            >
+              <Popup>{origin.label}</Popup>
+            </Marker>
+          )}
+        {destination && (
           <>
-            {/* Transport Stop Marker */}
-            {currRouteStopIdList.map((e, i) => {
-              const stop = gStopList[e];
-              return <CustomMarker stop={stop} key={i} i={i} />;
-            })}
-
-            {/* Line of Transport */}
-            <Polyline
-              pathOptions={{
-                color: `${
-                  currRoute.co[0] === "mtr"
-                    ? mtrLineColor["." + currRoute.route].color
-                    : companyColor["." + getFirstCoByRouteObj(currRoute)].color
-                }`,
-                opacity: "0.75",
-              }}
-              positions={routeLine}
-            />
-
-            {/* Line of Start Point to First Transport Stop */}
-            <Polyline
-              pathOptions={{
-                color: "grey",
-                opacity: "0.75",
-              }}
-              positions={[
-                [startLocation.lat, startLocation.lng],
-                [
-                  currRouteStopList[0].location.lat,
-                  currRouteStopList[0].location.lng,
-                ],
-              ]}
-            />
-            {/* Line of End Point to Last Transport Stop */}
-            <Polyline
-              pathOptions={{
-                color: "grey",
-                opacity: "0.75",
-              }}
-              positions={[
-                [endLocation.lat, endLocation.lng],
-                [
-                  currRouteStopList[currRouteStopList.length - 1].location.lat,
-                  currRouteStopList[currRouteStopList.length - 1].location.lng,
-                ],
-              ]}
-            />
+            {/* End Point Marker */}
+            <Marker
+              position={[endLocation.lat, endLocation.lng]}
+              icon={endIcon}
+            >
+              <Popup>{destination.label}</Popup>
+            </Marker>
           </>
         )}
+        {isMultiRoute && (
+          <>
+            {/* Common Point Marker */}
+            <Marker
+              position={[commonLocation.lat, commonLocation.lng]}
+              icon={transitIcon}
+             />
+          </>
+        )}
+        {startLocation &&
+          destination &&
+          origRouteObj?.stops &&
+          // destRouteObj?.stops &&
+          expanded && (
+            <>
+              {/* Transport A Stop Marker */}
+              {currRouteAStopIdList.map((e, i) => {
+                const stop = gStopList[e];
+                return (
+                  <CustomMarker
+                    stop={stop}
+                    key={i}
+                    i={i}
+                    routeObj={origRouteObj}
+                    currRouteStopIdList={currRouteAStopIdList}
+                    currRouteStopList={currRouteAStopList}
+                  />
+                );
+              })}
 
-      {
-        /* Current Location Marker */
-        currentLocation.lat !== 0 && currentLocation.lng !== 0 && (
-          <Marker
-            position={[currentLocation.lat, currentLocation.lng]}
-            icon={currLocationIcon}
-          />
-        )
-      }
+              {/* Transport B Stop Marker */}
+              {isMultiRoute &&
+                currRouteBStopIdList.map((e, i) => {
+                  const stop = gStopList[e];
+                  return (
+                    <CustomMarker
+                      stop={stop}
+                      key={i}
+                      i={i}
+                      routeObj={destRouteObj}
+                      currRouteStopIdList={currRouteBStopIdList}
+                      currRouteStopList={currRouteBStopList}
+                    />
+                  );
+                })}
 
-      <RouteBoundBtn />
-      <NavBtn />
-    </MapContainerRoot>
+              {/* Line of Transport A*/}
+              <Polyline
+                pathOptions={{
+                  color: `${
+                    origRouteObj.co[0] === "mtr"
+                      ? mtrLineColor["." + origRouteObj.route].color
+                      : companyColor["." + getFirstCoByRouteObj(origRouteObj)]
+                          .color
+                  }`,
+                  opacity: "0.75",
+                }}
+                positions={routeALine}
+              />
+
+              {/* Line of Transport B*/}
+              {isMultiRoute && (
+                <Polyline
+                  pathOptions={{
+                    color: `${
+                      destRouteObj.co[0] === "mtr"
+                        ? mtrLineColor["." + destRouteObj.route].color
+                        : companyColor["." + getFirstCoByRouteObj(destRouteObj)]
+                            .color
+                    }`,
+                    opacity: "0.75",
+                  }}
+                  positions={routeBLine}
+                />
+              )}
+
+              {/* Line of Start Point to First Transport Stop */}
+              <Polyline
+                pathOptions={{
+                  color: "grey",
+                  opacity: "0.75",
+                }}
+                positions={[
+                  [startLocation.lat, startLocation.lng],
+                  [
+                    currRouteAStopList[0].location.lat,
+                    currRouteAStopList[0].location.lng,
+                  ],
+                ]}
+              />
+              {/* Line of End Point to Last Transport Stop */}
+
+              {isMultiRoute ? (
+                <Polyline
+                  pathOptions={{
+                    color: "grey",
+                    opacity: "0.75",
+                  }}
+                  positions={[
+                    [endLocation.lat, endLocation.lng],
+                    [
+                      currRouteBStopList[currRouteBStopList.length - 1].location
+                        .lat,
+                      currRouteBStopList[currRouteBStopList.length - 1].location
+                        .lng,
+                    ],
+                  ]}
+                />
+              ) : (
+                <Polyline
+                  pathOptions={{
+                    color: "grey",
+                    opacity: "0.75",
+                  }}
+                  positions={[
+                    [endLocation.lat, endLocation.lng],
+                    [
+                      currRouteAStopList[currRouteAStopList.length - 1].location
+                        .lat,
+                      currRouteAStopList[currRouteAStopList.length - 1].location
+                        .lng,
+                    ],
+                  ]}
+                />
+              )}
+            </>
+          )}
+        {
+          /* Current Location Marker */
+          currentLocation.lat !== 0 && currentLocation.lng !== 0 && (
+            <Marker
+              position={[currentLocation.lat, currentLocation.lng]}
+              icon={currLocationIcon}
+            />
+          )
+        }
+        <RouteBoundBtn />
+        <NavBtn />
+      </MapContainerRoot>
+    </MapRoot>
   );
 };
 
-const MapContainerRoot = styled(MapContainer)({
-  flex: 4,
+const MapRoot = styled("div", {
+  shouldForwardProp: (prop) => prop !== "mapCollapse",
+})(({ mapCollapse }) => ({
+  flex: mapCollapse ? 1 : 4,
+  transition: "flex 0.3s ease",
   zIndex: 0,
+}));
+
+const MapContainerRoot = styled(MapContainer)({
   ".leaflet-control-container": {
     ".leaflet-top, .leaflet-bottom": {
       willChange: "transform",
@@ -383,12 +535,18 @@ const MapContainerRoot = styled(MapContainer)({
         ...mtrLineColor,
       },
     },
-  },
-  ".leaflet-popup-pane": {
-    ".title": {
-      fontWeight: 900,
+    ".leaflet-marker-pane": {
+      ".transitMarker": {
+        zIndex: "9999 !important",
+      },
+    },
+    ".leaflet-popup-pane": {
+      ".title": {
+        fontWeight: 900,
+      },
     },
   },
+
   ".MuiAvatar-root": {
     position: "absolute",
     zIndex: "1001",
@@ -414,17 +572,6 @@ const MapContainerRoot = styled(MapContainer)({
       bottom: "20px",
       "&.normal button": {
         color: "#777777",
-      },
-    },
-  },
-  ".leaflet-marker-pane": {
-    ".currLocationMarker": {
-      border: "none",
-      background: "none",
-    },
-    ".currStopMarker": {
-      "&.selected": {
-        filter: "hue-rotate(150deg)",
       },
     },
   },

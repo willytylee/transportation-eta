@@ -15,7 +15,7 @@ import {
   PushPin as PushPinIcon,
   Radar as RadarIcon,
 } from "@mui/icons-material";
-import { getPreciseDistance } from "geolib";
+import { getDistance } from "geolib";
 import { getFirstCoByRouteObj } from "../../Utils/Utils";
 import { EtaContext } from "../../context/EtaContext";
 import { DbContext } from "../../context/DbContext";
@@ -117,7 +117,7 @@ export const StopList = () => {
       if (currentLocation.lat !== 0 && currentLocation.lng !== 0) {
         updateNearestStopId(
           expandStopIdArr.reduce((prev, curr) => {
-            const prevDistance = getPreciseDistance(
+            const prevDistance = getDistance(
               {
                 latitude: gStopList[prev].location.lat,
                 longitude: gStopList[prev].location.lng,
@@ -127,7 +127,7 @@ export const StopList = () => {
                 longitude: currentLocation.lng,
               }
             );
-            const currDistance = getPreciseDistance(
+            const currDistance = getDistance(
               {
                 latitude: gStopList[curr].location.lat,
                 longitude: gStopList[curr].location.lng,
@@ -158,7 +158,7 @@ export const StopList = () => {
         inline: "center",
       });
     }
-  }, [stopList]);
+  }, [nearestStopId]);
 
   return (
     <>

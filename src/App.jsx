@@ -21,7 +21,6 @@ import { Redirect } from "./pages/Redirect";
 import { Playground } from "./pages/Playground";
 import { BookmarkModify } from "./pages/Settings/BookmarkModify";
 import { Direction } from "./pages/Direction";
-import { Lab } from "./pages/Settings/Lab";
 import { Pin } from "./components/Pin";
 
 const App = () => {
@@ -48,13 +47,12 @@ const App = () => {
           <Route path="/more" element={<More />} />
           <Route path="/stationMode" element={<StationMode />} />
           <Route path="/bookmark" element={<Bookmark />} />
-          <Route path="/bookmark/:userId" element={<Playground />} />
+          <Route path="/playground" element={<Playground />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/settings/personal" element={<Personal />} />
           <Route path="/settings/bookmarkModify" element={<BookmarkModify />} />
           <Route path="/settings/about" element={<About />} />
           <Route path="/settings/about/changeLog" element={<ChangeLog />} />
-          <Route path="/settings/about/lab" element={<Lab />} />
           <Route path="/settings/install" element={<Install />} />
           <Route path="/settings/update" element={<Update />} />
         </Routes>

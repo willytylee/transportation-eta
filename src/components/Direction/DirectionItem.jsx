@@ -1,49 +1,39 @@
 import { useContext } from "react";
-import { styled } from "@mui/material";
 import { DirectionContext } from "../../context/DirectionContext";
 import { useEtas } from "../../hooks/Etas";
 import { DirectionItemAccordion } from "./DirectionItemAccordion";
 
-export const DirectionItem = ({ e, i, handleChange }) => {
+export const DirectionItem = ({ routeListItem, i, handleChange }) => {
   const { displayMode } = useContext(DirectionContext);
-  const { eta, isEtaLoading } = useEtas({
-    seq: e.nearbyOrigStopSeq,
-    routeObj: e,
-    interval: 10000,
+  const { eta: origEta, isOrigEtaLoading } = useEtas({
+    seq: routeListItem.origin.stopSeq,
+    routeObj: routeListItem.origin.routeObj,
+    interval: 60000,
   });
 
+  const { eta: destEta, isDestEtaLoading } = useEtas({
+    seq: routeListItem.destination.stopSeq,
+    routeObj: routeListItem.destination.routeObj,
+    interval: 60000,
+  });
+
+  const isMultiRoute =
+    !!routeListItem &&
+    routeListItem.common &&
+    Object.keys(routeListItem.common).length > 0;
+
   return (
-    <>
-      {displayMode === "只顯示現時有班次路線" && eta.length > 0 && (
-        <DirectionItemRoot>
-          <DirectionItemAccordion
-            handleChange={handleChange}
-            i={i}
-            e={e}
-            eta={eta}
-            isEtaLoading={isEtaLoading}
-          />
-        </DirectionItemRoot>
-      )}
-      {displayMode === "顯示所有路線" && (
-        <DirectionItemRoot>
-          <DirectionItemAccordion
-            handleChange={handleChange}
-            i={i}
-            e={e}
-            eta={eta}
-            isEtaLoading={isEtaLoading}
-          />
-        </DirectionItemRoot>
-      )}
-    </>
+    (displayMode === "顯示所有路線" ||
+      (displayMode === "只顯示現時有班次路線" && isMultiRoute
+        ? origEta.length > 0 && destEta.length > 0
+        : origEta.length > 0)) && (
+      <DirectionItemAccordion
+        handleChange={handleChange}
+        i={i}
+        routeListItem={routeListItem}
+        eta={[origEta, destEta]}
+        isEtaLoading={isOrigEtaLoading && isDestEtaLoading}
+      />
+    )
   );
 };
-
-const DirectionItemRoot = styled("div")({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "flex-start",
-  gap: "4px",
-  borderBottom: "1px solid lightgrey",
-});

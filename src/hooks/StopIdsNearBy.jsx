@@ -1,5 +1,5 @@
 import { useContext, useMemo } from "react";
-import { getPreciseDistance } from "geolib";
+import { getDistance } from "geolib";
 import { DbContext } from "../context/DbContext";
 
 export const useStopIdsNearby = ({ maxDistance, lat, lng }) => {
@@ -22,7 +22,7 @@ export const useStopIdsNearby = ({ maxDistance, lat, lng }) => {
     for (const [stopId, { location }] of Object.entries(gStopList)) {
       // Ensure location has valid lat/lng
       if (Number.isFinite(location?.lat) && Number.isFinite(location?.lng)) {
-        const distance = getPreciseDistance(
+        const distance = getDistance(
           { latitude: location.lat, longitude: location.lng },
           { latitude: lat, longitude: lng }
         );

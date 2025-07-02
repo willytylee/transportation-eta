@@ -41,7 +41,7 @@ export const Category = ({ category }) => {
     };
 
     intervalContent();
-    const interval = setInterval(intervalContent, 10000);
+    const interval = setInterval(intervalContent, 30000);
 
     return () => clearInterval(interval);
   }, []);

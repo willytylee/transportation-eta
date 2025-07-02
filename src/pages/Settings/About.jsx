@@ -42,18 +42,6 @@ export const About = () => {
           />
         </ListItemButton>
       </ListItem>
-      {/* <ListItem disablePadding>
-        <ListItemButton
-          onClick={() => navigate("/settings/about/lab", { replace: true })}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <ScienceIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="實驗功能" />
-        </ListItemButton>
-      </ListItem> */}
       <Divider />
       <ListItem disablePadding>
         <ListItemButton

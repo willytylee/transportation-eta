@@ -4,9 +4,10 @@ export const DirectionContext = createContext();
 
 export const DirectionProvider = ({ children }) => {
   const [currRoute, setCurrRoute] = useState({});
-  const [origination, setOrigination] = useState(null);
+  const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [expanded, setExpanded] = useState(false);
+  const [mapCollapse, setMapCollapse] = useState(false);
   const [sortingDialogOpen, setSortingDialogOpen] = useState(false);
   const [settingDialogOpen, setSettingDialogOpen] = useState(false);
   const [displayDialogOpen, setDisplayDialogOpen] = useState(false);
@@ -18,8 +19,8 @@ export const DirectionProvider = ({ children }) => {
     setCurrRoute(e);
   }, []);
 
-  const updateOrigination = useCallback((e) => {
-    setOrigination(e);
+  const updateOrigin = useCallback((e) => {
+    setOrigin(e);
   }, []);
 
   const updateDestination = useCallback((e) => {
@@ -28,6 +29,10 @@ export const DirectionProvider = ({ children }) => {
 
   const updateExpanded = useCallback((e) => {
     setExpanded(e);
+  }, []);
+
+  const updateMapCollapse = useCallback(() => {
+    setMapCollapse((prev) => !prev);
   }, []);
 
   const updateSortingDialogOpen = useCallback((e) => {
@@ -58,12 +63,14 @@ export const DirectionProvider = ({ children }) => {
     () => ({
       currRoute,
       updateCurrRoute,
-      origination,
-      updateOrigination,
+      origin,
+      updateOrigin,
       destination,
       updateDestination,
       expanded,
       updateExpanded,
+      mapCollapse,
+      updateMapCollapse,
       sortingDialogOpen,
       updateSortingDialogOpen,
       displayDialogOpen,
@@ -80,12 +87,14 @@ export const DirectionProvider = ({ children }) => {
     [
       currRoute,
       updateCurrRoute,
-      origination,
-      updateOrigination,
+      origin,
+      updateOrigin,
       destination,
       updateDestination,
       expanded,
       updateExpanded,
+      mapCollapse,
+      updateMapCollapse,
       sortingDialogOpen,
       sortingMethod,
       updateSortingDialogOpen,

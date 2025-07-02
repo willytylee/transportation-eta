@@ -1,230 +1,132 @@
-import { useContext, useState } from "react";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  styled,
-} from "@mui/material";
-import {
-  DirectionsWalk as DirectionsWalkIcon,
-  DirectionsRun as DirectionsRunIcon,
-  ExpandMore as ExpandMoreIcon,
-  ExpandLess as ExpandLessIcon,
-} from "@mui/icons-material";
-import {
-  companyColor,
-  companyIconMap,
-  primaryColor,
-} from "../../constants/Constants";
-import { mtrIconColor, routeMap } from "../../constants/Mtr";
-import {
-  getCoIconByRouteObj,
-  getFirstCoByRouteObj,
-  phaseEtaToTime,
-  phaseEtaToWaitingMins,
-} from "../../Utils/Utils";
-import { DbContext } from "../../context/DbContext";
-import { Eta } from "../Search/RouteList/Eta";
+import { useContext } from "react";
+import { Accordion, AccordionDetails, styled } from "@mui/material";
+import { primaryColor } from "../../constants/Constants";
+import { mtrIconColor } from "../../constants/Mtr";
+import { phaseEtaToTime, phaseEtaToWaitingMins } from "../../Utils/Utils";
 import { DirectionContext } from "../../context/DirectionContext";
+import { Walking } from "./Box/Walking";
+import { TransportEta } from "./Box/TransportEta";
+import { DirectionSummary } from "./DirectionSummary";
+import { DirectionStopList } from "./Box/DirectionStopList";
 
 export const DirectionItemAccordion = ({
   handleChange,
   i,
-  e,
+  routeListItem,
   isEtaLoading,
-  eta,
+  eta: [origEta, destEta],
 }) => {
-  const [stopList, setStopList] = useState([]);
-  const { destination, expanded, updateFitBoundMode } =
-    useContext(DirectionContext);
-  const { gStopList } = useContext(DbContext);
+  const { expanded, updateFitBoundMode } = useContext(DirectionContext);
 
-  let waitingTime = null;
-  let waitingTimeStr = "";
-  let arriveTime = "";
+  const { origin, destination, common } = routeListItem;
+  const {
+    routeObj: origRouteObj,
+    stopId: origStopId,
+    stopSeq: origStopSeq,
+    walkDistance: origWalkDistance,
+    walkTime: origWalkTime,
+    transportTime: origTransportTime,
+  } = origin;
 
-  if (eta.length > 0) {
-    waitingTime = phaseEtaToWaitingMins(eta[0].eta);
-    arriveTime = phaseEtaToTime(eta[0].eta);
-    if (waitingTime > 0) {
-      waitingTimeStr = `將於 ${waitingTime}分鐘 後抵達 ${
-        gStopList[e.nearbyOrigStopId].name.zh
-      } (${arriveTime})`;
-    } else if (waitingTime === 0) {
-      waitingTimeStr = `準備抵達 ${gStopList[e.nearbyOrigStopId].name.zh}`;
-    } else {
-      waitingTimeStr = `已抵達 ${gStopList[e.nearbyOrigStopId].name.zh}`;
-    }
-  } else {
-    waitingTimeStr = " 沒有班次";
-  }
+  const {
+    routeObj: destRouteObj,
+    stopId: destStopId,
+    stopSeq: destStopSeq,
+    walkDistance: destWalkDistance,
+    walkTime: destWalkTime,
+    transportTime: destTransportTime,
+  } = destination;
 
-  let estimateTravelTime = null;
-  let estimateTravelTimeStr = "";
+  const {
+    stopSeqOrig: commonStopSeqOrig,
+    stopSeqDest: commonStopSeqDest,
+    stopId: commonStopId,
+  } = common;
 
-  if (e.transportTime !== null && eta.length > 0) {
-    const waitingTimeArr = eta.map((f) => phaseEtaToWaitingMins(f.eta));
-
-    if (waitingTimeArr[0] > e.origWalkTime) {
-      estimateTravelTime = waitingTimeArr[0] + e.transportTime + e.destWalkTime;
-    } else if (waitingTimeArr[1] > e.origWalkTime) {
-      estimateTravelTime = waitingTimeArr[1] + e.transportTime + e.destWalkTime;
-    } else {
-      estimateTravelTime = waitingTimeArr[2] + e.transportTime + e.destWalkTime;
-    }
-    estimateTravelTimeStr = `≈ ${estimateTravelTime}分鐘`;
-  }
-
-  const handleStopListBtnOnClick = () => {
-    if (stopList.length === 0) {
-      const _stopList = [];
-      for (let j = e.nearbyOrigStopSeq; j < e.nearbyDestStopSeq - 1; j += 1) {
-        _stopList.push(gStopList[e.stops[getFirstCoByRouteObj(e)][j]]);
-      }
-      setStopList(_stopList);
-    } else {
-      setStopList([]);
-    }
-  };
+  const origWaitingTime = phaseEtaToWaitingMins(origEta[0]?.eta);
+  const destWaitingTime = phaseEtaToWaitingMins(destEta[0]?.eta);
+  const origArriveTime = phaseEtaToTime(origEta[0]?.eta);
+  const destArriveTime = phaseEtaToTime(destEta[0]?.eta);
+  const isMultiRoute = Object.keys(common).length > 0;
 
   return (
     <AccordionRoot
       expanded={expanded === `panel${i}`}
-      onChange={handleChange(`panel${i}`, e)}
+      onChange={handleChange(`panel${i}`, routeListItem)}
     >
-      <AccordionSummary>
-        <div className="left">
-          <div className="simpleStep">
-            <div className="walkDistance">
-              {e.origWalkDistance <= 400 && <DirectionsWalkIcon />}
-              {e.origWalkDistance > 400 && <DirectionsRunIcon />}
-              <div className="time">{e.origWalkTime}</div>
-            </div>
-            →
-            <div className="transportIconWrapper">
-              <img
-                className={`transportIcon ${e.route}`}
-                src={companyIconMap[getCoIconByRouteObj(e)]}
-                alt=""
-              />
-              {e.co[0] === "mtr" ? (
-                <div className={e.route}>{routeMap[e.route]}</div>
-              ) : (
-                <div className="route">{e.route} </div>
-              )}
-            </div>
-            →
-            <div className="walkDistance">
-              {e.destWalkDistance <= 400 && <DirectionsWalkIcon />}
-              {e.destWalkDistance > 400 && <DirectionsRunIcon />}
-              <div className="time">{e.destWalkTime}</div>
-            </div>
-          </div>
-          <div className="eta">{isEtaLoading ? "載入中" : waitingTimeStr}</div>
-        </div>
-        <div className="right">{estimateTravelTimeStr}</div>
-      </AccordionSummary>
+      <DirectionSummary
+        eta={origEta}
+        routeObj={{ origRouteObj, destRouteObj }}
+        transportTime={{ origTransportTime, destTransportTime }}
+        origStopId={origStopId}
+        origWalkDistance={destWalkDistance}
+        origWalkTime={origWalkTime}
+        destWalkDistance={destWalkDistance}
+        destWalkTime={destWalkTime}
+        isEtaLoading={isEtaLoading}
+        waitingTime={origWaitingTime}
+        arriveTime={origArriveTime}
+        isMultiRoute={isMultiRoute}
+      />
       <AccordionDetails>
         <div className="detail">
-          <button
-            type="button"
-            className="detailItem"
-            onClick={() => updateFitBoundMode("startWalk")}
-          >
-            <div className="walkNotice">
-              {e.origWalkDistance <= 400 && <DirectionsWalkIcon />}
-              {e.origWalkDistance > 400 && e.origWalkDistance <= 600 && (
-                <DirectionsRunIcon />
-              )}
-              <div>
-                步行至 {gStopList[e.nearbyOrigStopId].name.zh} (
-                {e.origWalkDistance}米)
-              </div>
-            </div>
-            <div className="time">{e.origWalkTime}分鐘</div>
-          </button>
-          <div className="detailItem">
-            <div className="waitingNotice">
-              <div className="arriveTimeMsgWrapper">
-                <div className="transportIconWrapper">
-                  <img
-                    className={`transportIcon ${e.route}`}
-                    src={companyIconMap[getCoIconByRouteObj(e)]}
-                    alt=""
-                  />
-                </div>
-                <div className="arriveTimeMsg">
-                  {e.co[0] === "mtr" ? (
-                    <div className={e.route}>{routeMap[e.route]}</div>
-                  ) : (
-                    <div className="route">{e.route} </div>
-                  )}
-                  到站時間: {arriveTime}
-                </div>
-              </div>
-              <div className="eta">
-                <Eta seq={e.nearbyOrigStopSeq} routeObj={e} slice={3} />
-              </div>
-            </div>
-            <div className="time">
-              {waitingTime !== null && `${waitingTime}分鐘`}
-            </div>
-          </div>
-          <div className="detailItem">
-            <ul className="transportNotice">
-              <li>{gStopList[e.nearbyOrigStopId].name.zh}</li>
-              {e.nearbyDestStopSeq - e.nearbyOrigStopSeq > 1 && (
-                <button
-                  className="stopListBtn"
-                  type="button"
-                  onClick={handleStopListBtnOnClick}
-                >
-                  <div
-                    className={
-                      e.co[0] === "mtr"
-                        ? `${e.route}`
-                        : `${getFirstCoByRouteObj(e)}`
-                    }
-                  >
-                    搭{e.nearbyDestStopSeq - e.nearbyOrigStopSeq}個站
-                  </div>
-                  {stopList.length === 0 ? (
-                    <ExpandMoreIcon />
-                  ) : (
-                    <ExpandLessIcon />
-                  )}
-                </button>
-              )}
-              <div
-                className="stopList"
-                style={stopList.length === 0 ? { display: "none" } : null}
-              >
-                {stopList.map((f, j) => (
-                  <li key={j}>{f.name.zh}</li>
-                ))}
-              </div>
-              <li>{gStopList[e.nearbyDestStopId].name.zh}</li>
-            </ul>
-            <div className="time">
-              {e.transportTime !== null && `${e.transportTime}分鐘`}
-            </div>
-          </div>
-          <button
-            type="button"
-            className="detailItem"
-            onClick={() => updateFitBoundMode("endWalk")}
-          >
-            <div className="walkNotice">
-              {e.destWalkDistance <= 400 && <DirectionsWalkIcon />}
-              {e.destWalkDistance > 400 && e.destWalkDistance <= 600 && (
-                <DirectionsRunIcon />
-              )}
-              <div>
-                步行至 {destination.label} ({e.destWalkDistance}米)
-              </div>
-            </div>
-            <div className="time">{e.destWalkTime}分鐘</div>
-          </button>
+          <Walking
+            walkDistance={origWalkDistance}
+            stopId={origStopId}
+            walkTime={origWalkTime}
+            updateFitBoundMode={updateFitBoundMode}
+            fitBoundMode="startWalk"
+          />
+          <TransportEta
+            routeObj={origRouteObj}
+            stopSeq={origStopSeq}
+            arriveTime={origArriveTime}
+            waitingTime={origWaitingTime}
+          />
+          {!isMultiRoute && (
+            <DirectionStopList
+              routeObj={origRouteObj}
+              startStopSeq={origStopSeq}
+              startStopId={origStopId}
+              endStopSeq={destStopSeq}
+              endStopId={destStopId}
+              transportTime={origTransportTime}
+            />
+          )}
+
+          {isMultiRoute && (
+            <>
+              <DirectionStopList
+                routeObj={origRouteObj}
+                startStopSeq={origStopSeq}
+                startStopId={origStopId}
+                endStopSeq={commonStopSeqOrig}
+                endStopId={commonStopId}
+                transportTime={origTransportTime}
+              />
+              <TransportEta
+                routeObj={destRouteObj}
+                stopSeq={destStopSeq}
+                arriveTime={destArriveTime}
+                waitingTime={destWaitingTime}
+              />
+              <DirectionStopList
+                routeObj={destRouteObj}
+                startStopSeq={commonStopSeqDest}
+                startStopId={commonStopId}
+                endStopSeq={destStopSeq}
+                endStopId={destStopId}
+                transportTime={destTransportTime}
+              />
+            </>
+          )}
+          <Walking
+            walkDistance={destWalkDistance}
+            stopId={destStopId}
+            walkTime={destWalkTime}
+            updateFitBoundMode={updateFitBoundMode}
+            fitBoundMode="endWalk"
+          />
         </div>
       </AccordionDetails>
     </AccordionRoot>
@@ -236,14 +138,19 @@ const AccordionRoot = styled(Accordion)({
   boxShadow: "none",
   padding: "8px 0",
   borderRadius: 0,
+  borderBottom: "1px solid lightgrey",
   "&:before": {
     backgroundColor: "unset",
   },
   "&.Mui-expanded": {
     backgroundColor: `${primaryColor}17`,
+    margin: 0,
   },
   ".MuiAccordionSummary-root": {
     minHeight: 0,
+    "&.Mui-expanded": {
+      minHeight: 0,
+    },
     ".MuiAccordionSummary-content": {
       display: "flex",
       margin: 0,
@@ -251,39 +158,6 @@ const AccordionRoot = styled(Accordion)({
       justifyContent: "space-between",
       alignItems: "center",
       width: "100%",
-      ".left": {
-        display: "flex",
-        flexDirection: "column",
-        ".simpleStep": {
-          display: "flex",
-          alignItems: "center",
-          gap: "6px",
-          ".transportIconWrapper": {
-            display: "flex",
-            alignItems: "center",
-            ...mtrIconColor,
-            ".transportIcon": {
-              height: "18px",
-            },
-          },
-          ".route": {
-            fontWeight: 900,
-          },
-          ".walkDistance": {
-            display: "flex",
-            alignItems: "baseline",
-            svg: { fontSize: "18px" },
-            ".time": {
-              fontSize: "10px",
-            },
-          },
-        },
-        ".eta": {
-          display: "flex",
-          alignItems: "center",
-          ...companyColor,
-        },
-      },
     },
   },
 
@@ -305,32 +179,7 @@ const AccordionRoot = styled(Accordion)({
         alignItems: "center",
         border: "none",
         svg: { fontSize: "14px" },
-        ".walkNotice": {
-          display: "flex",
-        },
-        ".transportNotice": {
-          display: "flex",
-          flexDirection: "column",
-          gap: "6px",
-          borderLeft: "3px solid",
-          paddingLeft: "12px",
-          margin: 0,
-          ".stopListBtn": {
-            display: "flex",
-            alignItems: "center",
-            border: "none",
-            padding: "0",
-            background: "unset",
-            fontSize: "12px",
-            ...companyColor,
-            ...mtrIconColor,
-          },
-          ".stopList": {
-            display: "flex",
-            flexDirection: "column",
-            gap: "4px",
-          },
-        },
+
         ".waitingNotice": {
           ".arriveTimeMsgWrapper": {
             display: "flex",

@@ -35,7 +35,7 @@ export const StopGroupList = ({
     const company = getFirstCoByRouteObj(routeData);
     const { stops } = routeData;
 
-    const filitedStopId = Object.values(stops[company]).filter((f) =>
+    const filitedStopId = stops[company].filter((f) =>
       Object.keys(stopIdsNearby).includes(f)
     );
 
@@ -44,9 +44,10 @@ export const StopGroupList = ({
       const _stopId = filitedStopId.reduce((prev, curr) =>
         stopIdsNearby[prev] < stopIdsNearby[curr] ? prev : curr
       );
+      const origStopSeq = stops[company].findIndex((f) => f === _stopId) + 1;
       routeData.nearbyOrigStopId = _stopId;
-      routeData.nearbyOrigStopSeq =
-        stops[company].findIndex((f) => f === _stopId) + 1;
+      routeData.origStopSeq = origStopSeq;
+
       routeData.distance = stopIdsNearby[_stopId];
       routeData.key = e;
       filteredRouteObjList.push(routeData);
@@ -134,7 +135,7 @@ export const StopGroupList = ({
                     </div>
                     <div className="etas">
                       <Eta
-                        seq={routeObj.nearbyOrigStopSeq}
+                        seq={routeObj.origStopSeq}
                         routeObj={routeObj}
                         slice={1}
                       />
