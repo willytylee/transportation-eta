@@ -1,10 +1,11 @@
 import { useContext } from "react";
-import { styled } from "@mui/material";
+import { styled, Button } from "@mui/material";
 import {
   DirectionsWalk as DirectionsWalkIcon,
   DirectionsRun as DirectionsRunIcon,
 } from "@mui/icons-material";
 import { DbContext } from "../../../context/DbContext";
+import { DirectionContext } from "../../../context/DirectionContext";
 
 export const Walking = ({
   walkDistance,
@@ -14,10 +15,10 @@ export const Walking = ({
   fitBoundMode,
 }) => {
   const { gStopList } = useContext(DbContext);
+  const { destination } = useContext(DirectionContext);
 
   return (
     <WalkingRoot
-      type="button"
       className="detailItem"
       onClick={() => updateFitBoundMode(fitBoundMode)}
     >
@@ -25,7 +26,8 @@ export const Walking = ({
         {walkDistance <= 400 && <DirectionsWalkIcon />}
         {walkDistance > 400 && <DirectionsRunIcon />}
         <div>
-          步行至 {gStopList[stopId].name.zh} ({walkDistance}
+          步行至 {stopId ? gStopList[stopId].name.zh : destination.value} (
+          {walkDistance}
           米)
         </div>
       </div>
@@ -34,7 +36,8 @@ export const Walking = ({
   );
 };
 
-const WalkingRoot = styled("button")({
+const WalkingRoot = styled(Button)({
+  color: "#2f305c",
   ".walkNotice": {
     display: "flex",
     alignItems: "center",

@@ -1,7 +1,7 @@
 import { useContext, useMemo, useState, useEffect } from "react";
 import L from "leaflet";
 import {
-  Route as RouteIcon,
+  Polyline as PolylineIcon,
   Navigation as NavigationIcon,
 } from "@mui/icons-material";
 import { IconButton, styled, Avatar } from "@mui/material";
@@ -41,27 +41,33 @@ export const Map = ({ mapCollapse }) => {
   const [navBtnType, setNavBtnType] = useState("normal");
   const [map, setMap] = useState(null);
 
-  const { routeObj: origRouteObj, stopSeq: origStopSeq } =
-    currRoute.origin || {};
-
-  const { routeObj: destRouteObj, stopSeq: destStopSeq } =
-    currRoute.destination || {};
+  const {
+    routeObj: origRouteObj,
+    stopSeq: origStopSeq,
+    commonStopId: origCommonStopId,
+    commonStopSeq: origCommonStopSeq,
+  } = currRoute.origin || {};
 
   const {
-    stopSeqOrig: commonStopSeqOrig,
-    stopSeqDest: commonStopSeqDest,
-    stopId: commonStopId,
-  } = currRoute.common || {};
+    routeObj: destRouteObj,
+    stopSeq: destStopSeq,
+    commonStopId: destCommonStopId,
+    commonStopSeq: destCommonStopSeq,
+  } = currRoute.destination || {};
 
   const startLocation = origin?.location;
   const endLocation = destination?.location;
-  const commonLocation = gStopList[commonStopId]?.location;
+  const origCommonLocation = gStopList[origCommonStopId]?.location;
+  const destCommonLocation = gStopList[destCommonStopId]?.location;
 
   const isMultiRoute =
-    !!currRoute && currRoute.common && Object.keys(currRoute.common).length > 0;
+    origCommonStopId &&
+    origCommonStopSeq &&
+    destCommonStopId &&
+    destCommonStopSeq;
 
   const currRouteAStopIdList = useMemo(() => {
-    const endSeq = isMultiRoute ? commonStopSeqOrig : destStopSeq;
+    const endSeq = isMultiRoute ? origCommonStopSeq : destStopSeq;
     return (
       origRouteObj?.stops &&
       origRouteObj?.stops[getFirstCoByRouteObj(origRouteObj)].slice(
@@ -69,14 +75,14 @@ export const Map = ({ mapCollapse }) => {
         endSeq
       )
     );
-  }, [origRouteObj, origStopSeq, commonStopSeqOrig, destStopSeq]);
+  }, [origRouteObj, origStopSeq, origCommonStopSeq, destStopSeq]);
 
   const currRouteAStopList = useMemo(
     () => currRouteAStopIdList?.map((e) => gStopList[e]),
     [currRouteAStopIdList]
   );
 
-  const routeALine = useMemo(
+  const routeAPoints = useMemo(
     () => currRouteAStopList?.map((e) => [e.location.lat, e.location.lng]),
     [currRouteAStopList]
   );
@@ -87,10 +93,10 @@ export const Map = ({ mapCollapse }) => {
     () =>
       destRouteObj?.stops &&
       destRouteObj?.stops[getFirstCoByRouteObj(destRouteObj)].slice(
-        commonStopSeqDest - 1,
+        destCommonStopSeq - 1,
         destStopSeq
       ),
-    [destRouteObj, commonStopSeqDest, destStopSeq]
+    [destRouteObj, destCommonStopSeq, destStopSeq]
   );
 
   const currRouteBStopList = useMemo(
@@ -98,7 +104,7 @@ export const Map = ({ mapCollapse }) => {
     [currRouteBStopIdList]
   );
 
-  const routeBLine = useMemo(
+  const routeBPoints = useMemo(
     () => currRouteBStopList?.map((e) => [e.location.lat, e.location.lng]),
     [currRouteBStopList]
   );
@@ -106,46 +112,53 @@ export const Map = ({ mapCollapse }) => {
   // ===============================
 
   const routeLineWithStartEnd = useMemo(() => {
-    if (map && routeALine && startLocation && endLocation) {
-      if (isMultiRoute && routeBLine) {
+    if (map && routeAPoints && startLocation && endLocation) {
+      if (isMultiRoute && routeBPoints) {
         return [
           [startLocation.lat, startLocation.lng],
-          ...routeALine,
-          ...routeBLine,
+          ...routeAPoints,
+          ...routeBPoints,
           [endLocation.lat, endLocation.lng],
         ];
-      } 
-        return [
-          [startLocation.lat, startLocation.lng],
-          ...routeALine,
-          [endLocation.lat, endLocation.lng],
-        ];
-      
+      }
+      return [
+        [startLocation.lat, startLocation.lng],
+        ...routeAPoints,
+        [endLocation.lat, endLocation.lng],
+      ];
     }
-  }, [routeALine, routeBLine, startLocation, endLocation]);
+  }, [routeAPoints, routeBPoints, startLocation, endLocation]);
 
   const startWalkLine = useMemo(
     () =>
       map &&
-      routeALine &&
-      startLocation && [[startLocation.lat, startLocation.lng], routeALine[0]],
-    [routeALine, startLocation]
+      routeAPoints &&
+      startLocation && [
+        [startLocation.lat, startLocation.lng],
+        routeAPoints[0],
+      ],
+    [routeAPoints, startLocation]
   );
 
-  const endWalkLine = useMemo(
-    () =>
-      map &&
-      routeBLine &&
-      endLocation && [
-        routeBLine[routeBLine.length - 1],
+  const endWalkLine = useMemo(() => {
+    if (map && routeAPoints && endLocation) {
+      if (isMultiRoute && routeBPoints) {
+        return [
+          routeBPoints[routeBPoints.length - 1],
+          [endLocation.lat, endLocation.lng],
+        ];
+      }
+      return [
+        routeAPoints[routeAPoints.length - 1],
         [endLocation.lat, endLocation.lng],
-      ],
-    [routeBLine, endLocation]
-  );
+      ];
+    }
+  }, [routeBPoints, endLocation]);
 
   useEffect(() => {
     if (map && routeLineWithStartEnd) {
-      map.fitBounds(routeLineWithStartEnd);
+      map.fitBounds(routeLineWithStartEnd, { duration: 1, padding: [15, 15] });
+      // map.flyToBounds(routeLineWithStartEnd);
     }
   }, [origRouteObj, destRouteObj]);
 
@@ -297,7 +310,7 @@ export const Map = ({ mapCollapse }) => {
     return (
       <Avatar className="routeBoundBtnAvatar">
         <IconButton onClick={handleIconOnClick}>
-          <RouteIcon />
+          <PolylineIcon />
         </IconButton>
       </Avatar>
     );
@@ -370,13 +383,19 @@ export const Map = ({ mapCollapse }) => {
             </Marker>
           </>
         )}
-        {isMultiRoute && (
+        {isMultiRoute && expanded && (
           <>
             {/* Common Point Marker */}
             <Marker
-              position={[commonLocation.lat, commonLocation.lng]}
+              position={[origCommonLocation.lat, origCommonLocation.lng]}
               icon={transitIcon}
-             />
+            />
+            {origCommonStopId !== destCommonStopId && (
+              <Marker
+                position={[destCommonLocation.lat, destCommonLocation.lng]}
+                icon={transitIcon}
+              />
+            )}
           </>
         )}
         {startLocation &&
@@ -427,7 +446,7 @@ export const Map = ({ mapCollapse }) => {
                   }`,
                   opacity: "0.75",
                 }}
-                positions={routeALine}
+                positions={routeAPoints}
               />
 
               {/* Line of Transport B*/}
@@ -442,7 +461,7 @@ export const Map = ({ mapCollapse }) => {
                     }`,
                     opacity: "0.75",
                   }}
-                  positions={routeBLine}
+                  positions={routeBPoints}
                 />
               )}
 

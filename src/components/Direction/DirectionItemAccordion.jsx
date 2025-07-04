@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { Accordion, AccordionDetails, styled } from "@mui/material";
 import { primaryColor } from "../../constants/Constants";
-import { mtrIconColor } from "../../constants/Mtr";
 import { phaseEtaToTime, phaseEtaToWaitingMins } from "../../Utils/Utils";
 import { DirectionContext } from "../../context/DirectionContext";
 import { Walking } from "./Box/Walking";
@@ -14,15 +13,18 @@ export const DirectionItemAccordion = ({
   i,
   routeListItem,
   isEtaLoading,
-  eta: [origEta, destEta],
+  origEta,
+  commonStopEta,
 }) => {
   const { expanded, updateFitBoundMode } = useContext(DirectionContext);
 
-  const { origin, destination, common } = routeListItem;
+  const { origin, destination } = routeListItem;
   const {
     routeObj: origRouteObj,
     stopId: origStopId,
     stopSeq: origStopSeq,
+    commonStopId: origCommonStopId,
+    commonStopSeq: origCommonStopSeq,
     walkDistance: origWalkDistance,
     walkTime: origWalkTime,
     transportTime: origTransportTime,
@@ -32,22 +34,21 @@ export const DirectionItemAccordion = ({
     routeObj: destRouteObj,
     stopId: destStopId,
     stopSeq: destStopSeq,
+    commonStopId: destCommonStopId,
+    commonStopSeq: destCommonStopSeq,
     walkDistance: destWalkDistance,
     walkTime: destWalkTime,
     transportTime: destTransportTime,
   } = destination;
 
-  const {
-    stopSeqOrig: commonStopSeqOrig,
-    stopSeqDest: commonStopSeqDest,
-    stopId: commonStopId,
-  } = common;
-
   const origWaitingTime = phaseEtaToWaitingMins(origEta[0]?.eta);
-  const destWaitingTime = phaseEtaToWaitingMins(destEta[0]?.eta);
   const origArriveTime = phaseEtaToTime(origEta[0]?.eta);
-  const destArriveTime = phaseEtaToTime(destEta[0]?.eta);
-  const isMultiRoute = Object.keys(common).length > 0;
+  const destArriveTime = phaseEtaToTime(commonStopEta[0]?.eta);
+  const isMultiRoute =
+    origCommonStopId &&
+    origCommonStopSeq &&
+    destCommonStopId &&
+    destCommonStopSeq;
 
   return (
     <AccordionRoot
@@ -78,18 +79,19 @@ export const DirectionItemAccordion = ({
             fitBoundMode="startWalk"
           />
           <TransportEta
+            eta={origEta}
             routeObj={origRouteObj}
             stopSeq={origStopSeq}
             arriveTime={origArriveTime}
-            waitingTime={origWaitingTime}
+            walkTime={origWalkTime}
           />
           {!isMultiRoute && (
             <DirectionStopList
               routeObj={origRouteObj}
               startStopSeq={origStopSeq}
               startStopId={origStopId}
-              endStopSeq={destStopSeq}
               endStopId={destStopId}
+              endStopSeq={destStopSeq}
               transportTime={origTransportTime}
             />
           )}
@@ -98,31 +100,30 @@ export const DirectionItemAccordion = ({
             <>
               <DirectionStopList
                 routeObj={origRouteObj}
-                startStopSeq={origStopSeq}
                 startStopId={origStopId}
-                endStopSeq={commonStopSeqOrig}
-                endStopId={commonStopId}
+                startStopSeq={origStopSeq}
+                endStopId={origCommonStopId}
+                endStopSeq={origCommonStopSeq}
                 transportTime={origTransportTime}
               />
               <TransportEta
+                eta={commonStopEta}
                 routeObj={destRouteObj}
-                stopSeq={destStopSeq}
+                stopSeq={destCommonStopSeq}
                 arriveTime={destArriveTime}
-                waitingTime={destWaitingTime}
               />
               <DirectionStopList
                 routeObj={destRouteObj}
-                startStopSeq={commonStopSeqDest}
-                startStopId={commonStopId}
-                endStopSeq={destStopSeq}
+                startStopId={destCommonStopId}
+                startStopSeq={destCommonStopSeq}
                 endStopId={destStopId}
+                endStopSeq={destStopSeq}
                 transportTime={destTransportTime}
               />
             </>
           )}
           <Walking
             walkDistance={destWalkDistance}
-            stopId={destStopId}
             walkTime={destWalkTime}
             updateFitBoundMode={updateFitBoundMode}
             fitBoundMode="endWalk"
@@ -179,32 +180,8 @@ const AccordionRoot = styled(Accordion)({
         alignItems: "center",
         border: "none",
         svg: { fontSize: "14px" },
-
-        ".waitingNotice": {
-          ".arriveTimeMsgWrapper": {
-            display: "flex",
-            alignItems: "center",
-            ".transportIconWrapper": {
-              display: "flex",
-              ...mtrIconColor,
-              ".transportIcon": {
-                height: "14px",
-              },
-            },
-          },
-          ".arriveTimeMsg": {
-            display: "flex",
-            alignItems: "center",
-            ...mtrIconColor,
-            ".route": {
-              fontWeight: 900,
-            },
-          },
-          ".eta": {
-            display: "flex",
-            gap: "12px",
-          },
-        },
+        lineHeight: "normal",
+        fontSize: "12px",
       },
     },
   },

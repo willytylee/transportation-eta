@@ -5,34 +5,37 @@ import { DirectionItemAccordion } from "./DirectionItemAccordion";
 
 export const DirectionItem = ({ routeListItem, i, handleChange }) => {
   const { displayMode } = useContext(DirectionContext);
-  const { eta: origEta, isOrigEtaLoading } = useEtas({
+  const { eta: origEta, isEtaLoading: isOrigEtaLoading } = useEtas({
     seq: routeListItem.origin.stopSeq,
     routeObj: routeListItem.origin.routeObj,
     interval: 60000,
   });
 
-  const { eta: destEta, isDestEtaLoading } = useEtas({
-    seq: routeListItem.destination.stopSeq,
+  const { eta: commonStopEta, isEtaLoading: isCommontEtaLoading } = useEtas({
+    seq: routeListItem.destination.commonStopSeq,
     routeObj: routeListItem.destination.routeObj,
     interval: 60000,
   });
 
   const isMultiRoute =
     !!routeListItem &&
-    routeListItem.common &&
-    Object.keys(routeListItem.common).length > 0;
+    routeListItem.origin?.commonStopId &&
+    routeListItem.origin?.commonStopSeq &&
+    routeListItem.destination?.commonStopId &&
+    routeListItem.destination?.commonStopSeq;
 
   return (
     (displayMode === "顯示所有路線" ||
       (displayMode === "只顯示現時有班次路線" && isMultiRoute
-        ? origEta.length > 0 && destEta.length > 0
+        ? origEta.length > 0 && commonStopEta.length > 0
         : origEta.length > 0)) && (
       <DirectionItemAccordion
         handleChange={handleChange}
         i={i}
         routeListItem={routeListItem}
-        eta={[origEta, destEta]}
-        isEtaLoading={isOrigEtaLoading && isDestEtaLoading}
+        origEta={origEta}
+        commonStopEta={commonStopEta}
+        isEtaLoading={isOrigEtaLoading && isCommontEtaLoading}
       />
     )
   );

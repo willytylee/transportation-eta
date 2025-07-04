@@ -1,5 +1,9 @@
 import { useState, useContext, useEffect, useMemo } from "react";
-import { styled } from "@mui/material";
+import { styled, Button, ButtonGroup } from "@mui/material";
+import {
+  DirectionsRun as DirectionsRunIcon,
+  Elderly as ElderlyIcon,
+} from "@mui/icons-material";
 import { getDistance } from "geolib";
 import { DbContext } from "../../context/DbContext";
 import { useLocationOnce } from "../../hooks/Location";
@@ -7,6 +11,13 @@ import { useStopIdsNearby } from "../../hooks/StopIdsNearBy";
 import { basicFiltering, getFirstCoByRouteObj } from "../../Utils/Utils";
 import { DirectionContext } from "../../context/DirectionContext";
 import { DirectionItem } from "./DirectionItem";
+
+const routeRatio = 0.9; // 0 to 1, the larger, the route become a straight line from point to point, apply on multi-route only.
+const maxCommonStopDistance = 150; // The maximum distance between common stops
+const walkDistanceTimeRatio = 40; // The meter / minutes for calculate the walking time. The more the value, the faster you walk, 50 = 1000m / 20minutes
+const mtrDistanceTimeRatio = 600;
+const carDistanceTimeRatio = 200;
+const maxRouteList = 100;
 
 export const DirectionList = () => {
   const { gRouteList, gStopList } = useContext(DbContext);
@@ -19,6 +30,7 @@ export const DirectionList = () => {
   } = useContext(DirectionContext);
   const [directionRouteList, setDirectionRouteList] = useState([]);
   const [sortedRouteList, setSortedRouteList] = useState([]);
+  const [maxWalkingDistance, setMaxWalkingDistance] = useState(400);
 
   const routeList = useMemo(
     () =>
@@ -37,24 +49,24 @@ export const DirectionList = () => {
     updateCurrRoute(currRoute);
   };
 
+  const handleWalkMoreOnClick = () => {
+    setMaxWalkingDistance((prev) => prev + 200);
+  };
+
+  const handleWalkLessOnClick = () => {
+    if (maxWalkingDistance > 0) {
+      setMaxWalkingDistance((prev) => prev - 200);
+    }
+  };
+
   const { location: currentLocation } = useLocationOnce();
   const { stopIdsNearby: origins } = useStopIdsNearby({
-    maxDistance: 1000,
+    maxDistance: maxWalkingDistance,
     lat: origin ? origin.location.lat : currentLocation.lat,
     lng: origin ? origin.location.lng : currentLocation.lng,
   });
   const { stopIdsNearby: destinations } = useStopIdsNearby({
-    maxDistance: 1000,
-    lat: destination?.location?.lat,
-    lng: destination?.location?.lng,
-  });
-  const { stopIdsNearby: lessOrigins } = useStopIdsNearby({
-    maxDistance: 300,
-    lat: origin ? origin.location.lat : currentLocation.lat,
-    lng: origin ? origin.location.lng : currentLocation.lng,
-  });
-  const { stopIdsNearby: lessDestinations } = useStopIdsNearby({
-    maxDistance: 300,
+    maxDistance: maxWalkingDistance,
     lat: destination?.location?.lat,
     lng: destination?.location?.lng,
   });
@@ -67,6 +79,13 @@ export const DirectionList = () => {
   }) => {
     let fullRouteDistance = 0;
     let transportDistance = 0;
+
+    const getMTRTravelTime = (meter) =>
+      Math.round(meter / mtrDistanceTimeRatio);
+
+    const getCarTravelTime = (meter) =>
+      Math.round(meter / carDistanceTimeRatio);
+
     for (let i = 0; i < routeObj.stops[company].length - 1; i += 1) {
       const stopId = routeObj.stops[company][i];
       const nextStopId = routeObj.stops[company][i + 1];
@@ -87,15 +106,17 @@ export const DirectionList = () => {
 
     if (routeObj.jt !== null) {
       return Math.round(routeObj.jt * (transportDistance / fullRouteDistance));
+    } else if (routeObj.co[0] === "mtr") {
+      return getMTRTravelTime(transportDistance);
     } 
-      return null;
+      return getCarTravelTime(transportDistance);
     
   };
 
   useEffect(() => {
     updateExpanded(false);
     // use useEffect prevent reload on setExpanded
-    const getWalkTime = (meter) => Math.round(meter / 50);
+    const getWalkTime = (meter) => Math.round(meter / walkDistanceTimeRatio);
 
     const result = [];
     const routeSet = new Set(result.map((e) => e.route));
@@ -117,7 +138,7 @@ export const DirectionList = () => {
         // If this route contain both orig stop Id and dest stop Id,
         // that mean the direction can be done in one route.
         if (matchedOrigins?.length > 0 && matchedDestinations?.length > 0) {
-          // There may have more than one destinations in a route,
+          // There may have multi stops within the certain distance,
           // find the nearest stop in the route stop List
           const origStopId = matchedOrigins.reduce((prev, curr) =>
             origins[prev] < origins[curr] ? prev : curr
@@ -127,10 +148,8 @@ export const DirectionList = () => {
           );
 
           // Get the sequence of origStop, destStop
-          const origStopSeq =
-            routeObj.stops[company].findIndex((f) => f === origStopId) + 1;
-          const destStopSeq =
-            routeObj.stops[company].findIndex((f) => f === destStopId) + 1;
+          const origStopSeq = routeObj.stops[company].indexOf(origStopId) + 1;
+          const destStopSeq = routeObj.stops[company].indexOf(destStopId) + 1;
 
           const origWalkDistance = origins[origStopId];
           const destWalkDistance = destinations[destStopId];
@@ -150,11 +169,12 @@ export const DirectionList = () => {
           if (origStopSeq < destStopSeq && !routeSet.has(routeObj.route)) {
             routeSet.add(routeObj.route);
             result.push({
-              common: {},
               origin: {
                 routeObj,
                 stopId: origStopId,
                 stopSeq: origStopSeq,
+                commonStopId: "",
+                commonStopSeq: "",
                 walkDistance: origWalkDistance,
                 walkTime: origWalkTime,
                 transportTime,
@@ -163,6 +183,8 @@ export const DirectionList = () => {
                 routeObj: {},
                 stopId: destStopId,
                 stopSeq: destStopSeq,
+                commonStopId: "",
+                commonStopSeq: "",
                 walkDistance: destWalkDistance,
                 walkTime: destWalkTime,
                 transportTime: 0,
@@ -177,11 +199,11 @@ export const DirectionList = () => {
       const seenPairs = new Set();
 
       // Find routes containing any origin stop
-      const originRoutes = routeList.filter((routeObj) => {
+      const origRoutes = routeList.filter((routeObj) => {
         // Find the stopId that the route included
         const company = getFirstCoByRouteObj(routeObj);
         const matchedOrigins = routeObj.stops[company].filter((f) =>
-          Object.keys(lessOrigins).includes(f)
+          Object.keys(origins).includes(f)
         );
 
         return matchedOrigins.some((_origin) =>
@@ -190,10 +212,10 @@ export const DirectionList = () => {
       });
 
       // Find routes containing any destination stop
-      const destinationRoutes = routeList.filter((routeObj) => {
+      const destRoutes = routeList.filter((routeObj) => {
         const company = getFirstCoByRouteObj(routeObj);
         const matchedDestinations = routeObj.stops[company].filter((f) =>
-          Object.keys(lessDestinations).includes(f)
+          Object.keys(destinations).includes(f)
         );
         return matchedDestinations.some((dest) =>
           routeObj.stops[company].includes(dest)
@@ -201,70 +223,94 @@ export const DirectionList = () => {
       });
 
       // Check for connected routes
-      for (const originRoute of originRoutes) {
-        const originCompany = getFirstCoByRouteObj(originRoute);
-        for (const destRoute of destinationRoutes) {
+      for (const origRoute of origRoutes) {
+        const origCompany = getFirstCoByRouteObj(origRoute);
+        for (const destRoute of destRoutes) {
           const destCompany = getFirstCoByRouteObj(destRoute);
 
-          const originRouteStops = originRoute.stops[originCompany];
+          const origRouteStops = origRoute.stops[origCompany];
           const destRouteStops = destRoute.stops[destCompany];
           // Skip if same route
-          if (originRoute.route === destRoute.route) continue;
+          if (origRoute.route === destRoute.route) continue;
 
           // Create a unique key for the route pair
-          const pairKey = `${originRoute.route}:${destRoute.route}`;
+          const pairKey = `${origRoute.route}:${destRoute.route}`;
           if (seenPairs.has(pairKey)) continue;
 
           // Find matched origin and destination stops
-          const matchedOrigins = Object.keys(lessOrigins).filter((_origin) =>
-            originRouteStops.includes(_origin)
+          const matchedOrigins = Object.keys(origins).filter((_origin) =>
+            origRouteStops.includes(_origin)
           );
-          const matchedDestinations = Object.keys(lessDestinations).filter(
-            (dest) => destRouteStops.includes(dest)
+          const matchedDestinations = Object.keys(destinations).filter((dest) =>
+            destRouteStops.includes(dest)
           );
 
           if (matchedOrigins.length > 0 && matchedDestinations.length > 0) {
-            // There may have more than one destinations in a route,
+            // There may have multi stops within the certain distance,
             // find the nearest stop in the route stop List
             const origStopId = matchedOrigins.reduce((prev, curr) =>
-              lessOrigins[prev] < lessOrigins[curr] ? prev : curr
+              origins[prev] < origins[curr] ? prev : curr
             );
             const destStopId = matchedDestinations.reduce((prev, curr) =>
-              lessDestinations[prev] < lessDestinations[curr] ? prev : curr
+              destinations[prev] < destinations[curr] ? prev : curr
             );
 
             // Get the sequence of origStop, destStop and common Stop on both route
             // For calculate the correct order sequence between them
-            const origStopSeq =
-              originRouteStops.findIndex((f) => f === origStopId) + 1;
-            const destStopSeq =
-              destRouteStops.findIndex((f) => f === destStopId) + 1;
+            const origStopSeq = origRouteStops.indexOf(origStopId) + 1;
+            const destStopSeq = destRouteStops.indexOf(destStopId) + 1;
 
-            const originRouteStopsAfterStart = originRouteStops.slice(
+            // Make sure the common point is after the start point and before the end point
+            const origRouteStopsAfterStart = origRouteStops.slice(
               origStopSeq + 1
             );
-
-            const commonStops = originRouteStopsAfterStart.filter((stop) =>
-              destRouteStops.includes(stop)
+            const destRouteStopsBeforeEnd = destRouteStops.slice(
+              0,
+              destStopSeq + 1
             );
 
-            const commonStopId = commonStops[commonStops.length - 1];
+            let pair = null;
+            origRouteStopsAfterStart.some((_origStopId) =>
+              destRouteStopsBeforeEnd.some((_destStopId) => {
+                const distanceBtwnTwoCommonStop = getDistance(
+                  {
+                    latitude: gStopList[_origStopId].location.lat,
+                    longitude: gStopList[_origStopId].location.lng,
+                  },
+                  {
+                    latitude: gStopList[_destStopId].location.lat,
+                    longitude: gStopList[_destStopId].location.lng,
+                  }
+                );
 
-            // const commonStopId = originRouteStopsAfterStart.find((e) =>
-            //   commonStops.includes(e)
-            // );
+                if (distanceBtwnTwoCommonStop < maxCommonStopDistance) {
+                  const origCommonStopSeq =
+                    origRouteStops.indexOf(_origStopId) + 1;
+                  const destCommonStopSeq =
+                    destRouteStops.indexOf(_destStopId) + 1;
 
-            if (!commonStopId) {
-              // CommonStopId not found, probably the common point is before the origin stop
+                  pair = {
+                    _origStopId,
+                    origCommonStopSeq,
+                    _destStopId,
+                    destCommonStopSeq,
+                  };
+                  return true;
+                }
+                return false;
+              })
+            );
+
+            if (!pair) {
               continue;
             }
 
-            const commonStopSeqOrig =
-              originRouteStops.findIndex((f) => f === commonStopId) + 1;
-            const commonStopSeqDest =
-              destRoute.stops[originCompany].findIndex(
-                (f) => f === commonStopId
-              ) + 1;
+            const {
+              _origStopId: origCommonStopId,
+              origCommonStopSeq,
+              _destStopId: destCommonStopId,
+              destCommonStopSeq,
+            } = pair;
 
             // Get the distance to prevent the origin route bring you far away from destination
             const distanceBtwnOrigStopAndCommonStop = getDistance(
@@ -273,8 +319,19 @@ export const DirectionList = () => {
                 longitude: gStopList[origStopId].location.lng,
               },
               {
-                latitude: gStopList[commonStopId].location.lat,
-                longitude: gStopList[commonStopId].location.lng,
+                latitude: gStopList[origCommonStopId].location.lat,
+                longitude: gStopList[origCommonStopId].location.lng,
+              }
+            );
+
+            const distanceBtwnCommonStopAndDestStop = getDistance(
+              {
+                latitude: gStopList[destCommonStopId].location.lat,
+                longitude: gStopList[destCommonStopId].location.lng,
+              },
+              {
+                latitude: gStopList[destStopId].location.lat,
+                longitude: gStopList[destStopId].location.lng,
               }
             );
 
@@ -289,44 +346,48 @@ export const DirectionList = () => {
               }
             );
 
-            const origWalkDistance = lessOrigins[origStopId];
-            const destWalkDistance = lessDestinations[destStopId];
+            const origWalkDistance = origins[origStopId];
+            const destWalkDistance = destinations[destStopId];
 
             const origWalkTime = getWalkTime(origWalkDistance);
             const destWalkTime = getWalkTime(destWalkDistance);
 
             const origTransportTime = calculateTransportTime({
-              routeObj: originRoute,
-              company: originCompany,
+              routeObj: origRoute,
+              company: origCompany,
               startStopSeq: origStopSeq,
-              endStopSeq: commonStopSeqOrig,
+              endStopSeq: origCommonStopSeq,
             });
 
             const destTransportTime = calculateTransportTime({
               routeObj: destRoute,
               company: destCompany,
-              startStopSeq: commonStopSeqDest,
+              startStopSeq: destCommonStopSeq,
               endStopSeq: destStopSeq,
             });
 
             const validCondition =
-              origStopSeq < commonStopSeqOrig &&
-              commonStopSeqDest < destStopSeq &&
+              origStopSeq < origCommonStopSeq &&
+              destCommonStopSeq < destStopSeq &&
               // Shouldn't bring you far away from destination
               distanceBtwnOrigStopAndCommonStop <
-                distanceBtwnOrigStopAndDestStop;
+                distanceBtwnOrigStopAndDestStop &&
+              distanceBtwnCommonStopAndDestStop <
+                distanceBtwnOrigStopAndDestStop &&
+              distanceBtwnOrigStopAndDestStop /
+                (distanceBtwnOrigStopAndCommonStop +
+                  distanceBtwnCommonStopAndDestStop) >
+                routeRatio;
+
             if (validCondition) {
               seenPairs.add(pairKey);
               result.push({
-                common: {
-                  stopId: commonStopId,
-                  stopSeqOrig: commonStopSeqOrig,
-                  stopSeqDest: commonStopSeqDest,
-                },
                 origin: {
-                  routeObj: originRoute,
+                  routeObj: origRoute,
                   stopId: origStopId,
                   stopSeq: origStopSeq,
+                  commonStopId: origCommonStopId,
+                  commonStopSeq: origCommonStopSeq,
                   walkDistance: origWalkDistance,
                   walkTime: origWalkTime,
                   transportTime: origTransportTime,
@@ -335,6 +396,8 @@ export const DirectionList = () => {
                   routeObj: destRoute,
                   stopId: destStopId,
                   stopSeq: destStopSeq,
+                  commonStopId: destCommonStopId,
+                  commonStopSeq: destCommonStopSeq,
                   walkDistance: destWalkDistance,
                   walkTime: destWalkTime,
                   transportTime: destTransportTime,
@@ -347,42 +410,65 @@ export const DirectionList = () => {
     }
 
     setDirectionRouteList(result);
-  }, [origin, destination]);
+  }, [origin, destination, maxWalkingDistance]);
 
   useEffect(() => {
+    let filteredRouteList;
     if (sortingMethod === "最短步行時間") {
-      setSortedRouteList(
-        directionRouteList.sort(
-          (a, b) =>
-            a.origin.walkTime +
-            a.destination.walkTime -
-            (b.origin.walkTime + b.destination.walkTime)
-        )
+      filteredRouteList = directionRouteList.sort(
+        (a, b) =>
+          a.origin.walkTime +
+          a.destination.walkTime -
+          (b.origin.walkTime + b.destination.walkTime)
       );
     } else if (sortingMethod === "最短交通時間") {
-      setSortedRouteList(
-        directionRouteList.sort(
-          (a, b) =>
-            a.origin.transportTime +
-            a.destination.transportTime -
-            (b.origin.transportTime + b.destination.transportTime)
-        )
+      filteredRouteList = directionRouteList.sort(
+        (a, b) =>
+          a.origin.transportTime +
+          a.destination.transportTime -
+          (b.origin.transportTime + b.destination.transportTime)
       );
     } else if (sortingMethod === "最短總時間") {
-      setSortedRouteList(
-        directionRouteList.sort(
-          (a, b) =>
-            a.origin.walkTime +
-            a.origin.transportTime +
-            a.destination.walkTime +
-            a.destination.transportTime -
-            (b.origin.walkTime +
-              b.origin.transportTime +
-              b.destination.walkTime +
-              b.destination.transportTime)
-        )
+      filteredRouteList = directionRouteList.sort(
+        (a, b) =>
+          a.origin.walkTime +
+          a.origin.transportTime +
+          a.destination.walkTime +
+          a.destination.transportTime -
+          (b.origin.walkTime +
+            b.origin.transportTime +
+            b.destination.walkTime +
+            b.destination.transportTime)
       );
     }
+    setSortedRouteList(
+      filteredRouteList
+        .sort((a, b) => {
+          const aIsEmpty =
+            a.origin.commonStopId === "" &&
+            a.origin.commonStopSeq === "" &&
+            a.destination.commonStopId === "" &&
+            a.destination.commonStopSeq === "";
+          const bIsEmpty =
+            b.origin.commonStopId === "" &&
+            b.origin.commonStopSeq === "" &&
+            b.destination.commonStopId === "" &&
+            b.destination.commonStopSeq === "";
+
+          if (aIsEmpty && !bIsEmpty) return -1; // a goes first
+          if (!aIsEmpty && bIsEmpty) return 1; // b goes first
+          return 0; // maintain order if both are empty or both are non-empty
+        })
+        .filter(
+          (e) =>
+            e.origin.walkTime +
+              e.origin.transportTime +
+              e.destination.walkTime +
+              e.destination.transportTime <
+            120
+        )
+        .slice(0, maxRouteList)
+    );
   }, [directionRouteList, sortingMethod]);
 
   // const groupedData = sortedRouteList.reduce((acc, item) => {
@@ -414,7 +500,6 @@ export const DirectionList = () => {
         ) : (
           <div className="emptyMsg">沒有路線</div>
         ))}
-
       {!origin && !destination ? (
         <div className="emptyMsg">載入中...</div>
       ) : !origin ? (
@@ -422,6 +507,25 @@ export const DirectionList = () => {
       ) : (
         !destination && <div className="emptyMsg">請輸入目的地</div>
       )}
+      <div className="walkingDistanceWrapper">
+        車站步行距離: 最多{maxWalkingDistance}米
+      </div>
+      <ButtonGroup fullWidth variant="outlined" className="btnWrapper">
+        <Button
+          disabled={maxWalkingDistance === 1000}
+          onClick={handleWalkMoreOnClick}
+          startIcon={<DirectionsRunIcon />}
+        >
+          可以行遠啲!
+        </Button>
+        <Button
+          disabled={maxWalkingDistance === 0}
+          onClick={handleWalkLessOnClick}
+          startIcon={<ElderlyIcon />}
+        >
+          行唔郁啦!
+        </Button>
+      </ButtonGroup>
     </DirectionListRoot>
   );
 };
@@ -431,9 +535,19 @@ const DirectionListRoot = styled("div")({
   flex: "5",
   flexDirection: "column",
   overflow: "auto",
+  ".walkingDistanceWrapper": {
+    textAlign: "center",
+    paddingTop: "10px",
+  },
   ".emptyMsg": {
     fontSize: "14px",
     textAlign: "center",
     padding: "14px",
+  },
+  ".btnWrapper button": {
+    borderColor: "#2f305c",
+    color: "#2f305c",
+    fontSize: "14px",
+    alignItems: "flex-start",
   },
 });

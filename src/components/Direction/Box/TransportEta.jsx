@@ -1,16 +1,39 @@
 import { styled } from "@mui/material";
 import { companyIconMap } from "../../../constants/Constants";
-import { getCoIconByRouteObj } from "../../../Utils/Utils";
+import {
+  getCoIconByRouteObj,
+  phaseEtaToWaitingMins,
+} from "../../../Utils/Utils";
 import { routeMap } from "../../../constants/Mtr";
 import { mtrIconColor } from "../../../constants/Mtr";
 import { Eta } from "../../Search/RouteList/Eta";
 
 export const TransportEta = ({
+  eta,
   routeObj,
   stopSeq,
+  walkTime,
   arriveTime,
-  waitingTime,
-}) => (
+}) => {
+  let timeForNextRoute = 0;
+
+  if (eta.length > 0) {
+    const etaTimes = eta.map((f) => phaseEtaToWaitingMins(f.eta));
+
+    if (walkTime) {
+      if (etaTimes[0] > walkTime) {
+        timeForNextRoute = etaTimes[0];
+      } else if (etaTimes[1] > walkTime) {
+        timeForNextRoute = etaTimes[1];
+      } else if (etaTimes[2] > walkTime) {
+        timeForNextRoute = etaTimes[2];
+      }
+    } else {
+      timeForNextRoute = etaTimes[0];
+    }
+  }
+
+  return (
     <TransportEtaRoot className="detailItem">
       <div className="waitingNotice">
         <div className="arriveTimeMsgWrapper">
@@ -34,9 +57,10 @@ export const TransportEta = ({
           <Eta seq={stopSeq} routeObj={routeObj} slice={3} />
         </div>
       </div>
-      <div className="time">{waitingTime !== null && `${waitingTime}分鐘`}</div>
+      <div className="time">{`${timeForNextRoute}分鐘`}</div>
     </TransportEtaRoot>
   );
+};
 
 const TransportEtaRoot = styled("div")({
   ".waitingNotice": {

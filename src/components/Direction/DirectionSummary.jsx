@@ -37,9 +37,8 @@ export const DirectionSummary = ({
       return `≈ ${remainingMinutes}分鐘`;
     } else if (remainingMinutes === 0) {
       return `≈ ${hours}小時`;
-    } 
-      return `≈ ${hours}小時${remainingMinutes}分鐘`;
-    
+    }
+    return `≈ ${hours}小時${remainingMinutes}分鐘`;
   }
 
   let waitingTimeStr;
@@ -56,36 +55,27 @@ export const DirectionSummary = ({
     waitingTimeStr = " 沒有班次";
   }
   if (origTransportTime !== null && destTransportTime !== null) {
-    const waitingTimeArr = eta.map((f) => phaseEtaToWaitingMins(f.eta));
+    const etaTimes = eta.map((f) => phaseEtaToWaitingMins(f.eta));
 
-    if (waitingTimeArr[0] > origWalkTime) {
+    if (etaTimes[0] > origWalkTime) {
       estimateTravelTime =
-        waitingTimeArr[0] +
-        origTransportTime +
-        destTransportTime +
-        destWalkTime;
+        etaTimes[0] + origTransportTime + destTransportTime + destWalkTime;
       estimateTravelTimeStr = formatTime(estimateTravelTime);
-    } else if (waitingTimeArr[1] > origWalkTime) {
+    } else if (etaTimes[1] > origWalkTime) {
       estimateTravelTime =
-        waitingTimeArr[1] +
-        origTransportTime +
-        destTransportTime +
-        destWalkTime;
+        etaTimes[1] + origTransportTime + destTransportTime + destWalkTime;
       estimateTravelTimeStr = formatTime(estimateTravelTime);
-    } else if (waitingTimeArr[2] > origWalkTime) {
+    } else if (etaTimes[2] > origWalkTime) {
       estimateTravelTime =
-        waitingTimeArr[2] +
-        origTransportTime +
-        destTransportTime +
-        destWalkTime;
+        etaTimes[2] + origTransportTime + destTransportTime + destWalkTime;
       estimateTravelTimeStr = formatTime(estimateTravelTime);
     } else {
       const timeWithoutWaiting =
         origWalkTime + origTransportTime + destTransportTime + destWalkTime;
       if (eta.length > 0) {
-        estimateTravelTimeStr = `${timeWithoutWaiting}分鐘 (趕唔切了)`;
+        estimateTravelTimeStr = `${formatTime(timeWithoutWaiting)} (趕唔切了)`;
       } else {
-        estimateTravelTimeStr = `${timeWithoutWaiting}分鐘 (沒有班次)`;
+        estimateTravelTimeStr = `${formatTime(timeWithoutWaiting)} (沒有班次)`;
       }
     }
   } else {
