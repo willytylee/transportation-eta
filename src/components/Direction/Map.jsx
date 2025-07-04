@@ -82,7 +82,7 @@ export const Map = ({ mapCollapse }) => {
     [currRouteAStopIdList]
   );
 
-  const routeAPoints = useMemo(
+  const routePointsA = useMemo(
     () => currRouteAStopList?.map((e) => [e.location.lat, e.location.lng]),
     [currRouteAStopList]
   );
@@ -104,61 +104,80 @@ export const Map = ({ mapCollapse }) => {
     [currRouteBStopIdList]
   );
 
-  const routeBPoints = useMemo(
+  const routePointsB = useMemo(
     () => currRouteBStopList?.map((e) => [e.location.lat, e.location.lng]),
     [currRouteBStopList]
   );
 
   // ===============================
 
-  const routeLineWithStartEnd = useMemo(() => {
-    if (map && routeAPoints && startLocation && endLocation) {
-      if (isMultiRoute && routeBPoints) {
+  const startEndRouteLine = useMemo(() => {
+    if (map && routePointsA && startLocation && endLocation) {
+      if (isMultiRoute && routePointsB) {
         return [
           [startLocation.lat, startLocation.lng],
-          ...routeAPoints,
-          ...routeBPoints,
+          ...routePointsA,
+          ...routePointsB,
           [endLocation.lat, endLocation.lng],
         ];
       }
       return [
         [startLocation.lat, startLocation.lng],
-        ...routeAPoints,
+        ...routePointsA,
         [endLocation.lat, endLocation.lng],
       ];
     }
-  }, [routeAPoints, routeBPoints, startLocation, endLocation]);
+  }, [routePointsA, routePointsB, startLocation, endLocation]);
 
   const startWalkLine = useMemo(
     () =>
       map &&
-      routeAPoints &&
+      routePointsA &&
       startLocation && [
         [startLocation.lat, startLocation.lng],
-        routeAPoints[0],
+        routePointsA[0],
       ],
-    [routeAPoints, startLocation]
+    [routePointsA, startLocation]
   );
 
   const endWalkLine = useMemo(() => {
-    if (map && routeAPoints && endLocation) {
-      if (isMultiRoute && routeBPoints) {
+    if (map && endLocation) {
+      if (isMultiRoute && routePointsB) {
         return [
-          routeBPoints[routeBPoints.length - 1],
+          routePointsB[routePointsB.length - 1],
           [endLocation.lat, endLocation.lng],
         ];
       }
-      return [
-        routeAPoints[routeAPoints.length - 1],
-        [endLocation.lat, endLocation.lng],
-      ];
+      if (routePointsA) {
+        return [
+          routePointsA[routePointsA.length - 1],
+          [endLocation.lat, endLocation.lng],
+        ];
+      }
     }
-  }, [routeBPoints, endLocation]);
+  }, [routePointsA, routePointsB, endLocation]);
+
+  const transportEtaALine = useMemo(
+    () => map && routePointsA && startLocation && [routePointsA[0]],
+    [routePointsA, startLocation]
+  );
+
+  const transportEtaBLine = useMemo(
+    () => map && routePointsB && endLocation && [routePointsB[0]],
+    [routePointsB, startLocation]
+  );
+
+  const transportRouteALine = useMemo(
+    () => map && routePointsA && [...routePointsA]
+  );
+
+  const transportRouteBLine = useMemo(
+    () => map && routePointsB && [...routePointsB]
+  );
 
   useEffect(() => {
-    if (map && routeLineWithStartEnd) {
-      map.fitBounds(routeLineWithStartEnd, { duration: 1, padding: [15, 15] });
-      // map.flyToBounds(routeLineWithStartEnd);
+    if (map && startEndRouteLine) {
+      map.fitBounds(startEndRouteLine, { duration: 1, padding: [15, 15] });
     }
   }, [origRouteObj, destRouteObj]);
 
@@ -181,16 +200,37 @@ export const Map = ({ mapCollapse }) => {
     if (map) {
       if (fitBoundMode === "startWalk" && startWalkLine) {
         map.flyToBounds(startWalkLine, { duration: 1, padding: [15, 15] });
-        setTimeout(() => {
-          updateFitBoundMode("");
-        }, 1500);
       }
       if (fitBoundMode === "endWalk" && endWalkLine) {
         map.flyToBounds(endWalkLine, { duration: 1, padding: [15, 15] });
-        setTimeout(() => {
-          updateFitBoundMode("");
-        }, 1500);
       }
+      if (fitBoundMode === "transportEtaA" && transportEtaALine) {
+        map.flyToBounds(transportEtaALine, { duration: 1, padding: [15, 15] });
+      }
+      if (fitBoundMode === "transportEtaB" && transportEtaBLine) {
+        map.flyToBounds(transportEtaBLine, { duration: 1, padding: [15, 15] });
+      }
+      if (fitBoundMode === "transportEtaSingle" && startEndRouteLine) {
+        map.flyToBounds(startEndRouteLine, {
+          duration: 1,
+          padding: [15, 15],
+        });
+      }
+      if (fitBoundMode === "transportRouteA" && transportRouteALine) {
+        map.flyToBounds(transportRouteALine, {
+          duration: 1,
+          padding: [15, 15],
+        });
+      }
+      if (fitBoundMode === "transportRouteB" && transportRouteBLine) {
+        map.flyToBounds(transportRouteBLine, {
+          duration: 1,
+          padding: [15, 15],
+        });
+      }
+      setTimeout(() => {
+        updateFitBoundMode("");
+      }, 1500);
     }
   }, [fitBoundMode]);
 
@@ -298,8 +338,8 @@ export const Map = ({ mapCollapse }) => {
     const _map = useMap();
 
     const handleIconOnClick = () => {
-      if (routeLineWithStartEnd) {
-        _map.flyToBounds(routeLineWithStartEnd, {
+      if (startEndRouteLine) {
+        _map.flyToBounds(startEndRouteLine, {
           duration: 1,
           padding: [15, 15],
         });
@@ -446,7 +486,7 @@ export const Map = ({ mapCollapse }) => {
                   }`,
                   opacity: "0.75",
                 }}
-                positions={routeAPoints}
+                positions={routePointsA}
               />
 
               {/* Line of Transport B*/}
@@ -461,7 +501,7 @@ export const Map = ({ mapCollapse }) => {
                     }`,
                     opacity: "0.75",
                   }}
-                  positions={routeBPoints}
+                  positions={routePointsB}
                 />
               )}
 

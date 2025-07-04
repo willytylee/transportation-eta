@@ -17,11 +17,12 @@ export const Walking = ({
   const { gStopList } = useContext(DbContext);
   const { destination } = useContext(DirectionContext);
 
+  const handleOnClick = () => {
+    updateFitBoundMode(fitBoundMode);
+  };
+
   return (
-    <WalkingRoot
-      className="detailItem"
-      onClick={() => updateFitBoundMode(fitBoundMode)}
-    >
+    <WalkingRoot className="detailItem" onClick={handleOnClick}>
       <div className="walkNotice">
         {walkDistance <= 400 && <DirectionsWalkIcon />}
         {walkDistance > 400 && <DirectionsRunIcon />}

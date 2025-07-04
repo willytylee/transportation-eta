@@ -84,6 +84,8 @@ export const DirectionItemAccordion = ({
             stopSeq={origStopSeq}
             arriveTime={origArriveTime}
             walkTime={origWalkTime}
+            updateFitBoundMode={updateFitBoundMode}
+            fitBoundMode="transportEtaA"
           />
           {!isMultiRoute && (
             <DirectionStopList
@@ -93,6 +95,8 @@ export const DirectionItemAccordion = ({
               endStopId={destStopId}
               endStopSeq={destStopSeq}
               transportTime={origTransportTime}
+              updateFitBoundMode={updateFitBoundMode}
+              fitBoundMode="transportEtaSingle"
             />
           )}
 
@@ -105,12 +109,16 @@ export const DirectionItemAccordion = ({
                 endStopId={origCommonStopId}
                 endStopSeq={origCommonStopSeq}
                 transportTime={origTransportTime}
+                updateFitBoundMode={updateFitBoundMode}
+                fitBoundMode="transportRouteA"
               />
               <TransportEta
                 eta={commonStopEta}
                 routeObj={destRouteObj}
                 stopSeq={destCommonStopSeq}
                 arriveTime={destArriveTime}
+                updateFitBoundMode={updateFitBoundMode}
+                fitBoundMode="transportEtaB"
               />
               <DirectionStopList
                 routeObj={destRouteObj}
@@ -119,6 +127,8 @@ export const DirectionItemAccordion = ({
                 endStopId={destStopId}
                 endStopSeq={destStopSeq}
                 transportTime={destTransportTime}
+                updateFitBoundMode={updateFitBoundMode}
+                fitBoundMode="transportRouteB"
               />
             </>
           )}

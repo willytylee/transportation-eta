@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { styled } from "@mui/material";
+import { styled, Button } from "@mui/material";
 import {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
@@ -16,6 +16,8 @@ export const DirectionStopList = ({
   startStopId,
   endStopId,
   transportTime,
+  updateFitBoundMode,
+  fitBoundMode,
 }) => {
   const { gStopList } = useContext(DbContext);
   const [stopList, setStopList] = useState([]);
@@ -34,12 +36,16 @@ export const DirectionStopList = ({
     }
   };
 
+  const handleOnClick = () => {
+    updateFitBoundMode(fitBoundMode);
+  };
+
   return (
-    <DirectionStopListRoot className="detailItem">
+    <DirectionStopListRoot className="detailItem" onClick={handleOnClick}>
       <ul className="transportNotice">
         <li>{gStopList[startStopId].name.zh}</li>
         {endStopSeq - startStopSeq > 1 && (
-          <button
+          <div
             className="stopListBtn"
             type="button"
             onClick={handleStopListBtnOnClick}
@@ -54,7 +60,7 @@ export const DirectionStopList = ({
               搭{endStopSeq - startStopSeq}個站
             </div>
             {stopList.length === 0 ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-          </button>
+          </div>
         )}
         <div
           className="stopList"
@@ -73,7 +79,8 @@ export const DirectionStopList = ({
   );
 };
 
-const DirectionStopListRoot = styled("div")({
+const DirectionStopListRoot = styled(Button)({
+  color: "rgba(0, 0, 0, 0.87)",
   ".transportNotice": {
     display: "flex",
     flexDirection: "column",
@@ -81,6 +88,7 @@ const DirectionStopListRoot = styled("div")({
     borderLeft: "3px solid",
     paddingLeft: "12px",
     margin: 0,
+    alignItems: "flex-start",
     ".stopListBtn": {
       display: "flex",
       alignItems: "center",
@@ -95,6 +103,7 @@ const DirectionStopListRoot = styled("div")({
       display: "flex",
       flexDirection: "column",
       gap: "4px",
+      alignItems: "flex-start",
     },
   },
 });

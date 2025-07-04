@@ -1,4 +1,4 @@
-import { styled } from "@mui/material";
+import { styled, Button } from "@mui/material";
 import { companyIconMap } from "../../../constants/Constants";
 import {
   getCoIconByRouteObj,
@@ -14,6 +14,8 @@ export const TransportEta = ({
   stopSeq,
   walkTime,
   arriveTime,
+  updateFitBoundMode,
+  fitBoundMode,
 }) => {
   let timeForNextRoute = 0;
 
@@ -33,8 +35,12 @@ export const TransportEta = ({
     }
   }
 
+  const handleOnClick = () => {
+    updateFitBoundMode(fitBoundMode);
+  };
+
   return (
-    <TransportEtaRoot className="detailItem">
+    <TransportEtaRoot className="detailItem" onClick={handleOnClick}>
       <div className="waitingNotice">
         <div className="arriveTimeMsgWrapper">
           <div className="transportIconWrapper">
@@ -62,7 +68,8 @@ export const TransportEta = ({
   );
 };
 
-const TransportEtaRoot = styled("div")({
+const TransportEtaRoot = styled(Button)({
+  color: "rgba(0, 0, 0, 0.87)",
   ".waitingNotice": {
     ".arriveTimeMsgWrapper": {
       display: "flex",
