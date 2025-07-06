@@ -8,13 +8,13 @@ export const DirectionItem = ({ routeListItem, i }) => {
   const { eta: origEta, isEtaLoading: isOrigEtaLoading } = useEtas({
     seq: routeListItem.origin.stopSeq,
     routeObj: routeListItem.origin.routeObj,
-    interval: 240000,
+    interval: 120000,
   });
 
   const { eta: commonStopEta, isEtaLoading: isCommontEtaLoading } = useEtas({
     seq: routeListItem.destination.commonStopSeq,
     routeObj: routeListItem.destination.routeObj,
-    interval: 240000,
+    interval: 120000,
   });
 
   const isMultiRoute =
