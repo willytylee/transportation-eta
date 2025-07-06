@@ -18,7 +18,6 @@ export const DirectionList = () => {
   const [directionRouteList, setDirectionRouteList] = useState([]);
   const [sortedRouteList, setSortedRouteList] = useState([]);
   const [maxWalkingDistance, setMaxWalkingDistance] = useState(400);
-  const [text, setText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const routeList = useMemo(
@@ -75,7 +74,6 @@ export const DirectionList = () => {
     };
 
     worker.onerror = () => {
-      setText("Error during calculation");
       setIsLoading(false);
       worker.terminate();
     };
@@ -155,8 +153,6 @@ export const DirectionList = () => {
   // Convert to array format if needed
   // console.log(Object.values(groupedData));
 
-  // console.log(sortedRouteList);
-
   return (
     <DirectionListRoot>
       {origin &&
@@ -201,7 +197,6 @@ export const DirectionList = () => {
           行唔郁啦!
         </Button>
       </ButtonGroup>
-      {text}
     </DirectionListRoot>
   );
 };

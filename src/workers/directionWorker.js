@@ -3,15 +3,17 @@ import { getDistance } from "geolib";
 import { getFirstCoByRouteObj } from "../Utils/Utils";
 
 const routeRatio = 0.9; // 0 to 1, the larger, the route become a straight line from point to point, apply on multi-route only.
-const maxCommonStopDistance = 150; // The maximum distance between common stops
+const maxCommonStopDistance = 100; // The maximum distance between common stops
+
 const walkDistanceTimeRatio = 40; // The meter / minutes for calculate the walking time. The more the value, the faster you walk, 50 = 1000m / 20minutes
 const mtrDistanceTimeRatio = 600;
 const carDistanceTimeRatio = 200;
+const displacementDistanceRatio = 0.75;
 
 self.onmessage = function handleMessage(e) {
   const { origins, destinations, routeList, gStopList } = e.data;
 
-  const calculateTransportTime = ({
+  const calculateTransportTimeAndDistance = ({
     routeObj,
     company,
     startStopSeq,
@@ -44,11 +46,20 @@ self.onmessage = function handleMessage(e) {
     }
 
     if (routeObj.jt !== null) {
-      return Math.round(routeObj.jt * (transportDistance / fullRouteDistance));
+      return {
+        time: Math.round(routeObj.jt * (transportDistance / fullRouteDistance)),
+        distance: transportDistance,
+      };
     } else if (routeObj.co[0] === "mtr") {
-      return getMTRTravelTime(transportDistance);
+      return {
+        time: getMTRTravelTime(transportDistance),
+        distance: transportDistance,
+      };
     }
-    return getCarTravelTime(transportDistance);
+    return {
+      time: getCarTravelTime(transportDistance),
+      distance: transportDistance,
+    };
   };
 
   const getWalkTime = (meter) => Math.round(meter / walkDistanceTimeRatio);
@@ -94,7 +105,7 @@ self.onmessage = function handleMessage(e) {
 
         // Calcaulate transportTime
 
-        const transportTime = calculateTransportTime({
+        const { time: transportTime } = calculateTransportTimeAndDistance({
           routeObj,
           company,
           startStopSeq: origStopSeq,
@@ -159,185 +170,207 @@ self.onmessage = function handleMessage(e) {
 
     // Check for connected routes
     for (const origRoute of origRoutes) {
+      if (routeSet.has(origRoute.route)) continue;
+
       const origCompany = getFirstCoByRouteObj(origRoute);
-      for (const destRoute of destRoutes) {
-        const destCompany = getFirstCoByRouteObj(destRoute);
+      const origRouteStops = origRoute.stops[origCompany];
+      // Find matched origin and destination stops
+      const matchedOrigins = Object.keys(origins).filter((_origin) =>
+        origRouteStops.includes(_origin)
+      );
 
-        const origRouteStops = origRoute.stops[origCompany];
-        const destRouteStops = destRoute.stops[destCompany];
-        // Skip if same route
-        if (origRoute.route === destRoute.route) continue;
-
-        // Create a unique key for the route pair
-        const pairKey = `${origRoute.route}:${destRoute.route}`;
-        if (seenPairs.has(pairKey)) continue;
-
-        // Find matched origin and destination stops
-        const matchedOrigins = Object.keys(origins).filter((_origin) =>
-          origRouteStops.includes(_origin)
-        );
-        const matchedDestinations = Object.keys(destinations).filter((dest) =>
-          destRouteStops.includes(dest)
+      if (matchedOrigins.length > 0) {
+        // There may have multi stops within the certain distance,
+        // find the nearest stop in the route stop List
+        const origStopId = matchedOrigins.reduce((prev, curr) =>
+          origins[prev] < origins[curr] ? prev : curr
         );
 
-        if (matchedOrigins.length > 0 && matchedDestinations.length > 0) {
-          // There may have multi stops within the certain distance,
-          // find the nearest stop in the route stop List
-          const origStopId = matchedOrigins.reduce((prev, curr) =>
-            origins[prev] < origins[curr] ? prev : curr
-          );
-          const destStopId = matchedDestinations.reduce((prev, curr) =>
-            destinations[prev] < destinations[curr] ? prev : curr
+        // Get the sequence of origStop, destStop and common Stop on both route
+        // For calculate the correct order sequence between them
+        const origStopSeq = origRouteStops.indexOf(origStopId) + 1;
+
+        // Make sure the common point is after the start point and before the end point
+        const origRouteStopsAfterStart = origRouteStops.slice(origStopSeq + 1);
+
+        for (const destRoute of destRoutes) {
+          if (routeSet.has(destRoute.route)) continue;
+          if (origRoute.route === destRoute.route) continue; // Skip if same route
+
+          // Create a unique key for the route pair
+          const pairKey = `${origRoute.route}:${destRoute.route}`;
+          if (seenPairs.has(pairKey)) continue;
+
+          const destCompany = getFirstCoByRouteObj(destRoute);
+          const destRouteStops = destRoute.stops[destCompany];
+          // Find matched origin and destination stops
+          const matchedDestinations = Object.keys(destinations).filter((dest) =>
+            destRouteStops.includes(dest)
           );
 
-          // Get the sequence of origStop, destStop and common Stop on both route
-          // For calculate the correct order sequence between them
-          const origStopSeq = origRouteStops.indexOf(origStopId) + 1;
-          const destStopSeq = destRouteStops.indexOf(destStopId) + 1;
+          if (matchedDestinations.length > 0) {
+            // There may have multi stops within the certain distance,
+            // find the nearest stop in the route stop List
+            const destStopId = matchedDestinations.reduce((prev, curr) =>
+              destinations[prev] < destinations[curr] ? prev : curr
+            );
 
-          // Make sure the common point is after the start point and before the end point
-          const origRouteStopsAfterStart = origRouteStops.slice(
-            origStopSeq + 1
-          );
-          const destRouteStopsBeforeEnd = destRouteStops.slice(
-            0,
-            destStopSeq + 1
-          );
+            // Get the sequence of origStop, destStop and common Stop on both route
+            // For calculate the correct order sequence between them
+            const destStopSeq = destRouteStops.indexOf(destStopId) + 1;
 
-          let pair = null;
-          origRouteStopsAfterStart.some((_origStopId) =>
-            destRouteStopsBeforeEnd.some((_destStopId) => {
-              const distanceBtwnTwoCommonStop = getDistance(
-                {
-                  latitude: gStopList[_origStopId].location.lat,
-                  longitude: gStopList[_origStopId].location.lng,
-                },
-                {
-                  latitude: gStopList[_destStopId].location.lat,
-                  longitude: gStopList[_destStopId].location.lng,
+            // Make sure the common point is after the start point and before the end point
+            const destRouteStopsBeforeEnd = destRouteStops.slice(
+              0,
+              destStopSeq + 1
+            );
+
+            let pair = null;
+            origRouteStopsAfterStart.some((_origStopId) =>
+              destRouteStopsBeforeEnd.some((_destStopId) => {
+                const distanceBtwnTwoCommonStop = getDistance(
+                  {
+                    latitude: gStopList[_origStopId].location.lat,
+                    longitude: gStopList[_origStopId].location.lng,
+                  },
+                  {
+                    latitude: gStopList[_destStopId].location.lat,
+                    longitude: gStopList[_destStopId].location.lng,
+                  }
+                );
+
+                if (distanceBtwnTwoCommonStop < maxCommonStopDistance) {
+                  const origCommonStopSeq =
+                    origRouteStops.indexOf(_origStopId) + 1;
+                  const destCommonStopSeq =
+                    destRouteStops.indexOf(_destStopId) + 1;
+
+                  pair = {
+                    _origStopId,
+                    origCommonStopSeq,
+                    _destStopId,
+                    destCommonStopSeq,
+                  };
+                  return true;
                 }
-              );
+                return false;
+              })
+            );
 
-              if (distanceBtwnTwoCommonStop < maxCommonStopDistance) {
-                const origCommonStopSeq =
-                  origRouteStops.indexOf(_origStopId) + 1;
-                const destCommonStopSeq =
-                  destRouteStops.indexOf(_destStopId) + 1;
+            if (!pair) continue;
 
-                pair = {
-                  _origStopId,
-                  origCommonStopSeq,
-                  _destStopId,
-                  destCommonStopSeq,
-                };
-                return true;
+            const {
+              _origStopId: origCommonStopId,
+              origCommonStopSeq,
+              _destStopId: destCommonStopId,
+              destCommonStopSeq,
+            } = pair;
+
+            const correctSeqOrder =
+              origStopSeq < origCommonStopSeq &&
+              destCommonStopSeq < destStopSeq;
+
+            if (!correctSeqOrder) continue;
+
+            // Get the distance to prevent the origin route bring you far away from destination
+            const distanceBtwnOrigStopAndCommonStop = getDistance(
+              {
+                latitude: gStopList[origStopId].location.lat,
+                longitude: gStopList[origStopId].location.lng,
+              },
+              {
+                latitude: gStopList[origCommonStopId].location.lat,
+                longitude: gStopList[origCommonStopId].location.lng,
               }
-              return false;
-            })
-          );
+            );
 
-          if (!pair) {
-            continue;
-          }
+            const distanceBtwnCommonStopAndDestStop = getDistance(
+              {
+                latitude: gStopList[destCommonStopId].location.lat,
+                longitude: gStopList[destCommonStopId].location.lng,
+              },
+              {
+                latitude: gStopList[destStopId].location.lat,
+                longitude: gStopList[destStopId].location.lng,
+              }
+            );
 
-          const {
-            _origStopId: origCommonStopId,
-            origCommonStopSeq,
-            _destStopId: destCommonStopId,
-            destCommonStopSeq,
-          } = pair;
+            const distanceBtwnOrigStopAndDestStop = getDistance(
+              {
+                latitude: gStopList[origStopId].location.lat,
+                longitude: gStopList[origStopId].location.lng,
+              },
+              {
+                latitude: gStopList[destStopId].location.lat,
+                longitude: gStopList[destStopId].location.lng,
+              }
+            );
 
-          // Get the distance to prevent the origin route bring you far away from destination
-          const distanceBtwnOrigStopAndCommonStop = getDistance(
-            {
-              latitude: gStopList[origStopId].location.lat,
-              longitude: gStopList[origStopId].location.lng,
-            },
-            {
-              latitude: gStopList[origCommonStopId].location.lat,
-              longitude: gStopList[origCommonStopId].location.lng,
-            }
-          );
+            const origWalkDistance = origins[origStopId];
+            const destWalkDistance = destinations[destStopId];
 
-          const distanceBtwnCommonStopAndDestStop = getDistance(
-            {
-              latitude: gStopList[destCommonStopId].location.lat,
-              longitude: gStopList[destCommonStopId].location.lng,
-            },
-            {
-              latitude: gStopList[destStopId].location.lat,
-              longitude: gStopList[destStopId].location.lng,
-            }
-          );
+            const origWalkTime = getWalkTime(origWalkDistance);
+            const destWalkTime = getWalkTime(destWalkDistance);
 
-          const distanceBtwnOrigStopAndDestStop = getDistance(
-            {
-              latitude: gStopList[origStopId].location.lat,
-              longitude: gStopList[origStopId].location.lng,
-            },
-            {
-              latitude: gStopList[destStopId].location.lat,
-              longitude: gStopList[destStopId].location.lng,
-            }
-          );
-
-          const origWalkDistance = origins[origStopId];
-          const destWalkDistance = destinations[destStopId];
-
-          const origWalkTime = getWalkTime(origWalkDistance);
-          const destWalkTime = getWalkTime(destWalkDistance);
-
-          const origTransportTime = calculateTransportTime({
-            routeObj: origRoute,
-            company: origCompany,
-            startStopSeq: origStopSeq,
-            endStopSeq: origCommonStopSeq,
-          });
-
-          const destTransportTime = calculateTransportTime({
-            routeObj: destRoute,
-            company: destCompany,
-            startStopSeq: destCommonStopSeq,
-            endStopSeq: destStopSeq,
-          });
-
-          const validCondition =
-            origStopSeq < origCommonStopSeq &&
-            destCommonStopSeq < destStopSeq &&
-            // Shouldn't bring you far away from destination
-            distanceBtwnOrigStopAndCommonStop <
-              distanceBtwnOrigStopAndDestStop &&
-            distanceBtwnCommonStopAndDestStop <
-              distanceBtwnOrigStopAndDestStop &&
-            distanceBtwnOrigStopAndDestStop /
-              (distanceBtwnOrigStopAndCommonStop +
-                distanceBtwnCommonStopAndDestStop) >
-              routeRatio;
-
-          if (validCondition) {
-            seenPairs.add(pairKey);
-            result.push({
-              origin: {
+            const { time: origTransportTime, distance: origTransportDistance } =
+              calculateTransportTimeAndDistance({
                 routeObj: origRoute,
-                stopId: origStopId,
-                stopSeq: origStopSeq,
-                commonStopId: origCommonStopId,
-                commonStopSeq: origCommonStopSeq,
-                walkDistance: origWalkDistance,
-                walkTime: origWalkTime,
-                transportTime: origTransportTime,
-              },
-              destination: {
+                company: origCompany,
+                startStopSeq: origStopSeq,
+                endStopSeq: origCommonStopSeq,
+              });
+
+            const { time: destTransportTime, distance: destTransportDistance } =
+              calculateTransportTimeAndDistance({
                 routeObj: destRoute,
-                stopId: destStopId,
-                stopSeq: destStopSeq,
-                commonStopId: destCommonStopId,
-                commonStopSeq: destCommonStopSeq,
-                walkDistance: destWalkDistance,
-                walkTime: destWalkTime,
-                transportTime: destTransportTime,
-              },
-            });
+                company: destCompany,
+                startStopSeq: destCommonStopSeq,
+                endStopSeq: destStopSeq,
+              });
+
+            // Shouldn't bring you far away from destination
+            const correctCommonStop =
+              distanceBtwnOrigStopAndCommonStop <
+                distanceBtwnOrigStopAndDestStop &&
+              distanceBtwnCommonStopAndDestStop <
+                distanceBtwnOrigStopAndDestStop &&
+              distanceBtwnOrigStopAndDestStop /
+                (distanceBtwnOrigStopAndCommonStop +
+                  distanceBtwnCommonStopAndDestStop) >
+                routeRatio;
+
+            // Prevent circulating route
+            const correctRoute =
+              distanceBtwnOrigStopAndCommonStop / origTransportDistance >
+                displacementDistanceRatio &&
+              distanceBtwnCommonStopAndDestStop / destTransportDistance >
+                displacementDistanceRatio;
+
+            if (correctCommonStop && correctRoute) {
+              seenPairs.add(pairKey);
+              result.push({
+                origin: {
+                  routeObj: origRoute,
+                  stopId: origStopId,
+                  stopSeq: origStopSeq,
+                  commonStopId: origCommonStopId,
+                  commonStopSeq: origCommonStopSeq,
+                  walkDistance: origWalkDistance,
+                  walkTime: origWalkTime,
+                  transportTime: origTransportTime,
+                },
+                destination: {
+                  routeObj: destRoute,
+                  stopId: destStopId,
+                  stopSeq: destStopSeq,
+                  commonStopId: destCommonStopId,
+                  commonStopSeq: destCommonStopSeq,
+                  walkDistance: destWalkDistance,
+                  walkTime: destWalkTime,
+                  transportTime: destTransportTime,
+                },
+              });
+            }
           }
         }
       }
