@@ -9,14 +9,14 @@ import { DirectionSummary } from "./DirectionSummary";
 import { DirectionStopList } from "./Box/DirectionStopList";
 
 export const DirectionItemAccordion = ({
-  handleChange,
   i,
   routeListItem,
   isEtaLoading,
   origEta,
   commonStopEta,
 }) => {
-  const { expanded, updateFitBoundMode } = useContext(DirectionContext);
+  const { expanded, updateFitBoundMode, updateExpanded, updateCurrRoute } =
+    useContext(DirectionContext);
 
   const { origin, destination } = routeListItem;
   const {
@@ -50,10 +50,15 @@ export const DirectionItemAccordion = ({
     destCommonStopId &&
     destCommonStopSeq;
 
+  const handleAccordionChange = (panel, currRoute) => (e, isExpanded) => {
+    updateExpanded(isExpanded ? panel : false);
+    updateCurrRoute(currRoute);
+  };
+
   return (
     <AccordionRoot
       expanded={expanded === `panel${i}`}
-      onChange={handleChange(`panel${i}`, routeListItem)}
+      onChange={handleAccordionChange(`panel${i}`, routeListItem)}
     >
       <DirectionSummary
         eta={origEta}

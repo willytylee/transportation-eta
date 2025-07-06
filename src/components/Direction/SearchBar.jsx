@@ -179,6 +179,13 @@ export const SearchBar = ({ updateMapCollapse }) => {
           className="asyncSelect"
           onFocus={onFocus}
           onBlur={onBlur}
+          loadingMessage={() => "載入地點中..."}
+          styles={{
+            option: (baseStyles) => ({
+              ...baseStyles,
+              fontSize: "11px",
+            }),
+          }}
         />
         <AsyncSelect
           cacheOptions
@@ -190,10 +197,10 @@ export const SearchBar = ({ updateMapCollapse }) => {
           className="asyncSelect"
           onFocus={onFocus}
           onBlur={onBlur}
+          loadingMessage={() => "載入地點中..."}
           styles={{
-            option: (baseStyles, state) => ({
+            option: (baseStyles) => ({
               ...baseStyles,
-              borderColor: state.isFocused ? "grey" : "red",
               fontSize: "11px",
             }),
           }}

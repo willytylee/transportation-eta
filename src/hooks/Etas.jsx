@@ -20,7 +20,10 @@ export const useEtas = ({ seq, routeObj, interval }) => {
 
     intervalContent();
 
-    const intervalID = setInterval(intervalContent, interval);
+    const intervalID = setInterval(
+      intervalContent,
+      Math.random() * 10000 + interval - 5000
+    );
 
     return () => {
       clearInterval(intervalID);
