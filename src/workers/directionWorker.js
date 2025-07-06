@@ -1,5 +1,6 @@
 // src/workers/worker.js
 import { getDistance } from "geolib";
+import { getFirstCoByRouteObj } from "../Utils/Utils";
 
 const routeRatio = 0.9; // 0 to 1, the larger, the route become a straight line from point to point, apply on multi-route only.
 const maxCommonStopDistance = 150; // The maximum distance between common stops
@@ -9,21 +10,6 @@ const carDistanceTimeRatio = 200;
 
 self.onmessage = function handleMessage(e) {
   const { origins, destinations, routeList, gStopList } = e.data;
-
-  const coPriority = ["kmb", "nwfb", "ctb", "gmb", "mtr", "nlb"];
-
-  const getFirstCoByRouteObj = (routeObj) => {
-    // Method: If the routeObj's stops included the company,
-    // get the first match from coPriority
-    let companyId = "";
-    for (const f of coPriority) {
-      if (Object.keys(routeObj.stops).includes(f)) {
-        companyId = f;
-        break;
-      }
-    }
-    return companyId;
-  };
 
   const calculateTransportTime = ({
     routeObj,
