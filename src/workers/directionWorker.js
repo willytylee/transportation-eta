@@ -9,6 +9,7 @@ const walkDistanceTimeRatio = 40; // The meter / minutes for calculate the walki
 const mtrDistanceTimeRatio = 600;
 const carDistanceTimeRatio = 200;
 const displacementDistanceRatio = 0.75;
+const minRouteDistance = 300;
 
 self.onmessage = function handleMessage(e) {
   const { origins, destinations, routeList, gStopList } = e.data;
@@ -65,11 +66,13 @@ self.onmessage = function handleMessage(e) {
   const getWalkTime = (meter) => Math.round(meter / walkDistanceTimeRatio);
 
   const result = [];
-  const routeSet = new Set(result.map((f) => f.route));
+  const singleRouteSet = new Set(result.map((f) => f.route));
 
   if (origins && destinations) {
     // ===========================  Single Route  ===========================
     routeList?.forEach((routeObj) => {
+      if (singleRouteSet.has(routeObj.route)) return;
+
       const company = getFirstCoByRouteObj(routeObj);
 
       // Find the stopId that the route included
@@ -97,6 +100,10 @@ self.onmessage = function handleMessage(e) {
         const origStopSeq = routeObj.stops[company].indexOf(origStopId) + 1;
         const destStopSeq = routeObj.stops[company].indexOf(destStopId) + 1;
 
+        const correctSeqOrder = origStopSeq < destStopSeq;
+
+        if (!correctSeqOrder) return;
+
         const origWalkDistance = origins[origStopId];
         const destWalkDistance = destinations[destStopId];
 
@@ -104,7 +111,6 @@ self.onmessage = function handleMessage(e) {
         const destWalkTime = getWalkTime(destWalkDistance);
 
         // Calcaulate transportTime
-
         const { time: transportTime } = calculateTransportTimeAndDistance({
           routeObj,
           company,
@@ -112,31 +118,29 @@ self.onmessage = function handleMessage(e) {
           endStopSeq: destStopSeq,
         });
 
-        if (origStopSeq < destStopSeq && !routeSet.has(routeObj.route)) {
-          routeSet.add(routeObj.route);
-          result.push({
-            origin: {
-              routeObj,
-              stopId: origStopId,
-              stopSeq: origStopSeq,
-              commonStopId: "",
-              commonStopSeq: "",
-              walkDistance: origWalkDistance,
-              walkTime: origWalkTime,
-              transportTime,
-            },
-            destination: {
-              routeObj: {},
-              stopId: destStopId,
-              stopSeq: destStopSeq,
-              commonStopId: "",
-              commonStopSeq: "",
-              walkDistance: destWalkDistance,
-              walkTime: destWalkTime,
-              transportTime: 0,
-            },
-          });
-        }
+        singleRouteSet.add(routeObj.route);
+        result.push({
+          origin: {
+            routeObj,
+            stopId: origStopId,
+            stopSeq: origStopSeq,
+            commonStopId: "",
+            commonStopSeq: "",
+            walkDistance: origWalkDistance,
+            walkTime: origWalkTime,
+            transportTime,
+          },
+          destination: {
+            routeObj: {},
+            stopId: destStopId,
+            stopSeq: destStopSeq,
+            commonStopId: "",
+            commonStopSeq: "",
+            walkDistance: destWalkDistance,
+            walkTime: destWalkTime,
+            transportTime: 0,
+          },
+        });
       }
     });
 
@@ -170,10 +174,12 @@ self.onmessage = function handleMessage(e) {
 
     // Check for connected routes
     for (const origRoute of origRoutes) {
-      if (routeSet.has(origRoute.route)) continue;
+      // if single route has route, no need go for connected routes
+      if (singleRouteSet.has(origRoute.route)) continue;
 
       const origCompany = getFirstCoByRouteObj(origRoute);
       const origRouteStops = origRoute.stops[origCompany];
+
       // Find matched origin and destination stops
       const matchedOrigins = Object.keys(origins).filter((_origin) =>
         origRouteStops.includes(_origin)
@@ -194,7 +200,9 @@ self.onmessage = function handleMessage(e) {
         const origRouteStopsAfterStart = origRouteStops.slice(origStopSeq + 1);
 
         for (const destRoute of destRoutes) {
-          if (routeSet.has(destRoute.route)) continue;
+          // if single route has route, no need go for connected routes
+          if (singleRouteSet.has(destRoute.route)) continue;
+
           if (origRoute.route === destRoute.route) continue; // Skip if same route
 
           // Create a unique key for the route pair
@@ -257,7 +265,7 @@ self.onmessage = function handleMessage(e) {
               })
             );
 
-            if (!pair) continue;
+            if (!pair) continue; // Can't find any common stop
 
             const {
               _origStopId: origCommonStopId,
@@ -306,6 +314,27 @@ self.onmessage = function handleMessage(e) {
               }
             );
 
+            // Shouldn't bring you far away from destination
+            const correctCommonStop =
+              distanceBtwnOrigStopAndCommonStop <
+                distanceBtwnOrigStopAndDestStop &&
+              distanceBtwnCommonStopAndDestStop <
+                distanceBtwnOrigStopAndDestStop &&
+              distanceBtwnOrigStopAndDestStop /
+                (distanceBtwnOrigStopAndCommonStop +
+                  distanceBtwnCommonStopAndDestStop) >
+                routeRatio;
+
+            if (!correctCommonStop) continue;
+
+            // The route can't be too short
+            if (
+              distanceBtwnOrigStopAndCommonStop < minRouteDistance ||
+              distanceBtwnCommonStopAndDestStop < minRouteDistance
+            ) {
+              continue;
+            }
+
             const origWalkDistance = origins[origStopId];
             const destWalkDistance = destinations[destStopId];
 
@@ -328,17 +357,6 @@ self.onmessage = function handleMessage(e) {
                 endStopSeq: destStopSeq,
               });
 
-            // Shouldn't bring you far away from destination
-            const correctCommonStop =
-              distanceBtwnOrigStopAndCommonStop <
-                distanceBtwnOrigStopAndDestStop &&
-              distanceBtwnCommonStopAndDestStop <
-                distanceBtwnOrigStopAndDestStop &&
-              distanceBtwnOrigStopAndDestStop /
-                (distanceBtwnOrigStopAndCommonStop +
-                  distanceBtwnCommonStopAndDestStop) >
-                routeRatio;
-
             // Prevent circulating route
             const correctRoute =
               distanceBtwnOrigStopAndCommonStop / origTransportDistance >
@@ -346,31 +364,31 @@ self.onmessage = function handleMessage(e) {
               distanceBtwnCommonStopAndDestStop / destTransportDistance >
                 displacementDistanceRatio;
 
-            if (correctCommonStop && correctRoute) {
-              seenPairs.add(pairKey);
-              result.push({
-                origin: {
-                  routeObj: origRoute,
-                  stopId: origStopId,
-                  stopSeq: origStopSeq,
-                  commonStopId: origCommonStopId,
-                  commonStopSeq: origCommonStopSeq,
-                  walkDistance: origWalkDistance,
-                  walkTime: origWalkTime,
-                  transportTime: origTransportTime,
-                },
-                destination: {
-                  routeObj: destRoute,
-                  stopId: destStopId,
-                  stopSeq: destStopSeq,
-                  commonStopId: destCommonStopId,
-                  commonStopSeq: destCommonStopSeq,
-                  walkDistance: destWalkDistance,
-                  walkTime: destWalkTime,
-                  transportTime: destTransportTime,
-                },
-              });
-            }
+            if (!correctRoute) continue;
+
+            seenPairs.add(pairKey);
+            result.push({
+              origin: {
+                routeObj: origRoute,
+                stopId: origStopId,
+                stopSeq: origStopSeq,
+                commonStopId: origCommonStopId,
+                commonStopSeq: origCommonStopSeq,
+                walkDistance: origWalkDistance,
+                walkTime: origWalkTime,
+                transportTime: origTransportTime,
+              },
+              destination: {
+                routeObj: destRoute,
+                stopId: destStopId,
+                stopSeq: destStopSeq,
+                commonStopId: destCommonStopId,
+                commonStopSeq: destCommonStopSeq,
+                walkDistance: destWalkDistance,
+                walkTime: destWalkTime,
+                transportTime: destTransportTime,
+              },
+            });
           }
         }
       }

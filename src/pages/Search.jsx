@@ -8,7 +8,7 @@ import { TabPanel } from "../components/TabPanel";
 import { NearbyRouteList } from "../components/Search/RouteList/NearbyRouteList";
 import { SearchRouteList } from "../components/Search/RouteList/SearchRouteList";
 import { HistoryRouteList } from "../components/Search/RouteList/HistoryRouteList";
-import { setRouteListHistory, a11yProps } from "../Utils/Utils";
+import { a11yProps } from "../Utils/Utils";
 import { primaryColor } from "../constants/Constants";
 import { AppContext } from "../context/AppContext";
 import { DbContext } from "../context/DbContext";
@@ -36,6 +36,38 @@ export const Search = () => {
     }
     if (value === 0) {
       navigate("/search", { replace: true });
+    }
+  };
+
+  const setRouteListHistory = (_routeKey) => {
+    let routeListHistory;
+
+    try {
+      JSON.parse(localStorage.getItem("routeListHistory"));
+    } catch (error) {
+      routeListHistory = [];
+      localStorage.removeItem("routeListHistory");
+    }
+
+    if (Array.isArray(JSON.parse(localStorage.getItem("routeListHistory")))) {
+      routeListHistory = JSON.parse(localStorage.getItem("routeListHistory"));
+    } else {
+      routeListHistory = [];
+      localStorage.removeItem("routeListHistory");
+    }
+
+    const isInHistory =
+      routeListHistory.filter((e) => e === _routeKey).length > 0;
+
+    if (!isInHistory) {
+      if (routeListHistory.length >= 20) {
+        routeListHistory.pop();
+      }
+      routeListHistory.unshift(_routeKey);
+      localStorage.setItem(
+        "routeListHistory",
+        JSON.stringify(routeListHistory)
+      );
     }
   };
 

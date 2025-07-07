@@ -75,9 +75,6 @@ export const navbarDetail = {
   "/direction": {
     title: "點對點規劃路線",
   },
-  "/stationMode": {
-    title: "車站模式",
-  },
   "/settings": {
     title: "設定",
   },

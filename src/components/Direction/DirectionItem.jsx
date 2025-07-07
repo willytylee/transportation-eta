@@ -1,20 +1,21 @@
 import { useContext } from "react";
 import { DirectionContext } from "../../context/DirectionContext";
-import { useEtas } from "../../hooks/Etas";
+import { useEtas2 } from "../../hooks/Etas";
 import { DirectionItemAccordion } from "./DirectionItemAccordion";
 
 export const DirectionItem = ({ routeListItem, i }) => {
   const { displayMode } = useContext(DirectionContext);
-  const { eta: origEta, isEtaLoading: isOrigEtaLoading } = useEtas({
+
+  const { eta: origEta, isEtaLoading: isOrigEtaLoading } = useEtas2({
     seq: routeListItem.origin.stopSeq,
     routeObj: routeListItem.origin.routeObj,
-    interval: 120000,
+    interval: 60000,
   });
 
-  const { eta: commonStopEta, isEtaLoading: isCommontEtaLoading } = useEtas({
+  const { eta: commonStopEta, isEtaLoading: isCommontEtaLoading } = useEtas2({
     seq: routeListItem.destination.commonStopSeq,
     routeObj: routeListItem.destination.routeObj,
-    interval: 120000,
+    interval: 60000,
   });
 
   const isMultiRoute =

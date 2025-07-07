@@ -46,7 +46,7 @@ export const SimpleRouteList = ({ mode, routeKeyList }) => {
     };
 
     return (
-      <SearchRouteListRoot
+      <SimpleRouteListRoot
         onClick={() => handleOnClick(key)}
         key={key}
         className={isMatch && isSearchMode ? "match" : ""}
@@ -86,12 +86,12 @@ export const SimpleRouteList = ({ mode, routeKeyList }) => {
             </span>
           </div>
         </div>
-      </SearchRouteListRoot>
+      </SimpleRouteListRoot>
     );
   });
 };
 
-const SearchRouteListRoot = styled("div")({
+const SimpleRouteListRoot = styled("div")({
   display: "flex",
   alignItems: "center",
   padding: "4px 10px",

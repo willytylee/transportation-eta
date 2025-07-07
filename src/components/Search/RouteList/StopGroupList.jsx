@@ -1,16 +1,11 @@
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { styled, ButtonGroup, Button } from "@mui/material";
-import {
-  getFirstCoByRouteObj,
-  getCoIconByRouteObj,
-} from "../../../Utils/Utils";
+import { getFirstCoByRouteObj } from "../../../Utils/Utils";
 import { DbContext } from "../../../context/DbContext";
-import { companyIconMap, primaryColor } from "../../../constants/Constants";
-import { mtrIconColor } from "../../../constants/Mtr";
+import { primaryColor } from "../../../constants/Constants";
 import { useStopIdsNearby } from "../../../hooks/StopIdsNearBy";
-import { Eta } from "./Eta";
+import { StopGroupListSection } from "./StopGroupListSection";
 
 export const StopGroupList = ({
   routeKeyList,
@@ -19,7 +14,6 @@ export const StopGroupList = ({
   childStyles,
 }) => {
   const { gRouteList, gStopList } = useContext(DbContext);
-  const navigate = useNavigate();
   const [maxDistance, setMaxDistance] = useState(200);
   const { stopIdsNearby } = useStopIdsNearby({
     maxDistance,
@@ -45,17 +39,18 @@ export const StopGroupList = ({
         stopIdsNearby[prev] < stopIdsNearby[curr] ? prev : curr
       );
       const origStopSeq = stops[company].findIndex((f) => f === _stopId) + 1;
-      routeData.nearbyOrigStopId = _stopId;
-      routeData.origStopSeq = origStopSeq;
+      routeData.stopId = _stopId;
+      routeData.seq = origStopSeq;
 
       routeData.distance = stopIdsNearby[_stopId];
-      routeData.key = e;
+      routeData.routeKey = e;
+
       filteredRouteObjList.push(routeData);
     }
   });
 
   const nearbyRouteList = _(filteredRouteObjList)
-    .groupBy((x) => x.nearbyOrigStopId)
+    .groupBy((x) => x.stopId)
     .map((value, key) => ({
       stopId: key,
       routes: value,
@@ -67,13 +62,6 @@ export const StopGroupList = ({
 
   const handleMeterBtnOnClick = (e) => {
     setMaxDistance(e);
-  };
-
-  const handleRouteItemOnClick = (routeKey, stopId) => {
-    navigate("/search/" + routeKey + "/" + stopId, { replace: true });
-    if (setNearbyDialogOpen) {
-      setNearbyDialogOpen(false);
-    }
   };
 
   return (
@@ -93,8 +81,8 @@ export const StopGroupList = ({
         </ButtonGroup>
       </div>
       {nearbyRouteList?.length > 0 &&
-        nearbyRouteList.map((e, i) => {
-          const stop = gStopList[e.stopId];
+        nearbyRouteList.map((category, i) => {
+          const stop = gStopList[category.stopId];
           const name = stop.name.zh;
           const { lat, lng } = stop.location;
           return (
@@ -103,45 +91,14 @@ export const StopGroupList = ({
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
                 >
-                  {name} - {e.routes[0].distance}米
+                  {name} - {category.routes[0].distance}米
                 </a>
               </div>
               <div className="routes">
-                {e.routes.map((routeObj, j) => (
-                  <div
-                    key={j}
-                    className="routeItems"
-                    onClick={() =>
-                      handleRouteItemOnClick(routeObj.key, e.stopId)
-                    }
-                  >
-                    <div className="transportIconWrapper">
-                      <img
-                        className="transportIcon"
-                        src={companyIconMap[getCoIconByRouteObj(routeObj)]}
-                        alt=""
-                      />
-                    </div>
-                    <div className="route">{routeObj.route}</div>
-                    <div className="nearStopDest">
-                      <div>
-                        <span className="dest">{routeObj.dest.zh}</span>
-                        <span className="special">
-                          {" "}
-                          {parseInt(routeObj.serviceType, 10) !== 1 &&
-                            "特別班次"}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="etas">
-                      <Eta
-                        seq={routeObj.origStopSeq}
-                        routeObj={routeObj}
-                        slice={1}
-                      />
-                    </div>
-                  </div>
-                ))}
+                <StopGroupListSection
+                  category={category}
+                  setNearbyDialogOpen={setNearbyDialogOpen}
+                />
               </div>
             </div>
           );
@@ -183,34 +140,6 @@ const StopGrouListRoot = styled("div", {
     },
     ".routes": {
       padding: "0 10px",
-      ".routeItems": {
-        display: "flex",
-        alignItems: "center",
-        padding: "4px 0",
-        borderBottom: "1px solid lightgrey",
-        ".transportIconWrapper": {
-          width: "10%",
-          display: "flex",
-          ...mtrIconColor,
-          ".transportIcon": {
-            height: "18px",
-          },
-        },
-        ".route": {
-          fontWeight: "900",
-          width: "12.5%",
-        },
-        ".nearStopDest": {
-          width: "57.5%",
-          ".special": {
-            fontSize: "10px",
-          },
-        },
-        ".etas": {
-          width: "20%",
-          float: "left",
-        },
-      },
     },
   },
   ...childStyles,

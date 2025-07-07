@@ -3,15 +3,14 @@ import { companyIconMap } from "../../../constants/Constants";
 import {
   getCoIconByRouteObj,
   phaseEtaToWaitingMins,
+  etaTimeConverter,
 } from "../../../Utils/Utils";
 import { routeMap } from "../../../constants/Mtr";
 import { mtrIconColor } from "../../../constants/Mtr";
-import { Eta } from "../../Search/RouteList/Eta";
 
 export const TransportEta = ({
   eta,
   routeObj,
-  stopSeq,
   walkTime,
   arriveTime,
   updateFitBoundMode,
@@ -60,7 +59,15 @@ export const TransportEta = ({
           </div>
         </div>
         <div className="eta">
-          <Eta seq={stopSeq} routeObj={routeObj} slice={3} />
+          {eta.length > 0 &&
+            eta.map((e, i) => (
+              <div key={i} className="eta">
+                {
+                  etaTimeConverter({ etaStr: e.eta, remark: e.rmk_tc })
+                    .etaIntervalStr
+                }
+              </div>
+            ))}
         </div>
       </div>
       <div className="time">{`${timeForNextRoute}分鐘`}</div>

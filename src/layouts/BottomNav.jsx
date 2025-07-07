@@ -54,29 +54,6 @@ export const BottomNav = () => {
         label="規劃路線"
         icon={<DirectionsIcon />}
       />
-      {/* <BottomNavigationAction
-        component={NavLink}
-        style={({ isActive }) => (isActive ? activeStyle : undefined)}
-        to="/stationMode"
-        label="車站模式"
-        icon={<DepartureBoardIcon />}
-      /> */}
-      {/* <BottomNavigationAction
-        component={NavLink}
-        style={({ isActive }) => (isActive ? activeStyle : undefined)}
-        to="/more"
-        label="更多"
-        icon={
-          <Badge
-            color="primary"
-            variant="dot"
-            overlap="circular"
-            invisible={appVersion === serVersion}
-          >
-            <MenuIcon />
-          </Badge>
-        }
-      /> */}
       <BottomNavigationAction
         label="設定"
         component={NavLink}

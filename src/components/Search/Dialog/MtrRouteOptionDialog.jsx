@@ -44,9 +44,11 @@ export const MtrRouteOptionDialog = ({
   const handleConfirmBtnOnClick = () => {
     if (bound !== "") {
       // Find the correct direction routeKey
-      const _routeKey = Object.keys(gRouteList)
-        .filter((e) => gRouteList[e].route === routeData.route)
-        .filter((e) => bound === gRouteList[e].bound.mtr)[0];
+      const _routeKey = Object.keys(gRouteList).filter(
+        (e) =>
+          gRouteList[e].route === routeData.route &&
+          bound === gRouteList[e].bound.mtr
+      )[0];
 
       const _bookmarkData = {
         routeKey: _routeKey,

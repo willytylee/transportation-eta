@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, useMemo } from "react";
-import { styled, Button, ButtonGroup } from "@mui/material";
+import { styled, Button, ButtonGroup, CircularProgress } from "@mui/material";
 import {
   DirectionsRun as DirectionsRunIcon,
   Elderly as ElderlyIcon,
@@ -25,7 +25,7 @@ export const DirectionList = () => {
       gRouteList &&
       Object.keys(gRouteList)
         .map((e) => {
-          gRouteList[e].key = e;
+          gRouteList[e].routeKey = e;
           return gRouteList[e];
         })
         .filter((e) => basicFiltering(e)),
@@ -155,10 +155,19 @@ export const DirectionList = () => {
 
   return (
     <DirectionListRoot>
+      {!origin && !destination ? (
+        <div className="emptyMsg">請輸入起點及目的地</div>
+      ) : !origin ? (
+        <div className="emptyMsg">請輸入起點</div>
+      ) : (
+        !destination && <div className="emptyMsg">請輸入目的地</div>
+      )}
       {origin &&
         destination &&
         (isLoading ? (
-          <div className="emptyMsg">搜尋路線中...</div>
+          <div className="emptyMsg">
+            <CircularProgress size={20} />
+          </div>
         ) : sortedRouteList?.length > 0 ? (
           sortedRouteList.map((e, i) => (
             <DirectionItem
@@ -169,15 +178,8 @@ export const DirectionList = () => {
             />
           ))
         ) : (
-          <div className="emptyMsg">沒有路線</div>
+          <div className="emptyMsg">沒有路線, 試吓行遠啲?</div>
         ))}
-      {!origin && !destination ? (
-        <div className="emptyMsg" />
-      ) : !origin ? (
-        <div className="emptyMsg">請輸入起點</div>
-      ) : (
-        !destination && <div className="emptyMsg">請輸入目的地</div>
-      )}
       <div className="walkingDistanceWrapper">
         車站步行距離: 最多{maxWalkingDistance}米
       </div>
@@ -190,7 +192,7 @@ export const DirectionList = () => {
           可以行遠啲!
         </Button>
         <Button
-          disabled={maxWalkingDistance === 0}
+          disabled={maxWalkingDistance === 200}
           onClick={handleWalkLessOnClick}
           startIcon={<ElderlyIcon />}
         >

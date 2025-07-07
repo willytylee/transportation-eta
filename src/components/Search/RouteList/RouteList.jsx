@@ -59,8 +59,9 @@ export const RouteList = () => {
         );
     } else {
       routeKeyList = Object.keys(gRouteList)
-        .filter((e) => basicFiltering(gRouteList[e]))
-        .filter((e) => gRouteList[e].route === route)
+        .filter(
+          (e) => basicFiltering(gRouteList[e]) && gRouteList[e].route === route
+        )
         .sort((a, b) => sortByCompany(gRouteList[a], gRouteList[b]))
         .filter((e) => {
           if (routeKey) {

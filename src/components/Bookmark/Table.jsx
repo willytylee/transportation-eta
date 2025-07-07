@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,7 +13,7 @@ import {
   DirectionsBus as DirectionsBusIcon,
   PriorityHigh as PriorityHighIcon,
 } from "@mui/icons-material";
-import { handleTableResult } from "../../Utils/Utils";
+import { etaTimeConverter } from "../../Utils/Utils";
 import { companyColor, primaryColor } from "../../constants/Constants";
 import { routeMap, mtrLineColor, stationMap } from "../../constants/Mtr";
 
@@ -20,7 +21,51 @@ export const Table = ({ etaResult }) => {
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
 
-  const result = handleTableResult(etaResult);
+  const result = etaResult
+    .sort((a, b) => {
+      if (a.etas[0] === "" || a.etas[0] === null) {
+        return 1;
+      }
+      if (b.etas[0] === "" || b.etas[0] === null) {
+        return -1;
+      }
+      if (a.etas[0] && b.etas[0]) {
+        return moment(a.etas[0].eta).diff(moment(b.etas[0].eta));
+      }
+      return false;
+    })
+    .map((e) => {
+      const {
+        co,
+        etas,
+        route,
+        stopName,
+        stopId,
+        routeKey,
+        location: { lat, lng },
+      } = e;
+
+      return {
+        co: etas ? co : "error",
+        route,
+        routeKey,
+        stopId,
+        etas: etas
+          ? etas.length === 0
+            ? [{ minutes: "沒有班次" }]
+            : etas
+                .map((f) => ({
+                  minutes: etaTimeConverter({ etaStr: f.eta, remark: f.rmk_tc })
+                    .etaIntervalStr,
+                  dest: f.dest,
+                }))
+                .slice(0, 3)
+          : [{ minutes: "路線已更變, 請刪除及重新將路線加入書籤" }],
+
+        stopName,
+        latLngUrl: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`,
+      };
+    });
 
   const handleChange = (panel) => (e, isExpanded) => {
     setExpanded(isExpanded ? panel : false);

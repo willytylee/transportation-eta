@@ -102,8 +102,8 @@ export const ListBtnDialog = ({
         )}
       </ListRoot>
     ) : (
-      <ListRoot sx={{ pt: 0, pb: 0 }}>
-        <ListItemButton onClick={handleAddBtnOnClick}>
+      <ListRoot>
+        <ListItemButton className="addCategory" onClick={handleAddBtnOnClick}>
           <div>{emptyMsg}</div>
         </ListItemButton>
       </ListRoot>

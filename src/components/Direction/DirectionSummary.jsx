@@ -73,7 +73,7 @@ export const DirectionSummary = ({
       const timeWithoutWaiting =
         origWalkTime + origTransportTime + destTransportTime + destWalkTime;
       if (eta.length > 0) {
-        estimateTravelTimeStr = `${formatTime(timeWithoutWaiting)} (趕唔切了)`;
+        estimateTravelTimeStr = `${formatTime(timeWithoutWaiting)}`;
       } else {
         estimateTravelTimeStr = `${formatTime(timeWithoutWaiting)} (沒有班次)`;
       }

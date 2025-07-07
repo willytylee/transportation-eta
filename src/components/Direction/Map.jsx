@@ -57,8 +57,8 @@ export const Map = ({ mapCollapse }) => {
 
   const startLocation = origin?.location;
   const endLocation = destination?.location;
-  const origCommonLocation = gStopList[origCommonStopId]?.location;
-  const destCommonLocation = gStopList[destCommonStopId]?.location;
+  const origCommonLocation = gStopList && gStopList[origCommonStopId]?.location;
+  const destCommonLocation = gStopList && gStopList[destCommonStopId]?.location;
 
   const isMultiRoute =
     origCommonStopId &&

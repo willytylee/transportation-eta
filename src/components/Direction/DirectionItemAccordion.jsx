@@ -120,7 +120,6 @@ export const DirectionItemAccordion = ({
               <TransportEta
                 eta={commonStopEta}
                 routeObj={destRouteObj}
-                stopSeq={destCommonStopSeq}
                 arriveTime={destArriveTime}
                 updateFitBoundMode={updateFitBoundMode}
                 fitBoundMode="transportEtaB"

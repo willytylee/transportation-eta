@@ -10,9 +10,11 @@ export const NearbyRouteList = () => {
   const { route } = useContext(EtaContext);
   const { location: currentLocation } = useLocation({ interval: 60000 });
 
-  const routeKeyList = Object.keys(gRouteList)
-    .filter((e) => basicFiltering(gRouteList[e]))
-    .filter((e) => route === gRouteList[e].route.substring(0, route.length));
+  const routeKeyList = Object.keys(gRouteList).filter(
+    (e) =>
+      basicFiltering(gRouteList[e]) &&
+      route === gRouteList[e].route.substring(0, route.length)
+  );
 
   return (
     <StopGroupList
