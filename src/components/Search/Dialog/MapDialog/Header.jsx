@@ -177,7 +177,7 @@ const MtrStopEtaRoot = styled("div")({
 
 const StopEtaRoot = styled("div")({
   display: "flex",
-  width: "100%",
+  fontSize: "13px",
   ".seq": {
     width: "8%",
   },
@@ -189,6 +189,7 @@ const StopEtaRoot = styled("div")({
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-end",
-    gap: "8px",
+    gap: "5px",
+    flexShrink: 0,
   },
 });

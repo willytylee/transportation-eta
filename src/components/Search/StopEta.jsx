@@ -12,7 +12,7 @@ export const StopEta = ({
       {name.zh}
     </div>
     <div className="etas">
-      <Eta seq={seq} routeObj={routeObj} slice={3} />
+      <Eta seq={seq} routeObj={routeObj} slice={2} />
     </div>
   </StopEtaRoot>
 );
