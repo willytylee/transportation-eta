@@ -74,7 +74,7 @@ export const DirectionItemAccordion = ({
         arriveTime={origArriveTime}
         isMultiRoute={isMultiRoute}
       />
-      <AccordionDetails>
+      <AccordionDetails className="AccordionDetails">
         <div className="detail">
           <Walking
             walkDistance={origWalkDistance}
@@ -176,8 +176,8 @@ const AccordionRoot = styled(Accordion)({
     },
   },
 
-  ".MuiAccordionDetails-root": {
-    padding: "8px 16px 8px",
+  ".AccordionDetails": {
+    padding: "8px",
     ".detail": {
       display: "flex",
       alignItems: "flex-start",

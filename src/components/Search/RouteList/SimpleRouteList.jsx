@@ -104,6 +104,7 @@ const SimpleRouteListRoot = styled("div")({
     display: "flex",
     alignItems: "center",
     gap: "4px",
+    flexShrink: 0,
     ".boldRoute": {
       fontWeight: 900,
     },

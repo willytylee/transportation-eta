@@ -75,7 +75,9 @@ export const DirectionSummary = ({
       if (eta.length > 0) {
         estimateTravelTimeStr = `${formatTime(timeWithoutWaiting)}`;
       } else {
-        estimateTravelTimeStr = `${formatTime(timeWithoutWaiting)} (沒有班次)`;
+        estimateTravelTimeStr = `${formatTime(
+          timeWithoutWaiting
+        )} \n (沒有班次)`;
       }
     }
   } else {
@@ -104,6 +106,8 @@ export const DirectionSummary = ({
 };
 
 const DirectionSummaryRoot = styled(AccordionSummary)({
+  paddingLeft: "8px",
+  paddingRight: "8px",
   ".left": {
     display: "flex",
     flexDirection: "column",
@@ -121,5 +125,10 @@ const DirectionSummaryRoot = styled(AccordionSummary)({
       alignItems: "center",
       ...companyColor,
     },
+  },
+  ".right": {
+    whiteSpace: "pre-line",
+    width: "80px",
+    flexShrink: 0,
   },
 });

@@ -25,7 +25,7 @@ export const StopGroupList = ({
 
   // Find out the route which contains the near by Stops
   routeKeyList?.forEach((e) => {
-    const routeData = gRouteList[e];
+    const routeData = { ...gRouteList[e] };
     const company = getFirstCoByRouteObj(routeData);
     const { stops } = routeData;
 

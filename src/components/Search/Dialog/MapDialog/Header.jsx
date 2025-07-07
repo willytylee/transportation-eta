@@ -106,6 +106,7 @@ const DialogTitleRoot = styled(DialogTitle)({
     },
     ".headerWrapper": {
       width: "100%",
+      fontWeight: "normal",
       ".coRoute": {
         display: "flex",
         alignItems: "center",
