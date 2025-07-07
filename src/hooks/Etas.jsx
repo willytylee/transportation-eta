@@ -37,13 +37,21 @@ export const useEtas = ({ seq, routeObj, interval }) => {
 export const useEtas2 = ({ seq, routeObj, interval }) => {
   const [eta, setEta] = useState([]);
   const [isEtaLoading, setIsEtaLoading] = useState(true);
-  const co = getFirstCoByRouteObj(routeObj);
 
   useEffect(() => {
+    // Single route, return no Etas for dest route
+    if (Object.keys(routeObj).length === 0) {
+      setEta([]);
+      setIsEtaLoading(false);
+      return;
+    }
+
     setIsEtaLoading(true);
+
     const intervalContent = () => {
       let _routeObj;
 
+      const co = getFirstCoByRouteObj(routeObj);
       if (co === "mtr") {
         _routeObj = {
           ...routeObj,
