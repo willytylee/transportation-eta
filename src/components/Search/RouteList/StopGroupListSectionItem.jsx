@@ -11,6 +11,7 @@ export const StopGroupListSectionItem = ({ eta, setNearbyDialogOpen }) => {
 
   const navigate = useNavigate();
   const routeObj = gRouteList[eta.routeKey];
+  const { route } = routeObj;
 
   const handleRouteItemOnClick = (routeKey, stopId) => {
     navigate("/search/" + routeKey + "/" + stopId, { replace: true });
@@ -21,22 +22,20 @@ export const StopGroupListSectionItem = ({ eta, setNearbyDialogOpen }) => {
 
   return (
     <StopGrouListSectionItemRoot
-      onClick={() => handleRouteItemOnClick(routeObj.routeKey, routeObj.stopId)}
+      onClick={() => handleRouteItemOnClick(eta.routeKey, eta.stopId)}
       eta={eta}
     >
       <div className="transportIconWrapper">
         <img
-          className={`transportIcon ${routeObj.route}`}
+          className={`transportIcon ${route}`}
           src={companyIconMap[getCoIconByRouteObj(routeObj)]}
           alt=""
         />
       </div>
       {routeObj.co[0] === "mtr" ? (
-        <div className={`route ${routeObj.route}`}>
-          {routeMap[routeObj.route]}
-        </div>
+        <div className={`route ${route}`}>{routeMap[route]}</div>
       ) : (
-        <div className="route">{routeObj.route} </div>
+        <div className="route">{route} </div>
       )}
       <div className="nearStopDest">
         <div>

@@ -132,7 +132,7 @@ const StopGrouListRoot = styled("div", {
   },
   ".routeList": {
     display: "flex",
-    padding: "4px",
+    padding: "4px 0px",
     flexDirection: "column",
     ".stop": {
       backgroundColor: `${primaryColor}26`,
