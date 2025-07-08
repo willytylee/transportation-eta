@@ -76,23 +76,26 @@ self.onmessage = function handleMessage(e) {
       const company = getFirstCoByRouteObj(routeObj);
 
       // Find the stopId that the route included
-      const matchedOrigins = routeObj.stops[company].filter((f) =>
+      const matchedOriginStops = routeObj.stops[company].filter((f) =>
         Object.keys(origins).includes(f)
       );
 
-      const matchedDestinations = routeObj.stops[company].filter((f) =>
+      const matchedDestinationStops = routeObj.stops[company].filter((f) =>
         Object.keys(destinations).includes(f)
       );
 
       // If this route contain both orig stop Id and dest stop Id,
       // that mean the direction can be done in one route.
-      if (matchedOrigins?.length > 0 && matchedDestinations?.length > 0) {
+      if (
+        matchedOriginStops?.length > 0 &&
+        matchedDestinationStops?.length > 0
+      ) {
         // There may have multi stops within the certain distance,
         // find the nearest stop in the route stop List
-        const origStopId = matchedOrigins.reduce((prev, curr) =>
+        const origStopId = matchedOriginStops.reduce((prev, curr) =>
           origins[prev] < origins[curr] ? prev : curr
         );
-        const destStopId = matchedDestinations.reduce((prev, curr) =>
+        const destStopId = matchedDestinationStops.reduce((prev, curr) =>
           destinations[prev] < destinations[curr] ? prev : curr
         );
 
@@ -152,11 +155,11 @@ self.onmessage = function handleMessage(e) {
     const origRoutes = routeList.filter((routeObj) => {
       // Find the stopId that the route included
       const company = getFirstCoByRouteObj(routeObj);
-      const matchedOrigins = routeObj.stops[company].filter((f) =>
+      const matchedOriginStops = routeObj.stops[company].filter((f) =>
         Object.keys(origins).includes(f)
       );
 
-      return matchedOrigins.some((_origin) =>
+      return matchedOriginStops.some((_origin) =>
         routeObj.stops[company].includes(_origin)
       );
     });
@@ -164,10 +167,10 @@ self.onmessage = function handleMessage(e) {
     // Find routes containing any destination stop
     const destRoutes = routeList.filter((routeObj) => {
       const company = getFirstCoByRouteObj(routeObj);
-      const matchedDestinations = routeObj.stops[company].filter((f) =>
+      const matchedDestinationStops = routeObj.stops[company].filter((f) =>
         Object.keys(destinations).includes(f)
       );
-      return matchedDestinations.some((dest) =>
+      return matchedDestinationStops.some((dest) =>
         routeObj.stops[company].includes(dest)
       );
     });
@@ -180,15 +183,15 @@ self.onmessage = function handleMessage(e) {
       const origCompany = getFirstCoByRouteObj(origRoute);
       const origRouteStops = origRoute.stops[origCompany];
 
-      // Find matched origin and destination stops
-      const matchedOrigins = Object.keys(origins).filter((_origin) =>
+      // Find matched origin stops
+      const matchedOriginStops = Object.keys(origins).filter((_origin) =>
         origRouteStops.includes(_origin)
       );
 
-      if (matchedOrigins.length > 0) {
+      if (matchedOriginStops.length > 0) {
         // There may have multi stops within the certain distance,
         // find the nearest stop in the route stop List
-        const origStopId = matchedOrigins.reduce((prev, curr) =>
+        const origStopId = matchedOriginStops.reduce((prev, curr) =>
           origins[prev] < origins[curr] ? prev : curr
         );
 
@@ -211,15 +214,15 @@ self.onmessage = function handleMessage(e) {
 
           const destCompany = getFirstCoByRouteObj(destRoute);
           const destRouteStops = destRoute.stops[destCompany];
-          // Find matched origin and destination stops
-          const matchedDestinations = Object.keys(destinations).filter((dest) =>
-            destRouteStops.includes(dest)
+          // Find matched destination stops
+          const matchedDestinationStops = Object.keys(destinations).filter(
+            (dest) => destRouteStops.includes(dest)
           );
 
-          if (matchedDestinations.length > 0) {
+          if (matchedDestinationStops.length > 0) {
             // There may have multi stops within the certain distance,
             // find the nearest stop in the route stop List
-            const destStopId = matchedDestinations.reduce((prev, curr) =>
+            const destStopId = matchedDestinationStops.reduce((prev, curr) =>
               destinations[prev] < destinations[curr] ? prev : curr
             );
 

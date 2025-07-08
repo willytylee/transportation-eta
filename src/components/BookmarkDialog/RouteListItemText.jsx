@@ -17,7 +17,7 @@ export const RouteListItemText = ({ e }) => {
     <ListItemTextRoot
       primary={
         co === "mtr" ? (
-          <span className={route}>{routeMap[route]}</span>
+          <span className={`route ${route}`}>{routeMap[route]}</span>
         ) : (
           <span className={routeKey ? co : "error"}>{route}</span>
         )
@@ -42,9 +42,11 @@ const ListItemTextRoot = styled(ListItemText)({
   alignItems: "center",
   ".MuiListItemText-primary": {
     ...companyColor,
-    ...mtrLineColor,
     width: "60px",
     fontSize: "14px",
+    ".route": {
+      ...mtrLineColor,
+    },
   },
   ".MuiListItemText-secondary": {
     fontSize: "12px",

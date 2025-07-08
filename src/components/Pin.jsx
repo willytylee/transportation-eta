@@ -12,7 +12,7 @@ import { EtaContext } from "../context/EtaContext";
 import { DbContext } from "../context/DbContext";
 import { getCoIconByRouteObj } from "../Utils/Utils";
 import { companyColor, companyIconMap } from "../constants/Constants";
-import { mtrLineColor, routeMap, mtrIconColor } from "../constants/Mtr";
+import { mtrLineColor, routeMap } from "../constants/Mtr";
 import { Eta } from "./Search/RouteList/Eta";
 
 export const Pin = () => {
@@ -100,7 +100,6 @@ const PinRoot = styled("div")({
     fontSize: "12px",
     gap: "2px",
     ...companyColor,
-    ...mtrLineColor,
     ".text": {
       display: "flex",
       flex: 1,
@@ -110,14 +109,14 @@ const PinRoot = styled("div")({
         alignItems: "center",
         gap: "8px",
         paddingBottom: "4px",
-        ...mtrIconColor,
         ".transportIcon": {
           height: "16px",
+          ...mtrLineColor,
         },
         ".route": {
           fontSize: "16px",
-          width: "10%",
           fontWeight: 900,
+          ...mtrLineColor,
         },
         ".path": {
           display: "flex",

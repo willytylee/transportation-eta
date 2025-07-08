@@ -5,6 +5,7 @@ import kmb_nwfb from "../assets/transports/kmb_nwfb.png";
 import kmb from "../assets/transports/kmb.png";
 import nwfb from "../assets/transports/nwfb.png";
 import mtr from "../assets/transports/mtr.png";
+import nlb from "../assets/transports/nlb.png";
 
 import { mtrLineColor } from "./Mtr";
 
@@ -25,6 +26,7 @@ export const companyIconMap = {
   kmb_nwfb,
   mtr,
   gmb,
+  nlb,
 };
 
 export const companyColor = {
@@ -45,8 +47,8 @@ export const companyColor = {
     stroke: "#1c7136",
   },
   ".nlb": {
-    color: "#106b78",
-    stroke: "#106b78",
+    color: "#005e87",
+    stroke: "#005e87",
   },
   ".mtr": {
     color: "#767676",

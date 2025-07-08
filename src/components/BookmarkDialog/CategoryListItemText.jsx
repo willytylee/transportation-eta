@@ -3,7 +3,7 @@ import { styled } from "@mui/material/";
 import { ListItemText } from "@mui/material/";
 import { PriorityHigh as PriorityHighIcon } from "@mui/icons-material";
 import { companyColor } from "../../constants/Constants";
-import { mtrLineColor, stationMap } from "../../constants/Mtr";
+import { mtrLineColor, routeMap } from "../../constants/Mtr";
 import { DbContext } from "../../context/DbContext";
 import { getFirstCoByRouteObj } from "../../Utils/Utils";
 
@@ -24,9 +24,9 @@ export const CategoryListItemText = ({ e }) => {
 
             return (
               <span key={j} className="routeStopWrapper">
-                <span className="route">
+                <span className="routeWrapper">
                   {co === "mtr" ? (
-                    <span className={route}>{stationMap[f.stopId]}</span>
+                    <span className={`route ${route}`}>{routeMap[route]}</span>
                   ) : routeKey ? (
                     <span className={co}>{route}</span>
                   ) : (
@@ -60,11 +60,13 @@ const ListItemTextRoot = styled(ListItemText)({
     listStyleType: "disc",
     paddingLeft: "6px",
     ...companyColor,
-    ...mtrLineColor,
     ".routeStopWrapper": {
       display: "flex",
-      ".route": {
+      ".routeWrapper": {
         width: "40px",
+        ".route": {
+          ...mtrLineColor,
+        },
       },
     },
   },

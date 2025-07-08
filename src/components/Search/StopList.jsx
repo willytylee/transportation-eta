@@ -352,7 +352,7 @@ const MtrStopEtaRoot = styled("div")({
     width: "25px",
   },
   ".stop": {
-    width: "50px",
+    width: "65px",
   },
   ".noEta": {
     textAlign: "center",

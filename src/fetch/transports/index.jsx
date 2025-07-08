@@ -2,6 +2,7 @@ import { sortEtaObj } from "../../Utils/Utils";
 import { fetchGmbEtas } from "./Gmb";
 import { fetchKmbEtas } from "./Kmb";
 import { fetchMtrEtas } from "./Mtr";
+import { fetchNlbEtas } from "./Nlb";
 import { fetchNwfbCtbEtas } from "./NwfbCtb";
 
 export const fetchEtas = async ({
@@ -14,6 +15,7 @@ export const fetchEtas = async ({
   seq,
   stopId,
   stops,
+  nlbId,
 }) => {
   try {
     if (!error) {
@@ -47,6 +49,13 @@ export const fetchEtas = async ({
                 co: company_id,
                 route,
                 seq,
+                stopId: _stopId,
+              })
+            );
+          } else if (company_id === "nlb") {
+            etas = etas.concat(
+              await fetchNlbEtas({
+                nlbId,
                 stopId: _stopId,
               })
             );

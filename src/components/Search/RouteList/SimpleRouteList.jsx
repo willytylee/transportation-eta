@@ -4,12 +4,7 @@ import { styled } from "@mui/material";
 import { getCoIconByRouteObj } from "../../../Utils/Utils";
 import { companyIconMap } from "../../../constants/Constants";
 import { EtaContext } from "../../../context/EtaContext";
-import {
-  etaExcluded,
-  mtrIconColor,
-  mtrLineColor,
-  routeMap,
-} from "../../../constants/Mtr";
+import { etaExcluded, mtrLineColor, routeMap } from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
 
 export const SimpleRouteList = ({ mode, routeKeyList }) => {
@@ -65,7 +60,7 @@ export const SimpleRouteList = ({ mode, routeKeyList }) => {
         <div className="companyOrigDest">
           {isMtr && (
             <div className="routeWrapper">
-              <div className={_route}>{routeMap[_route]}</div>
+              <div className={`route ${_route}`}>{routeMap[_route]}</div>
             </div>
           )}
           <div className="origDest">
@@ -110,9 +105,9 @@ const SimpleRouteListRoot = styled("div")({
     },
     ".transportIconWrapper": {
       display: "flex",
-      ...mtrIconColor,
       ".transportIcon": {
         height: "18px",
+        ...mtrLineColor,
       },
     },
   },
@@ -121,7 +116,9 @@ const SimpleRouteListRoot = styled("div")({
     display: "flex",
     flexDirection: "column",
     ".routeWrapper": {
-      ...mtrLineColor,
+      ".route": {
+        ...mtrLineColor,
+      },
     },
     ".origDest": {
       ".dest": {

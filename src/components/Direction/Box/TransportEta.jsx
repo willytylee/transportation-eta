@@ -6,7 +6,7 @@ import {
   etaTimeConverter,
 } from "../../../Utils/Utils";
 import { routeMap } from "../../../constants/Mtr";
-import { mtrIconColor } from "../../../constants/Mtr";
+import { mtrLineColor } from "../../../constants/Mtr";
 
 export const TransportEta = ({
   eta,
@@ -83,16 +83,16 @@ const TransportEtaRoot = styled(Button)({
       alignItems: "center",
       ".transportIconWrapper": {
         display: "flex",
-        ...mtrIconColor,
         ".transportIcon": {
           height: "14px",
+          ...mtrLineColor,
         },
       },
     },
     ".arriveTimeMsg": {
       display: "flex",
       alignItems: "center",
-      ...mtrIconColor,
+      ...mtrLineColor,
       ".route": {
         fontWeight: 900,
       },

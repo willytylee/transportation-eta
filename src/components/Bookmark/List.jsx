@@ -99,9 +99,9 @@ export const List = ({ etaResult, longList }) => {
           onChange={handleChange(`panel${i}`)}
         >
           <AccordionSummary className="accordionSummary">
-            <div className="route">
+            <div className="routeWrapper">
               {e.co === "mtr" ? (
-                <span className={`${e.route}`}>{routeMap[e?.route]}</span>
+                <span className={`route ${e.route}`}>{routeMap[e?.route]}</span>
               ) : (
                 <>
                   {e.co === "error" && <PriorityHighIcon fontSize="small" />}
@@ -174,13 +174,15 @@ const ListView = styled("div")({
         width: "100%",
         alignItems: "center",
         margin: 0,
-        ".route": {
+        ".routeWrapper": {
           ...companyColor,
-          ...mtrLineColor,
           width: "13%",
           fontWeight: "900",
           display: "flex",
           alignItems: "center",
+          ".route": {
+            ...mtrLineColor,
+          },
         },
         ".stopName": {
           width: "45%",

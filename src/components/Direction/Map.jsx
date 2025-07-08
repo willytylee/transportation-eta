@@ -478,11 +478,10 @@ export const Map = ({ mapCollapse }) => {
               {/* Line of Transport A*/}
               <Polyline
                 pathOptions={{
-                  color: `${
+                  className: `route ${
                     origRouteObj.co[0] === "mtr"
-                      ? mtrLineColor["." + origRouteObj.route].color
-                      : companyColor["." + getFirstCoByRouteObj(origRouteObj)]
-                          .color
+                      ? origRouteObj.route
+                      : getFirstCoByRouteObj(origRouteObj)
                   }`,
                   opacity: "0.75",
                 }}
@@ -493,11 +492,10 @@ export const Map = ({ mapCollapse }) => {
               {isMultiRoute && (
                 <Polyline
                   pathOptions={{
-                    color: `${
+                    className: `route ${
                       destRouteObj.co[0] === "mtr"
-                        ? mtrLineColor["." + destRouteObj.route].color
-                        : companyColor["." + getFirstCoByRouteObj(destRouteObj)]
-                            .color
+                        ? destRouteObj.route
+                        : getFirstCoByRouteObj(destRouteObj)
                     }`,
                     opacity: "0.75",
                   }}
@@ -589,8 +587,8 @@ const MapContainerRoot = styled(MapContainer)({
   },
   ".leaflet-map-pane": {
     ".leaflet-overlay-pane": {
-      ".leaflet-interactive": {
-        ...companyColor,
+      ...companyColor,
+      ".route": {
         ...mtrLineColor,
       },
     },

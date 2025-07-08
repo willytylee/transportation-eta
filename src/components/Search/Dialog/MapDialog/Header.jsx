@@ -5,7 +5,7 @@ import { DialogTitle, Grid, IconButton, styled } from "@mui/material";
 import { getCoIconByRouteObj } from "../../../../Utils/Utils";
 import { companyIconMap } from "../../../../constants/Constants";
 import { EtaContext } from "../../../../context/EtaContext";
-import { etaExcluded, mtrIconColor, routeMap } from "../../../../constants/Mtr";
+import { etaExcluded, mtrLineColor, routeMap } from "../../../../constants/Mtr";
 import { StopEta } from "../../StopEta";
 import { MtrStopEta } from "../../MtrStopEta";
 import { DbContext } from "../../../../context/DbContext";
@@ -39,7 +39,7 @@ export const Header = ({ handleDialogOnClose }) => {
             </div>
             {routeData.co[0] === "mtr" && (
               <div className="routeWrapper">
-                <div className={routeData.route}>
+                <div className={`route ${routeData.route}`}>
                   {routeMap[routeData.route]}
                 </div>
               </div>
@@ -112,19 +112,21 @@ const DialogTitleRoot = styled(DialogTitle)({
         alignItems: "center",
         ".transportIconWrapper": {
           display: "flex",
-          ...mtrIconColor,
           ".transportIcon": {
             height: "18px",
+            ...mtrLineColor,
           },
         },
         ".route": {
           fontWeight: "900",
+          ...mtrLineColor,
         },
       },
       ".destSpecial": {
+        fontSize: "13px",
         ".dest": {
           fontWeight: 900,
-          fontSize: "16px",
+          fontSize: "15px",
         },
         ".special": {
           fontSize: "12px",

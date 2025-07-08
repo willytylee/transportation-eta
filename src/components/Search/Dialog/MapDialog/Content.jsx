@@ -23,7 +23,7 @@ import { mtrLineColor } from "../../../../constants/Mtr";
 import { DbContext } from "../../../../context/DbContext";
 import { useLocation } from "../../../../hooks/Location";
 import currentLocationIcon from "../../../../assets/icons/currentLocation.png";
-import markerIcon from "../../../../assets/icons/marker-icon-2x.png";
+import stopIconPath from "../../../../assets/icons/stop.png";
 
 export const Content = () => {
   const { routeKey } = useParams();
@@ -86,14 +86,14 @@ export const Content = () => {
     const stopIcon = useMemo(
       () =>
         new L.Icon({
-          iconUrl: markerIcon,
-          iconRetinaUrl: markerIcon,
-          iconAnchor: [20, 40],
+          iconUrl: stopIconPath,
+          iconRetinaUrl: stopIconPath,
+          iconAnchor: [4, 6],
           popupAnchor: null,
           shadowUrl: null,
           shadowSize: null,
           shadowAnchor: null,
-          iconSize: new L.Point(40, 40),
+          iconSize: new L.Point(10, 10),
           className: `currStopMarker ${i === mapStopIdx && "selected"} ${
             mapStopIdx > -1 && i > mapStopIdx && "forward"
           }`,
@@ -270,7 +270,7 @@ export const Content = () => {
 
       <Polyline
         pathOptions={{
-          className: `${
+          className: `route ${
             routeData.co[0] === "mtr"
               ? routeData.route
               : getFirstCoByRouteObj(routeData)
@@ -300,7 +300,9 @@ const MapContainerRoot = styled(MapContainer)({
   ".leaflet-map-pane": {
     ".leaflet-overlay-pane": {
       ...companyColor,
-      ...mtrLineColor,
+      ".route": {
+        ...mtrLineColor,
+      },
     },
   },
   ".MuiAvatar-root": {

@@ -19,6 +19,7 @@ export const stationMap = {
   HOK: "香港",
   SUN: "欣澳",
   DIS: "迪士尼",
+  LOW: "羅湖",
   SHS: "上水",
   FAN: "粉嶺",
   TWO: "太和",
@@ -32,6 +33,7 @@ export const stationMap = {
   HUH: "紅磡",
   EXC: "會展",
   ADM: "金鐘",
+  LMC: "落馬洲",
   CHW: "柴灣",
   HFC: "杏花邨",
   SKW: "筲箕灣",
@@ -88,6 +90,7 @@ export const stationMap = {
   SIH: "兆康",
   TUM: "屯門",
   TUC: "東涌",
+  LAK: "茘景",
   OLY: "奧運",
   POA: "寶琳",
   HAH: "坑口",
@@ -97,6 +100,7 @@ export const stationMap = {
   TWH: "大窩口",
   KWH: "葵興",
   KWF: "葵芳",
+  LCK: "茘枝角",
   CSW: "長沙灣",
   SSP: "深水埗",
   JOR: "佐敦",
@@ -107,89 +111,66 @@ export const stationMap = {
   SOH: "海怡半島",
 };
 
-export const mtrIconColor = {
-  ".TML": {
+export const mtrLineColor = {
+  "&.TML": {
+    color: "black",
+    stroke: "black",
     filter:
       "invert(12%) sepia(93%) saturate(6476%) hue-rotate(42deg) brightness(95%) contrast(104%)",
   },
-  ".AEL": {
+  "&.AEL": {
+    color: "black",
+    stroke: "black",
     filter:
       "invert(34%) sepia(74%) saturate(2374%) hue-rotate(159deg) brightness(86%) contrast(103%)",
   },
-  ".DRL": {
+  "&.DRL": {
+    color: "black",
+    stroke: "black",
     filter:
       "invert(65%) sepia(16%) saturate(6001%) hue-rotate(297deg) brightness(100%) contrast(85%)",
   },
-  ".EAL": {
+  "&.EAL": {
+    color: "black",
+    stroke: "black",
     filter:
       "invert(61%) sepia(77%) saturate(314%) hue-rotate(160deg) brightness(94%) contrast(93%)",
   },
-  ".ISL": {
+  "&.ISL": {
+    color: "black",
+    stroke: "black",
     filter:
       "invert(34%) sepia(85%) saturate(1179%) hue-rotate(177deg) brightness(86%) contrast(106%)",
   },
-  ".KTL": {
+  "&.KTL": {
+    color: "black",
+    stroke: "black",
     filter:
       "invert(40%) sepia(98%) saturate(1584%) hue-rotate(117deg) brightness(86%) contrast(101%)",
   },
-  ".SIL": {
+  "&.SIL": {
+    color: "black",
+    stroke: "black",
     filter:
       "invert(89%) sepia(80%) saturate(5922%) hue-rotate(3deg) brightness(83%) contrast(99%)",
   },
-  ".TCL": {
+  "&.TCL": {
+    color: "black",
+    stroke: "black",
     filter:
       "invert(71%) sepia(49%) saturate(2097%) hue-rotate(339deg) brightness(99%) contrast(92%)",
   },
-  ".TKL": {
+  "&.TKL": {
+    color: "black",
+    stroke: "black",
     filter:
       "invert(28%) sepia(26%) saturate(2271%) hue-rotate(249deg) brightness(96%) contrast(89%)",
   },
-  ".TWL": {
+  "&.TWL": {
+    color: "black",
+    stroke: "black",
     filter:
       "invert(34%) sepia(100%) saturate(7384%) hue-rotate(349deg) brightness(85%) contrast(116%)",
-  },
-};
-
-export const mtrLineColor = {
-  ".TML": {
-    color: "#9c2e00",
-    stroke: "#9c2e00",
-  },
-  ".AEL": {
-    color: "#00888e",
-    stroke: "#00888e",
-  },
-  ".DRL": {
-    color: "#eb6ea5",
-    stroke: "#eb6ea5",
-  },
-  ".EAL": {
-    color: "#5eb7e8",
-    stroke: "#5eb7e8",
-  },
-  ".ISL": {
-    color: "#0075c3",
-    stroke: "#0075c3",
-  },
-  ".KTL": {
-    color: "#00a040",
-    stroke: "#00a040",
-  },
-  ".SIL": {
-    color: "#cbd401",
-    stroke: "#cbd401",
-  },
-  ".TCL": {
-    color: "#f3992d",
-    stroke: "#f3992d",
-  },
-  ".TKL": {
-    color: "#7e3c93",
-    stroke: "#7e3c93",
-  },
-  ".TWL": {
-    color: "#e70011",
-    stroke: "#e70011",
   },
 };
 

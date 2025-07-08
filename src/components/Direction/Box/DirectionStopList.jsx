@@ -6,7 +6,7 @@ import {
 } from "@mui/icons-material";
 import { getFirstCoByRouteObj } from "../../../Utils/Utils";
 import { DbContext } from "../../../context/DbContext";
-import { mtrIconColor } from "../../../constants/Mtr";
+import { mtrLineColor } from "../../../constants/Mtr";
 import { companyColor } from "../../../constants/Constants";
 
 export const DirectionStopList = ({
@@ -53,7 +53,7 @@ export const DirectionStopList = ({
             <div
               className={
                 routeObj.co[0] === "mtr"
-                  ? `${routeObj.route}`
+                  ? `stop ${routeObj.route}`
                   : `${getFirstCoByRouteObj(routeObj)}`
               }
             >
@@ -97,7 +97,9 @@ const DirectionStopListRoot = styled(Button)({
       background: "unset",
       fontSize: "12px",
       ...companyColor,
-      ...mtrIconColor,
+      ".stop": {
+        ...mtrLineColor,
+      },
     },
     ".stopList": {
       display: "flex",

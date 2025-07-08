@@ -8,12 +8,7 @@ import {
 } from "../../../Utils/Utils";
 import { EtaContext } from "../../../context/EtaContext";
 import { companyIconMap } from "../../../constants/Constants";
-import {
-  etaExcluded,
-  mtrIconColor,
-  mtrLineColor,
-  routeMap,
-} from "../../../constants/Mtr";
+import { etaExcluded, mtrLineColor, routeMap } from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
 
 export const RouteList = () => {
@@ -99,7 +94,7 @@ export const RouteList = () => {
                 </div>
                 {routeData.co[0] === "mtr" && (
                   <div className="routeWrapper">
-                    <div className={routeData.route}>
+                    <div className={`route ${routeData.route}`}>
                       {routeMap[routeData.route]}
                     </div>
                   </div>
@@ -147,23 +142,23 @@ const RouteListRoot = styled("div")({
       "&.matched": {
         backgroundColor: "#ffffe5",
       },
-      ".route": {
-        width: "10%",
-        fontWeight: "900",
-      },
       ".companyOrigDest": {
         gap: "4px",
         alignItems: "center",
         width: "100%",
         display: "flex",
         ".routeWrapper": {
-          ...mtrLineColor,
+          width: "10%",
+          ".route": {
+            fontWeight: "900",
+            ...mtrLineColor,
+          },
         },
         ".transportIconWrapper": {
           display: "flex",
-          ...mtrIconColor,
           ".transportIcon": {
             height: "18px",
+            ...mtrLineColor,
           },
         },
         ".dest": {

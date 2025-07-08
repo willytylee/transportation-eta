@@ -129,6 +129,7 @@ export const basicFiltering = (e) =>
   e.co.includes("nwfb") ||
   e.co.includes("ctb") ||
   e.co.includes("gmb") ||
+  e.co.includes("nlb") ||
   e.co.includes("mtr");
 
 export const sortByCompany = (routeObjA, routeObjB) => {

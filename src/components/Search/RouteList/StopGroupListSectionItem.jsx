@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material";
 import { getCoIconByRouteObj, etaTimeConverter } from "../../../Utils/Utils";
 import { companyIconMap } from "../../../constants/Constants";
-import { mtrIconColor, routeMap } from "../../../constants/Mtr";
+import { mtrLineColor, routeMap } from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
 
 export const StopGroupListSectionItem = ({ eta, setNearbyDialogOpen }) => {
@@ -69,14 +69,15 @@ const StopGrouListSectionItemRoot = styled("div", {
   ".transportIconWrapper": {
     width: "10%",
     display: "flex",
-    ...mtrIconColor,
     ".transportIcon": {
       height: "18px",
+      ...mtrLineColor,
     },
   },
   ".route": {
     fontWeight: "900",
     width: "12.5%",
+    ...mtrLineColor,
   },
   ".nearStopDest": {
     width: "57.5%",
