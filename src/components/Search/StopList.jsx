@@ -33,7 +33,6 @@ export const StopList = () => {
   const { gStopList, gRouteList } = useContext(DbContext);
   const { location: currentLocation } = useLocation({ interval: 60000 });
   const [stopList, setStopList] = useState([]);
-  const [expanded, setExpanded] = useState(false);
   const [nearbyDialogOpen, setNearbyDialogOpen] = useState(false);
   const [mtrRouteOptionDialogOpen, setMtrRouteOptionDialogOpen] =
     useState(false);
@@ -49,7 +48,7 @@ export const StopList = () => {
     updatePinList,
   } = useContext(EtaContext);
 
-  const stopListRef = useRef(null);
+  const stopListRef = useRef([]);
 
   const handlePinIconOnClick = (seq, _routeKey, _stopId) => {
     const isInList =
@@ -84,14 +83,17 @@ export const StopList = () => {
     }
   };
 
-  const handleAccordionChange =
-    ({ _stopId, mapLocation, mapStopIdx }) =>
-    (e, isExpanded) => {
+  const handleAccordionOnChange = ({ _stopId, mapLocation, mapStopIdx }) => {
+    if (stopId && stopId === _stopId) {
       navigate("/search/" + routeKey, { replace: true });
-      updateMapLocation(mapLocation);
-      updateMapStopIdx(mapStopIdx);
-      setExpanded(isExpanded ? _stopId : false);
-    };
+    } else {
+      navigate("/search/" + routeKey + "/" + _stopId, { replace: true });
+    }
+
+    updateMapLocation(mapLocation);
+    updateMapStopIdx(mapStopIdx);
+    // setExpanded(isExpanded ? _stopId : false);
+  };
 
   const routeData = routeKey ? gRouteList[routeKey] : [];
 
@@ -106,35 +108,37 @@ export const StopList = () => {
       setStopList(expandStopIdArr.map((e) => ({ ...gStopList[e], stopId: e })));
 
       if (currentLocation.lat !== 0 && currentLocation.lng !== 0) {
-        updateNearestStopId(
-          expandStopIdArr.reduce((prev, curr) => {
-            const prevDistance = getDistance(
-              {
-                latitude: gStopList[prev].location.lat,
-                longitude: gStopList[prev].location.lng,
-              },
-              {
-                latitude: currentLocation.lat,
-                longitude: currentLocation.lng,
-              }
-            );
-            const currDistance = getDistance(
-              {
-                latitude: gStopList[curr].location.lat,
-                longitude: gStopList[curr].location.lng,
-              },
-              {
-                latitude: currentLocation.lat,
-                longitude: currentLocation.lng,
-              }
-            );
-
-            if (prevDistance < currDistance) {
-              return prev;
+        const resultStopId = expandStopIdArr.reduce((prev, curr) => {
+          const prevDistance = getDistance(
+            {
+              latitude: gStopList[prev].location.lat,
+              longitude: gStopList[prev].location.lng,
+            },
+            {
+              latitude: currentLocation.lat,
+              longitude: currentLocation.lng,
             }
-            return curr;
-          })
-        );
+          );
+          const currDistance = getDistance(
+            {
+              latitude: gStopList[curr].location.lat,
+              longitude: gStopList[curr].location.lng,
+            },
+            {
+              latitude: currentLocation.lat,
+              longitude: currentLocation.lng,
+            }
+          );
+
+          if (prevDistance < currDistance) {
+            return prev;
+          }
+          return curr;
+        });
+
+        updateMapStopIdx(expandStopIdArr.findIndex((e) => e === resultStopId));
+        // updateMapLocation(gStopList[resultStopId].location);
+        updateNearestStopId(resultStopId);
       } else {
         updateNearestStopId("");
       }
@@ -143,10 +147,20 @@ export const StopList = () => {
 
   useEffect(() => {
     if (stopList.length > 0) {
-      stopListRef.current?.scrollIntoView({
+      const idx = stopList.findIndex((e) => e.stopId === stopId);
+      stopListRef.current[idx]?.scrollIntoView({
         behavior: "smooth",
         block: "center",
-        inline: "center",
+      });
+    }
+  }, [stopId]);
+
+  useEffect(() => {
+    if (stopList.length > 0) {
+      const idx = stopList.findIndex((e) => e.stopId === nearestStopId);
+      stopListRef.current[idx]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
       });
     }
   }, [nearestStopId]);
@@ -166,19 +180,22 @@ export const StopList = () => {
 
             return (
               <Accordion
-                expanded={stopId === e?.stopId || expanded === e?.stopId}
-                onChange={handleAccordionChange({
-                  _stopId: e.stopId,
-                  mapLocation: { lat, lng },
-                  mapStopIdx: i,
-                })}
+                expanded={stopId === e?.stopId}
+                onChange={() =>
+                  handleAccordionOnChange({
+                    _stopId: e.stopId,
+                    mapLocation: { lat, lng },
+                    mapStopIdx: i,
+                  })
+                }
                 key={i}
                 className={isNearestStop ? "highlighted" : ""}
-                ref={
-                  stopId === e?.stopId || (!stopId && isNearestStop)
-                    ? stopListRef
-                    : null
-                }
+                // ref={
+                //   stopId === e?.stopId || (!stopId && isNearestStop)
+                //     ? stopListRef
+                //     : null
+                // }
+                ref={(_e) => (stopListRef.current[i] = _e)}
               >
                 <AccordionSummary className="accordionSummary">
                   {routeData.co[0] === "mtr" ? (
@@ -260,6 +277,7 @@ export const StopList = () => {
             );
           })}
       </StopListRoot>
+
       <BookmarkDialog
         bookmarkDialogMode={bookmarkDialogMode}
         setBookmarkDialogMode={setBookmarkDialogMode}
@@ -331,7 +349,7 @@ const MtrStopEtaRoot = styled("div")({
     width: "25px",
   },
   ".stop": {
-    width: "65px",
+    width: "50px",
   },
   ".noEta": {
     textAlign: "center",
