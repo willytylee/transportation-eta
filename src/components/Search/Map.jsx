@@ -226,10 +226,10 @@ export const Map = () => {
 
       <Polyline
         pathOptions={{
-          className: `route ${
+          color: `${
             routeData.co[0] === "mtr"
-              ? routeData.route
-              : getFirstCoByRouteObj(routeData)
+              ? mtrLineColor["." + routeData.route].color
+              : companyColor["." + getFirstCoByRouteObj(routeData)].color
           }`,
           opacity: "0.75",
         }}

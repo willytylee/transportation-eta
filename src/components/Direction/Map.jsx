@@ -478,11 +478,13 @@ export const Map = ({ mapCollapse }) => {
               {/* Line of Transport A*/}
               <Polyline
                 pathOptions={{
-                  className: `route ${
+                  color: `${
                     origRouteObj.co[0] === "mtr"
-                      ? origRouteObj.route
-                      : getFirstCoByRouteObj(origRouteObj)
+                      ? mtrLineColor["." + origRouteObj.route].color
+                      : companyColor["." + getFirstCoByRouteObj(origRouteObj)]
+                          .color
                   }`,
+
                   opacity: "0.75",
                 }}
                 positions={routePointsA}
@@ -492,10 +494,11 @@ export const Map = ({ mapCollapse }) => {
               {isMultiRoute && (
                 <Polyline
                   pathOptions={{
-                    className: `route ${
+                    color: `${
                       destRouteObj.co[0] === "mtr"
-                        ? destRouteObj.route
-                        : getFirstCoByRouteObj(destRouteObj)
+                        ? mtrLineColor["." + destRouteObj.route].color
+                        : companyColor["." + getFirstCoByRouteObj(destRouteObj)]
+                            .color
                     }`,
                     opacity: "0.75",
                   }}
