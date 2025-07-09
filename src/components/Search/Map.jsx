@@ -245,7 +245,7 @@ export const Map = () => {
 
 const MapContainerRoot = styled(MapContainer)({
   width: "100%",
-  height: "35vh",
+  height: "30vh",
   ".leaflet-control-container": {
     ".leaflet-top, .leaflet-bottom": {
       willChange: "transform",
