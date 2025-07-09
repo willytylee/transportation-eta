@@ -228,7 +228,7 @@ export const Map = () => {
         pathOptions={{
           color: `${
             routeData.co[0] === "mtr"
-              ? mtrLineColor["." + routeData.route].color
+              ? mtrLineColor["&." + routeData.route].color
               : companyColor["." + getFirstCoByRouteObj(routeData)].color
           }`,
           opacity: "0.75",
