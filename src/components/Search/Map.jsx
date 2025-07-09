@@ -1,54 +1,42 @@
 import { useContext, useMemo, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import L from "leaflet";
 import {
-  ArrowForwardIos as ArrowForwardIosIcon,
-  ArrowBackIosNew as ArrowBackIosNewIcon,
   PersonPinCircle as PersonPinCircleIcon,
-  Route as RouteIcon,
+  Polyline as PolylineIcon,
   Navigation as NavigationIcon,
 } from "@mui/icons-material";
 import { IconButton, styled, Avatar } from "@mui/material";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  useMap,
-  Polyline,
-} from "react-leaflet";
-import { getFirstCoByRouteObj } from "../../../../Utils/Utils";
-import { companyColor } from "../../../../constants/Constants";
-import { EtaContext } from "../../../../context/EtaContext";
-import { mtrLineColor } from "../../../../constants/Mtr";
-import { DbContext } from "../../../../context/DbContext";
-import { useLocation } from "../../../../hooks/Location";
-import currentLocationIcon from "../../../../assets/icons/currentLocation.png";
-import stopIconPath from "../../../../assets/icons/stop.png";
+import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
+import { getFirstCoByRouteObj } from "../../Utils/Utils";
+import { companyColor } from "../../constants/Constants";
+import { EtaContext } from "../../context/EtaContext";
+import { mtrLineColor } from "../../constants/Mtr";
+import { DbContext } from "../../context/DbContext";
+import { useLocation } from "../../hooks/Location";
+import stopIconPath from "../../assets/icons/stop.png";
+import currentLocationIcon from "../../assets/icons/currentLocation.png";
 
-export const Content = () => {
-  const { routeKey } = useParams();
-  const { location: currentLocation } = useLocation({ interval: 1000 });
+export const Map = () => {
+  const { routeKey, stopId } = useParams();
+  const navigate = useNavigate();
+  const { location: currentLocation } = useLocation({ interval: 200000 });
   const { nearestStopId, mapStopIdx, mapLocation, updateMapStopIdx } =
     useContext(EtaContext);
   const { gRouteList, gStopList } = useContext(DbContext);
   const [navBtnType, setNavBtnType] = useState("normal");
+  const [map, setMap] = useState(null);
 
   const routeData = routeKey ? gRouteList[routeKey] : [];
 
   const currRouteStopIdList = useMemo(
-    () => routeData.stops && routeData.stops[Object.keys(routeData.stops)[0]],
+    () => routeData.stops && routeData.stops[getFirstCoByRouteObj(routeData)],
     [routeKey]
   );
 
   const nearestStopIdx = currRouteStopIdList?.findIndex(
     (e) => e === nearestStopId
   );
-
-  useEffect(() => {
-    if (!mapLocation) {
-      updateMapStopIdx(nearestStopIdx);
-    }
-  }, []);
 
   const currRouteStopList = useMemo(
     () => currRouteStopIdList?.map((e) => gStopList[e]),
@@ -65,10 +53,26 @@ export const Content = () => {
     location = { lat: 0, lng: 0 };
   }
 
+  useEffect(() => {
+    if (map && mapLocation) {
+      map.panTo([mapLocation.lat, mapLocation.lng]);
+    }
+  }, [mapLocation]);
+
   const routeLine = currRouteStopList?.map((e) => [
     e.location.lat,
     e.location.lng,
   ]);
+
+  useEffect(() => {
+    if (map && routeKey && routeLine) {
+      map.flyToBounds(routeLine, { duration: 0.5 });
+    }
+  }, [map, routeKey]);
+
+  useEffect(() => {
+    setNavBtnType("normal");
+  }, [stopId]);
 
   const currLocationIcon = new L.Icon({
     iconUrl: currentLocationIcon,
@@ -82,7 +86,7 @@ export const Content = () => {
     className: "currLocationMarker",
   });
 
-  const CustomMarker = ({ stop, i }) => {
+  const CustomMarker = ({ stop, _stopId, i }) => {
     const stopIcon = useMemo(
       () =>
         new L.Icon({
@@ -101,12 +105,15 @@ export const Content = () => {
       []
     );
 
-    const map = useMap();
+    // const map = useMap();
 
     const eventHandlers = useMemo(
       () => ({
         click: () => {
           updateMapStopIdx(i);
+          navigate("/search/" + routeKey + "/" + _stopId, {
+            replace: true,
+          });
           map.panTo([stop.location.lat, stop.location.lng], {
             animate: true,
             duration: 0.5,
@@ -126,59 +133,8 @@ export const Content = () => {
     );
   };
 
-  const PrevStopBtn = () => {
-    const map = useMap();
-
-    const handleIconOnClick = () => {
-      const prevStop = currRouteStopList[mapStopIdx - 1];
-      map.panTo([prevStop.location.lat, prevStop.location.lng], {
-        animate: true,
-        duration: 0.5,
-      });
-      updateMapStopIdx(mapStopIdx - 1);
-      setNavBtnType("normal");
-    };
-
-    return (
-      <Avatar className={`prevBtnAvatar ${mapStopIdx === 0 ? "disabled" : ""}`}>
-        <IconButton disabled={mapStopIdx === 0} onClick={handleIconOnClick}>
-          <ArrowBackIosNewIcon sx={{ fontSize: 15 }} />
-        </IconButton>
-      </Avatar>
-    );
-  };
-
-  const NextStopBtn = () => {
-    const map = useMap();
-
-    const handleIconOnClick = () => {
-      const nextStop = currRouteStopList[mapStopIdx + 1];
-      map.panTo([nextStop.location.lat, nextStop.location.lng], {
-        animate: true,
-        duration: 0.5,
-      });
-      updateMapStopIdx(mapStopIdx + 1);
-      setNavBtnType("normal");
-    };
-
-    return (
-      <Avatar
-        className={`nextBtnAvatar ${
-          mapStopIdx === currRouteStopIdList.length - 1 ? "disabled" : ""
-        }`}
-      >
-        <IconButton
-          disabled={mapStopIdx === currRouteStopIdList.length - 1}
-          onClick={handleIconOnClick}
-        >
-          <ArrowForwardIosIcon sx={{ fontSize: 15 }} />
-        </IconButton>
-      </Avatar>
-    );
-  };
-
   const RouteBoundBtn = () => {
-    const map = useMap();
+    // const map = useMap();
 
     const handleIconOnClick = () => {
       map.flyToBounds(routeLine, { duration: 1 });
@@ -186,16 +142,16 @@ export const Content = () => {
     };
 
     return (
-      <Avatar className="routeBoundBtnAvatar">
+      <Avatar className="polylineBtnAvatar">
         <IconButton onClick={handleIconOnClick}>
-          <RouteIcon />
+          <PolylineIcon />
         </IconButton>
       </Avatar>
     );
   };
 
   const NearestStopBtn = () => {
-    const map = useMap();
+    // const map = useMap();
 
     const handleIconOnClick = () => {
       const nearestStop = currRouteStopList[nearestStopIdx];
@@ -217,21 +173,19 @@ export const Content = () => {
   };
 
   const NavBtn = () => {
-    const map = useMap();
-
-    map.on("drag", () => {
+    map?.on("drag", () => {
       setNavBtnType("normal");
     });
 
     if (navBtnType === "navigation") {
-      map.panTo([currentLocation.lat, currentLocation.lng], {
+      map?.panTo([currentLocation.lat, currentLocation.lng], {
         animate: true,
         duration: 0.5,
       });
     }
 
     const handleIconOnClick = () => {
-      map.flyTo([currentLocation.lat, currentLocation.lng], 18, {
+      map?.flyTo([currentLocation.lat, currentLocation.lng], 18, {
         animate: true,
         duration: 0.5,
       });
@@ -252,6 +206,8 @@ export const Content = () => {
       center={[location.lat, location.lng]}
       zoom={18}
       scrollWheelZoom={false}
+      ref={setMap}
+      whenCreated={setMap} // Store map instance
     >
       <TileLayer
         attribution=""
@@ -260,7 +216,7 @@ export const Content = () => {
       {routeData.stops &&
         currRouteStopIdList.map((e, i) => {
           const stop = gStopList[e];
-          return <CustomMarker stop={stop} key={i} i={i} />;
+          return <CustomMarker stop={stop} _stopId={e} key={i} i={i} />;
         })}
 
       <Marker
@@ -280,8 +236,6 @@ export const Content = () => {
         positions={routeLine}
       />
 
-      <PrevStopBtn />
-      <NextStopBtn />
       <RouteBoundBtn />
       <NearestStopBtn />
       <NavBtn />
@@ -290,7 +244,8 @@ export const Content = () => {
 };
 
 const MapContainerRoot = styled(MapContainer)({
-  height: "100%",
+  width: "100%",
+  height: "35vh",
   ".leaflet-control-container": {
     ".leaflet-top, .leaflet-bottom": {
       willChange: "transform",
@@ -335,17 +290,17 @@ const MapContainerRoot = styled(MapContainer)({
       marginTop: "-35px", // equal to width and height
       right: "10px",
     },
-    "&.routeBoundBtnAvatar": {
-      right: "10px",
-      bottom: "140px",
+    "&.polylineBtnAvatar": {
+      right: "110px",
+      bottom: "20px",
     },
     "&.nearestStopBtnAvatar": {
-      right: "10px",
-      bottom: "90px",
+      right: "60px",
+      bottom: "20px",
     },
     "&.navBtnAvatar,": {
       right: "10px",
-      bottom: "40px",
+      bottom: "20px",
       "&.normal button": {
         color: "#777777",
       },
@@ -359,6 +314,11 @@ const MapContainerRoot = styled(MapContainer)({
     ".currStopMarker": {
       "&.selected": {
         filter: "hue-rotate(150deg)",
+        width: "20px !important",
+        height: "20px !important",
+        marginLeft: "-11px !important",
+        marginTop: "-11px !important",
+        zIndex: "999 !important",
       },
       "&.forward": {
         filter: "opacity(0.5)",

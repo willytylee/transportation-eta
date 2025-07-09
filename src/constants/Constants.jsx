@@ -7,8 +7,6 @@ import nwfb from "../assets/transports/nwfb.png";
 import mtr from "../assets/transports/mtr.png";
 import nlb from "../assets/transports/nlb.png";
 
-import { mtrLineColor } from "./Mtr";
-
 export const companyMap = {
   kmb: "九巴",
   ctb: "城巴",
@@ -53,7 +51,6 @@ export const companyColor = {
   ".mtr": {
     color: "#767676",
     stroke: "#767676",
-    ...mtrLineColor,
   },
 };
 

@@ -1,15 +1,15 @@
 import { useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, styled } from "@mui/material";
-import {
-  basicFiltering,
-  sortByCompany,
-  getCoIconByRouteObj,
-} from "../../../Utils/Utils";
+import { basicFiltering, sortByCompany } from "../../../Utils/Utils";
 import { EtaContext } from "../../../context/EtaContext";
-import { companyIconMap } from "../../../constants/Constants";
-import { etaExcluded, mtrLineColor, routeMap } from "../../../constants/Mtr";
+import {
+  etaExcluded,
+  mtrIconColor,
+  mtrLineColor,
+} from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
+import { TransportSign } from "../../Direction/Box/TransportSign";
 
 export const RouteList = () => {
   const { route } = useContext(EtaContext);
@@ -85,20 +85,7 @@ export const RouteList = () => {
               className={`routeTitle ${e === routeKey ? "matched" : ""}`}
             >
               <div className="companyOrigDest">
-                <div className="transportIconWrapper">
-                  <img
-                    className={`transportIcon ${routeData.route}`}
-                    src={companyIconMap[getCoIconByRouteObj(routeData)]}
-                    alt=""
-                  />
-                </div>
-                {routeData.co[0] === "mtr" && (
-                  <div className="routeWrapper">
-                    <div className={`route ${routeData.route}`}>
-                      {routeMap[routeData.route]}
-                    </div>
-                  </div>
-                )}
+                <TransportSign routeObj={routeData} />
                 <div>
                   {routeData.orig.zh}{" "}
                   {routeData.co[0] === "mtr" ? (
@@ -147,31 +134,30 @@ const RouteListRoot = styled("div")({
         alignItems: "center",
         width: "100%",
         display: "flex",
-        ".routeWrapper": {
-          width: "10%",
-          ".route": {
-            fontWeight: "900",
-            ...mtrLineColor,
-          },
-        },
-        ".transportIconWrapper": {
-          display: "flex",
-          ".transportIcon": {
-            height: "18px",
-            ...mtrLineColor,
-          },
-        },
-        ".dest": {
+      },
+
+      ".transportIcon": {
+        height: "18px",
+        ...mtrIconColor,
+        ".route": {
           fontWeight: "900",
-          fontSize: "14px",
+          ...mtrLineColor,
         },
-        ".special": {
-          fontSize: "10px",
-          fontWeight: "normal",
-          ".star": {
-            fontWeight: "normal",
-          },
-        },
+      },
+      ".route": {
+        fontWeight: "900",
+        ...mtrLineColor,
+      },
+    },
+    ".dest": {
+      fontWeight: "900",
+      fontSize: "14px",
+    },
+    ".special": {
+      fontSize: "10px",
+      fontWeight: "normal",
+      ".star": {
+        fontWeight: "normal",
       },
     },
   },

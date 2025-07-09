@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import {
   Directions as DirectionsIcon,
-  Map as MapIcon,
   BookmarkAdd as BookmarkAddIcon,
   Streetview as StreetviewIcon,
   PushPin as PushPinIcon,
@@ -22,7 +21,6 @@ import { DbContext } from "../../context/DbContext";
 import { primaryColor } from "../../constants/Constants";
 import { useLocation } from "../../hooks/Location";
 import { etaExcluded } from "../../constants/Mtr";
-import { MapDialog } from "./Dialog/MapDialog/MapDialog";
 import { MtrStopEta } from "./MtrStopEta";
 import { StopEta } from "./StopEta";
 import { BookmarkDialog } from "./Dialog/BookmarkDialog";
@@ -36,7 +34,6 @@ export const StopList = () => {
   const { location: currentLocation } = useLocation({ interval: 60000 });
   const [stopList, setStopList] = useState([]);
   const [expanded, setExpanded] = useState(false);
-  const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const [nearbyDialogOpen, setNearbyDialogOpen] = useState(false);
   const [mtrRouteOptionDialogOpen, setMtrRouteOptionDialogOpen] =
     useState(false);
@@ -53,16 +50,6 @@ export const StopList = () => {
   } = useContext(EtaContext);
 
   const stopListRef = useRef(null);
-
-  const handleMapDialogOnClose = () => {
-    setMapDialogOpen(false);
-  };
-
-  const handleMapIconOnClick = ({ mapLocation, mapStopIdx }) => {
-    setMapDialogOpen(true);
-    updateMapLocation(mapLocation);
-    updateMapStopIdx(mapStopIdx);
-  };
 
   const handlePinIconOnClick = (seq, _routeKey, _stopId) => {
     const isInList =
@@ -97,10 +84,14 @@ export const StopList = () => {
     }
   };
 
-  const handleChange = (_stopId) => (e, isExpanded) => {
-    navigate("/search/" + routeKey, { replace: true });
-    setExpanded(isExpanded ? _stopId : false);
-  };
+  const handleAccordionChange =
+    ({ _stopId, mapLocation, mapStopIdx }) =>
+    (e, isExpanded) => {
+      navigate("/search/" + routeKey, { replace: true });
+      updateMapLocation(mapLocation);
+      updateMapStopIdx(mapStopIdx);
+      setExpanded(isExpanded ? _stopId : false);
+    };
 
   const routeData = routeKey ? gRouteList[routeKey] : [];
 
@@ -176,7 +167,11 @@ export const StopList = () => {
             return (
               <Accordion
                 expanded={stopId === e?.stopId || expanded === e?.stopId}
-                onChange={handleChange(e.stopId)}
+                onChange={handleAccordionChange({
+                  _stopId: e.stopId,
+                  mapLocation: { lat, lng },
+                  mapStopIdx: i,
+                })}
                 key={i}
                 className={isNearestStop ? "highlighted" : ""}
                 ref={
@@ -203,18 +198,6 @@ export const StopList = () => {
                   )}
                 </AccordionSummary>
                 <AccordionDetails className="iconWrapper">
-                  <IconButton
-                    className="iconBtn"
-                    onClick={() =>
-                      handleMapIconOnClick({
-                        mapLocation: { lat, lng },
-                        mapStopIdx: i,
-                      })
-                    }
-                  >
-                    <MapIcon />
-                    <div>路線地圖</div>
-                  </IconButton>
                   <IconButton
                     className="iconBtn"
                     component="a"
@@ -277,10 +260,6 @@ export const StopList = () => {
             );
           })}
       </StopListRoot>
-      <MapDialog
-        mapDialogOpen={mapDialogOpen}
-        handleMapDialogOnClose={handleMapDialogOnClose}
-      />
       <BookmarkDialog
         bookmarkDialogMode={bookmarkDialogMode}
         setBookmarkDialogMode={setBookmarkDialogMode}

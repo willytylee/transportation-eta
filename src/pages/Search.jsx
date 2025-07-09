@@ -13,6 +13,7 @@ import { primaryColor } from "../constants/Constants";
 import { AppContext } from "../context/AppContext";
 import { DbContext } from "../context/DbContext";
 import { EtaContext } from "../context/EtaContext";
+import { Map } from "../components/Search/Map";
 
 export const Search = () => {
   const searchMethod =
@@ -113,8 +114,11 @@ export const Search = () => {
           <SearchRouteList />
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={1}>
-          <RouteList />
-          <StopList />
+          {routeKey && <Map />}
+          <div className="routeListStopWrapper">
+            <RouteList />
+            <StopList />
+          </div>
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={2}>
           <NearbyRouteList />
@@ -155,7 +159,15 @@ const SearchResult = styled("div")({
 
 const TabPanelRoot = styled(TabPanel)({
   overflow: "auto",
-  padding: "8px 0px",
+  "&#simple-tabpanel-1>div": {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    ".routeListStopWrapper": {
+      flex: 3,
+      overflow: "auto",
+    },
+  },
   ".emptyMsg": {
     fontSize: "14px",
     textAlign: "center",

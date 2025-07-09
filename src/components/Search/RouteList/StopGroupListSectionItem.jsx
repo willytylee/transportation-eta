@@ -1,17 +1,16 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material";
-import { getCoIconByRouteObj, etaTimeConverter } from "../../../Utils/Utils";
-import { companyIconMap } from "../../../constants/Constants";
-import { mtrLineColor, routeMap } from "../../../constants/Mtr";
+import { etaTimeConverter } from "../../../Utils/Utils";
+import { mtrIconColor, mtrLineColor } from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
+import { TransportSign } from "../../Direction/Box/TransportSign";
 
 export const StopGroupListSectionItem = ({ eta, setNearbyDialogOpen }) => {
   const { gRouteList } = useContext(DbContext);
 
   const navigate = useNavigate();
   const routeObj = gRouteList[eta.routeKey];
-  const { route } = routeObj;
 
   const handleRouteItemOnClick = (routeKey, stopId) => {
     navigate("/search/" + routeKey + "/" + stopId, { replace: true });
@@ -25,18 +24,7 @@ export const StopGroupListSectionItem = ({ eta, setNearbyDialogOpen }) => {
       onClick={() => handleRouteItemOnClick(eta.routeKey, eta.stopId)}
       eta={eta}
     >
-      <div className="transportIconWrapper">
-        <img
-          className={`transportIcon ${route}`}
-          src={companyIconMap[getCoIconByRouteObj(routeObj)]}
-          alt=""
-        />
-      </div>
-      {routeObj.co[0] === "mtr" ? (
-        <div className={`route ${route}`}>{routeMap[route]}</div>
-      ) : (
-        <div className="route">{route} </div>
-      )}
+      <TransportSign routeObj={routeObj} />
       <div className="nearStopDest">
         <div>
           <span className="dest">{routeObj.dest.zh}</span>
@@ -71,12 +59,12 @@ const StopGrouListSectionItemRoot = styled("div", {
     display: "flex",
     ".transportIcon": {
       height: "18px",
-      ...mtrLineColor,
+      ...mtrIconColor,
     },
   },
   ".route": {
     fontWeight: "900",
-    width: "12.5%",
+    width: "55px",
     ...mtrLineColor,
   },
   ".nearStopDest": {

@@ -4,7 +4,12 @@ import { styled } from "@mui/material";
 import { getCoIconByRouteObj } from "../../../Utils/Utils";
 import { companyIconMap } from "../../../constants/Constants";
 import { EtaContext } from "../../../context/EtaContext";
-import { etaExcluded, mtrLineColor, routeMap } from "../../../constants/Mtr";
+import {
+  etaExcluded,
+  mtrIconColor,
+  mtrLineColor,
+  routeMap,
+} from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
 
 export const SimpleRouteList = ({ mode, routeKeyList }) => {
@@ -107,7 +112,7 @@ const SimpleRouteListRoot = styled("div")({
       display: "flex",
       ".transportIcon": {
         height: "18px",
-        ...mtrLineColor,
+        ...mtrIconColor,
       },
     },
   },

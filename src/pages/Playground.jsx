@@ -1,1 +1,1 @@
-export const Playground = () => <div />;
+export const Playground = () => <>Playground</>;

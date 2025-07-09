@@ -10,10 +10,10 @@ import {
 import { Delete as DeleteIcon } from "@mui/icons-material/";
 import { EtaContext } from "../context/EtaContext";
 import { DbContext } from "../context/DbContext";
-import { getCoIconByRouteObj } from "../Utils/Utils";
-import { companyColor, companyIconMap } from "../constants/Constants";
-import { mtrLineColor, routeMap } from "../constants/Mtr";
+import { companyColor } from "../constants/Constants";
+import { mtrIconColor, mtrLineColor } from "../constants/Mtr";
 import { Eta } from "./Search/RouteList/Eta";
+import { TransportSign } from "./Direction/Box/TransportSign";
 
 export const Pin = () => {
   const navigate = useNavigate();
@@ -56,17 +56,7 @@ export const Pin = () => {
                 >
                   <div className="text">
                     <div className="top">
-                      <img
-                        className={`transportIcon ${routeData.route}`}
-                        src={companyIconMap[getCoIconByRouteObj(routeData)]}
-                      />
-                      {routeData.co[0] === "mtr" ? (
-                        <div className={`route ${routeData.route}`}>
-                          {routeMap[routeData.route]}
-                        </div>
-                      ) : (
-                        <div className="route">{routeData.route} </div>
-                      )}
+                      <TransportSign routeObj={routeData} />
                       <div className="path">
                         <span>{routeData.orig.zh}</span>→
                         <span className="dest">{routeData.dest.zh}</span>
@@ -110,8 +100,8 @@ const PinRoot = styled("div")({
         gap: "8px",
         paddingBottom: "4px",
         ".transportIcon": {
-          height: "16px",
-          ...mtrLineColor,
+          height: "18px",
+          ...mtrIconColor,
         },
         ".route": {
           fontSize: "16px",

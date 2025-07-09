@@ -2,14 +2,12 @@ import { useContext, useRef, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, styled, IconButton, InputAdornment } from "@mui/material";
 import {
-  Map as MapIcon,
   Close as CloseIcon,
   AccessTime as AccessTimeIcon,
 } from "@mui/icons-material";
 import { AppContext } from "../../context/AppContext";
 import { EtaContext } from "../../context/EtaContext";
 import { DbContext } from "../../context/DbContext";
-import { MapDialog } from "./Dialog/MapDialog/MapDialog";
 import { TimetableDialog } from "./Dialog/TimetableDialog";
 
 export const SearchBar = ({ handleFormKeyPress }) => {
@@ -19,7 +17,6 @@ export const SearchBar = ({ handleFormKeyPress }) => {
   const navigate = useNavigate();
   const { updateRoute, route } = useContext(EtaContext);
   const { gRouteList } = useContext(DbContext);
-  const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const [timetableDialogOpen, setTimetableDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -30,10 +27,6 @@ export const SearchBar = ({ handleFormKeyPress }) => {
 
   const handleFormChange = (text) => {
     updateRoute(text.toUpperCase());
-  };
-
-  const handleMapDialogOnClose = () => {
-    setMapDialogOpen(false);
   };
 
   return (
@@ -78,18 +71,6 @@ export const SearchBar = ({ handleFormKeyPress }) => {
           }}
         />
       </div>
-      <IconButton
-        className={`mapIconButton ${!routeKey ? "hide" : ""}`}
-        disabled={dbVersion === null}
-        onClick={() => setMapDialogOpen(true)}
-      >
-        <MapIcon />
-        <div>路線地圖</div>
-      </IconButton>
-      <MapDialog
-        mapDialogOpen={mapDialogOpen}
-        handleMapDialogOnClose={handleMapDialogOnClose}
-      />
       <TimetableDialog
         timetableDialogOpen={timetableDialogOpen}
         setTimetableDialogOpen={setTimetableDialogOpen}

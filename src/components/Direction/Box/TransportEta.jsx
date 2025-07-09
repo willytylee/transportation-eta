@@ -1,12 +1,8 @@
 import { styled, Button } from "@mui/material";
-import { companyIconMap } from "../../../constants/Constants";
-import {
-  getCoIconByRouteObj,
-  phaseEtaToWaitingMins,
-  etaTimeConverter,
-} from "../../../Utils/Utils";
-import { routeMap } from "../../../constants/Mtr";
+import { phaseEtaToWaitingMins, etaTimeConverter } from "../../../Utils/Utils";
+import { mtrIconColor } from "../../../constants/Mtr";
 import { mtrLineColor } from "../../../constants/Mtr";
+import { TransportSign } from "./TransportSign";
 
 export const TransportEta = ({
   eta,
@@ -42,21 +38,8 @@ export const TransportEta = ({
     <TransportEtaRoot className="detailItem" onClick={handleOnClick}>
       <div className="waitingNotice">
         <div className="arriveTimeMsgWrapper">
-          <div className="transportIconWrapper">
-            <img
-              className={`transportIcon ${routeObj.route}`}
-              src={companyIconMap[getCoIconByRouteObj(routeObj)]}
-              alt=""
-            />
-          </div>
-          <div className="arriveTimeMsg">
-            {routeObj.co[0] === "mtr" ? (
-              <div className={routeObj.route}>{routeMap[routeObj.route]}</div>
-            ) : (
-              <div className="route">{routeObj.route} </div>
-            )}
-            到站時間: {arriveTime}
-          </div>
+          <TransportSign routeObj={routeObj} />
+          <div className="arriveTimeMsg">到站時間: {arriveTime}</div>
         </div>
         <div className="eta">
           {eta.length > 0 &&
@@ -85,16 +68,16 @@ const TransportEtaRoot = styled(Button)({
         display: "flex",
         ".transportIcon": {
           height: "14px",
-          ...mtrLineColor,
+          ...mtrIconColor,
         },
       },
     },
     ".arriveTimeMsg": {
       display: "flex",
       alignItems: "center",
-      ...mtrLineColor,
       ".route": {
         fontWeight: 900,
+        ...mtrLineColor,
       },
     },
     ".eta": {
