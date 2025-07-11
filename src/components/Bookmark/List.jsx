@@ -111,7 +111,9 @@ export const List = ({ etaResult, longList }) => {
             </div>
             <div className={`stopName ${e.co}`}>
               {e?.stopName}
-              {e.co === "mtr" && ` → ${stationMap[e?.dest]}`}
+              {e.co === "mtr" &&
+                e?.eta !== "沒有班次" &&
+                ` → ${stationMap[e?.dest]}`}
             </div>
             <div className="eta">{e?.eta}</div>
           </AccordionSummary>
