@@ -327,5 +327,3 @@ export const stationDestMap = {
     down: ["TSW"],
   },
 };
-
-export const etaExcluded = [];

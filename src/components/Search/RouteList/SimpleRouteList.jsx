@@ -4,12 +4,7 @@ import { styled } from "@mui/material";
 import { getCoIconByRouteObj } from "../../../Utils/Utils";
 import { companyIconMap } from "../../../constants/Constants";
 import { EtaContext } from "../../../context/EtaContext";
-import {
-  etaExcluded,
-  mtrIconColor,
-  mtrLineColor,
-  routeMap,
-} from "../../../constants/Mtr";
+import { mtrIconColor, mtrLineColor, routeMap } from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
 
 export const SimpleRouteList = ({ mode, routeKeyList }) => {
@@ -81,9 +76,6 @@ export const SimpleRouteList = ({ mode, routeKeyList }) => {
             <span className="special">
               {" "}
               {parseInt(serviceType, 10) !== 1 && "特別班次"}
-              {etaExcluded.includes(_route) && (
-                <span className="star">沒有相關班次資料</span>
-              )}
             </span>
           </div>
         </div>

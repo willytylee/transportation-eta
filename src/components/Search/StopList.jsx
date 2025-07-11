@@ -20,7 +20,6 @@ import { EtaContext } from "../../context/EtaContext";
 import { DbContext } from "../../context/DbContext";
 import { primaryColor } from "../../constants/Constants";
 import { useLocation } from "../../hooks/Location";
-import { etaExcluded } from "../../constants/Mtr";
 import { MtrStopEta } from "./MtrStopEta";
 import { StopEta } from "./StopEta";
 import { BookmarkDialog } from "./Dialog/BookmarkDialog";
@@ -221,29 +220,26 @@ export const StopList = () => {
                     <StreetviewIcon />
                     <div>街景</div>
                   </IconButton>
-                  {!etaExcluded.includes(routeData.route) && (
-                    // Disallow some route to be added to bookmark
-                    <IconButton
-                      className="iconBtn"
-                      onClick={() => {
-                        if (routeData.co[0] === "mtr") {
-                          handleBookmarkAddIconOnClick({
-                            routeKey,
-                            stopId: e.stopId,
-                          });
-                        } else {
-                          handleBookmarkAddIconOnClick({
-                            seq: i + 1,
-                            stopId: e.stopId,
-                            routeKey,
-                          });
-                        }
-                      }}
-                    >
-                      <BookmarkAddIcon />
-                      <div>書籤</div>
-                    </IconButton>
-                  )}
+                  <IconButton
+                    className="iconBtn"
+                    onClick={() => {
+                      if (routeData.co[0] === "mtr") {
+                        handleBookmarkAddIconOnClick({
+                          routeKey,
+                          stopId: e.stopId,
+                        });
+                      } else {
+                        handleBookmarkAddIconOnClick({
+                          seq: i + 1,
+                          stopId: e.stopId,
+                          routeKey,
+                        });
+                      }
+                    }}
+                  >
+                    <BookmarkAddIcon />
+                    <div>書籤</div>
+                  </IconButton>
                   <IconButton
                     className="iconBtn"
                     onClick={() =>

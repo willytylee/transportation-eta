@@ -18,9 +18,7 @@ export const phaseEta = ({ etaStr, remark }) => {
       etaIntervalStr = "已離開";
     } else if (mintuesLeft === 0) {
       etaIntervalStr = "已抵達";
-    } else if (mintuesLeft === 1) {
-      etaIntervalStr = "即將抵達";
-    } else if (mintuesLeft > 1 && mintuesLeft <= 60) {
+    } else if (mintuesLeft > 0 && mintuesLeft <= 60) {
       etaIntervalStr = `${mintuesLeft}分鐘`;
     } else if (mintuesLeft > 60) {
       etaIntervalStr = moment(etaStr).format("HH:mma");

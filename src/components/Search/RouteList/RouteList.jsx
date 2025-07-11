@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card, styled } from "@mui/material";
 import { basicFiltering, sortByCompany } from "../../../Utils/Utils";
 import { EtaContext } from "../../../context/EtaContext";
-import { etaExcluded, mtrLineColor } from "../../../constants/Mtr";
+import { mtrLineColor } from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
 import { TransportSign } from "../../Direction/Box/TransportSign";
 
@@ -94,9 +94,6 @@ export const RouteList = () => {
                   <span className="special">
                     {" "}
                     {parseInt(routeData.serviceType, 10) !== 1 && "特別班次"}
-                    {etaExcluded.includes(routeData.route) && (
-                      <span className="star">沒有相關班次資料</span>
-                    )}
                   </span>
                 </div>
               </div>

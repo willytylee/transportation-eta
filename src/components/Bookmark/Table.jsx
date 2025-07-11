@@ -91,12 +91,21 @@ export const Table = ({ etaResult }) => {
               )}
             </div>
             <div className={`stopName ${e.co}`}>{e.stopName}</div>
-            {e.etas.map((eta, j) => (
-              <div key={j} className="eta">
-                {eta.minutes} <br />
-                {eta.dest && `(${stationMap[eta?.dest]})`}
-              </div>
-            ))}
+            <div className="etas">
+              {e.etas.map((eta, j) => (
+                <div key={j} className="eta">
+                  {eta.minutes} <br />
+                  {eta.dest && `(${stationMap[eta?.dest]})`}
+                </div>
+              ))}
+              {e.etas.length === 1 && (
+                <>
+                  <div className="eta"> </div>
+                  <div className="eta"> </div>
+                </>
+              )}
+              {e.etas.length === 2 && <div className="eta" />}
+            </div>
           </AccordionSummary>
           <AccordionDetails>
             <IconButton
@@ -159,19 +168,24 @@ const TableView = styled("div")({
         margin: 0,
         ".routeWrapper": {
           ...companyColor,
-
-          width: "13%",
+          width: "52px",
           fontWeight: "900",
           display: "flex",
           alignItems: "center",
           ".route": {
+            width: "52px",
             ...mtrLineColor,
           },
         },
         ".stopName": {
           width: "45%",
         },
-        ".eta": { width: "14%" },
+        ".etas": {
+          display: "flex",
+          ".eta": {
+            width: "52px",
+          },
+        },
       },
     },
   },

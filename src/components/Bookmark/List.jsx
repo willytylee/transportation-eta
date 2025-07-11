@@ -178,7 +178,7 @@ const ListView = styled("div")({
         margin: 0,
         ".routeWrapper": {
           ...companyColor,
-          width: "13%",
+          width: "52px",
           fontWeight: "900",
           display: "flex",
           alignItems: "center",

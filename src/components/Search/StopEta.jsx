@@ -33,7 +33,7 @@ const StopEtaRoot = styled("div", {
     width: "50%",
   },
   ".etas": {
-    width: "45%",
+    width: "180px",
     display: "flex",
     flexDirection: "row",
     ".eta": {

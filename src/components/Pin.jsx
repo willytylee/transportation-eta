@@ -30,6 +30,26 @@ export const Pin = () => {
     });
   };
 
+  const mtrStopEtaChildStyles = {
+    paddingTop: 0,
+    paddingBottom: 0,
+    ".ttntWrapper": { width: "150px !important;" },
+  };
+
+  const stopEtaChildStyles = {
+    justifyContent: "space-between",
+    paddingTop: 0,
+    paddingBottom: 0,
+    ".etas": {
+      width: "150px",
+      display: "flex",
+      flexDirection: "row",
+      ".eta": {
+        width: "33.33%",
+      },
+    },
+  };
+
   return (
     <PinRoot>
       <List disablePadding>
@@ -68,7 +88,7 @@ export const Pin = () => {
                           seq={e.seq}
                           routeObj={routeData}
                           stopObj={gStopList[e.stopId]}
-                          childStyles={{ paddingTop: 0, paddingBottom: 0 }}
+                          childStyles={mtrStopEtaChildStyles}
                         />
                       ) : (
                         <StopEta
@@ -76,7 +96,7 @@ export const Pin = () => {
                           routeObj={routeData}
                           stopObj={gStopList[e.stopId]}
                           slice={3}
-                          childStyles={{ paddingTop: 0, paddingBottom: 0 }}
+                          childStyles={stopEtaChildStyles}
                         />
                       )}
                     </div>
@@ -92,7 +112,8 @@ export const Pin = () => {
 
 const PinRoot = styled("div")({
   maxHeight: "130px",
-  overflow: "auto",
+  overflowY: "auto",
+  overflowX: "hidden",
   ".pinItem": {
     display: "flex",
     justifyContent: "space-between",

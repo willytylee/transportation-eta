@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { styled } from "@mui/material";
 import { phaseEta } from "../../Utils/Utils";
 import { useEtas } from "../../hooks/Etas";
-import { etaExcluded, stationMap } from "../../constants/Mtr";
+import { stationMap } from "../../constants/Mtr";
 
 export const MtrStopEta = ({ seq, stopObj, routeObj, childStyles }) => {
   const { stopId } = useParams();
@@ -26,47 +26,44 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, childStyles }) => {
     <MtrStopEtaRoot childStyles={childStyles}>
       <div className="seq">{seq}.</div>
       <div className="stop">{stopObj.name.zh}</div>
-      {etaExcluded.includes(routeObj.route) ? (
-        <div className="noEta">沒有相關班次資料</div>
-      ) : (
-        <div className="etasWrapper">
-          {groupedEtas.length > 0 ? (
-            groupedEtas.map((destEtas, i) => (
-              <div key={i} className="etaWrapper">
-                <div className="arriveText">
-                  →{" "}
-                  <span className="dest">
-                    {" "}
-                    {stationMap[destEtas.dest] || destEtas.dest}
-                  </span>
-                </div>
-                <div className="ttntWrapper">
-                  {destEtas.etas
-                    .map((_eta, j) => (
-                      <div key={j} className="ttnt">
-                        {phaseEta({ etaStr: _eta.eta }).etaIntervalStr} <br />
-                        {stopId && stopId === _eta.stopId && (
-                          <>
-                            <div>{phaseEta({ etaStr: _eta.eta }).time}</div>
-                            <div>{_eta.plat}號月台</div>
-                          </>
-                        )}
-                      </div>
-                    ))
-                    .slice(0, 3)}
-                </div>
+
+      <div className="etasWrapper">
+        {groupedEtas.length > 0 ? (
+          groupedEtas.map((destEtas, i) => (
+            <div key={i} className="etaWrapper">
+              <div className="arriveText">
+                →{" "}
+                <span className="dest">
+                  {" "}
+                  {stationMap[destEtas.dest] || destEtas.dest}
+                </span>
               </div>
-            ))
-          ) : (
-            <div className="etaWrapper">
-              <div> </div>
-              <div className="noEta2">
-                {isEtaLoading ? "載入中..." : "沒有相關班次資料"}
+              <div className="ttntWrapper">
+                {destEtas.etas
+                  .map((_eta, j) => (
+                    <div key={j} className="ttnt">
+                      {phaseEta({ etaStr: _eta.eta }).etaIntervalStr} <br />
+                      {stopId && stopId === _eta.stopId && (
+                        <>
+                          <div>{phaseEta({ etaStr: _eta.eta }).time}</div>
+                          <div>{_eta.plat}號月台</div>
+                        </>
+                      )}
+                    </div>
+                  ))
+                  .slice(0, 3)}
               </div>
             </div>
-          )}
-        </div>
-      )}
+          ))
+        ) : (
+          <div className="etaWrapper">
+            <div> </div>
+            <div className="noEta2">
+              {isEtaLoading ? "載入中..." : "沒有班次"}
+            </div>
+          </div>
+        )}
+      </div>
     </MtrStopEtaRoot>
   );
 };
@@ -103,15 +100,15 @@ const MtrStopEtaRoot = styled("div", {
       ".arriveText": {
         display: "flex",
         alignItems: "center",
-        width: "80px",
         ".dest": {
           paddingLeft: "4px",
         },
       },
       ".ttntWrapper": {
-        width: "55%",
+        width: "180px",
         display: "flex",
         flexDirection: "row",
+        gap: "4px",
         ".ttnt": {
           width: "33.33%",
           fontSize: "12px",
