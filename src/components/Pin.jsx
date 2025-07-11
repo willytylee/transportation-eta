@@ -11,9 +11,9 @@ import { Delete as DeleteIcon } from "@mui/icons-material/";
 import { EtaContext } from "../context/EtaContext";
 import { DbContext } from "../context/DbContext";
 import { companyColor } from "../constants/Constants";
-import { mtrIconColor, mtrLineColor } from "../constants/Mtr";
-import { Eta } from "./Search/RouteList/Eta";
 import { TransportSign } from "./Direction/Box/TransportSign";
+import { StopEta } from "./Search/StopEta";
+import { MtrStopEta } from "./Search/MtrStopEta";
 
 export const Pin = () => {
   const navigate = useNavigate();
@@ -63,12 +63,22 @@ export const Pin = () => {
                       </div>
                     </div>
                     <div className="bottom">
-                      <div className="stop">
-                        <div>{gStopList[e.stopId].name.zh}</div>
-                      </div>
-                      <div className="etas">
-                        <Eta seq={e.seq} routeObj={routeData} slice={3} />
-                      </div>
+                      {routeData.co[0] === "mtr" ? (
+                        <MtrStopEta
+                          seq={e.seq}
+                          routeObj={routeData}
+                          stopObj={gStopList[e.stopId]}
+                          childStyles={{ paddingTop: 0, paddingBottom: 0 }}
+                        />
+                      ) : (
+                        <StopEta
+                          seq={e.seq}
+                          routeObj={routeData}
+                          stopObj={gStopList[e.stopId]}
+                          slice={3}
+                          childStyles={{ paddingTop: 0, paddingBottom: 0 }}
+                        />
+                      )}
                     </div>
                   </div>
                 </ListItemButton>
@@ -81,14 +91,18 @@ export const Pin = () => {
 };
 
 const PinRoot = styled("div")({
+  maxHeight: "130px",
+  overflow: "auto",
   ".pinItem": {
-    padding: "6px",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     borderBottom: "1px solid rgb(200, 200, 200)",
     fontSize: "12px",
     gap: "2px",
+    paddingTop: "3px",
+    paddingBottom: "0px",
+    paddingLeft: "8px",
     ...companyColor,
     ".text": {
       display: "flex",
@@ -98,15 +112,9 @@ const PinRoot = styled("div")({
         display: "flex",
         alignItems: "center",
         gap: "8px",
-        paddingBottom: "4px",
-        ".transportIcon": {
-          height: "18px",
-          ...mtrIconColor,
-        },
+        paddingBottom: "0",
         ".route": {
-          fontSize: "16px",
-          fontWeight: 900,
-          ...mtrLineColor,
+          fontSize: "15px",
         },
         ".path": {
           display: "flex",
@@ -114,19 +122,6 @@ const PinRoot = styled("div")({
           alignItems: "center",
           ".dest": {
             fontWeight: 900,
-          },
-        },
-      },
-      ".bottom": {
-        display: "flex",
-        ".stop": {
-          width: "50%",
-        },
-        ".etas": {
-          display: "flex",
-          width: "50%",
-          ".eta": {
-            width: "33%",
           },
         },
       },

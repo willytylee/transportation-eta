@@ -152,6 +152,50 @@ export const mtrLineColor = {
     color: "#e70011",
     stroke: "#e70011",
   },
+  "&.L505": {
+    color: "#da2128",
+    stroke: "#da2128",
+  },
+  "&.L507": {
+    color: "#00a651",
+    stroke: "#00a651",
+  },
+  "&.L610": {
+    color: "#551b14",
+    stroke: "#551b14",
+  },
+  "&.L614": {
+    color: "#16c1f3",
+    stroke: "#16c1f3",
+  },
+  "&.L614P": {
+    color: "#f3858e",
+    stroke: "#f3858e",
+  },
+  "&.L615": {
+    color: "#ffde00",
+    stroke: "#ffde00",
+  },
+  "&.L615P": {
+    color: "#006684",
+    stroke: "#006684",
+  },
+  "&.L705": {
+    color: "#71bf44",
+    stroke: "#71bf44",
+  },
+  "&.L706": {
+    color: "#b37ab5",
+    stroke: "#b37ab5",
+  },
+  "&.L751": {
+    color: "#f58220",
+    stroke: "#f58220",
+  },
+  "&.L761P": {
+    color: "#702c91",
+    stroke: "#702c91",
+  },
 };
 
 export const mtrIconColor = {
@@ -194,6 +238,50 @@ export const mtrIconColor = {
   "&.TWL": {
     filter:
       "invert(34%) sepia(100%) saturate(7384%) hue-rotate(349deg) brightness(85%) contrast(116%)",
+  },
+  "&.L505": {
+    filter:
+      "brightness(0) saturate(100%) invert(20%) sepia(36%) saturate(6351%) hue-rotate(344deg) brightness(94%) contrast(101%)",
+  },
+  "&.L507": {
+    filter:
+      "brightness(0) saturate(100%) invert(51%) sepia(64%) saturate(5247%) hue-rotate(127deg) brightness(93%) contrast(101%)",
+  },
+  "&.L610": {
+    filter:
+      "brightness(0) saturate(100%) invert(7%) sepia(43%) saturate(4172%) hue-rotate(355deg) brightness(115%) contrast(87%)",
+  },
+  "&.L614": {
+    filter:
+      "brightness(0) saturate(100%) invert(69%) sepia(33%) saturate(3690%) hue-rotate(156deg) brightness(95%) contrast(100%)",
+  },
+  "&.L614P": {
+    filter:
+      "brightness(0) saturate(100%) invert(81%) sepia(13%) saturate(5527%) hue-rotate(300deg) brightness(96%) contrast(98%)",
+  },
+  "&.L615": {
+    filter:
+      "brightness(0) saturate(100%) invert(81%) sepia(13%) saturate(5527%) hue-rotate(300deg) brightness(96%) contrast(98%)",
+  },
+  "&.L615P": {
+    filter:
+      "brightness(0) saturate(100%) invert(27%) sepia(19%) saturate(6419%) hue-rotate(168deg) brightness(92%) contrast(101%)",
+  },
+  "&.L705": {
+    filter:
+      "brightness(0) saturate(100%) invert(56%) sepia(88%) saturate(339%) hue-rotate(54deg) brightness(102%) contrast(83%)",
+  },
+  "&.L706": {
+    filter:
+      "brightness(0) saturate(100%) invert(73%) sepia(8%) saturate(2540%) hue-rotate(248deg) brightness(76%) contrast(81%)",
+  },
+  "&.L751": {
+    filter:
+      "brightness(0) saturate(100%) invert(61%) sepia(25%) saturate(5033%) hue-rotate(348deg) brightness(101%) contrast(92%)",
+  },
+  "&.L761P": {
+    filter:
+      "brightness(0) saturate(100%) invert(20%) sepia(27%) saturate(5746%) hue-rotate(266deg) brightness(89%) contrast(89%)",
   },
 };
 

@@ -28,6 +28,7 @@ export const SimpleRouteList = ({ mode, routeKeyList }) => {
     const routeData = gRouteList[key];
     const { route: _route, co, orig, dest, serviceType } = routeData;
     const isMtr = co[0] === "mtr";
+    const isLrt = co[0] === "lightRail";
     const isSearchMode = mode === "search";
     const isMatch = route === _route;
     const iconSrc = companyIconMap[getCoIconByRouteObj(routeData)];
@@ -54,7 +55,7 @@ export const SimpleRouteList = ({ mode, routeKeyList }) => {
         <div className="route">
           <div className="transportIconWrapper">
             <img
-              className={`transportIcon ${_route}`}
+              className={`transportIcon ${isLrt ? "L" + _route : _route}`}
               src={iconSrc}
               alt=""
               loading="lazy"

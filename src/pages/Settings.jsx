@@ -67,22 +67,26 @@ export const Settings = () => {
   return (
     <>
       <List>
-        <ListItem disablePadding>
-          <ListItemButton
-            onClick={() => setslctUsrDialogOpen(true)}
-            disabled={!!bookmark}
-          >
-            <ListItemAvatar>
-              <Avatar>
-                <AccountCircleIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary="載入用戶書籤"
-              secondary={bookmark ? "手機已載入書籤, 此功能不再適用" : username}
-            />
-          </ListItemButton>
-        </ListItem>
+        {(!process.env.NODE_ENV || process.env.NODE_ENV === "development") && (
+          <ListItem disablePadding>
+            <ListItemButton
+              onClick={() => setslctUsrDialogOpen(true)}
+              disabled={!!bookmark}
+            >
+              <ListItemAvatar>
+                <Avatar>
+                  <AccountCircleIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary="載入用戶書籤"
+                secondary={
+                  bookmark ? "手機已載入書籤, 此功能不再適用" : username
+                }
+              />
+            </ListItemButton>
+          </ListItem>
+        )}
         <ListItem disablePadding>
           <ListItemButton
             onClick={() => navigate("/settings/personal", { replace: true })}

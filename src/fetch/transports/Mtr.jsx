@@ -15,6 +15,7 @@ export const fetchMtrEtas = async ({ stopId, route, bound }) => {
       seq: e.seq,
       dest: e.dest,
       ttnt: e.ttnt,
+      plat: e.plat,
       stopId,
     }));
   } else if (bound === "DT") {
@@ -24,6 +25,7 @@ export const fetchMtrEtas = async ({ stopId, route, bound }) => {
       seq: e.seq,
       dest: e.dest,
       ttnt: e.ttnt,
+      plat: e.plat,
       stopId,
     }));
   }
@@ -38,6 +40,7 @@ export const fetchMtrEtas = async ({ stopId, route, bound }) => {
     seq: e.seq,
     dest: e.dest,
     ttnt: e.ttnt,
+    plat: e.plat,
     stopId,
   }));
 };

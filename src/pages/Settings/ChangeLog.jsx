@@ -3,6 +3,13 @@ import { Link } from "react-router-dom";
 
 export const ChangeLog = () => (
   <NewsRoot>
+    <div className="subTitle">7/2025</div>
+    <div className="content">
+      <ul>
+        加入<Link to="/search">輕鐵及大嶼山巴士搜索</Link>功能,
+      </ul>
+    </div>
+    <DividerRoot />
     <div className="subTitle">6/2025</div>
     <div className="content">
       <ul>
@@ -41,10 +48,6 @@ export const ChangeLog = () => (
     <div className="subTitle">7/2022</div>
     <div className="content">
       <ul>
-        <li>
-          加入<Link to="/settings">載入用戶書籤</Link>及
-          <Link to="/settings">用戶pin碼</Link>功能。
-        </li>
         <li>
           加入<Link to="/search">搜尋關鍵字路線</Link>及
           <Link to="/search">附近路線</Link>功能。

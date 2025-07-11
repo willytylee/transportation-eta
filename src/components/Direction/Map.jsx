@@ -481,6 +481,8 @@ export const Map = ({ mapCollapse }) => {
                   color: `${
                     origRouteObj.co[0] === "mtr"
                       ? mtrLineColor["&." + origRouteObj.route].color
+                      : origRouteObj.co[0] === "lightRail"
+                      ? mtrLineColor["&.L" + origRouteObj.route].color
                       : companyColor["." + getFirstCoByRouteObj(origRouteObj)]
                           .color
                   }`,
@@ -497,6 +499,8 @@ export const Map = ({ mapCollapse }) => {
                     color: `${
                       destRouteObj.co[0] === "mtr"
                         ? mtrLineColor["&." + destRouteObj.route].color
+                        : destRouteObj.co[0] === "lightRail"
+                        ? mtrLineColor["&.L" + destRouteObj.route].color
                         : companyColor["." + getFirstCoByRouteObj(destRouteObj)]
                             .color
                     }`,

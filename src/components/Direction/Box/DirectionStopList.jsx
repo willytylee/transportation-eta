@@ -21,6 +21,8 @@ export const DirectionStopList = ({
 }) => {
   const { gStopList } = useContext(DbContext);
   const [stopList, setStopList] = useState([]);
+  const isMtr = routeObj.co[0] === "mtr";
+  const isLrt = routeObj.co[0] === "lightRail";
 
   const handleStopListBtnOnClick = () => {
     if (stopList.length === 0) {
@@ -52,8 +54,10 @@ export const DirectionStopList = ({
           >
             <div
               className={
-                routeObj.co[0] === "mtr"
+                isMtr
                   ? `stop ${routeObj.route}`
+                  : isLrt
+                  ? `stop ${"L" + routeObj.route}`
                   : `${getFirstCoByRouteObj(routeObj)}`
               }
             >

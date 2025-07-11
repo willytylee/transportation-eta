@@ -4,11 +4,13 @@ import { fetchKmbEtas } from "./Kmb";
 import { fetchMtrEtas } from "./Mtr";
 import { fetchNlbEtas } from "./Nlb";
 import { fetchNwfbCtbEtas } from "./NwfbCtb";
+import { fetchLrtEtas } from "./Lrt";
 
 export const fetchEtas = async ({
   error,
   bound,
   co,
+  dest,
   gtfsId,
   route,
   serviceType,
@@ -74,6 +76,14 @@ export const fetchEtas = async ({
                 route,
                 stopId: _stopId,
                 bound,
+              })
+            );
+          } else if (company_id === "lightRail") {
+            etas = etas.concat(
+              await fetchLrtEtas({
+                route,
+                stopId: _stopId,
+                dest,
               })
             );
           }

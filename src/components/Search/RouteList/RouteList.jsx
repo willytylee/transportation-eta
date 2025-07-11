@@ -3,11 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card, styled } from "@mui/material";
 import { basicFiltering, sortByCompany } from "../../../Utils/Utils";
 import { EtaContext } from "../../../context/EtaContext";
-import {
-  etaExcluded,
-  mtrIconColor,
-  mtrLineColor,
-} from "../../../constants/Mtr";
+import { etaExcluded, mtrLineColor } from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
 import { TransportSign } from "../../Direction/Box/TransportSign";
 
@@ -134,15 +130,6 @@ const RouteListRoot = styled("div")({
         alignItems: "center",
         width: "100%",
         display: "flex",
-      },
-
-      ".transportIcon": {
-        height: "18px",
-        ...mtrIconColor,
-        ".route": {
-          fontWeight: "900",
-          ...mtrLineColor,
-        },
       },
       ".route": {
         fontWeight: "900",

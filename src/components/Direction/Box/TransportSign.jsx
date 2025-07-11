@@ -3,22 +3,25 @@ import { companyIconMap } from "../../../constants/Constants";
 import { getCoIconByRouteObj } from "../../../Utils/Utils";
 import { mtrIconColor, mtrLineColor, routeMap } from "../../../constants/Mtr";
 
-export const TransportSign = ({ routeObj }) => (
-  <TransportSignRoot>
-    <img
-      className={`transportIcon ${routeObj.route}`}
-      src={companyIconMap[getCoIconByRouteObj(routeObj)]}
-      alt=""
-    />
-    {routeObj.co[0] === "mtr" ? (
-      <div className={`route ${routeObj.route}`}>
-        {routeMap[routeObj.route]}
-      </div>
-    ) : (
-      <div className="route">{routeObj.route} </div>
-    )}
-  </TransportSignRoot>
-);
+export const TransportSign = ({ routeObj }) => {
+  const { route, co } = routeObj;
+  const isMtr = co[0] === "mtr";
+  const isLrt = co[0] === "lightRail";
+  return (
+    <TransportSignRoot>
+      <img
+        className={`transportIcon ${isLrt ? "L" + route : route}`}
+        src={companyIconMap[getCoIconByRouteObj(routeObj)]}
+        alt=""
+      />
+      {isMtr ? (
+        <div className={`route ${route}`}>{routeMap[route]}</div>
+      ) : (
+        <div className="route">{route} </div>
+      )}
+    </TransportSignRoot>
+  );
+};
 
 const TransportSignRoot = styled("div")({
   display: "flex",
@@ -29,6 +32,7 @@ const TransportSignRoot = styled("div")({
     ...mtrIconColor,
   },
   ".route": {
+    fontWeight: 900,
     ...mtrLineColor,
   },
 });

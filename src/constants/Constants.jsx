@@ -6,6 +6,7 @@ import kmb from "../assets/transports/kmb.png";
 import nwfb from "../assets/transports/nwfb.png";
 import mtr from "../assets/transports/mtr.png";
 import nlb from "../assets/transports/nlb.png";
+import lightRail from "../assets/transports/lightRail.png";
 
 export const companyMap = {
   kmb: "九巴",
@@ -14,6 +15,7 @@ export const companyMap = {
   mtr: "港鐵",
   gmb: "小巴",
   nlb: "嶼巴",
+  lightRail: "輕鐵",
 };
 
 export const companyIconMap = {
@@ -25,6 +27,7 @@ export const companyIconMap = {
   mtr,
   gmb,
   nlb,
+  lightRail,
 };
 
 export const companyColor = {
@@ -52,9 +55,21 @@ export const companyColor = {
     color: "#767676",
     stroke: "#767676",
   },
+  ".lightRail": {
+    color: "#dcb802",
+    stroke: "#dcb802",
+  },
 };
 
-export const coPriority = ["kmb", "nwfb", "ctb", "gmb", "mtr", "nlb"];
+export const coPriority = [
+  "kmb",
+  "nwfb",
+  "ctb",
+  "gmb",
+  "mtr",
+  "nlb",
+  "lightRail",
+];
 
 export const primaryColor = "#2f305c";
 

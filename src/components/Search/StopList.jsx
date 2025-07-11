@@ -84,15 +84,13 @@ export const StopList = () => {
   };
 
   const handleAccordionOnChange = ({ _stopId, mapLocation, mapStopIdx }) => {
+    updateMapLocation(mapLocation);
+    updateMapStopIdx(mapStopIdx);
     if (stopId && stopId === _stopId) {
       navigate("/search/" + routeKey, { replace: true });
     } else {
       navigate("/search/" + routeKey + "/" + _stopId, { replace: true });
     }
-
-    updateMapLocation(mapLocation);
-    updateMapStopIdx(mapStopIdx);
-    // setExpanded(isExpanded ? _stopId : false);
   };
 
   const routeData = routeKey ? gRouteList[routeKey] : [];
@@ -190,27 +188,17 @@ export const StopList = () => {
                 }
                 key={i}
                 className={isNearestStop ? "highlighted" : ""}
-                // ref={
-                //   stopId === e?.stopId || (!stopId && isNearestStop)
-                //     ? stopListRef
-                //     : null
-                // }
                 ref={(_e) => (stopListRef.current[i] = _e)}
               >
                 <AccordionSummary className="accordionSummary">
                   {routeData.co[0] === "mtr" ? (
-                    <MtrStopEta
-                      seq={i + 1}
-                      routeObj={routeData}
-                      stopObj={e}
-                      MtrStopEtaRoot={MtrStopEtaRoot}
-                    />
+                    <MtrStopEta seq={i + 1} routeObj={routeData} stopObj={e} />
                   ) : (
                     <StopEta
                       seq={i + 1}
                       routeObj={routeData}
                       stopObj={e}
-                      StopEtaRoot={StopEtaRoot}
+                      slice={3}
                     />
                   )}
                 </AccordionSummary>
@@ -336,72 +324,6 @@ const StopListRoot = styled("div")({
           width: "50px",
         },
       },
-    },
-  },
-});
-
-const MtrStopEtaRoot = styled("div")({
-  display: "flex",
-  flexDirection: "row",
-  flexGrow: "1",
-  alignItems: "center",
-  ".seq": {
-    width: "25px",
-  },
-  ".stop": {
-    width: "50px",
-  },
-  ".noEta": {
-    textAlign: "center",
-    width: "80%",
-    padding: "4px 0",
-  },
-  ".noEta2": {
-    width: "55%",
-  },
-  ".etasWrapper": {
-    width: "100%",
-    ".etaWrapper": {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      padding: "4px 0",
-      ".arriveText": {
-        width: "80px",
-        ".dest": {
-          paddingLeft: "4px",
-        },
-      },
-      ".ttntWrapper": {
-        width: "55%",
-        display: "flex",
-        flexDirection: "row",
-        ".ttnt": {
-          width: "33.33%",
-          fontSize: "12px",
-        },
-      },
-    },
-  },
-});
-
-const StopEtaRoot = styled("div")({
-  display: "flex",
-  padding: "4px 0",
-  width: "100%",
-  alignItems: "center",
-  ".seq": {
-    width: "5%",
-  },
-  ".stop": {
-    width: "50%",
-  },
-  ".etas": {
-    width: "45%",
-    display: "flex",
-    flexDirection: "row",
-    ".eta": {
-      width: "33.33%",
     },
   },
 });

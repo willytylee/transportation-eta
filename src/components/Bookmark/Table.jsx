@@ -13,7 +13,7 @@ import {
   DirectionsBus as DirectionsBusIcon,
   PriorityHigh as PriorityHighIcon,
 } from "@mui/icons-material";
-import { etaTimeConverter } from "../../Utils/Utils";
+import { phaseEta } from "../../Utils/Utils";
 import { companyColor, primaryColor } from "../../constants/Constants";
 import { routeMap, mtrLineColor, stationMap } from "../../constants/Mtr";
 
@@ -55,7 +55,7 @@ export const Table = ({ etaResult }) => {
             ? [{ minutes: "沒有班次" }]
             : etas
                 .map((f) => ({
-                  minutes: etaTimeConverter({ etaStr: f.eta, remark: f.rmk_tc })
+                  minutes: phaseEta({ etaStr: f.eta, remark: f.rmk_tc })
                     .etaIntervalStr,
                   dest: f.dest,
                 }))

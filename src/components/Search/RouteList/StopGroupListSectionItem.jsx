@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material";
-import { etaTimeConverter } from "../../../Utils/Utils";
-import { mtrIconColor, mtrLineColor } from "../../../constants/Mtr";
+import { phaseEta } from "../../../Utils/Utils";
+import { mtrLineColor } from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";
 import { TransportSign } from "../../Direction/Box/TransportSign";
 
@@ -36,7 +36,7 @@ export const StopGroupListSectionItem = ({ eta, setNearbyDialogOpen }) => {
       </div>
       <div className="etas">
         {eta.etas.length > 0
-          ? etaTimeConverter({
+          ? phaseEta({
               etaStr: eta.etas[0].eta,
               remark: eta.etas[0].rmk_tc,
             }).etaIntervalStr
@@ -54,14 +54,6 @@ const StopGrouListSectionItemRoot = styled("div", {
   padding: "4px 0",
   borderBottom: "1px solid lightgrey",
   color: eta.etas.length === 0 && "#c5c5c5",
-  ".transportIconWrapper": {
-    width: "10%",
-    display: "flex",
-    ".transportIcon": {
-      height: "18px",
-      ...mtrIconColor,
-    },
-  },
   ".route": {
     fontWeight: "900",
     width: "55px",

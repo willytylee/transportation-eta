@@ -12,7 +12,7 @@ import {
   DirectionsBus as DirectionsBusIcon,
   PriorityHigh as PriorityHighIcon,
 } from "@mui/icons-material";
-import { etaTimeConverter, sortEtaObj } from "../../Utils/Utils";
+import { phaseEta, sortEtaObj } from "../../Utils/Utils";
 import { companyColor, primaryColor } from "../../constants/Constants";
 import { stationMap, mtrLineColor, routeMap } from "../../constants/Mtr";
 
@@ -72,7 +72,7 @@ export const List = ({ etaResult, longList }) => {
 
   result.forEach((e, i) => {
     const { eta, rmk_tc } = e;
-    result[i].eta = etaTimeConverter({
+    result[i].eta = phaseEta({
       etaStr: eta,
       remark: rmk_tc,
     }).etaIntervalStr;
@@ -111,7 +111,7 @@ export const List = ({ etaResult, longList }) => {
             </div>
             <div className={`stopName ${e.co}`}>
               {e?.stopName}
-              {e.dest && ` → ${stationMap[e?.dest]}`}
+              {e.co === "mtr" && ` → ${stationMap[e?.dest]}`}
             </div>
             <div className="eta">{e?.eta}</div>
           </AccordionSummary>

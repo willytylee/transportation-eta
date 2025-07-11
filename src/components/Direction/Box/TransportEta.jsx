@@ -1,6 +1,5 @@
 import { styled, Button } from "@mui/material";
-import { phaseEtaToWaitingMins, etaTimeConverter } from "../../../Utils/Utils";
-import { mtrIconColor } from "../../../constants/Mtr";
+import { phaseEta } from "../../../Utils/Utils";
 import { mtrLineColor } from "../../../constants/Mtr";
 import { TransportSign } from "./TransportSign";
 
@@ -15,7 +14,7 @@ export const TransportEta = ({
   let timeForNextRoute = 0;
 
   if (eta.length > 0) {
-    const etaTimes = eta.map((f) => phaseEtaToWaitingMins(f.eta));
+    const etaTimes = eta.map((f) => phaseEta({ etaStr: f.eta }).waitingMins);
 
     if (walkTime) {
       if (etaTimes[0] > walkTime) {
@@ -39,16 +38,13 @@ export const TransportEta = ({
       <div className="waitingNotice">
         <div className="arriveTimeMsgWrapper">
           <TransportSign routeObj={routeObj} />
-          <div className="arriveTimeMsg">到站時間: {arriveTime}</div>
+          <div className="arriveTimeMsg"> 到站時間: {arriveTime}</div>
         </div>
         <div className="eta">
           {eta.length > 0 &&
             eta.map((e, i) => (
               <div key={i} className="eta">
-                {
-                  etaTimeConverter({ etaStr: e.eta, remark: e.rmk_tc })
-                    .etaIntervalStr
-                }
+                {phaseEta({ etaStr: e.eta, remark: e.rmk_tc }).etaIntervalStr}
               </div>
             ))}
         </div>
@@ -64,12 +60,9 @@ const TransportEtaRoot = styled(Button)({
     ".arriveTimeMsgWrapper": {
       display: "flex",
       alignItems: "center",
-      ".transportIconWrapper": {
-        display: "flex",
-        ".transportIcon": {
-          height: "14px",
-          ...mtrIconColor,
-        },
+      gap: "2px",
+      ".transportIcon": {
+        height: "14px",
       },
     },
     ".arriveTimeMsg": {

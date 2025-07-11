@@ -44,57 +44,62 @@ export const SearchBar = ({ updateMapCollapse }) => {
             );
             seen.add(key);
             uniqueData.push({
-              nameZH: item.nameZH,
-              addressZH: item.addressZH,
-              districtZH: item.districtZH,
+              label: `${item.nameZH}${
+                item.addressZH ? ` - ${item.addressZH}` : ""
+              }${item.districtZH ? ` - ${item.districtZH}` : ""}`,
+              labelEn: item.nameEN.toLowerCase(),
               location: { lat, lng },
             });
           }
         }
 
-        for (const item of Object.values(gStopList)) {
+        const stopList = Object.values(gStopList).filter(
+          (e) =>
+            e.name.en.toLowerCase().includes(input.toLowerCase()) ||
+            e.name.zh.includes(input)
+        );
+
+        for (const item of stopList) {
           const key = `${item.name.zh}`;
           if (!seen.has(key)) {
             seen.add(key);
             uniqueData.push({
-              nameZH: item.name.zh,
-              addressZH: "",
-              districtZH: "",
+              label: item.name.zh,
+              labelEn: item.name.en.toLowerCase(),
               location: { lat: item.location.lat, lng: item.location.lng },
             });
           }
         }
 
-        const result = uniqueData
-          .filter(
-            (e) =>
-              e.addressZH
-                .toLowerCase()
-                .replace(/\s/g, "")
-                .includes(input.toLowerCase().replace(/\s/g, "")) ||
-              e.nameZH
-                .toLowerCase()
-                .replace(/\s/g, "")
-                .includes(input.toLowerCase().replace(/\s/g, "")) ||
-              e.districtZH
-                .toLowerCase()
-                .replace(/\s/g, "")
-                .includes(input.toLowerCase().replace(/\s/g, ""))
-          )
+        return uniqueData
           .sort((x, y) => {
             // Check for exact match
-            const xIsExact = x.nameZH === input;
-            const yIsExact = y.nameZH === input;
+            const xIsExact =
+              x.label === input || x.labelEn === input.toLowerCase();
+            const yIsExact =
+              y.label === input || y.labelEn === input.toLowerCase();
 
             // Check if input is included at the start
-            const xStartsWith = x.nameZH.startsWith(input) && !xIsExact;
-            const yStartsWith = y.nameZH.startsWith(input) && !yIsExact;
+            const xStartsWith =
+              (x.label.startsWith(input) ||
+                x.labelEn.startsWith(input.toLowerCase())) &&
+              !xIsExact;
+            const yStartsWith =
+              (y.label.startsWith(input) ||
+                y.labelEn.startsWith(input.toLowerCase())) &&
+              !yIsExact;
 
             // Check if input is included but not at the start
             const xIncludes =
-              x.nameZH.includes(input) && !xIsExact && !xStartsWith;
+              (x.label.includes(input) ||
+                x.labelEn.includes(input.toLowerCase())) &&
+              !xIsExact &&
+              !xStartsWith;
             const yIncludes =
-              y.nameZH.includes(input) && !yIsExact && !yStartsWith;
+              (y.label.includes(input) ||
+                y.labelEn.includes(input.toLowerCase())) &&
+              !yIsExact &&
+              !yStartsWith;
 
             // Priority 1: Exact matches
             if (xIsExact && !yIsExact) return -1;
@@ -109,21 +114,14 @@ export const SearchBar = ({ updateMapCollapse }) => {
             if (!xIncludes && yIncludes) return 1;
 
             // Priority 4: Alphabetical order for the rest
-            return x.nameZH.localeCompare(y.nameZH);
+            return x.label.localeCompare(y.label);
           })
-          .map((e) => {
-            const formatted = `${e.nameZH}${
-              e.addressZH ? ` - ${e.addressZH}` : ""
-            }${e.districtZH ? ` - ${e.districtZH}` : ""}`;
-            const { lat, lng } = e.location;
-            return {
-              label: formatted,
-              value: formatted,
-              location: { lat, lng },
-            };
-          });
-
-        return result;
+          .slice(0, 30)
+          .map((e) => ({
+            label: e.label,
+            value: e.label,
+            location: e.location,
+          }));
       })
     );
   };
@@ -153,13 +151,12 @@ export const SearchBar = ({ updateMapCollapse }) => {
     updateMapCollapse();
   };
 
-  const defaultOptions = [
-    {
-      label: "你的位置",
-      value: "你的位置",
-      location: currentLocation,
-    },
-  ];
+  const defaultValue = {
+    label: "你的位置",
+    value: "你的位置",
+    location: currentLocation,
+  };
+  const defaultOptions = [defaultValue];
 
   return (
     <SearchBarRoot>
@@ -168,11 +165,7 @@ export const SearchBar = ({ updateMapCollapse }) => {
           loadOptions={loadOptions}
           onChange={onOrigChange}
           defaultOptions={defaultOptions}
-          defaultValue={{
-            label: "你的位置",
-            value: "你的位置",
-            location: currentLocation,
-          }}
+          defaultValue={defaultValue}
           cacheOptions
           value={origin}
           placeholder="起點"

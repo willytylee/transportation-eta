@@ -47,7 +47,7 @@ export const Map = () => {
 
   if (mapLocation) {
     location = mapLocation;
-  } else if (currRouteStopList[nearestStopIdx]) {
+  } else if (currRouteStopList && currRouteStopList[nearestStopIdx]) {
     location = currRouteStopList[nearestStopIdx].location;
   } else {
     location = { lat: 0, lng: 0 };
@@ -201,6 +201,14 @@ export const Map = () => {
     );
   };
 
+  const isMtr = routeData.co[0] === "mtr";
+  const isLrt = routeData.co[0] === "lightRail";
+  const polylineColor = isMtr
+    ? mtrLineColor["&." + routeData.route].color
+    : isLrt
+    ? mtrLineColor["&.L" + routeData.route].color
+    : companyColor["." + getFirstCoByRouteObj(routeData)]?.color;
+
   return (
     <MapContainerRoot
       center={[location.lat, location.lng]}
@@ -214,7 +222,7 @@ export const Map = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {routeData.stops &&
-        currRouteStopIdList.map((e, i) => {
+        currRouteStopIdList?.map((e, i) => {
           const stop = gStopList[e];
           return <CustomMarker stop={stop} _stopId={e} key={i} i={i} />;
         })}
@@ -226,11 +234,7 @@ export const Map = () => {
 
       <Polyline
         pathOptions={{
-          color: `${
-            routeData.co[0] === "mtr"
-              ? mtrLineColor["&." + routeData.route].color
-              : companyColor["." + getFirstCoByRouteObj(routeData)].color
-          }`,
+          color: polylineColor,
           opacity: "0.75",
         }}
         positions={routeLine}

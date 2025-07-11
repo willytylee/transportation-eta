@@ -1,13 +1,16 @@
 import _ from "lodash";
-import { parseMtrEtas } from "../../Utils/Utils";
+import { useParams } from "react-router-dom";
+import { styled } from "@mui/material";
+import { phaseEta } from "../../Utils/Utils";
 import { useEtas } from "../../hooks/Etas";
 import { etaExcluded, stationMap } from "../../constants/Mtr";
 
-export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
+export const MtrStopEta = ({ seq, stopObj, routeObj, childStyles }) => {
+  const { stopId } = useParams();
   const { eta, isEtaLoading } = useEtas({
     seq,
     routeObj,
-    interval: Math.floor(Math.random() * 10001) + 10000,
+    interval: 30000,
   });
 
   const groupedEtas = _(eta)
@@ -20,7 +23,7 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
     .sort((a, b) => (a.dest > b.dest ? 1 : -1));
 
   return (
-    <MtrStopEtaRoot>
+    <MtrStopEtaRoot childStyles={childStyles}>
       <div className="seq">{seq}.</div>
       <div className="stop">{stopObj.name.zh}</div>
       {etaExcluded.includes(routeObj.route) ? (
@@ -31,13 +34,23 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
             groupedEtas.map((destEtas, i) => (
               <div key={i} className="etaWrapper">
                 <div className="arriveText">
-                  → <span className="dest">{stationMap[destEtas.dest]}</span>
+                  →{" "}
+                  <span className="dest">
+                    {" "}
+                    {stationMap[destEtas.dest] || destEtas.dest}
+                  </span>
                 </div>
                 <div className="ttntWrapper">
                   {destEtas.etas
                     .map((_eta, j) => (
                       <div key={j} className="ttnt">
-                        {parseMtrEtas(_eta)}
+                        {phaseEta({ etaStr: _eta.eta }).etaIntervalStr} <br />
+                        {stopId && stopId === _eta.stopId && (
+                          <>
+                            <div>{phaseEta({ etaStr: _eta.eta }).time}</div>
+                            <div>{_eta.plat}號月台</div>
+                          </>
+                        )}
                       </div>
                     ))
                     .slice(0, 3)}
@@ -57,3 +70,54 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, MtrStopEtaRoot }) => {
     </MtrStopEtaRoot>
   );
 };
+
+const MtrStopEtaRoot = styled("div", {
+  shouldForwardProp: (prop) => prop !== "childStyles",
+})(({ childStyles }) => ({
+  display: "flex",
+  flexDirection: "row",
+  flexGrow: "1",
+  alignItems: "center",
+  ".seq": {
+    width: "25px",
+  },
+  ".stop": {
+    width: "70px",
+  },
+  ".noEta": {
+    textAlign: "center",
+    width: "80%",
+    padding: "4px 0",
+  },
+  ".noEta2": {
+    width: "55%",
+  },
+  ".etasWrapper": {
+    width: "100%",
+    ".etaWrapper": {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      padding: "3px 0",
+      alignItems: "center",
+      ".arriveText": {
+        display: "flex",
+        alignItems: "center",
+        width: "80px",
+        ".dest": {
+          paddingLeft: "4px",
+        },
+      },
+      ".ttntWrapper": {
+        width: "55%",
+        display: "flex",
+        flexDirection: "row",
+        ".ttnt": {
+          width: "33.33%",
+          fontSize: "12px",
+        },
+      },
+    },
+  },
+  ...childStyles,
+}));

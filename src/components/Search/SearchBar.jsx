@@ -82,7 +82,7 @@ export const SearchBar = ({ handleFormKeyPress }) => {
 const SearchBarWraper = styled("div")({
   width: "100%",
   textAlign: "center",
-  margin: "15px 0 10px",
+  margin: "10px 0 10px",
   display: "flex",
   justifyContent: "center",
   flexDirection: "row",

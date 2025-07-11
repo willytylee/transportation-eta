@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Accordion, AccordionDetails, styled } from "@mui/material";
 import { primaryColor } from "../../constants/Constants";
-import { phaseEtaToTime, phaseEtaToWaitingMins } from "../../Utils/Utils";
+import { phaseEta } from "../../Utils/Utils";
 import { DirectionContext } from "../../context/DirectionContext";
 import { Walking } from "./Box/Walking";
 import { TransportEta } from "./Box/TransportEta";
@@ -41,9 +41,16 @@ export const DirectionItemAccordion = ({
     transportTime: destTransportTime,
   } = destination;
 
-  const origWaitingTime = phaseEtaToWaitingMins(origEta[0]?.eta);
-  const origArriveTime = phaseEtaToTime(origEta[0]?.eta);
-  const destArriveTime = phaseEtaToTime(commonStopEta[0]?.eta);
+  const origWaitingTime = phaseEta({
+    etaStr: origEta[0]?.eta,
+  }).waitingMins;
+  const origArriveTime = phaseEta({
+    etaStr: origEta[0]?.eta,
+  }).time;
+  const destArriveTime = phaseEta({
+    etaStr: commonStopEta[0]?.eta,
+  }).time;
+
   const isMultiRoute =
     origCommonStopId &&
     origCommonStopSeq &&

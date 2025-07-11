@@ -6,20 +6,30 @@ import {
 import { coPriority } from "../constants/Constants";
 import { fetchEtas } from "../fetch/transports";
 
-export const etaTimeConverter = ({ etaStr, remark }) => {
-  let etaIntervalStr, remarkStr;
-
+export const phaseEta = ({ etaStr, remark }) => {
+  let etaIntervalStr, remarkStr, waitingMins, time;
   if (moment(etaStr, "YYYY-MM-DD HH:mm:ss").isValid()) {
-    const mintuesLeft = moment(etaStr).diff(moment(), "minutes");
-    if (mintuesLeft <= 0) {
-      etaIntervalStr = "準備埋站";
+    const mintuesLeft = moment(etaStr).diff(
+      moment().format("YYYY-MM-DD HH:mm:ss"),
+      "minutes"
+    );
+
+    if (mintuesLeft < 0) {
+      etaIntervalStr = "已離開";
     } else if (mintuesLeft === 0) {
-      etaIntervalStr = "已埋站";
-    } else if (mintuesLeft >= 0 && mintuesLeft <= 60) {
+      etaIntervalStr = "已抵達";
+    } else if (mintuesLeft === 1) {
+      etaIntervalStr = "即將抵達";
+    } else if (mintuesLeft > 1 && mintuesLeft <= 60) {
       etaIntervalStr = `${mintuesLeft}分鐘`;
     } else if (mintuesLeft > 60) {
-      etaIntervalStr = moment(etaStr).format("HH:mm");
+      etaIntervalStr = moment(etaStr).format("HH:mma");
     }
+    waitingMins = moment(etaStr).diff(
+      moment().format("YYYY-MM-DD HH:mm:ss"),
+      "minutes"
+    );
+    time = moment(etaStr).format("HH:mma");
   } else if (etaStr === "") {
     if (remark) {
       etaIntervalStr = `${remark}`;
@@ -28,26 +38,14 @@ export const etaTimeConverter = ({ etaStr, remark }) => {
     }
   } else if (etaStr === false) {
     etaIntervalStr = "路線已更變, 請刪除及重新將路線加入書籤";
+  } else {
+    etaIntervalStr = etaStr;
   }
   if (remark) {
     remarkStr = `${remark}`;
   }
 
-  return { etaIntervalStr, remarkStr };
-};
-
-export const phaseEtaToWaitingMins = (etaStr) => {
-  if (moment(etaStr, "YYYY-MM-DD HH:mm:ss").isValid()) {
-    return moment(etaStr).diff(moment(), "minutes");
-  }
-  return null;
-};
-
-export const phaseEtaToTime = (etaStr) => {
-  if (moment(etaStr, "YYYY-MM-DD HH:mm:ss").isValid()) {
-    return moment(etaStr).format("HH:mm");
-  }
-  return "";
+  return { etaIntervalStr, remarkStr, waitingMins, time };
 };
 
 export const getLocalStorage = (key) => {
@@ -77,7 +75,12 @@ export const sortEtaObj = (etaObjArr) => {
     if (b.eta === "" || b.eta === null) {
       return -1;
     }
-    if (a.eta && b.eta) {
+    if (
+      a.eta &&
+      b.eta &&
+      moment(a.eta, "YYYY-MM-DD HH:mm:ss").isValid() &&
+      moment(b.eta, "YYYY-MM-DD HH:mm:ss").isValid()
+    ) {
       return moment(a.eta).diff(moment(b.eta), "second");
     }
     return false;
@@ -130,7 +133,8 @@ export const basicFiltering = (e) =>
   e.co.includes("ctb") ||
   e.co.includes("gmb") ||
   e.co.includes("nlb") ||
-  e.co.includes("mtr");
+  e.co.includes("mtr") ||
+  e.co.includes("lightRail");
 
 export const sortByCompany = (routeObjA, routeObjB) => {
   const coA = coPriority.indexOf(getFirstCoByRouteObj(routeObjA));
@@ -143,13 +147,6 @@ export const sortByCompany = (routeObjA, routeObjB) => {
   }
   return 0;
 };
-
-export const parseMtrEtas = (e) =>
-  parseInt(e.ttnt, 10) === 0
-    ? "準備埋站"
-    : parseInt(e.ttnt, 10) >= 60
-    ? moment(e.eta, "YYYY-MM-DD HH:mm:ss").format("HH:mm")
-    : `${e.ttnt}分鐘`;
 
 export const findNearestNumber = (goal, arr) =>
   arr.reduce((prev, curr) =>

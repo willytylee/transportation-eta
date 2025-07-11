@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { styled, AccordionSummary } from "@mui/material";
-import { phaseEtaToWaitingMins } from "../../Utils/Utils";
+import { phaseEta } from "../../Utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { DbContext } from "../../context/DbContext";
 import { WalkSign } from "./Box/WalkSign";
@@ -55,7 +55,7 @@ export const DirectionSummary = ({
     waitingTimeStr = " 沒有班次";
   }
   if (origTransportTime !== null && destTransportTime !== null) {
-    const etaTimes = eta.map((f) => phaseEtaToWaitingMins(f.eta));
+    const etaTimes = eta.map((f) => phaseEta({ etaStr: f.eta }).waitingMins);
 
     if (etaTimes[0] > origWalkTime) {
       estimateTravelTime =
