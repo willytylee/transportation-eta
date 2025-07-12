@@ -62,30 +62,16 @@ export const useLocationOnce = () => {
     lat: 0,
     lng: 0,
   });
-  const [canStop, setCanStop] = useState(false);
 
   useEffect(() => {
-    const intervalContent = async () => {
-      const success = (position) => {
-        setLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-        setCanStop(true);
-      };
-      navigator.geolocation.getCurrentPosition(success);
+    const success = (position) => {
+      setLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
     };
-
-    const intervalID = setInterval(intervalContent, 1000);
-
-    if (canStop) {
-      clearInterval(intervalID);
-    }
-
-    return () => {
-      clearInterval(intervalID);
-    };
-  }, [location]);
+    navigator.geolocation.getCurrentPosition(success);
+  }, []);
 
   return { location };
 };
