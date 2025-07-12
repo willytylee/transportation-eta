@@ -44,10 +44,10 @@ export const MtrStopEta = ({ seq, stopObj, routeObj, childStyles }) => {
                     <div key={j} className="ttnt">
                       {phaseEta({ etaStr: _eta.eta }).etaIntervalStr} <br />
                       {stopId && stopId === _eta.stopId && (
-                        <>
+                        <div className="extra">
                           <div>{phaseEta({ etaStr: _eta.eta }).time}</div>
-                          <div>{_eta.plat}號月台</div>
-                        </>
+                          <div>月台{_eta.plat}</div>
+                        </div>
                       )}
                     </div>
                   ))
@@ -87,7 +87,7 @@ const MtrStopEtaRoot = styled("div", {
     padding: "4px 0",
   },
   ".noEta2": {
-    width: "55%",
+    width: "180px",
   },
   ".etasWrapper": {
     width: "100%",
@@ -109,9 +109,13 @@ const MtrStopEtaRoot = styled("div", {
         display: "flex",
         flexDirection: "row",
         gap: "4px",
+        alignItems: "flex-end",
         ".ttnt": {
           width: "33.33%",
           fontSize: "12px",
+          ".extra": {
+            fontSize: "11px",
+          },
         },
       },
     },

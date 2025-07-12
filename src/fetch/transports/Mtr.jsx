@@ -15,7 +15,12 @@ export const fetchMtrEtas = async ({ stopId, route, bound }) => {
       seq: e.seq,
       dest: e.dest,
       ttnt: e.ttnt,
-      plat: e.plat,
+      plat: e.plat
+        .toString()
+        .replace(/1/g, "①")
+        .replace(/2/g, "②")
+        .replace(/3/g, "③")
+        .replace(/4/g, "④"),
       stopId,
     }));
   } else if (bound === "DT") {
@@ -25,7 +30,12 @@ export const fetchMtrEtas = async ({ stopId, route, bound }) => {
       seq: e.seq,
       dest: e.dest,
       ttnt: e.ttnt,
-      plat: e.plat,
+      plat: e.plat
+        .toString()
+        .replace(/1/g, "①")
+        .replace(/2/g, "②")
+        .replace(/3/g, "③")
+        .replace(/4/g, "④"),
       stopId,
     }));
   }
@@ -40,7 +50,12 @@ export const fetchMtrEtas = async ({ stopId, route, bound }) => {
     seq: e.seq,
     dest: e.dest,
     ttnt: e.ttnt,
-    plat: e.plat,
+    plat: e.plat
+      .toString()
+      .replace(/1/g, "①")
+      .replace(/2/g, "②")
+      .replace(/3/g, "③")
+      .replace(/4/g, "④"),
     stopId,
   }));
 };

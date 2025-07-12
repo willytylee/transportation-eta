@@ -33,17 +33,21 @@ export const Pin = () => {
   const mtrStopEtaChildStyles = {
     paddingTop: 0,
     paddingBottom: 0,
-    ".ttntWrapper": { width: "150px !important;" },
+    ".etaWrapper": {
+      paddingTop: "0 !important",
+      paddingBottom: "0 !important",
+      ".ttntWrapper": { width: "150px !important;" },
+    },
   };
 
   const stopEtaChildStyles = {
-    justifyContent: "space-between",
     paddingTop: 0,
     paddingBottom: 0,
     ".etas": {
       width: "150px",
       display: "flex",
       flexDirection: "row",
+      alignItems: "flex-end",
       ".eta": {
         width: "33.33%",
       },

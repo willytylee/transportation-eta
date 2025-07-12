@@ -13,13 +13,17 @@ export const phaseEta = ({ etaStr, remark }) => {
       moment().format("YYYY-MM-DD HH:mm:ss"),
       "minutes"
     );
-
     if (mintuesLeft < 0) {
       etaIntervalStr = "已離開";
     } else if (mintuesLeft === 0) {
       etaIntervalStr = "已抵達";
     } else if (mintuesLeft > 0 && mintuesLeft <= 60) {
-      etaIntervalStr = `${mintuesLeft}分鐘`;
+      etaIntervalStr = (
+        <>
+          {mintuesLeft}
+          <span style={{ fontSize: "10px" }}>分鐘</span>
+        </>
+      );
     } else if (mintuesLeft > 60) {
       etaIntervalStr = moment(etaStr).format("HH:mma");
     }

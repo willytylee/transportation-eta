@@ -17,10 +17,12 @@ export const Eta = ({ seq, routeObj, slice }) => {
       .map((e, i) => (
         <div key={i} className="eta">
           {phaseEta({ etaStr: e.eta, remark: e.rmk_tc }).etaIntervalStr}
-          {stopId && stopId === e.stopId && (
-            <div>{phaseEta({ etaStr: e.eta }).time}</div>
-          )}
-          {stopId && stopId === e.stopId && e.plat && <div>{e.plat}號月台</div>}
+          <div className="extra">
+            {stopId && stopId === e.stopId && (
+              <div>{phaseEta({ etaStr: e.eta }).time}</div>
+            )}
+            {stopId && stopId === e.stopId && e.plat && <div>月台{e.plat}</div>}
+          </div>
         </div>
       ))
       .slice(0, slice)

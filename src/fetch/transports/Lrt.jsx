@@ -33,7 +33,14 @@ export const fetchLrtEtas = async ({ stopId, route, dest }) => {
           dest: e.dest_ch,
           eta,
           route: e.route_no,
-          plat: platform.platform_id,
+          plat: platform.platform_id
+            .toString()
+            .replace(/1/g, "①")
+            .replace(/2/g, "②")
+            .replace(/3/g, "③")
+            .replace(/4/g, "④")
+            .replace(/5/g, "⑤")
+            .replace(/6/g, "⑥"),
           stopId,
         };
       });

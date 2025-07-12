@@ -27,17 +27,22 @@ const StopEtaRoot = styled("div", {
   width: "100%",
   alignItems: "baseline",
   ".seq": {
-    width: "5%",
+    width: "20px",
+    flexShrink: 0,
   },
   ".stop": {
-    width: "50%",
+    flex: 1,
   },
   ".etas": {
     width: "180px",
     display: "flex",
     flexDirection: "row",
+    alignItems: "flex-end",
     ".eta": {
       width: "33.33%",
+      ".extra": {
+        fontSize: "11px",
+      },
     },
   },
   ...childStyles,

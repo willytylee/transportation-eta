@@ -63,7 +63,7 @@ const ListItemTextRoot = styled(ListItemText)({
     ".routeStopWrapper": {
       display: "flex",
       ".routeWrapper": {
-        width: "40px",
+        width: "60px",
         ".route": {
           ...mtrLineColor,
         },

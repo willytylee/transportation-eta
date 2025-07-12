@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 import { findNearestNumber } from "../../Utils/Utils";
 
 export const fetchKmbEtas = async ({
@@ -25,7 +26,13 @@ export const fetchKmbEtas = async ({
   }
 
   return data
-    .filter((e) => e.eta !== null && e.dir === bound && e.seq === correctSeq)
+    .filter(
+      (e) =>
+        e.eta !== null &&
+        e.dir === bound &&
+        e.seq === correctSeq &&
+        moment(e.data_timestamp) < moment(e.eta)
+    )
     .map((e) => ({
       co: "kmb",
       eta: e.eta,
