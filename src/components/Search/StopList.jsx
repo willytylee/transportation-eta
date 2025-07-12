@@ -133,8 +133,13 @@ export const StopList = () => {
           return curr;
         });
 
-        updateMapStopIdx(expandStopIdArr.findIndex((e) => e === resultStopId));
-        // updateMapLocation(gStopList[resultStopId].location);
+        if (!stopId) {
+          updateMapStopIdx(
+            expandStopIdArr.findIndex((e) => e === resultStopId)
+          );
+          updateMapLocation(gStopList[resultStopId].location);
+        }
+
         updateNearestStopId(resultStopId);
       } else {
         updateNearestStopId("");

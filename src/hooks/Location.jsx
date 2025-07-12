@@ -1,48 +1,48 @@
 // This hook is to get the current location information.
 import { useState, useEffect } from "react";
 
-export const useLocation = ({ interval }) => {
+export const useLocation = () => {
   const [location, setLocation] = useState({
     lat: 0,
     lng: 0,
   });
 
   useEffect(() => {
-    if (interval > 0) {
-      // Watch for position changes
-      const watchId = navigator.geolocation.watchPosition(
-        (pos) => {
-          const { latitude, longitude } = pos.coords;
-          setLocation({ lat: latitude, lng: longitude });
-        },
-        () => {},
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        }
-      );
+    // if (interval > 0) {
+    // Watch for position changes
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setLocation({ lat: latitude, lng: longitude });
+      },
+      () => {},
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      }
+    );
 
-      // Cleanup on component unmount
-      return () => navigator.geolocation.clearWatch(watchId);
+    // Cleanup on component unmount
+    return () => navigator.geolocation.clearWatch(watchId);
 
-      // const intervalContent = async () => {
-      //   const success = (position) => {
-      //     setLocation({
-      //       lat: position.coords.latitude,
-      //       lng: position.coords.longitude,
-      //     });
-      //   };
+    // const intervalContent = async () => {
+    //   const success = (position) => {
+    //     setLocation({
+    //       lat: position.coords.latitude,
+    //       lng: position.coords.longitude,
+    //     });
+    //   };
 
-      //   navigator.geolocation.getCurrentPosition(success);
-      // };
-      // intervalContent();
-      // const intervalID = setInterval(intervalContent, interval);
+    //   navigator.geolocation.getCurrentPosition(success);
+    // };
+    // intervalContent();
+    // const intervalID = setInterval(intervalContent, interval);
 
-      // return () => {
-      //   clearInterval(intervalID);
-      // };
-    }
+    // return () => {
+    //   clearInterval(intervalID);
+    // };
+    // }
   }, []);
 
   return { location };
