@@ -85,7 +85,7 @@ export const useLocationOnce = () => {
     return () => {
       clearInterval(intervalID);
     };
-  }, []);
+  }, [location]);
 
   return { location };
 };
