@@ -8,7 +8,6 @@ export const useLocation = () => {
   });
 
   useEffect(() => {
-    // if (interval > 0) {
     // Watch for position changes
     const watchId = navigator.geolocation.watchPosition(
       (pos) => {
@@ -25,24 +24,34 @@ export const useLocation = () => {
 
     // Cleanup on component unmount
     return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
 
-    // const intervalContent = async () => {
-    //   const success = (position) => {
-    //     setLocation({
-    //       lat: position.coords.latitude,
-    //       lng: position.coords.longitude,
-    //     });
-    //   };
+  return { location };
+};
 
-    //   navigator.geolocation.getCurrentPosition(success);
-    // };
-    // intervalContent();
-    // const intervalID = setInterval(intervalContent, interval);
+export const useLocationWithInterval = ({ interval }) => {
+  const [location, setLocation] = useState({
+    lat: 0,
+    lng: 0,
+  });
 
-    // return () => {
-    //   clearInterval(intervalID);
-    // };
-    // }
+  useEffect(() => {
+    if (interval > 0) {
+      const intervalContent = async () => {
+        const success = (position) => {
+          setLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        };
+        navigator.geolocation.getCurrentPosition(success);
+      };
+      intervalContent();
+      const intervalID = setInterval(intervalContent, interval);
+      return () => {
+        clearInterval(intervalID);
+      };
+    }
   }, []);
 
   return { location };
@@ -53,7 +62,7 @@ export const useLocationOnce = () => {
     lat: 0,
     lng: 0,
   });
-  const [stop, setStop] = useState(false);
+  const [canStop, setCanStop] = useState(false);
 
   useEffect(() => {
     const intervalContent = async () => {
@@ -62,21 +71,21 @@ export const useLocationOnce = () => {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         });
-        setStop(true);
+        setCanStop(true);
       };
       navigator.geolocation.getCurrentPosition(success);
     };
 
     const intervalID = setInterval(intervalContent, 1000);
 
-    if (stop) {
+    if (canStop) {
       clearInterval(intervalID);
     }
 
     return () => {
       clearInterval(intervalID);
     };
-  }, [location]);
+  }, []);
 
   return { location };
 };

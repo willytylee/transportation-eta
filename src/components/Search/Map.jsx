@@ -20,7 +20,7 @@ import currentLocationIcon from "../../assets/icons/currentLocation.png";
 export const Map = () => {
   const { routeKey, stopId } = useParams();
   const navigate = useNavigate();
-  const { location: currentLocation } = useLocation({ interval: 200000 });
+  const { location: currentLocation } = useLocation();
   const { nearestStopId, mapStopIdx, mapLocation, updateMapStopIdx } =
     useContext(EtaContext);
   const { gRouteList, gStopList } = useContext(DbContext);

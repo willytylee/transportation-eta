@@ -19,7 +19,7 @@ import { getFirstCoByRouteObj } from "../../Utils/Utils";
 import { EtaContext } from "../../context/EtaContext";
 import { DbContext } from "../../context/DbContext";
 import { primaryColor } from "../../constants/Constants";
-import { useLocation } from "../../hooks/Location";
+import { useLocationWithInterval } from "../../hooks/Location";
 import { MtrStopEta } from "./MtrStopEta";
 import { StopEta } from "./StopEta";
 import { BookmarkDialog } from "./Dialog/BookmarkDialog";
@@ -30,7 +30,9 @@ export const StopList = () => {
   const { routeKey, stopId } = useParams();
   const navigate = useNavigate();
   const { gStopList, gRouteList } = useContext(DbContext);
-  const { location: currentLocation } = useLocation({ interval: 60000 });
+  const { location: currentLocation } = useLocationWithInterval({
+    interval: 60000,
+  });
   const [stopList, setStopList] = useState([]);
   const [nearbyDialogOpen, setNearbyDialogOpen] = useState(false);
   const [mtrRouteOptionDialogOpen, setMtrRouteOptionDialogOpen] =

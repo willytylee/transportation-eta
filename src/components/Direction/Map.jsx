@@ -37,7 +37,7 @@ export const Map = ({ mapCollapse }) => {
   } = useContext(DirectionContext);
 
   const { gStopList } = useContext(DbContext);
-  const { location: currentLocation } = useLocation({ interval: 60000 });
+  const { location: currentLocation } = useLocation();
   const [navBtnType, setNavBtnType] = useState("normal");
   const [map, setMap] = useState(null);
 

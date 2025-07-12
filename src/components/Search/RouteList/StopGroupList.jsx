@@ -1,7 +1,5 @@
-import { useContext, useState } from "react";
-import _ from "lodash";
+import { useContext, useState, useEffect } from "react";
 import { styled, ButtonGroup, Button } from "@mui/material";
-import { getFirstCoByRouteObj } from "../../../Utils/Utils";
 import { DbContext } from "../../../context/DbContext";
 import { primaryColor } from "../../../constants/Constants";
 import { useStopIdsNearby } from "../../../hooks/StopIdsNearBy";
@@ -15,48 +13,34 @@ export const StopGroupList = ({
 }) => {
   const { gRouteList, gStopList } = useContext(DbContext);
   const [maxDistance, setMaxDistance] = useState(200);
+  const [nearbyRouteList, setNearbyRouteList] = useState([]);
   const { stopIdsNearby } = useStopIdsNearby({
     maxDistance,
     lat: currentLocation.lat,
     lng: currentLocation.lng,
   });
 
-  const filteredRouteObjList = [];
-
-  // Find out the route which contains the near by Stops
-  routeKeyList?.forEach((e) => {
-    const routeData = { ...gRouteList[e] };
-    const company = getFirstCoByRouteObj(routeData);
-    const { stops } = routeData;
-
-    const filitedStopId = stops[company].filter((f) =>
-      Object.keys(stopIdsNearby).includes(f)
+  useEffect(() => {
+    const worker = new Worker(
+      new URL("../../../workers/nearbyWorker.js", import.meta.url),
+      {
+        type: "module",
+      }
     );
 
-    if (filitedStopId?.length > 0) {
-      // There may have more than one stopIdsNearby in a route, find the nearest stop in the route stop List
-      const _stopId = filitedStopId.reduce((prev, curr) =>
-        stopIdsNearby[prev] < stopIdsNearby[curr] ? prev : curr
-      );
-      const origStopSeq = stops[company].findIndex((f) => f === _stopId) + 1;
-      routeData.stopId = _stopId;
-      routeData.seq = origStopSeq;
+    worker.onmessage = (e) => {
+      setNearbyRouteList(e.data);
+      worker.terminate(); // Clean up
+    };
 
-      routeData.distance = stopIdsNearby[_stopId];
-      routeData.routeKey = e;
+    worker.onerror = () => {
+      worker.terminate();
+    };
 
-      filteredRouteObjList.push(routeData);
-    }
-  });
+    worker.postMessage({ routeKeyList, gRouteList, stopIdsNearby }); // Trigger calculation (pass data if needed)
 
-  const nearbyRouteList = _(filteredRouteObjList)
-    .groupBy((x) => x.stopId)
-    .map((value, key) => ({
-      stopId: key,
-      routes: value,
-    }))
-    .value()
-    .sort((a, b) => a.routes[0].distance - b.routes[0].distance);
+    return () => worker.terminate(); // Cleanup on unmount
+  }, [routeKeyList, maxDistance]);
 
   const buttons = [200, 400, 600, 800, 1000];
 
@@ -141,6 +125,11 @@ const StopGrouListRoot = styled("div", {
     ".routes": {
       padding: "0 10px",
     },
+  },
+  ".emptyMsg": {
+    padding: "14px",
+    fontSize: "14px",
+    textAlign: "center",
   },
   ...childStyles,
 }));
