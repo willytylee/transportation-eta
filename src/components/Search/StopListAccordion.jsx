@@ -34,7 +34,7 @@ export const StopListAccordion = ({
   const { routeKey, stopId } = useParams();
   const [renderKey, setRenderKey] = useState(0);
 
-  const handleUpdateOnClick = () => {
+  const handleRefreshOnClick = () => {
     setRenderKey(renderKey + 1);
   };
 
@@ -122,12 +122,9 @@ export const StopListAccordion = ({
           <RadarIcon />
           <div>附近路線</div>
         </IconButton>
-        <IconButton
-          className="iconBtn"
-          onClick={() => handleUpdateOnClick(stop.stopId)}
-        >
+        <IconButton className="iconBtn" onClick={handleRefreshOnClick}>
           <RefreshIcon />
-          <div>更新時間</div>
+          <div>更新</div>
         </IconButton>
       </AccordionDetails>
     </AccordionRoot>
