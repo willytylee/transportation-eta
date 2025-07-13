@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Accordion,
@@ -12,6 +13,7 @@ import {
   Streetview as StreetviewIcon,
   PushPin as PushPinIcon,
   Radar as RadarIcon,
+  Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import { primaryColor } from "../../constants/Constants";
 import { MtrStopEta } from "./MtrStopEta";
@@ -24,12 +26,17 @@ export const StopListAccordion = ({
   isNearestStop,
   lat,
   lng,
-  handlePinIconOnClick,
-  handleNearbyIconOnClick,
-  handleBookmarkAddIconOnClick,
+  handlePinOnClick,
+  handleNearbyOnClick,
+  handleBookmarkAddOnClick,
   handleAccordionOnChange,
 }) => {
   const { routeKey, stopId } = useParams();
+  const [renderKey, setRenderKey] = useState(0);
+
+  const handleUpdateOnClick = () => {
+    setRenderKey(renderKey + 1);
+  };
 
   return (
     <AccordionRoot
@@ -46,13 +53,19 @@ export const StopListAccordion = ({
     >
       <AccordionSummary className="accordionSummary">
         {routeData.co[0] === "mtr" ? (
-          <MtrStopEta seq={stopIdx + 1} routeObj={routeData} stopObj={stop} />
+          <MtrStopEta
+            seq={stopIdx + 1}
+            routeObj={routeData}
+            stopObj={stop}
+            key={renderKey}
+          />
         ) : (
           <StopEta
             seq={stopIdx + 1}
             routeObj={routeData}
             stopObj={stop}
             slice={3}
+            key={renderKey}
           />
         )}
       </AccordionSummary>
@@ -79,12 +92,12 @@ export const StopListAccordion = ({
           className="iconBtn"
           onClick={() => {
             if (routeData.co[0] === "mtr") {
-              handleBookmarkAddIconOnClick({
+              handleBookmarkAddOnClick({
                 routeKey,
                 stopId: stop.stopId,
               });
             } else {
-              handleBookmarkAddIconOnClick({
+              handleBookmarkAddOnClick({
                 seq: stopIdx + 1,
                 stopId: stop.stopId,
                 routeKey,
@@ -97,19 +110,24 @@ export const StopListAccordion = ({
         </IconButton>
         <IconButton
           className="iconBtn"
-          onClick={() =>
-            handlePinIconOnClick(stopIdx + 1, routeKey, stop.stopId)
-          }
+          onClick={() => handlePinOnClick(stopIdx + 1, routeKey, stop.stopId)}
         >
           <PushPinIcon />
           <div>置頂</div>
         </IconButton>
         <IconButton
           className="iconBtn"
-          onClick={() => handleNearbyIconOnClick(stop.stopId)}
+          onClick={() => handleNearbyOnClick(stop.stopId)}
         >
           <RadarIcon />
           <div>附近路線</div>
+        </IconButton>
+        <IconButton
+          className="iconBtn"
+          onClick={() => handleUpdateOnClick(stop.stopId)}
+        >
+          <RefreshIcon />
+          <div>更新時間</div>
         </IconButton>
       </AccordionDetails>
     </AccordionRoot>

@@ -35,7 +35,7 @@ export const StopList = () => {
 
   const stopListRef = useRef(null);
 
-  const handlePinIconOnClick = (seq, _routeKey, _stopId) => {
+  const handlePinOnClick = (seq, _routeKey, _stopId) => {
     const isInList =
       pinList.filter(
         (e) => e.routeKey === _routeKey && e.stopId === _stopId && e.seq === seq
@@ -49,12 +49,12 @@ export const StopList = () => {
     }
   };
 
-  const handleNearbyIconOnClick = (_stopId) => {
+  const handleNearbyOnClick = (_stopId) => {
     setStopLatLng(gStopList[_stopId].location);
     setNearbyDialogOpen(true);
   };
 
-  const handleBookmarkAddIconOnClick = (_bookmarkData) => {
+  const handleBookmarkAddOnClick = (_bookmarkData) => {
     setBookmarkData(_bookmarkData);
     const english = /^[A-Za-z]*$/;
 
@@ -178,9 +178,9 @@ export const StopList = () => {
               isNearestStop={isNearestStop}
               lat={lat}
               lng={lng}
-              handlePinIconOnClick={handlePinIconOnClick}
-              handleNearbyIconOnClick={handleNearbyIconOnClick}
-              handleBookmarkAddIconOnClick={handleBookmarkAddIconOnClick}
+              handlePinOnClick={handlePinOnClick}
+              handleNearbyOnClick={handleNearbyOnClick}
+              handleBookmarkAddOnClick={handleBookmarkAddOnClick}
               handleAccordionOnChange={handleAccordionOnChange}
             />
           );
