@@ -44,8 +44,7 @@ export const SearchBar = ({ handleFormKeyPress }) => {
       <div className="searchWrapper">
         <TextField
           variant="standard"
-          label="輸入路線號碼"
-          placeholder="297"
+          placeholder="輸入路線號碼"
           disabled={dbVersion === null}
           inputProps={{ className: "searchBar" }}
           size="small"

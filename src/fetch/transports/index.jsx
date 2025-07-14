@@ -5,6 +5,7 @@ import { fetchMtrEtas } from "./Mtr";
 import { fetchNlbEtas } from "./Nlb";
 import { fetchNwfbCtbEtas } from "./NwfbCtb";
 import { fetchLrtEtas } from "./Lrt";
+import { fetchLrtFeederEtas } from "./lrtfeeder";
 
 export const fetchEtas = async ({
   error,
@@ -84,6 +85,14 @@ export const fetchEtas = async ({
                 route,
                 stopId: _stopId,
                 dest,
+              })
+            );
+          } else if (company_id === "lrtfeeder") {
+            etas = etas.concat(
+              await fetchLrtFeederEtas({
+                seq,
+                route,
+                stopId: _stopId,
               })
             );
           }

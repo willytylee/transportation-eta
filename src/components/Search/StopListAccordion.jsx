@@ -145,7 +145,7 @@ const AccordionRoot = styled(Accordion)({
   margin: "0 !important",
   boxShadow: "unset",
   ".accordionSummary": {
-    minHeight: "unset",
+    minHeight: "0 !important",
     padding: "0",
     ".MuiAccordionSummary-content": {
       margin: 0,

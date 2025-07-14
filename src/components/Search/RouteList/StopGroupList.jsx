@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { styled, ButtonGroup, Button } from "@mui/material";
 import { DbContext } from "../../../context/DbContext";
-import { primaryColor } from "../../../constants/Constants";
+import { primaryColor, transportBtn } from "../../../constants/Constants";
 import { useStopIdsNearby } from "../../../hooks/StopIdsNearBy";
 import { StopGroupListSection } from "./StopGroupListSection";
 
@@ -46,29 +46,6 @@ export const StopGroupList = ({
 
   const buttons = [200, 400, 600, 800, 1000];
 
-  const transportBtn = [
-    {
-      value: "gmb",
-      text: "小巴",
-      co: ["gmb"],
-    },
-    {
-      value: "bus",
-      text: "巴士",
-      co: ["kmb", "ctb", "nwfb", "nlb"],
-    },
-    {
-      value: "mtr",
-      text: "地鐵",
-      co: ["mtr"],
-    },
-    {
-      value: "lrt",
-      text: "輕鐵",
-      co: ["lightRail"],
-    },
-  ];
-
   const transportCo = transport
     .map((e) => {
       const _transport = transportBtn.find((btn) => e === btn.value);
@@ -86,7 +63,9 @@ export const StopGroupList = ({
 
   const handleTransportBtnOnClick = (e) => {
     const index = transport.indexOf(e.target.value);
-    if (index === -1) {
+    if (transport.length === 4) {
+      setTransport([e.target.value]);
+    } else if (index === -1) {
       setTransport([...transport, e.target.value]);
     } else {
       setTransport(transport.filter((f) => f !== e.target.value));

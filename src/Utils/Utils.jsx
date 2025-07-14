@@ -136,7 +136,8 @@ export const basicFiltering = (e) =>
   e.co.includes("gmb") ||
   e.co.includes("nlb") ||
   e.co.includes("mtr") ||
-  e.co.includes("lightRail");
+  e.co.includes("lightRail") ||
+  e.co.includes("lrtfeeder");
 
 export const sortByCompany = (routeObjA, routeObjB) => {
   const coA = coPriority.indexOf(getFirstCoByRouteObj(routeObjA));

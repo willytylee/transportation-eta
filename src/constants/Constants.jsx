@@ -7,16 +7,7 @@ import nwfb from "../assets/transports/nwfb.png";
 import mtr from "../assets/transports/mtr.png";
 import nlb from "../assets/transports/nlb.png";
 import lightRail from "../assets/transports/lightRail.png";
-
-export const companyMap = {
-  kmb: "九巴",
-  ctb: "城巴",
-  nwfb: "新巴",
-  mtr: "港鐵",
-  gmb: "小巴",
-  nlb: "嶼巴",
-  lightRail: "輕鐵",
-};
+import lrtfeeder from "../assets/transports/lrtfeeder.png";
 
 export const companyIconMap = {
   kmb,
@@ -28,6 +19,7 @@ export const companyIconMap = {
   gmb,
   nlb,
   lightRail,
+  lrtfeeder,
 };
 
 export const companyColor = {
@@ -59,6 +51,10 @@ export const companyColor = {
     color: "#dcb802",
     stroke: "#dcb802",
   },
+  ".lrtfeeder": {
+    color: "#9e0000",
+    stroke: "#9e0000",
+  },
 };
 
 export const coPriority = [
@@ -67,11 +63,35 @@ export const coPriority = [
   "ctb",
   "gmb",
   "mtr",
-  "nlb",
   "lightRail",
+  "nlb",
+  "lrtfeeder",
 ];
 
 export const primaryColor = "#2f305c";
+
+export const transportBtn = [
+  {
+    value: "gmb",
+    text: "小巴",
+    co: ["gmb"],
+  },
+  {
+    value: "bus",
+    text: "巴士",
+    co: ["kmb", "ctb", "nwfb", "nlb", "lrtfeeder"],
+  },
+  {
+    value: "mtr",
+    text: "地鐵",
+    co: ["mtr"],
+  },
+  {
+    value: "lrt",
+    text: "輕鐵",
+    co: ["lightRail"],
+  },
+];
 
 export const navbarDetail = {
   "/search": {

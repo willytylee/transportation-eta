@@ -37,8 +37,14 @@ export const SimpleRouteList = ({ mode, routeKeyList }) => {
           </div>
         );
       }
+
       // isMtr or mode === history, bold all
-      return <span className="boldRoute">{_route}</span>;
+      return (
+        <span className={`boldRoute mtrRoute ${_route}`}>
+          {routeMap[_route]}
+          {!isMtr && _route}
+        </span>
+      );
     };
 
     return (
@@ -46,6 +52,8 @@ export const SimpleRouteList = ({ mode, routeKeyList }) => {
         onClick={() => handleOnClick(key)}
         key={key}
         className={isMatch && isSearchMode ? "match" : ""}
+        isMtr={isMtr}
+        mode={mode}
       >
         <div className="route">
           <div className="transportIconWrapper">
@@ -59,11 +67,6 @@ export const SimpleRouteList = ({ mode, routeKeyList }) => {
           {renderRouteText()}
         </div>
         <div className="companyOrigDest">
-          {isMtr && (
-            <div className="routeWrapper">
-              <div className={`route ${_route}`}>{routeMap[_route]}</div>
-            </div>
-          )}
           <div className="origDest">
             {orig.zh}{" "}
             {isMtr ? (
@@ -84,7 +87,9 @@ export const SimpleRouteList = ({ mode, routeKeyList }) => {
   });
 };
 
-const SimpleRouteListRoot = styled("div")({
+const SimpleRouteListRoot = styled("div", {
+  shouldForwardProp: (prop) => prop !== "isMtr" && prop !== "mode",
+})(({ isMtr, mode }) => ({
   display: "flex",
   alignItems: "center",
   padding: "4px 10px",
@@ -93,7 +98,7 @@ const SimpleRouteListRoot = styled("div")({
     background: "#ffffe5",
   },
   ".route": {
-    width: "60px",
+    width: isMtr || mode === "history" ? "80px" : "60px",
     display: "flex",
     alignItems: "center",
     gap: "4px",
@@ -107,6 +112,9 @@ const SimpleRouteListRoot = styled("div")({
         height: "18px",
         ...mtrIconColor,
       },
+    },
+    ".mtrRoute": {
+      ...mtrLineColor,
     },
   },
 
@@ -133,4 +141,4 @@ const SimpleRouteListRoot = styled("div")({
       fontSize: "10px",
     },
   },
-});
+}));

@@ -6,7 +6,7 @@ export const ChangeLog = () => (
     <div className="subTitle">7/2025</div>
     <div className="content">
       <ul>
-        加入<Link to="/search">輕鐵及大嶼山巴士搜索</Link>功能,
+        加入<Link to="/search">輕鐵, 港鐵巴士及大嶼山巴士搜索</Link>功能。
       </ul>
     </div>
     <DividerRoot />
