@@ -40,7 +40,7 @@ export const TransportEta = ({
           <TransportSign routeObj={routeObj} />
           <div className="arriveTimeMsg"> 到站時間: {arriveTime}</div>
         </div>
-        <div className="eta">
+        <div className="etas">
           {eta.length > 0 &&
             eta.map((e, i) => (
               <div key={i} className="eta">
@@ -73,7 +73,7 @@ const TransportEtaRoot = styled(Button)({
         ...mtrLineColor,
       },
     },
-    ".eta": {
+    ".etas": {
       display: "flex",
       gap: "12px",
     },

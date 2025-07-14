@@ -5,6 +5,8 @@ import {
   PersonPinCircle as PersonPinCircleIcon,
   Polyline as PolylineIcon,
   Navigation as NavigationIcon,
+  OpenInFull as OpenInFullIcon,
+  CloseFullscreen as CloseFullscreenIcon,
 } from "@mui/icons-material";
 import { IconButton, styled, Avatar } from "@mui/material";
 import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
@@ -25,6 +27,7 @@ export const Map = () => {
     useContext(EtaContext);
   const { gRouteList, gStopList } = useContext(DbContext);
   const [navBtnType, setNavBtnType] = useState("normal");
+  const [mapExpanded, setMapExpanded] = useState(false);
   const [map, setMap] = useState(null);
 
   const routeData = routeKey ? gRouteList[routeKey] : [];
@@ -54,21 +57,15 @@ export const Map = () => {
   }
 
   useEffect(() => {
-    if (map && mapLocation) {
-      map.panTo([mapLocation.lat, mapLocation.lng]);
+    if (map && location) {
+      map.panTo([location.lat, location.lng]);
     }
-  }, [mapLocation]);
+  }, [location]);
 
   const routeLine = currRouteStopList?.map((e) => [
     e.location.lat,
     e.location.lng,
   ]);
-
-  useEffect(() => {
-    if (map && routeKey && routeLine) {
-      map.flyToBounds(routeLine, { duration: 0.5 });
-    }
-  }, [map, routeKey]);
 
   useEffect(() => {
     setNavBtnType("normal");
@@ -142,7 +139,7 @@ export const Map = () => {
     };
 
     return (
-      <Avatar className="polylineBtnAvatar">
+      <Avatar className="polylineBtn">
         <IconButton onClick={handleIconOnClick}>
           <PolylineIcon />
         </IconButton>
@@ -164,7 +161,7 @@ export const Map = () => {
     };
 
     return (
-      <Avatar className="nearestStopBtnAvatar">
+      <Avatar className="nearestStopBtn">
         <IconButton onClick={handleIconOnClick}>
           <PersonPinCircleIcon />
         </IconButton>
@@ -193,12 +190,33 @@ export const Map = () => {
     };
 
     return (
-      <Avatar className={`navBtnAvatar ${navBtnType === "normal" && "normal"}`}>
+      <Avatar className={`navBtn ${navBtnType === "normal" && "normal"}`}>
         <IconButton onClick={handleIconOnClick}>
           <NavigationIcon />
         </IconButton>
       </Avatar>
     );
+  };
+
+  const SizeBtn = () => {
+    const handleIconOnClick = () => {
+      setMapExpanded(!mapExpanded);
+    };
+
+    return (
+      <Avatar className="sizeBtn">
+        <IconButton onClick={handleIconOnClick}>
+          {mapExpanded ? <CloseFullscreenIcon /> : <OpenInFullIcon />}
+        </IconButton>
+      </Avatar>
+    );
+  };
+
+  const handleOnTransitionEnd = (e) => {
+    if (e.propertyName === "height" && map && mapLocation) {
+      // Re-render the map as the height as been changed
+      map.invalidateSize();
+    }
   };
 
   const isMtr = routeData.co[0] === "mtr";
@@ -210,46 +228,60 @@ export const Map = () => {
     : companyColor["." + getFirstCoByRouteObj(routeData)]?.color;
 
   return (
-    <MapContainerRoot
-      center={[location.lat, location.lng]}
-      zoom={18}
-      scrollWheelZoom={false}
-      ref={setMap}
-      whenCreated={setMap} // Store map instance
+    <MapRoot
+      mapExpanded={mapExpanded}
+      onTransitionEnd={(e) => handleOnTransitionEnd(e)}
     >
-      <TileLayer
-        attribution=""
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {routeData.stops &&
-        currRouteStopIdList?.map((e, i) => {
-          const stop = gStopList[e];
-          return <CustomMarker stop={stop} _stopId={e} key={i} i={i} />;
-        })}
+      <MapContainerRoot
+        center={[location.lat, location.lng]}
+        zoom={14}
+        style={{ height: "100%", width: "100%" }}
+        scrollWheelZoom={false}
+        ref={setMap}
+        whenCreated={setMap} // Store map instance
+      >
+        <TileLayer
+          attribution=""
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {routeData.stops &&
+          currRouteStopIdList?.map((e, i) => {
+            const stop = gStopList[e];
+            return <CustomMarker stop={stop} _stopId={e} key={i} i={i} />;
+          })}
 
-      <Marker
-        position={[currentLocation.lat, currentLocation.lng]}
-        icon={currLocationIcon}
-      />
+        <Marker
+          position={[currentLocation.lat, currentLocation.lng]}
+          icon={currLocationIcon}
+        />
 
-      <Polyline
-        pathOptions={{
-          color: polylineColor,
-          opacity: "0.75",
-        }}
-        positions={routeLine}
-      />
+        <Polyline
+          pathOptions={{
+            color: polylineColor,
+            opacity: "0.75",
+          }}
+          positions={routeLine}
+        />
 
-      <RouteBoundBtn />
-      <NearestStopBtn />
-      <NavBtn />
-    </MapContainerRoot>
+        <RouteBoundBtn />
+        <NearestStopBtn />
+        <NavBtn />
+        <SizeBtn />
+      </MapContainerRoot>
+    </MapRoot>
   );
 };
 
+const MapRoot = styled("div", {
+  shouldForwardProp: (prop) => prop !== "mapExpanded",
+})(({ mapExpanded }) => ({
+  height: mapExpanded ? "50vh" : "25vh",
+  transition: "height 0.3s ease",
+  zIndex: 0,
+}));
+
 const MapContainerRoot = styled(MapContainer)({
   width: "100%",
-  height: "30vh",
   ".leaflet-control-container": {
     ".leaflet-top, .leaflet-bottom": {
       willChange: "transform",
@@ -280,34 +312,27 @@ const MapContainerRoot = styled(MapContainer)({
     ".MuiButtonBase-root": {
       color: "black",
     },
-    "&.prevBtnAvatar": {
-      top: "50%",
-      width: "35px",
-      height: "35px",
-      marginTop: "-35px", // equal to width and height
-      left: "10px",
+  },
+  ".polylineBtn": {
+    right: "110px",
+    bottom: "20px",
+  },
+  ".nearestStopBtn": {
+    right: "60px",
+    bottom: "20px",
+  },
+  ".navBtn": {
+    right: "10px",
+    bottom: "20px",
+    ".normal button": {
+      color: "#777777",
     },
-    "&.nextBtnAvatar": {
-      top: "50%",
-      width: "35px",
-      height: "35px",
-      marginTop: "-35px", // equal to width and height
-      right: "10px",
-    },
-    "&.polylineBtnAvatar": {
-      right: "110px",
-      bottom: "20px",
-    },
-    "&.nearestStopBtnAvatar": {
-      right: "60px",
-      bottom: "20px",
-    },
-    "&.navBtnAvatar,": {
-      right: "10px",
-      bottom: "20px",
-      "&.normal button": {
-        color: "#777777",
-      },
+  },
+  ".sizeBtn": {
+    right: "10px",
+    top: "10px",
+    "&.normal button": {
+      color: "#777777",
     },
   },
   ".leaflet-marker-pane": {

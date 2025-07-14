@@ -3,7 +3,12 @@ import { buildRouteObjForEta } from "../../../Utils/Utils";
 import { DbContext } from "../../../context/DbContext";
 import { StopGroupListSectionItem } from "./StopGroupListSectionItem";
 
-export const StopGroupListSection = ({ category, setNearbyDialogOpen }) => {
+export const StopGroupListSection = ({
+  category,
+  setNearbyDialogOpen,
+  showNoEta,
+  transportCo,
+}) => {
   const { gRouteList, gStopList } = useContext(DbContext);
   const [etasResult, setEtasResult] = useState([]);
 
@@ -35,6 +40,8 @@ export const StopGroupListSection = ({ category, setNearbyDialogOpen }) => {
           }
           return false;
         })
+        .filter((e) => (!(!showNoEta && e.etas.length === 0)))
+        .filter((e) => transportCo.includes(e.co))
         .map((eta, i) => (
           <StopGroupListSectionItem
             key={i}

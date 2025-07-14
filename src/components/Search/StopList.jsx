@@ -119,13 +119,6 @@ export const StopList = () => {
           return curr;
         });
 
-        if (!stopId) {
-          updateMapStopIdx(
-            expandStopIdArr.findIndex((e) => e === resultStopId)
-          );
-          updateMapLocation(gStopList[resultStopId].location);
-        }
-
         updateNearestStopId(resultStopId);
       } else {
         updateNearestStopId("");
@@ -134,7 +127,9 @@ export const StopList = () => {
   }, [routeKey, currentLocation.lat, currentLocation.lng]);
 
   useEffect(() => {
-    if (stopList.length > 0) {
+    if (stopList.length > 0 && stopId) {
+      updateMapStopIdx(stopList.findIndex((e) => e.stopId === stopId));
+      updateMapLocation(gStopList[stopId]?.location);
       const node = stopListRef.current.querySelectorAll(
         '[title = "' + stopId + '"]'
       )[0];
@@ -143,10 +138,12 @@ export const StopList = () => {
         block: "center",
       });
     }
-  }, [stopId]);
+  }, [stopList, stopId]);
 
   useEffect(() => {
-    if (stopList.length > 0) {
+    if (stopList.length > 0 && !stopId) {
+      updateMapStopIdx(stopList.findIndex((e) => e.stopId === nearestStopId));
+      updateMapLocation(gStopList[nearestStopId]?.location);
       const node = stopListRef.current.querySelectorAll(
         '[title = "' + nearestStopId + '"]'
       )[0];

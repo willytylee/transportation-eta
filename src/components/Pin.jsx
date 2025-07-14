@@ -44,7 +44,7 @@ export const Pin = () => {
     paddingTop: 0,
     paddingBottom: 0,
     ".etas": {
-      width: "150px",
+      width: "120px",
       display: "flex",
       flexDirection: "row",
       alignItems: "flex-end",
