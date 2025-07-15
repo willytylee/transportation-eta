@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   Accordion,
@@ -21,6 +21,7 @@ import { StopEta } from "./StopEta";
 
 export const StopListAccordion = ({
   routeData,
+  stopListRenderKey,
   stop,
   stopIdx,
   isNearestStop,
@@ -37,6 +38,10 @@ export const StopListAccordion = ({
   const handleRefreshOnClick = () => {
     setRenderKey(renderKey + 1);
   };
+
+  useEffect(() => {
+    setRenderKey(renderKey + stopListRenderKey);
+  }, [stopListRenderKey]);
 
   return (
     <AccordionRoot
@@ -124,7 +129,7 @@ export const StopListAccordion = ({
         </IconButton>
         <IconButton className="iconBtn" onClick={handleRefreshOnClick}>
           <RefreshIcon />
-          <div>更新</div>
+          <div>更新時間</div>
         </IconButton>
       </AccordionDetails>
     </AccordionRoot>

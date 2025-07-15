@@ -9,7 +9,13 @@ import {
   CloseFullscreen as CloseFullscreenIcon,
 } from "@mui/icons-material";
 import { IconButton, styled, Avatar } from "@mui/material";
-import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Polyline,
+  Tooltip,
+} from "react-leaflet";
 import { getFirstCoByRouteObj } from "../../Utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { EtaContext } from "../../context/EtaContext";
@@ -89,15 +95,13 @@ export const Map = () => {
         new L.Icon({
           iconUrl: stopIconPath,
           iconRetinaUrl: stopIconPath,
-          iconAnchor: [4, 6],
+          iconAnchor: [10, 10],
           popupAnchor: null,
           shadowUrl: null,
           shadowSize: null,
           shadowAnchor: null,
-          iconSize: new L.Point(10, 10),
-          className: `currStopMarker ${i === mapStopIdx && "selected"} ${
-            mapStopIdx > -1 && i > mapStopIdx && "forward"
-          }`,
+          iconSize: new L.Point(20, 20),
+          className: `currStopMarker ${i === mapStopIdx && "selected"}`,
         }),
       []
     );
@@ -126,7 +130,16 @@ export const Map = () => {
         position={[stop.location.lat, stop.location.lng]}
         eventHandlers={eventHandlers}
         icon={stopIcon}
-      />
+      >
+        <Tooltip
+          direction="center"
+          opacity={1}
+          permanent
+          className={`toolTip ${i === mapStopIdx && "selected"}`}
+        >
+          {i + 1}
+        </Tooltip>
+      </Marker>
     );
   };
 
@@ -278,6 +291,16 @@ const MapRoot = styled("div", {
   height: mapExpanded ? "50vh" : "25vh",
   transition: "height 0.3s ease",
   zIndex: 0,
+  ".toolTip": {
+    backgroundColor: "transparent",
+    border: "none",
+    boxShadow: "none",
+    fontWeight: 900,
+    fontSize: "10px",
+    "&.selected": {
+      color: "red",
+    },
+  },
 }));
 
 const MapContainerRoot = styled(MapContainer)({
@@ -342,15 +365,7 @@ const MapContainerRoot = styled(MapContainer)({
     },
     ".currStopMarker": {
       "&.selected": {
-        filter: "hue-rotate(150deg)",
-        width: "20px !important",
-        height: "20px !important",
-        marginLeft: "-11px !important",
-        marginTop: "-11px !important",
         zIndex: "999 !important",
-      },
-      "&.forward": {
-        filter: "opacity(0.5)",
       },
     },
   },

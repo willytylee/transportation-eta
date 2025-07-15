@@ -71,78 +71,80 @@ export const RouteList = () => {
   };
 
   return routeKeyList?.length > 0 ? (
-    <RouteListRoot>
-      {routeKeyList?.map((e, i) => {
-        const routeData = gRouteList[e];
-        return (
-          <Card key={i} onClick={() => handleCardOnClick(e)}>
-            <div
-              // There may have nearestStopId in one of the currRoute
-              className={`routeTitle ${e === routeKey ? "matched" : ""}`}
-            >
-              <div className="companyOrigDest">
-                <TransportSign routeObj={routeData} />
-                <div>
-                  {routeData.orig.zh}{" "}
-                  {routeData.co[0] === "mtr" ? (
-                    <> ←→ {routeData.dest.zh}</>
-                  ) : (
-                    <>
-                      → <span className="dest">{routeData.dest.zh}</span>
-                    </>
-                  )}
-                  <span className="special">
-                    {" "}
-                    {parseInt(routeData.serviceType, 10) !== 1 && "特別班次"}
-                  </span>
-                </div>
+    routeKeyList?.map((e, i) => {
+      const routeData = gRouteList[e];
+      return (
+        <RouteListItemRoot
+          key={i}
+          onClick={() => handleCardOnClick(e)}
+          className={`${e === routeKey ? "matched" : ""}`}
+        >
+          <div
+            // There may have nearestStopId in one of the currRoute
+            className="routeTitle"
+          >
+            <div className="companyOrigDest">
+              <TransportSign routeObj={routeData} />
+              <div>
+                {routeData.orig.zh}{" "}
+                {routeData.co[0] === "mtr" ? (
+                  <> ←→ {routeData.dest.zh}</>
+                ) : (
+                  <>
+                    → <span className="dest">{routeData.dest.zh}</span>
+                  </>
+                )}
+                <span className="special">
+                  {" "}
+                  {parseInt(routeData.serviceType, 10) !== 1 && "特別班次"}
+                </span>
               </div>
             </div>
-          </Card>
-        );
-      })}
-    </RouteListRoot>
+          </div>
+        </RouteListItemRoot>
+      );
+    })
   ) : (
     <div className="emptyMsg">請輸入路線</div>
   );
 };
 
-const RouteListRoot = styled("div")({
-  marginBottom: "14px",
-  ".MuiPaper-root": {
-    margin: "2px 4px",
-    boxShadow: "unset",
-    border: "0.5px solid lightgrey",
-    ".routeTitle": {
-      padding: "4px",
-      fontSize: "12px",
-      display: "flex",
-      float: "left",
+const RouteListItemRoot = styled(Card)({
+  margin: "2px 4px",
+  boxShadow: "unset",
+  border: "0.5px solid lightgrey",
+  "&.matched": {
+    backgroundColor: "#ffffe5",
+    position: "sticky",
+    top: 0,
+    zIndex: 9999,
+  },
+  ".routeTitle": {
+    padding: "4px",
+    fontSize: "12px",
+    display: "flex",
+    float: "left",
+    width: "100%",
+    ".companyOrigDest": {
+      gap: "4px",
+      alignItems: "center",
       width: "100%",
-      "&.matched": {
-        backgroundColor: "#ffffe5",
-      },
-      ".companyOrigDest": {
-        gap: "4px",
-        alignItems: "center",
-        width: "100%",
-        display: "flex",
-      },
-      ".route": {
-        fontWeight: "900",
-        ...mtrLineColor,
-      },
+      display: "flex",
     },
-    ".dest": {
+    ".route": {
       fontWeight: "900",
-      fontSize: "14px",
+      ...mtrLineColor,
     },
-    ".special": {
-      fontSize: "10px",
+  },
+  ".dest": {
+    fontWeight: "900",
+    fontSize: "14px",
+  },
+  ".special": {
+    fontSize: "10px",
+    fontWeight: "normal",
+    ".star": {
       fontWeight: "normal",
-      ".star": {
-        fontWeight: "normal",
-      },
     },
   },
 });

@@ -7,12 +7,18 @@ export const StopEta = ({
   routeObj,
   slice,
   childStyles,
+  stopListRenderKey,
 }) => (
   <StopEtaRoot childStyles={childStyles}>
     <div className="seq">{seq}.</div>
     <div className="stop">{name.zh}</div>
     <div className="etas">
-      <Eta seq={seq} routeObj={routeObj} slice={slice} />
+      <Eta
+        seq={seq}
+        routeObj={routeObj}
+        slice={slice}
+        key={stopListRenderKey}
+      />
     </div>
   </StopEtaRoot>
 );

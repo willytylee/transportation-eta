@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { styled, Tabs, Tab } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { SearchBar } from "../components/Search/SearchBar";
 import { RouteList } from "../components/Search/RouteList/RouteList";
 import { StopList } from "../components/Search/StopList";
@@ -19,11 +20,18 @@ export const Search = () => {
   const searchMethod =
     JSON.parse(localStorage.getItem("settings"))?.searchMethod || "搜尋路線";
   const [tabIdx, setTabIdx] = useState(searchMethod === "搜尋路線" ? 0 : 1);
+  const [stopListRenderKey, setStopListRenderKey] = useState(0);
+  const [historyRenderKey, setHistoryRenderKey] = useState(0);
   const { routeKey } = useParams();
   const { gRouteList } = useContext(DbContext);
   const { dbVersion } = useContext(AppContext);
   const { updateRoute } = useContext(EtaContext);
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleRefreshOnClick = () => {
+    setStopListRenderKey(stopListRenderKey + 1);
+  };
 
   const handleFormKeyPress = (e) => {
     e.key === "Enter" && setTabIdx(1);
@@ -40,49 +48,58 @@ export const Search = () => {
     }
   };
 
-  const setRouteListHistory = (_routeKey) => {
-    let routeListHistory;
-
-    try {
-      JSON.parse(localStorage.getItem("routeListHistory"));
-    } catch (error) {
-      routeListHistory = [];
-      localStorage.removeItem("routeListHistory");
-    }
-
-    if (Array.isArray(JSON.parse(localStorage.getItem("routeListHistory")))) {
-      routeListHistory = JSON.parse(localStorage.getItem("routeListHistory"));
-    } else {
-      routeListHistory = [];
-      localStorage.removeItem("routeListHistory");
-    }
-
-    const isInHistory =
-      routeListHistory.filter((e) => e === _routeKey).length > 0;
-
-    if (!isInHistory) {
-      if (routeListHistory.length >= 20) {
-        routeListHistory.pop();
-      }
-      routeListHistory.unshift(_routeKey);
-      localStorage.setItem(
-        "routeListHistory",
-        JSON.stringify(routeListHistory)
-      );
-    }
+  const handleRemoveHistoryOnClick = () => {
+    localStorage.removeItem("routeListHistory");
+    setHistoryRenderKey(historyRenderKey + 1);
+    enqueueSnackbar("歷史紀錄已清除", {
+      variant: "success",
+    });
   };
 
   useEffect(() => {
-    if (routeKey && gRouteList[routeKey]) {
+    if (gRouteList && routeKey && gRouteList[routeKey]) {
       setTabIdx(1);
-      setRouteListHistory(routeKey);
+
+      let routeListHistory;
+
+      try {
+        JSON.parse(localStorage.getItem("routeListHistory"));
+      } catch (error) {
+        routeListHistory = [];
+        localStorage.removeItem("routeListHistory");
+      }
+
+      if (Array.isArray(JSON.parse(localStorage.getItem("routeListHistory")))) {
+        routeListHistory = JSON.parse(localStorage.getItem("routeListHistory"));
+      } else {
+        routeListHistory = [];
+        localStorage.removeItem("routeListHistory");
+      }
+
+      const isInHistory =
+        routeListHistory.filter((e) => e === routeKey).length > 0;
+
+      if (!isInHistory) {
+        if (routeListHistory.length >= 20) {
+          routeListHistory.pop();
+        }
+        routeListHistory.unshift(routeKey);
+        localStorage.setItem(
+          "routeListHistory",
+          JSON.stringify(routeListHistory)
+        );
+      }
     }
   }, [routeKey]);
 
   return (
     <SearchRoot>
-      <SearchBar handleFormKeyPress={handleFormKeyPress} />
-
+      <SearchBar
+        handleFormKeyPress={handleFormKeyPress}
+        handleRefreshOnClick={handleRefreshOnClick}
+        handleRemoveHistoryOnClick={handleRemoveHistoryOnClick}
+        tabIdx={tabIdx}
+      />
       <SearchResult>
         <Tabs
           value={tabIdx}
@@ -117,14 +134,14 @@ export const Search = () => {
           {routeKey && <Map />}
           <div className="routeListStopWrapper">
             <RouteList />
-            <StopList />
+            <StopList stopListRenderKey={stopListRenderKey} />
           </div>
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={2}>
           <NearbyRouteList />
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={3}>
-          <HistoryRouteList />
+          <HistoryRouteList key={historyRenderKey} />
         </TabPanelRoot>
       </SearchResult>
     </SearchRoot>

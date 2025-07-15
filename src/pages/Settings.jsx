@@ -18,7 +18,6 @@ import {
   Report as ReportIcon,
   Source as SourceIcon,
   Tune as TuneIcon,
-  LayersClear as LayersClearIcon,
   Share as ShareIcon,
   Bookmark as BookmarkIcon,
 } from "@mui/icons-material";
@@ -30,13 +29,6 @@ export const Settings = () => {
   const { appVersion, serVersion } = useContext(AppContext);
   const [slctUsrDialogOpen, setslctUsrDialogOpen] = useState(false);
   const navigate = useNavigate();
-
-  const handleClearHistOnClick = () => {
-    localStorage.removeItem("routeListHistory");
-    enqueueSnackbar("歷史紀錄已清除", {
-      variant: "success",
-    });
-  };
 
   const handleShareOnClick = () => {
     if (navigator.share) {
@@ -111,16 +103,6 @@ export const Settings = () => {
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="書籤設定" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton onClick={handleClearHistOnClick}>
-            <ListItemAvatar>
-              <Avatar>
-                <LayersClearIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="清除路線歷史紀錄" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

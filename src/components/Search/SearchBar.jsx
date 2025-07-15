@@ -4,13 +4,22 @@ import { TextField, styled, IconButton, InputAdornment } from "@mui/material";
 import {
   Close as CloseIcon,
   AccessTime as AccessTimeIcon,
+  Refresh as RefreshIcon,
+  Delete as DeleteIcon,
 } from "@mui/icons-material";
+
+import mtrLogo from "../../assets/transports/mtrLogo.png";
 import { AppContext } from "../../context/AppContext";
 import { EtaContext } from "../../context/EtaContext";
 import { DbContext } from "../../context/DbContext";
 import { TimetableDialog } from "./Dialog/TimetableDialog";
 
-export const SearchBar = ({ handleFormKeyPress }) => {
+export const SearchBar = ({
+  tabIdx,
+  handleRemoveHistoryOnClick,
+  handleFormKeyPress,
+  handleRefreshOnClick,
+}) => {
   const { routeKey } = useParams();
   const { dbVersion } = useContext(AppContext);
   const textInput = useRef(null);
@@ -20,7 +29,7 @@ export const SearchBar = ({ handleFormKeyPress }) => {
   const [timetableDialogOpen, setTimetableDialogOpen] = useState(false);
 
   useEffect(() => {
-    if (routeKey && gRouteList[routeKey]) {
+    if (routeKey && gRouteList && gRouteList[routeKey]) {
       updateRoute(gRouteList[routeKey].route);
     }
   }, [routeKey]);
@@ -29,18 +38,12 @@ export const SearchBar = ({ handleFormKeyPress }) => {
     updateRoute(text.toUpperCase());
   };
 
+  const handleMtrOnClick = () => {
+    updateRoute("MTR");
+  };
+
   return (
     <SearchBarWraper>
-      <IconButton
-        className={`timetableIconButton ${
-          !routeKey || gRouteList[routeKey].co[0] === "mtr" ? "hide" : ""
-        }`}
-        disabled={dbVersion === null}
-        onClick={() => setTimetableDialogOpen(true)}
-      >
-        <AccessTimeIcon />
-        <div>昤間表</div>
-      </IconButton>
       <div className="searchWrapper">
         <TextField
           variant="standard"
@@ -70,10 +73,45 @@ export const SearchBar = ({ handleFormKeyPress }) => {
           }}
         />
       </div>
-      <TimetableDialog
-        timetableDialogOpen={timetableDialogOpen}
-        setTimetableDialogOpen={setTimetableDialogOpen}
-      />
+      <div className="iconWrapper">
+        {gRouteList &&
+          routeKey &&
+          gRouteList[routeKey].co[0] !== "mtr" &&
+          gRouteList[routeKey].co[0] !== "lightRail" && (
+            <IconButton
+              className="btn"
+              disabled={dbVersion === null}
+              onClick={() => setTimetableDialogOpen(true)}
+            >
+              <AccessTimeIcon />
+              <div>時間表</div>
+            </IconButton>
+          )}
+        {gRouteList && routeKey && (
+          <IconButton className="btn" onClick={handleRefreshOnClick}>
+            <RefreshIcon />
+            <div>更新時間</div>
+          </IconButton>
+        )}
+        {tabIdx === 3 && (
+          <IconButton className="btn" onClick={handleRemoveHistoryOnClick}>
+            <DeleteIcon />
+            <div>刪除記錄</div>
+          </IconButton>
+        )}
+        {(tabIdx === 0 || tabIdx === 1) && route === "" && (
+          <IconButton className="btn mtrBtn" onClick={handleMtrOnClick}>
+            <img alt="edit" src={mtrLogo} />
+            <div>港鐵路線</div>
+          </IconButton>
+        )}
+      </div>
+      {gRouteList && (
+        <TimetableDialog
+          timetableDialogOpen={timetableDialogOpen}
+          setTimetableDialogOpen={setTimetableDialogOpen}
+        />
+      )}
     </SearchBarWraper>
   );
 };
@@ -81,12 +119,11 @@ export const SearchBar = ({ handleFormKeyPress }) => {
 const SearchBarWraper = styled("div")({
   width: "100%",
   textAlign: "center",
-  margin: "10px 0 10px",
+  margin: "4px 0 4px",
   display: "flex",
-  justifyContent: "center",
+  justifyContent: "space-around",
   flexDirection: "row",
   alignItems: "center",
-  position: "relative",
   ".searchWrapper": {
     display: "flex",
     alignItems: "center",
@@ -95,32 +132,38 @@ const SearchBarWraper = styled("div")({
       ".searchBar": {
         textAlign: "center",
         padding: 0,
-        width: "110px",
+        width: "100px",
       },
     },
   },
-  ".mapIconButton": {
+  ".iconWrapper": {
     display: "flex",
-    flexDirection: "column",
-    position: "absolute",
-    right: 0,
-    width: "60px",
-    height: "60px",
-    fontSize: "10px",
-    "&.hide": {
-      display: "none",
-    },
-  },
-  ".timetableIconButton": {
-    display: "flex",
-    flexDirection: "column",
-    position: "absolute",
-    left: 0,
-    width: "60px",
-    height: "60px",
-    fontSize: "10px",
-    "&.hide": {
-      display: "none",
+    width: "94px",
+    height: "40px",
+    gap: "4px",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    ".btn": {
+      display: "flex",
+      flexDirection: "column",
+      padding: "0",
+      width: "45px",
+      height: "45px",
+      minWidth: "45px",
+      fontSize: "10px",
+      "&.mtrBtn": {
+        img: {
+          height: "19px",
+          padding: "3px",
+        },
+      },
+      svg: {
+        width: "18px",
+        height: "18px",
+      },
+      ".MuiTouchRipple-root, .MuiTouchRipple-ripple, .MuiTouchRipple-child": {
+        borderRadius: "4px",
+      },
     },
   },
 });

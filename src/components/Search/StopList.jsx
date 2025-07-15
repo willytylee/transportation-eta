@@ -10,7 +10,7 @@ import { MtrRouteOptionDialog } from "./Dialog/MtrRouteOptionDialog";
 import { StopNearbyDialog } from "./Dialog/StopNearbyDialog";
 import { StopListAccordion } from "./StopListAccordion";
 
-export const StopList = () => {
+export const StopList = ({ stopListRenderKey }) => {
   const { routeKey, stopId } = useParams();
   const navigate = useNavigate();
   const { gStopList, gRouteList } = useContext(DbContext);
@@ -155,7 +155,7 @@ export const StopList = () => {
   }, [nearestStopId]);
 
   return (
-    <div className="debug" ref={stopListRef}>
+    <div ref={stopListRef}>
       {routeKey &&
         stopList?.map((stop, i) => {
           const isNearestStop =
@@ -169,6 +169,7 @@ export const StopList = () => {
           return (
             <StopListAccordion
               key={i}
+              stopListRenderKey={stopListRenderKey}
               routeData={routeData}
               stop={stop}
               stopIdx={i}
