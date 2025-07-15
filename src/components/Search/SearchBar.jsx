@@ -121,12 +121,13 @@ const SearchBarWraper = styled("div")({
   textAlign: "center",
   margin: "4px 0 4px",
   display: "flex",
-  justifyContent: "space-around",
+  justifyContent: "space-between",
   flexDirection: "row",
   alignItems: "center",
   ".searchWrapper": {
     display: "flex",
     alignItems: "center",
+    paddingLeft: "28px",
     ".MuiInput-root": {
       paddingBottom: "6px",
       ".searchBar": {
@@ -138,11 +139,10 @@ const SearchBarWraper = styled("div")({
   },
   ".iconWrapper": {
     display: "flex",
-    width: "94px",
     height: "40px",
     gap: "4px",
-    justifyContent: "flex-end",
     alignItems: "center",
+    paddingRight: "28px",
     ".btn": {
       display: "flex",
       flexDirection: "column",
