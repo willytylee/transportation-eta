@@ -117,7 +117,7 @@ const RouteListItemRoot = styled(Card)({
     backgroundColor: "#ffffe5",
     position: "sticky",
     top: 0,
-    zIndex: 9999,
+    zIndex: 10,
   },
   ".routeTitle": {
     padding: "4px",
