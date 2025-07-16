@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
-import { buildRouteObjForEta } from "../../../Utils/Utils";
-import { DbContext } from "../../../context/DbContext";
+import { buildRouteObjForEta } from "../../../../Utils/Utils";
+import { DbContext } from "../../../../context/DbContext";
 import { StopGroupListSectionItem } from "./StopGroupListSectionItem";
 
 export const StopGroupListSection = ({
@@ -40,7 +40,7 @@ export const StopGroupListSection = ({
           }
           return false;
         })
-        .filter((e) => (!(!showNoEta && e.etas.length === 0)))
+        .filter((e) => !(!showNoEta && e.etas.length === 0))
         .filter((e) => transportCo.includes(e.co))
         .map((eta, i) => (
           <StopGroupListSectionItem

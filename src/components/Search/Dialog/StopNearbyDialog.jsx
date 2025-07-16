@@ -9,7 +9,7 @@ import {
 } from "@mui/material/";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { DbContext } from "../../../context/DbContext";
-import { StopGroupList } from "../RouteList/StopGroupList";
+import { StopGroupList } from "../RouteList/Nearby/StopGroupList";
 import { basicFiltering } from "../../../Utils/Utils";
 
 export const StopNearbyDialog = ({

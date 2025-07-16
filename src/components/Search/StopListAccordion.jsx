@@ -14,6 +14,7 @@ import {
   PushPin as PushPinIcon,
   Radar as RadarIcon,
   Refresh as RefreshIcon,
+  Info as InfoIcon,
 } from "@mui/icons-material";
 import { primaryColor } from "../../constants/Constants";
 import { MtrStopEta } from "./MtrStopEta";
@@ -31,6 +32,7 @@ export const StopListAccordion = ({
   handleNearbyOnClick,
   handleBookmarkAddOnClick,
   handleAccordionOnChange,
+  handleLrtStationOnClick,
 }) => {
   const { routeKey, stopId } = useParams();
   const [renderKey, setRenderKey] = useState(0);
@@ -38,6 +40,9 @@ export const StopListAccordion = ({
   const handleRefreshOnClick = () => {
     setRenderKey(renderKey + 1);
   };
+
+  const isMtr = routeData.co[0] === "mtr";
+  const isLrt = routeData.co[0] === "lightRail";
 
   useEffect(() => {
     setRenderKey(renderKey + stopListRenderKey);
@@ -57,7 +62,7 @@ export const StopListAccordion = ({
       title={stop.stopId}
     >
       <AccordionSummary className="accordionSummary">
-        {routeData.co[0] === "mtr" ? (
+        {isMtr ? (
           <MtrStopEta
             seq={stopIdx + 1}
             routeObj={routeData}
@@ -96,18 +101,11 @@ export const StopListAccordion = ({
         <IconButton
           className="iconBtn"
           onClick={() => {
-            if (routeData.co[0] === "mtr") {
-              handleBookmarkAddOnClick({
-                routeKey,
-                stopId: stop.stopId,
-              });
-            } else {
-              handleBookmarkAddOnClick({
-                seq: stopIdx + 1,
-                stopId: stop.stopId,
-                routeKey,
-              });
-            }
+            handleBookmarkAddOnClick({
+              seq: stopIdx + 1,
+              stopId: stop.stopId,
+              routeKey,
+            });
           }}
         >
           <BookmarkAddIcon />
@@ -127,6 +125,15 @@ export const StopListAccordion = ({
           <RadarIcon />
           <div>附近路線</div>
         </IconButton>
+        {isLrt && (
+          <IconButton
+            className="iconBtn"
+            onClick={() => handleLrtStationOnClick(stop.stopId)}
+          >
+            <InfoIcon />
+            <div>車站資訊</div>
+          </IconButton>
+        )}
         <IconButton className="iconBtn" onClick={handleRefreshOnClick}>
           <RefreshIcon />
           <div>更新時間</div>
@@ -167,8 +174,12 @@ const AccordionRoot = styled(Accordion)({
         padding: "0px",
         flexDirection: "column",
         fontSize: "10px",
-        height: "50px",
-        width: "50px",
+        height: "45px",
+        width: "45px",
+        svg: {
+          width: "20px",
+          height: "20px",
+        },
       },
     },
   },

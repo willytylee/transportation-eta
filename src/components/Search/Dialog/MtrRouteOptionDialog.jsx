@@ -50,8 +50,12 @@ export const MtrRouteOptionDialog = ({
           bound === gRouteList[e].bound.mtr
       )[0];
 
+      const seq =
+        gRouteList[_routeKey].stops.mtr.indexOf(bookmarkData.stopId) + 1;
+
       const _bookmarkData = {
         routeKey: _routeKey,
+        seq,
         stopId: bookmarkData.stopId,
       };
 

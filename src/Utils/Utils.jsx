@@ -50,6 +50,20 @@ export const phaseEta = ({ etaStr, remark }) => {
   return { etaIntervalStr, remarkStr, waitingMins, time };
 };
 
+export const convertLrtMinsToEta = (mins) => {
+  let eta;
+  const number = mins.match(/\d+/) ? parseInt(mins.match(/\d+/)[0], 10) : null;
+  if (mins === "-") {
+    eta = moment().format("YYYY-MM-DD HH:mm:ss");
+  } else if (number) {
+    const mintues = parseInt(mins.match(/\d+/)[0], 10);
+    eta = moment().add(mintues, "minutes").format("YYYY-MM-DD HH:mm:ss");
+  } else {
+    eta = mins;
+  }
+  return eta;
+};
+
 export const getLocalStorage = (key) => {
   if (localStorage.getItem(key) != null) {
     return JSON.parse(
@@ -108,9 +122,7 @@ export const getHeatIndex = (temperature, humidity) => {
 
 export const getCoIconByRouteObj = (routeObj) => {
   const companyList = routeObj.co.reduce((prev, curr) => {
-    if (Object.keys(routeObj.stops).includes(curr)) {
-      prev.push(curr);
-    }
+    prev.push(curr);
     return prev;
   }, []);
   return companyList.sort((a, b) => (a > b ? 1 : -1)).join("_");
@@ -161,9 +173,9 @@ export const buildRouteObjForEta = async (gStopList, gRouteList, category) => {
 
   for (let i = 0; i < category.length; i += 1) {
     // category = bookmark data
-    // Non-MTR: routeKey, stopId, seq
-    // MTR: routeKey, stopId
-    const { routeKey, stopId, seq } = category[i];
+    // category only accept 3 params
+    // routeKey and seq REQUIRED in category, stopId for cross check.
+    const { routeKey, seq, stopId } = category[i];
 
     if (routeKey) {
       const routeData = gRouteList[routeKey];
@@ -171,22 +183,21 @@ export const buildRouteObjForEta = async (gStopList, gRouteList, category) => {
 
       let routeObj;
 
-      if (co === "mtr") {
-        // Fetch MTR eta needs stopId and custom bound format (string)
-        routeObj = { ...routeData, stopId, bound: routeData.bound.mtr };
-      } else if (routeData.stops[co][seq - 1] !== stopId && co !== "mtr") {
-        // For non-mtr, check if the seq and the stopId are matched,
-        // If not match, it means the official database has been changed,
-        // User needs to update the bookmark.
+      if (!seq || (stopId && routeData.stops[co][seq - 1] !== stopId)) {
+        // Check if the seq and the stopId are matched,
+        // If not match, it means the official database has been changed, User needs to update the bookmark.
+        // * Only Bookmark will pass the seq and stopId for checking
         routeObj = { error: true };
+      } else if (co === "mtr") {
+        // Fetch MTR eta needs stopId and custom bound format (string)
+        routeObj = { ...routeData, seq, bound: routeData.bound.mtr };
       } else {
         routeObj = routeData;
       }
 
       const promise = fetchEtas({
         ...routeObj,
-        stopId,
-        seq: parseInt(seq, 10),
+        targetSeq: parseInt(seq, 10),
       });
       allPromises.push(promise);
     } else {
@@ -198,14 +209,16 @@ export const buildRouteObjForEta = async (gStopList, gRouteList, category) => {
   const categoryEtas = await Promise.all(allPromises);
 
   return categoryEtas.map((e, i) => {
-    const { stopId, routeKey } = category[i];
-    const stopName = gStopList[stopId].name.zh;
-    const { location } = gStopList[stopId];
+    const { routeKey, seq, stopId } = category[i];
 
     if (routeKey) {
       const routeData = gRouteList[routeKey];
       const co = getFirstCoByRouteObj(routeData);
-      const { route } = routeData;
+      const { route, stops } = routeData;
+      const _stopId = seq && stops[co] ? stops[co][seq - 1] : stopId;
+      const stop = gStopList[_stopId];
+      const { location } = stop;
+      const stopName = stop.name.zh;
 
       return {
         etas: e,
@@ -217,10 +230,11 @@ export const buildRouteObjForEta = async (gStopList, gRouteList, category) => {
         routeKey,
       };
     }
+
     const { route, co } = category[i];
     return {
       etas: e,
-      stopName,
+      stopName: gStopList[stopId].name.zh,
       location,
       stopId,
       route,

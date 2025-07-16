@@ -11,7 +11,7 @@ export const useEtas = ({ seq, routeObj, interval }) => {
     const intervalContent = () => {
       const _routeObj = {
         ...routeObj,
-        seq: parseInt(seq, 10),
+        targetSeq: parseInt(seq, 10),
       };
       fetchEtas(_routeObj).then((response) => {
         setIsEtaLoading(false);
@@ -56,12 +56,12 @@ export const useEtas2 = ({ seq, routeObj, interval }) => {
         _routeObj = {
           ...routeObj,
           bound: routeObj.bound.mtr,
-          seq: parseInt(seq, 10),
+          targetSeq: parseInt(seq, 10),
         };
       } else {
         _routeObj = {
           ...routeObj,
-          seq: parseInt(seq, 10),
+          targetSeq: parseInt(seq, 10),
         };
       }
       fetchEtas(_routeObj).then((response) => {

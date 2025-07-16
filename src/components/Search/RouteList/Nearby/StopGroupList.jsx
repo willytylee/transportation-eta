@@ -1,8 +1,8 @@
 import { useContext, useState, useEffect } from "react";
 import { styled, ButtonGroup, Button } from "@mui/material";
-import { DbContext } from "../../../context/DbContext";
-import { primaryColor, transportBtn } from "../../../constants/Constants";
-import { useStopIdsNearby } from "../../../hooks/StopIdsNearBy";
+import { DbContext } from "../../../../context/DbContext";
+import { primaryColor, transportBtn } from "../../../../constants/Constants";
+import { useStopIdsNearby } from "../../../../hooks/StopIdsNearBy";
 import { StopGroupListSection } from "./StopGroupListSection";
 
 export const StopGroupList = ({
@@ -24,7 +24,7 @@ export const StopGroupList = ({
 
   useEffect(() => {
     const worker = new Worker(
-      new URL("../../../workers/nearbyWorker.js", import.meta.url),
+      new URL("../../../../workers/nearbyWorker.js", import.meta.url),
       {
         type: "module",
       }
@@ -124,7 +124,7 @@ export const StopGroupList = ({
                 <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`}
                 >
-                  {name} - {category.routes[0].distance}米
+                  {name} - {category.distance}米
                 </a>
               </div>
               <div className="routes">
@@ -162,7 +162,7 @@ const StopGrouListRoot = styled("div", {
     gap: "8px",
     paddingTop: "4px",
     ".MuiButton-containedPrimary": {
-      backgroundColor: "#2f305c",
+      backgroundColor: "#2f305cde",
       color: "white",
     },
     ".MuiButton-outlinedPrimary": {

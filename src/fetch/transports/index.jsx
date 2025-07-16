@@ -15,7 +15,7 @@ export const fetchEtas = async ({
   gtfsId,
   route,
   serviceType,
-  seq,
+  targetSeq: seq,
   stopId,
   stops,
   nlbId,

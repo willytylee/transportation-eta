@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material";
-import { phaseEta } from "../../../Utils/Utils";
-import { mtrLineColor } from "../../../constants/Mtr";
-import { DbContext } from "../../../context/DbContext";
-import { TransportSign } from "../../Direction/Box/TransportSign";
+import { phaseEta } from "../../../../Utils/Utils";
+import { mtrLineColor } from "../../../../constants/Mtr";
+import { DbContext } from "../../../../context/DbContext";
+import { TransportSign } from "../../../Direction/Box/TransportSign";
 
 export const StopGroupListSectionItem = ({ eta, setNearbyDialogOpen }) => {
   const { gRouteList } = useContext(DbContext);
@@ -27,7 +27,7 @@ export const StopGroupListSectionItem = ({ eta, setNearbyDialogOpen }) => {
       <TransportSign routeObj={routeObj} />
       <div className="nearStopDest">
         <div>
-          <span className="dest">{routeObj.dest.zh}</span>
+          <span className="dest">→ {routeObj.dest.zh}</span>
           <span className="special">
             {" "}
             {parseInt(routeObj.serviceType, 10) !== 1 && "特別班次"}
@@ -60,13 +60,12 @@ const StopGrouListSectionItemRoot = styled("div", {
     ...mtrLineColor,
   },
   ".nearStopDest": {
-    width: "57.5%",
+    flex: 1,
     ".special": {
       fontSize: "10px",
     },
   },
   ".etas": {
-    width: "20%",
-    float: "left",
+    width: "60px",
   },
 }));

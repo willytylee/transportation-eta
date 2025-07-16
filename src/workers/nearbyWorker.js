@@ -25,7 +25,6 @@ self.onmessage = function handleMessage(e) {
       const origStopSeq = stops[company].findIndex((f) => f === _stopId) + 1;
       routeData.stopId = _stopId;
       routeData.seq = origStopSeq;
-
       routeData.distance = stopIdsNearby[_stopId];
       routeData.routeKey = key;
 
@@ -37,10 +36,14 @@ self.onmessage = function handleMessage(e) {
     .groupBy((x) => x.stopId)
     .map((value, key) => ({
       stopId: key,
-      routes: value,
+      distance: value[0].distance,
+      routes: value.map((f) => ({
+        routeKey: f.routeKey,
+        seq: f.seq,
+      })),
     }))
     .value()
-    .sort((a, b) => a.routes[0].distance - b.routes[0].distance);
+    .sort((a, b) => a.distance - b.distance);
 
   self.postMessage(result);
 };

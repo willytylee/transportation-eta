@@ -9,13 +9,7 @@ import {
   CloseFullscreen as CloseFullscreenIcon,
 } from "@mui/icons-material";
 import { IconButton, styled, Avatar } from "@mui/material";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Polyline,
-  Tooltip,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
 import { getFirstCoByRouteObj } from "../../Utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { EtaContext } from "../../context/EtaContext";
@@ -37,6 +31,14 @@ export const Map = () => {
   const [map, setMap] = useState(null);
 
   const routeData = routeKey ? gRouteList[routeKey] : [];
+
+  const isMtr = routeData.co[0] === "mtr";
+  const isLrt = routeData.co[0] === "lightRail";
+  const polylineColor = isMtr
+    ? mtrLineColor["&." + routeData.route].color
+    : isLrt
+    ? mtrLineColor["&.L" + routeData.route].color
+    : companyColor["." + getFirstCoByRouteObj(routeData)]?.color;
 
   const currRouteStopIdList = useMemo(
     () => routeData.stops && routeData.stops[getFirstCoByRouteObj(routeData)],
@@ -92,18 +94,16 @@ export const Map = () => {
   const CustomMarker = ({ stop, _stopId, i }) => {
     const stopIcon = useMemo(
       () =>
-        new L.Icon({
-          iconUrl: stopIconPath,
-          iconRetinaUrl: stopIconPath,
+        new L.divIcon({
+          html: `<div class="markerText" style="background: url(${stopIconPath}) no-repeat center; background-size: contain">${
+            isMtr ? (i === mapStopIdx ? "★" : "") : i + 1
+          }</div>`,
           iconAnchor: [10, 10],
-          popupAnchor: null,
-          shadowUrl: null,
-          shadowSize: null,
-          shadowAnchor: null,
-          iconSize: new L.Point(20, 20),
-          className: `currStopMarker ${i === mapStopIdx && "selected"}`,
+          popupAnchor: [0, -10],
+          className: `currStopMarker ${i === mapStopIdx ? "selected" : ""}`,
+          iconSize: [20, 20],
         }),
-      []
+      [i]
     );
 
     // const map = useMap();
@@ -121,7 +121,7 @@ export const Map = () => {
           });
         },
       }),
-      []
+      [i, _stopId, routeKey]
     );
 
     return (
@@ -130,16 +130,7 @@ export const Map = () => {
         position={[stop.location.lat, stop.location.lng]}
         eventHandlers={eventHandlers}
         icon={stopIcon}
-      >
-        <Tooltip
-          direction="center"
-          opacity={1}
-          permanent
-          className={`toolTip ${i === mapStopIdx && "selected"}`}
-        >
-          {i + 1}
-        </Tooltip>
-      </Marker>
+      />
     );
   };
 
@@ -232,14 +223,6 @@ export const Map = () => {
     }
   };
 
-  const isMtr = routeData.co[0] === "mtr";
-  const isLrt = routeData.co[0] === "lightRail";
-  const polylineColor = isMtr
-    ? mtrLineColor["&." + routeData.route].color
-    : isLrt
-    ? mtrLineColor["&.L" + routeData.route].color
-    : companyColor["." + getFirstCoByRouteObj(routeData)]?.color;
-
   return (
     <MapRoot
       mapExpanded={mapExpanded}
@@ -291,16 +274,6 @@ const MapRoot = styled("div", {
   height: mapExpanded ? "50vh" : "25vh",
   transition: "height 0.3s ease",
   zIndex: 0,
-  ".toolTip": {
-    backgroundColor: "transparent",
-    border: "none",
-    boxShadow: "none",
-    fontWeight: 900,
-    fontSize: "10px",
-    "&.selected": {
-      color: "red",
-    },
-  },
 }));
 
 const MapContainerRoot = styled(MapContainer)({
@@ -316,6 +289,28 @@ const MapContainerRoot = styled(MapContainer)({
       ...companyColor,
       ".route": {
         ...mtrLineColor,
+      },
+    },
+    ".leaflet-marker-pane": {
+      ".currStopMarker": {
+        color: "black",
+        fontWeight: "bold",
+        fontSize: "11px",
+        "&.selected": {
+          color: "red",
+          zIndex: "300 !important",
+        },
+        ".markerText": {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "20px",
+          height: "20px",
+        },
+      },
+      ".currLocationMarker": {
+        border: "none",
+        background: "none",
       },
     },
   },
@@ -356,17 +351,6 @@ const MapContainerRoot = styled(MapContainer)({
     top: "10px",
     "&.normal button": {
       color: "#777777",
-    },
-  },
-  ".leaflet-marker-pane": {
-    ".currLocationMarker": {
-      border: "none",
-      background: "none",
-    },
-    ".currStopMarker": {
-      "&.selected": {
-        zIndex: "999 !important",
-      },
     },
   },
 });

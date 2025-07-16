@@ -3,7 +3,7 @@ import { basicFiltering } from "../../../Utils/Utils";
 import { DbContext } from "../../../context/DbContext";
 import { EtaContext } from "../../../context/EtaContext";
 import { useLocationWithInterval } from "../../../hooks/Location";
-import { StopGroupList } from "./StopGroupList";
+import { StopGroupList } from "./Nearby/StopGroupList";
 
 export const NearbyRouteList = () => {
   const { gRouteList } = useContext(DbContext);

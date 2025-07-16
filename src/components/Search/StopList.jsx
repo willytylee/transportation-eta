@@ -9,6 +9,7 @@ import { BookmarkDialog } from "./Dialog/BookmarkDialog";
 import { MtrRouteOptionDialog } from "./Dialog/MtrRouteOptionDialog";
 import { StopNearbyDialog } from "./Dialog/StopNearbyDialog";
 import { StopListAccordion } from "./StopListAccordion";
+import { LrtStationDialog } from "./Dialog/LrtStationDialog";
 
 export const StopList = ({ stopListRenderKey }) => {
   const { routeKey, stopId } = useParams();
@@ -19,6 +20,8 @@ export const StopList = ({ stopListRenderKey }) => {
   });
   const [stopList, setStopList] = useState([]);
   const [nearbyDialogOpen, setNearbyDialogOpen] = useState(false);
+  const [lrtStationDialogOpen, setLrtStationDialogOpen] = useState(false);
+  const [lrtStopId, setlrtStopId] = useState("");
   const [mtrRouteOptionDialogOpen, setMtrRouteOptionDialogOpen] =
     useState(false);
   const [bookmarkDialogMode, setBookmarkDialogMode] = useState(null);
@@ -52,6 +55,11 @@ export const StopList = ({ stopListRenderKey }) => {
   const handleNearbyOnClick = (_stopId) => {
     setStopLatLng(gStopList[_stopId].location);
     setNearbyDialogOpen(true);
+  };
+
+  const handleLrtStationOnClick = (_stopId) => {
+    setlrtStopId(_stopId);
+    setLrtStationDialogOpen(true);
   };
 
   const handleBookmarkAddOnClick = (_bookmarkData) => {
@@ -180,6 +188,7 @@ export const StopList = ({ stopListRenderKey }) => {
               handleNearbyOnClick={handleNearbyOnClick}
               handleBookmarkAddOnClick={handleBookmarkAddOnClick}
               handleAccordionOnChange={handleAccordionOnChange}
+              handleLrtStationOnClick={handleLrtStationOnClick}
             />
           );
         })}
@@ -200,6 +209,11 @@ export const StopList = ({ stopListRenderKey }) => {
         nearbyDialogOpen={nearbyDialogOpen}
         setNearbyDialogOpen={setNearbyDialogOpen}
         stopLatLng={stopLatLng}
+      />
+      <LrtStationDialog
+        lrtStationDialogOpen={lrtStationDialogOpen}
+        setLrtStationDialogOpen={setLrtStationDialogOpen}
+        lrtStopId={lrtStopId}
       />
     </div>
   );
