@@ -153,10 +153,19 @@ export const StopList = ({ stopListRenderKey }) => {
       const node = stopListRef.current.querySelectorAll(
         '[title = "' + nearestStopId + '"]'
       )[0];
-      node?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+      const scroll = () => {
+        node?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      };
+      if (routeData.co[0] === "mtr") {
+        setTimeout(() => {
+          scroll();
+        }, 500);
+      } else {
+        scroll();
+      }
     }
   }, [nearestStopId]);
 
