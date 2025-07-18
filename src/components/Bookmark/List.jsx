@@ -104,7 +104,7 @@ export const List = ({ etaResult, longList }) => {
             <div className={`stopName ${e.co}`}>
               {e?.stopName}
               {e.co === "mtr" &&
-                e?.eta !== "沒有班次" &&
+                e?.eta.length > 0 &&
                 ` → ${stationMap[e?.dest]}`}
             </div>
             <div className="eta">
@@ -114,16 +114,18 @@ export const List = ({ etaResult, longList }) => {
                   remark: e.rmk_tc,
                 }).etaIntervalStr
               }
-              <span className="time">
-                (
-                {
-                  phaseEta({
-                    etaStr: e.eta,
-                    remark: e.rmk_tc,
-                  }).time
-                }
-                )
-              </span>
+              {e?.eta.length > 0 && (
+                <span className="time">
+                  (
+                  {
+                    phaseEta({
+                      etaStr: e.eta,
+                      remark: e.rmk_tc,
+                    }).time
+                  }
+                  )
+                </span>
+              )}
             </div>
           </AccordionSummary>
           <AccordionDetails>
