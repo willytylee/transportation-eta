@@ -22,6 +22,7 @@ export const Search = () => {
   const [tabIdx, setTabIdx] = useState(searchMethod === "搜尋路線" ? 0 : 1);
   const [stopListRenderKey, setStopListRenderKey] = useState(0);
   const [historyRenderKey, setHistoryRenderKey] = useState(0);
+  const [nearbyLocation, setNearbyLocation] = useState({});
   const { routeKey } = useParams();
   const { gRouteList } = useContext(DbContext);
   const { dbVersion } = useContext(AppContext);
@@ -46,6 +47,10 @@ export const Search = () => {
     if (value === 0) {
       navigate("/search", { replace: true });
     }
+  };
+
+  const handleNearbySelectOnChange = (e) => {
+    setNearbyLocation(e.location);
   };
 
   const handleRemoveHistoryOnClick = () => {
@@ -90,7 +95,7 @@ export const Search = () => {
         );
       }
     }
-  }, [routeKey]);
+  }, [routeKey, gRouteList]);
 
   return (
     <SearchRoot>
@@ -98,6 +103,7 @@ export const Search = () => {
         handleFormKeyPress={handleFormKeyPress}
         handleRefreshOnClick={handleRefreshOnClick}
         handleRemoveHistoryOnClick={handleRemoveHistoryOnClick}
+        handleNearbySelectOnChange={handleNearbySelectOnChange}
         tabIdx={tabIdx}
       />
       <SearchResult>
@@ -138,7 +144,7 @@ export const Search = () => {
           </div>
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={2}>
-          <NearbyRouteList />
+          <NearbyRouteList nearbyLocation={nearbyLocation} />
         </TabPanelRoot>
         <TabPanelRoot value={tabIdx} index={3}>
           <HistoryRouteList key={historyRenderKey} />
@@ -152,6 +158,7 @@ const SearchRoot = styled("div")({
   display: "flex",
   flexDirection: "column",
   overflow: "hidden",
+  flex: 1,
 });
 
 const SearchResult = styled("div")({

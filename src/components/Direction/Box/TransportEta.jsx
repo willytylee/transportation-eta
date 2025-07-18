@@ -49,7 +49,9 @@ export const TransportEta = ({
             ))}
         </div>
       </div>
-      <div className="time">{`${timeForNextRoute}分鐘`}</div>
+      {fitBoundMode === "transportEtaA" && (
+        <div className="time">{`${timeForNextRoute}分鐘`}</div>
+      )}
     </TransportEtaRoot>
   );
 };

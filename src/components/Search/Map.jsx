@@ -1,4 +1,5 @@
 import { useContext, useMemo, useState, useEffect } from "react";
+import _ from "lodash";
 import { useParams, useNavigate } from "react-router-dom";
 import L from "leaflet";
 import {
@@ -56,7 +57,7 @@ export const Map = () => {
 
   let location = {};
 
-  if (mapLocation) {
+  if (!_.isEmpty(mapLocation)) {
     location = mapLocation;
   } else if (currRouteStopList && currRouteStopList[nearestStopIdx]) {
     location = currRouteStopList[nearestStopIdx].location;

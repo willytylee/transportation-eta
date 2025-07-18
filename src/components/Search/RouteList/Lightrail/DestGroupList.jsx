@@ -47,40 +47,41 @@ export const DestGroupList = ({ lrtStopId, orderMode, childStyles }) => {
     <DestGroupListRoot childStyles={childStyles}>
       {stopInfo?.length > 0 &&
         stopInfo.map((category, i) => (
-            <div className="routeList" key={i}>
-              <div className="key">{renderCategoryText(category.key)}</div>
-              <div className="routes">
-                {category.routes
-                  .sort((a, b) => {
-                    if (
-                      a.eta &&
-                      b.eta &&
-                      moment(a.eta, "YYYY-MM-DD HH:mm:ss").isValid() &&
-                      moment(b.eta, "YYYY-MM-DD HH:mm:ss").isValid()
-                    ) {
-                      return moment(a.eta).diff(moment(b.eta), "second");
-                    }
-                    return false;
-                  })
-                  .map((route, j) => (
-                    <div className="item" key={j}>
-                      <div className="left">
-                        <TransportSign routeObj={route} />
-                        <div className="plat">月台{route.plat}</div>
+          <div className="routeList" key={i}>
+            <div className="key">{renderCategoryText(category.key)}</div>
+            <div className="routes">
+              {category.routes
+                .sort((a, b) => {
+                  if (
+                    a.eta &&
+                    b.eta &&
+                    moment(a.eta, "YYYY-MM-DD HH:mm").isValid() &&
+                    moment(b.eta, "YYYY-MM-DD HH:mm").isValid()
+                  ) {
+                    return moment(a.eta).diff(moment(b.eta), "second");
+                  }
+                  return false;
+                })
+                .map((route, j) => (
+                  <div className="item" key={j}>
+                    <div className="left">
+                      <TransportSign routeObj={route} />
+                      <div className="plat">月台{route.plat}</div>
+                      <div className="dest">{route.dest}</div>
+                    </div>
+                    <div className="etaWrapper">
+                      <div className="etas">
+                        {phaseEta({ etaStr: route.eta }).etaIntervalStr}
                       </div>
-                      <div className="etaWrapper">
-                        <div className="etas">
-                          {phaseEta({ etaStr: route.eta }).etaIntervalStr}
-                        </div>
-                        <div className="time">
-                          {phaseEta({ etaStr: route.eta }).time}
-                        </div>
+                      <div className="time">
+                        {phaseEta({ etaStr: route.eta }).time}
                       </div>
                     </div>
-                  ))}
-              </div>
+                  </div>
+                ))}
             </div>
-          ))}
+          </div>
+        ))}
     </DestGroupListRoot>
   );
 };
@@ -106,18 +107,14 @@ const DestGroupListRoot = styled("div", {
         justifyContent: "space-between",
         ".left": {
           display: "flex",
+          gap: "6px",
           ".route": {
-            width: "55px",
+            width: "40px",
           },
         },
         ".etaWrapper": {
           display: "flex",
-          ".etas": {
-            width: "60px",
-          },
-          ".time": {
-            width: "50px",
-          },
+          gap: "6px",
         },
       },
     },

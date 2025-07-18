@@ -360,14 +360,14 @@ self.onmessage = function handleMessage(e) {
                 endStopSeq: destStopSeq,
               });
 
-            // Prevent circulating route
-            const correctRoute =
+            // Prevent junk route / too many stops
+            const cleanRoute =
               distanceBtwnOrigStopAndCommonStop / origTransportDistance >
                 displacementDistanceRatio &&
               distanceBtwnCommonStopAndDestStop / destTransportDistance >
                 displacementDistanceRatio;
 
-            if (!correctRoute) continue;
+            if (!cleanRoute) continue;
 
             seenPairs.add(pairKey);
             result.push({

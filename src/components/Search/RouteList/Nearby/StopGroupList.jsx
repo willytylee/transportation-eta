@@ -7,7 +7,7 @@ import { StopGroupListSection } from "./StopGroupListSection";
 
 export const StopGroupList = ({
   routeKeyList,
-  currentLocation,
+  location,
   setNearbyDialogOpen,
   childStyles,
 }) => {
@@ -18,8 +18,8 @@ export const StopGroupList = ({
   const [nearbyRouteList, setNearbyRouteList] = useState([]);
   const { stopIdsNearby } = useStopIdsNearby({
     maxDistance,
-    lat: currentLocation.lat,
-    lng: currentLocation.lng,
+    lat: location.lat,
+    lng: location.lng,
   });
 
   useEffect(() => {
@@ -139,12 +139,12 @@ export const StopGroupList = ({
           );
         })}
 
-      {currentLocation.lat === 0 && currentLocation.lng === 0 && (
+      {location.lat === 0 && location.lng === 0 && (
         <div className="emptyMsg">載入中...</div>
       )}
 
-      {currentLocation.lat !== 0 &&
-        currentLocation.lng !== 0 &&
+      {location.lat !== 0 &&
+        location.lng !== 0 &&
         nearbyRouteList?.length === 0 && (
           <div className="emptyMsg">附近未有交通路線</div>
         )}

@@ -109,7 +109,7 @@ const MtrStopEtaRoot = styled("div", {
         display: "flex",
         flexDirection: "row",
         gap: "4px",
-        alignItems: "flex-end",
+        alignItems: "flex-start",
         ".ttnt": {
           width: "33.33%",
           fontSize: "12px",

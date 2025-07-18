@@ -1,11 +1,12 @@
 import { useContext } from "react";
+import _ from "lodash";
 import { basicFiltering } from "../../../Utils/Utils";
 import { DbContext } from "../../../context/DbContext";
 import { EtaContext } from "../../../context/EtaContext";
 import { useLocationWithInterval } from "../../../hooks/Location";
 import { StopGroupList } from "./Nearby/StopGroupList";
 
-export const NearbyRouteList = () => {
+export const NearbyRouteList = ({ nearbyLocation }) => {
   const { gRouteList } = useContext(DbContext);
   const { route } = useContext(EtaContext);
   const { location: currentLocation } = useLocationWithInterval({
@@ -18,10 +19,9 @@ export const NearbyRouteList = () => {
       route === gRouteList[e].route.substring(0, route.length)
   );
 
-  return (
-    <StopGroupList
-      routeKeyList={routeKeyList}
-      currentLocation={currentLocation}
-    />
-  );
+  const location = !_.isEmpty(nearbyLocation)
+    ? nearbyLocation
+    : currentLocation;
+
+  return <StopGroupList routeKeyList={routeKeyList} location={location} />;
 };

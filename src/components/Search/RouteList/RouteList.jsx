@@ -73,9 +73,11 @@ export const RouteList = () => {
   return routeKeyList?.length > 0 ? (
     routeKeyList?.map((e, i) => {
       const routeData = gRouteList[e];
+      const isMtr = routeData.co[0] === "mtr";
       return (
         <RouteListItemRoot
           key={i}
+          isMtr={isMtr}
           onClick={() => handleCardOnClick(e)}
           className={`${e === routeKey ? "matched" : ""}`}
         >
@@ -87,7 +89,7 @@ export const RouteList = () => {
               <TransportSign routeObj={routeData} />
               <div>
                 {routeData.orig.zh}{" "}
-                {routeData.co[0] === "mtr" ? (
+                {isMtr ? (
                   <> ←→ {routeData.dest.zh}</>
                 ) : (
                   <>
@@ -109,7 +111,9 @@ export const RouteList = () => {
   );
 };
 
-const RouteListItemRoot = styled(Card)({
+const RouteListItemRoot = styled(Card, {
+  shouldForwardProp: (prop) => prop !== "isMtr",
+})(({ isMtr }) => ({
   margin: "2px 4px",
   boxShadow: "unset",
   border: "0.5px solid lightgrey",
@@ -133,6 +137,7 @@ const RouteListItemRoot = styled(Card)({
     },
     ".route": {
       fontWeight: "900",
+      width: isMtr ? "50px" : "40px",
       ...mtrLineColor,
     },
   },
@@ -147,4 +152,4 @@ const RouteListItemRoot = styled(Card)({
       fontWeight: "normal",
     },
   },
-});
+}));

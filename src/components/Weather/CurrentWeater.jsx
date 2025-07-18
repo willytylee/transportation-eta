@@ -52,7 +52,7 @@ export const CurrentWeater = () => {
       <p>{localForecast.forecastDesc}</p>
       <p>展望: {localForecast.outlook}</p>
       <p>
-        {moment(localForecast.updateTime, "YYYY-MM-DD HH:mm:ss").format(
+        {moment(localForecast.updateTime, "YYYY-MM-DD HH:mm").format(
           "YYYY年MM月DD日HH時mm分更新"
         )}
       </p>

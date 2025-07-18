@@ -12,13 +12,16 @@ import mtrLogo from "../../assets/transports/mtrLogo.png";
 import { AppContext } from "../../context/AppContext";
 import { EtaContext } from "../../context/EtaContext";
 import { DbContext } from "../../context/DbContext";
+import { routeMap } from "../../constants/Mtr";
 import { TimetableDialog } from "./Dialog/TimetableDialog";
+import { LocationSearchBar } from "./LocationSearchBar";
 
 export const SearchBar = ({
   tabIdx,
   handleRemoveHistoryOnClick,
   handleFormKeyPress,
   handleRefreshOnClick,
+  handleNearbySelectOnChange,
 }) => {
   const { routeKey } = useParams();
   const { dbVersion } = useContext(AppContext);
@@ -27,6 +30,7 @@ export const SearchBar = ({
   const { updateRoute, route } = useContext(EtaContext);
   const { gRouteList } = useContext(DbContext);
   const [timetableDialogOpen, setTimetableDialogOpen] = useState(false);
+  const [locationSearchBarValue, setLocationSearchBarValue] = useState("");
 
   useEffect(() => {
     if (routeKey && gRouteList && gRouteList[routeKey]) {
@@ -43,15 +47,16 @@ export const SearchBar = ({
   };
 
   return (
-    <SearchBarWraper>
+    <SearchBarWraper tabIdx={tabIdx}>
       <div className="searchWrapper">
         <TextField
+          fullWidth
           variant="standard"
           placeholder="輸入路線號碼"
           disabled={dbVersion === null}
-          inputProps={{ className: "searchBar" }}
-          size="small"
+          inputProps={{ className: "searchBarInput" }}
           name="category"
+          className="routeSearchField"
           value={route}
           onChange={(e) => handleFormChange(e.target.value)}
           onClick={() => navigate("/search", { replace: true })}
@@ -73,39 +78,79 @@ export const SearchBar = ({
           }}
         />
       </div>
-      <div className="iconWrapper">
-        {gRouteList &&
-          routeKey &&
-          gRouteList[routeKey].co[0] !== "mtr" &&
-          gRouteList[routeKey].co[0] !== "lightRail" && (
-            <IconButton
-              className="btn"
-              disabled={dbVersion === null}
-              onClick={() => setTimetableDialogOpen(true)}
-            >
-              <AccessTimeIcon />
-              <div>時間表</div>
-            </IconButton>
-          )}
-        {gRouteList && routeKey && (
-          <IconButton className="btn" onClick={handleRefreshOnClick}>
-            <RefreshIcon />
-            <div>更新時間</div>
+      {tabIdx === 2 && (
+        <div className="locationSearchBarWrapper">
+          <LocationSearchBar
+            placeholder="輸入自訂地點"
+            defaultValue={{
+              label: "你的位置",
+              value: "你的位置",
+            }}
+            defaultOptions={[
+              {
+                label: "你的位置",
+                value: "你的位置",
+              },
+            ]}
+            handleSelectOnChange={(e) => {
+              handleNearbySelectOnChange(e);
+              setLocationSearchBarValue(e);
+            }}
+            value={locationSearchBarValue}
+            optionStyle={{
+              textAlign: "left",
+            }}
+            controlStyle={{
+              border: 0,
+              borderBottom: "1px solid grey",
+              paddingBottom: "2px",
+              borderRadius: 0,
+              minHeight: 0,
+              fontSize: "14px",
+              backgroundColor: "transparent",
+            }}
+            dropdownIndicatorStyle={{
+              padding: "4px",
+            }}
+          />
+        </div>
+      )}
+      {tabIdx !== 2 &&
+        gRouteList &&
+        routeKey &&
+        gRouteList[routeKey].co[0] !== "mtr" &&
+        gRouteList[routeKey].co[0] !== "lightRail" && (
+          <IconButton
+            className="btn"
+            disabled={dbVersion === null}
+            onClick={() => setTimetableDialogOpen(true)}
+          >
+            <AccessTimeIcon />
+            <div>時間表</div>
           </IconButton>
         )}
-        {tabIdx === 3 && (
-          <IconButton className="btn" onClick={handleRemoveHistoryOnClick}>
-            <DeleteIcon />
-            <div>刪除記錄</div>
-          </IconButton>
-        )}
-        {(tabIdx === 0 || tabIdx === 1) && route === "" && (
+      {gRouteList && routeKey && (
+        <IconButton className="btn" onClick={handleRefreshOnClick}>
+          <RefreshIcon />
+          <div>更新時間</div>
+        </IconButton>
+      )}
+      {tabIdx === 3 && (
+        <IconButton className="btn" onClick={handleRemoveHistoryOnClick}>
+          <DeleteIcon />
+          <div>刪除記錄</div>
+        </IconButton>
+      )}
+      {(tabIdx === 0 || tabIdx === 1) &&
+        (route === "" ||
+          route === "MTR" ||
+          Object.keys(routeMap).includes(route)) && (
           <IconButton className="btn mtrBtn" onClick={handleMtrOnClick}>
             <img alt="edit" src={mtrLogo} />
             <div>港鐵路線</div>
           </IconButton>
         )}
-      </div>
+
       {gRouteList && (
         <TimetableDialog
           timetableDialogOpen={timetableDialogOpen}
@@ -116,54 +161,71 @@ export const SearchBar = ({
   );
 };
 
-const SearchBarWraper = styled("div")({
+const SearchBarWraper = styled("div", {
+  shouldForwardProp: (prop) => prop !== "tabIdx",
+})(({ tabIdx }) => ({
+  padding: "0 28px",
   width: "100%",
   textAlign: "center",
   margin: "4px 0 4px",
   display: "flex",
   justifyContent: "space-between",
-  flexDirection: "row",
   alignItems: "center",
+  flexDirection: tabIdx === 2 ? "column" : "row",
+  gap: tabIdx === 2 ? 0 : "16px",
   ".searchWrapper": {
     display: "flex",
     alignItems: "center",
-    paddingLeft: "28px",
-    ".MuiInput-root": {
-      paddingBottom: "6px",
-      ".searchBar": {
-        textAlign: "center",
-        padding: 0,
-        width: "100px",
-      },
-    },
-  },
-  ".iconWrapper": {
-    display: "flex",
-    height: "40px",
-    gap: "4px",
-    alignItems: "center",
-    paddingRight: "28px",
-    ".btn": {
-      display: "flex",
-      flexDirection: "column",
-      padding: "0",
-      width: "45px",
+    width: "100%",
+    ".routeSearchField": {
       height: "45px",
-      minWidth: "45px",
-      fontSize: "10px",
-      "&.mtrBtn": {
-        img: {
-          height: "19px",
-          padding: "3px",
+      justifyContent: "center",
+      ".MuiInput-root": {
+        paddingBottom: "6px",
+        ".searchBarInput": {
+          textAlign: "center",
+          padding: 0,
+          fontSize: "14px",
+          color: "hsl(0, 0%, 20%)",
+        },
+        ".MuiInputAdornment-root": {
+          marginLeft: 0,
+          button: {
+            padding: "4px",
+            svg: {
+              width: "20px",
+              height: "20px",
+            },
+          },
         },
       },
-      svg: {
-        width: "18px",
-        height: "18px",
-      },
-      ".MuiTouchRipple-root, .MuiTouchRipple-ripple, .MuiTouchRipple-child": {
-        borderRadius: "4px",
-      },
     },
   },
-});
+  ".locationSearchBarWrapper": {
+    height: "36px",
+    width: "100%",
+  },
+
+  ".btn": {
+    display: "flex",
+    flexDirection: "column",
+    padding: "0",
+    width: "45px",
+    height: "45px",
+    minWidth: "45px",
+    fontSize: "10px",
+    "&.mtrBtn": {
+      img: {
+        height: "19px",
+        padding: "3px",
+      },
+    },
+    svg: {
+      width: "18px",
+      height: "18px",
+    },
+    ".MuiTouchRipple-root, .MuiTouchRipple-ripple, .MuiTouchRipple-child": {
+      borderRadius: "4px",
+    },
+  },
+}));

@@ -41,7 +41,7 @@ const StopEtaRoot = styled("div", {
     width: "160px",
     display: "flex",
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "flex-start",
     ".eta": {
       width: "33.33%",
       ".extra": {

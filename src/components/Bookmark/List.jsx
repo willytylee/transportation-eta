@@ -37,7 +37,7 @@ export const List = ({ etaResult, longList }) => {
           routeKey,
           latLngUrl: `https://www.google.com.hk/maps/dir/?api=1&destination=${location?.lat},${location?.lng}&travelmode=walking`,
         });
-      } else {
+      } else if (etas.length >= 0) {
         etas.forEach((f) => {
           eta = f.eta ?? "";
           const { rmk_tc } = f;
@@ -69,14 +69,6 @@ export const List = ({ etaResult, longList }) => {
 
   // Sort the eta for same category
   result = sortEtaObj(result);
-
-  result.forEach((e, i) => {
-    const { eta, rmk_tc } = e;
-    result[i].eta = phaseEta({
-      etaStr: eta,
-      remark: rmk_tc,
-    }).etaIntervalStr;
-  });
 
   const etaRouteNum =
     JSON.parse(localStorage.getItem("settings"))?.etaRouteNum || "5個";
@@ -115,7 +107,22 @@ export const List = ({ etaResult, longList }) => {
                 e?.eta !== "沒有班次" &&
                 ` → ${stationMap[e?.dest]}`}
             </div>
-            <div className="eta">{e?.eta}</div>
+            <div className="eta">
+              <div className="str">
+                {
+                  phaseEta({
+                    etaStr: e.eta,
+                    remark: e.rmk_tc,
+                  }).etaIntervalStr
+                }
+              </div>
+              {
+                phaseEta({
+                  etaStr: e.eta,
+                  remark: e.rmk_tc,
+                }).time
+              }
+            </div>
           </AccordionSummary>
           <AccordionDetails>
             <IconButton
@@ -189,7 +196,13 @@ const ListView = styled("div")({
         ".stopName": {
           width: "45%",
         },
-        ".eta": { width: "42%" },
+        ".eta": {
+          display: "flex",
+          width: "42%",
+          ".str": {
+            width: "50px",
+          },
+        },
       },
     },
   },

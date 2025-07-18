@@ -20,7 +20,11 @@ export const fetchNwfbCtbEtas = async ({ co, stopId, route, bound, seq }) => {
 
   return data
     .filter(
-      (e) => e.eta !== null && bound?.includes(e.dir) && e.seq === correctSeq
+      (e) =>
+        e.eta !== null &&
+        bound?.includes(e.dir) &&
+        e.seq === correctSeq &&
+        e.rmk_tc !== "九巴時段"
     )
     .map((e) => ({
       co,

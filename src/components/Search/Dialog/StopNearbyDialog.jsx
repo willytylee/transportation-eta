@@ -51,7 +51,7 @@ export const StopNearbyDialog = ({
       <DialogContent>
         <StopGroupList
           routeKeyList={routeKeyList}
-          currentLocation={stopLatLng}
+          location={stopLatLng}
           childStyles={childStyles}
           setNearbyDialogOpen={setNearbyDialogOpen}
         />

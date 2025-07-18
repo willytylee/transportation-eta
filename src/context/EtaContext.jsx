@@ -6,7 +6,7 @@ export const EtaProvider = ({ children }) => {
   const [route, setRoute] = useState("");
   const [stopId, setStopId] = useState("");
   const [nearestStopId, setNearestStopId] = useState("");
-  const [mapLocation, setMapLocation] = useState(undefined);
+  const [mapLocation, setMapLocation] = useState({});
   const [mapStopIdx, setMapStopIdx] = useState(-1);
   const [pinList, setPinList] = useState([]);
 

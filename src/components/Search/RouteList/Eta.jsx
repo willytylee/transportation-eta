@@ -10,6 +10,9 @@ export const Eta = ({ seq, routeObj, slice }) => {
     interval: 30000,
   });
 
+  // Handle KMB and CTB have different stopId
+  const stopIds = eta.map((e) => e.stopId);
+
   return isEtaLoading ? (
     <div>載入中...</div>
   ) : eta.length !== 0 ? (
@@ -18,10 +21,12 @@ export const Eta = ({ seq, routeObj, slice }) => {
         <div key={i} className="eta">
           {phaseEta({ etaStr: e.eta, remark: e.rmk_tc }).etaIntervalStr}
           <div className="extra">
-            {stopId && stopId === e.stopId && (
+            {stopId && stopIds.includes(stopId) && (
               <div>{phaseEta({ etaStr: e.eta }).time}</div>
             )}
-            {stopId && stopId === e.stopId && e.plat && <div>月台{e.plat}</div>}
+            {stopId && stopIds.includes(stopId) && e.plat && (
+              <div>月台{e.plat}</div>
+            )}
           </div>
         </div>
       ))

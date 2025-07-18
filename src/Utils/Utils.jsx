@@ -8,9 +8,9 @@ import { fetchEtas } from "../fetch/transports";
 
 export const phaseEta = ({ etaStr, remark }) => {
   let etaIntervalStr, remarkStr, waitingMins, time;
-  if (moment(etaStr, "YYYY-MM-DD HH:mm:ss").isValid()) {
+  if (moment(etaStr, "YYYY-MM-DD HH:mm").isValid()) {
     const mintuesLeft = moment(etaStr).diff(
-      moment().format("YYYY-MM-DD HH:mm:ss"),
+      moment().format("YYYY-MM-DD HH:mm"),
       "minutes"
     );
     if (mintuesLeft < 0) {
@@ -28,7 +28,7 @@ export const phaseEta = ({ etaStr, remark }) => {
       etaIntervalStr = moment(etaStr).format("HH:mma");
     }
     waitingMins = moment(etaStr).diff(
-      moment().format("YYYY-MM-DD HH:mm:ss"),
+      moment().format("YYYY-MM-DD HH:mm"),
       "minutes"
     );
     time = moment(etaStr).format("HH:mma");
@@ -54,10 +54,10 @@ export const convertLrtMinsToEta = (mins) => {
   let eta;
   const number = mins.match(/\d+/) ? parseInt(mins.match(/\d+/)[0], 10) : null;
   if (mins === "-") {
-    eta = moment().format("YYYY-MM-DD HH:mm:ss");
+    eta = moment().format("YYYY-MM-DD HH:mm");
   } else if (number) {
     const mintues = parseInt(mins.match(/\d+/)[0], 10);
-    eta = moment().add(mintues, "minutes").format("YYYY-MM-DD HH:mm:ss");
+    eta = moment().add(mintues, "minutes").format("YYYY-MM-DD HH:mm");
   } else {
     eta = mins;
   }
@@ -94,8 +94,8 @@ export const sortEtaObj = (etaObjArr) => {
     if (
       a.eta &&
       b.eta &&
-      moment(a.eta, "YYYY-MM-DD HH:mm:ss").isValid() &&
-      moment(b.eta, "YYYY-MM-DD HH:mm:ss").isValid()
+      moment(a.eta, "YYYY-MM-DD HH:mm").isValid() &&
+      moment(b.eta, "YYYY-MM-DD HH:mm").isValid()
     ) {
       return moment(a.eta).diff(moment(b.eta), "second");
     }
