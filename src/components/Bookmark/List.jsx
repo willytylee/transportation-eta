@@ -202,7 +202,8 @@ const ListView = styled("div")({
         },
         ".eta": {
           display: "flex",
-          width: "42%",
+          width: "156px", // match table's eta = width: 52px
+          flexShrink: 0,
           alignItems: "baseline",
           ".time": {
             fontSize: "11px",

@@ -1,27 +1,37 @@
+import { useParams } from "react-router-dom";
 import { styled } from "@mui/material";
 import { Eta } from "./RouteList/Eta";
 
 export const StopEta = ({
   seq,
-  stopObj: { name },
+  stopObj,
   routeObj,
   slice,
   childStyles,
   stopListRenderKey,
-}) => (
-  <StopEtaRoot childStyles={childStyles}>
-    <div className="seq">{seq}.</div>
-    <div className="stop">{name.zh}</div>
-    <div className="etas">
-      <Eta
-        seq={seq}
-        routeObj={routeObj}
-        slice={slice}
-        key={stopListRenderKey}
-      />
-    </div>
-  </StopEtaRoot>
-);
+}) => {
+  const { stopId } = useParams();
+
+  return (
+    <StopEtaRoot childStyles={childStyles}>
+      <div className="seq">{seq}.</div>
+      <div className="col2Wrapper">
+        <div className="stop">{stopObj.name.zh}</div>
+        {stopId && stopId === stopObj.stopId && (
+          <div className="fare">${routeObj.fares[seq - 1]}</div>
+        )}
+      </div>
+      <div className="etas">
+        <Eta
+          seq={seq}
+          routeObj={routeObj}
+          slice={slice}
+          key={stopListRenderKey}
+        />
+      </div>
+    </StopEtaRoot>
+  );
+};
 
 const StopEtaRoot = styled("div", {
   shouldForwardProp: (prop) => prop !== "childStyles",
@@ -34,7 +44,7 @@ const StopEtaRoot = styled("div", {
     width: "20px",
     flexShrink: 0,
   },
-  ".stop": {
+  ".col2Wrapper": {
     flex: 1,
   },
   ".etas": {
