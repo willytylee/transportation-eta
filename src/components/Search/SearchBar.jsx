@@ -116,7 +116,7 @@ export const SearchBar = ({
               dropdownIndicator: {
                 padding: "4px",
               },
-              placeholder: { color: "red" },
+              placeholder: { color: "#b3b3b3" },
             }}
           />
         </div>

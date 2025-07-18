@@ -142,6 +142,10 @@ export const LocationSearchBar = ({
           ...baseStyles,
           ...styles?.dropdownIndicator,
         }),
+        placeholder: (baseStyles) => ({
+          ...baseStyles,
+          ...styles?.placeholder,
+        }),
       }}
     />
   );
