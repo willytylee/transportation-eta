@@ -12,9 +12,8 @@ export const LocationSearchBar = ({
   defaultOptions,
   onFocus,
   onBlur,
-  optionStyle,
-  controlStyle,
-  dropdownIndicatorStyle,
+  components,
+  styles,
 }) => {
   const { gStopList } = useContext(DbContext);
 
@@ -127,20 +126,21 @@ export const LocationSearchBar = ({
       placeholder={placeholder}
       onFocus={onFocus}
       onBlur={onBlur}
+      components={components}
       loadingMessage={() => "載入地點中..."}
       styles={{
         option: (baseStyles) => ({
           ...baseStyles,
           fontSize: "11px",
-          ...optionStyle,
+          ...styles?.option,
         }),
         control: (baseStyles) => ({
           ...baseStyles,
-          ...controlStyle,
+          ...styles?.control,
         }),
         dropdownIndicator: (baseStyles) => ({
           ...baseStyles,
-          ...dropdownIndicatorStyle,
+          ...styles?.dropdownIndicator,
         }),
       }}
     />

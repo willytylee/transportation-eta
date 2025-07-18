@@ -76,6 +76,13 @@ export const SearchBar = ({ updateMapCollapse }) => {
           value={destination}
           onFocus={onFocus}
           onBlur={onBlur}
+          defaultOptions={[
+            {
+              label: "你的位置",
+              value: "你的位置",
+              location: currentLocation,
+            },
+          ]}
         />
       </div>
       <div className="btnWrapper">

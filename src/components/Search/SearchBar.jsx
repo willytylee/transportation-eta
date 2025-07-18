@@ -83,6 +83,9 @@ export const SearchBar = ({
               label: "你的位置",
               value: "你的位置",
             }}
+            components={{
+              IndicatorSeparator: () => null,
+            }}
             defaultOptions={[
               {
                 label: "你的位置",
@@ -97,17 +100,23 @@ export const SearchBar = ({
             optionStyle={{
               textAlign: "left",
             }}
-            controlStyle={{
-              border: 0,
-              borderBottom: "1px solid grey",
-              paddingBottom: "2px",
-              borderRadius: 0,
-              minHeight: 0,
-              fontSize: "14px",
-              backgroundColor: "transparent",
-            }}
-            dropdownIndicatorStyle={{
-              padding: "4px",
+            styles={{
+              option: {
+                textAlign: "left",
+              },
+              control: {
+                border: 0,
+                borderBottom: "1px solid grey",
+                paddingBottom: "2px",
+                borderRadius: 0,
+                minHeight: 0,
+                fontSize: "14px",
+                backgroundColor: "transparent",
+              },
+              dropdownIndicator: {
+                padding: "4px",
+              },
+              placeholder: { color: "red" },
             }}
           />
         </div>
