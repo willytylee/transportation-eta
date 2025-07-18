@@ -201,6 +201,7 @@ const ListView = styled("div")({
         ".eta": {
           display: "flex",
           width: "42%",
+          alignItems: "baseline",
           ".time": {
             fontSize: "11px",
             paddingLeft: "4px",
