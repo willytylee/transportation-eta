@@ -61,6 +61,12 @@ export const Search = () => {
     });
   };
 
+  const handleMtrOnClick = () => {
+    navigate("/search", { replace: true });
+    updateRoute("MTR");
+    setTabIdx(1);
+  };
+
   useEffect(() => {
     if (gRouteList && routeKey && gRouteList[routeKey]) {
       setTabIdx(1);
@@ -104,6 +110,7 @@ export const Search = () => {
         handleRefreshOnClick={handleRefreshOnClick}
         handleRemoveHistoryOnClick={handleRemoveHistoryOnClick}
         handleNearbySelectOnChange={handleNearbySelectOnChange}
+        handleMtrOnClick={handleMtrOnClick}
         tabIdx={tabIdx}
       />
       <SearchResult>

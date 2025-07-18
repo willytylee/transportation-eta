@@ -316,7 +316,7 @@ export const Map = ({ mapCollapse }) => {
 
     const stopList = routeObj.stops[getFirstCoByRouteObj(routeObj)];
     const stopId = currRouteStopIdList[i];
-    const stopIdx = stopList.findIndex((e) => e === stopId);
+    const stopIdx = stopList.indexOf(stopId);
 
     return (
       <Marker

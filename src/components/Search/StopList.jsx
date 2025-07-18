@@ -76,9 +76,7 @@ export const StopList = ({ stopListRenderKey }) => {
     }
   };
 
-  const handleAccordionOnChange = ({ _stopId, mapLocation, mapStopIdx }) => {
-    updateMapLocation(mapLocation);
-    updateMapStopIdx(mapStopIdx);
+  const handleAccordionOnChange = ({ _stopId }) => {
     if (stopId && stopId === _stopId) {
       navigate("/search/" + routeKey, { replace: true });
     } else {

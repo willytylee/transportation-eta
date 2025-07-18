@@ -225,7 +225,7 @@ export const buildRouteObjForEta = async (gStopList, gRouteList, category) => {
         route,
         stopName,
         location,
-        stopId,
+        stopId: _stopId,
         co,
         routeKey,
       };

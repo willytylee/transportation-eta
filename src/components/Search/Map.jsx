@@ -46,9 +46,7 @@ export const Map = () => {
     [routeKey]
   );
 
-  const nearestStopIdx = currRouteStopIdList?.findIndex(
-    (e) => e === nearestStopId
-  );
+  const nearestStopIdx = currRouteStopIdList?.indexOf(nearestStopId);
 
   const currRouteStopList = useMemo(
     () => currRouteStopIdList?.map((e) => gStopList[e]),

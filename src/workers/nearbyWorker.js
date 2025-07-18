@@ -22,7 +22,7 @@ self.onmessage = function handleMessage(e) {
       const _stopId = filitedStopId.reduce((prev, curr) =>
         stopIdsNearby[prev] < stopIdsNearby[curr] ? prev : curr
       );
-      const origStopSeq = stops[company].findIndex((f) => f === _stopId) + 1;
+      const origStopSeq = stops[company].indexOf(_stopId) + 1;
       routeData.stopId = _stopId;
       routeData.seq = origStopSeq;
       routeData.distance = stopIdsNearby[_stopId];

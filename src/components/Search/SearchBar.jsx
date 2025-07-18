@@ -22,6 +22,7 @@ export const SearchBar = ({
   handleFormKeyPress,
   handleRefreshOnClick,
   handleNearbySelectOnChange,
+  handleMtrOnClick,
 }) => {
   const { routeKey } = useParams();
   const { dbVersion } = useContext(AppContext);
@@ -40,10 +41,6 @@ export const SearchBar = ({
 
   const handleFormChange = (text) => {
     updateRoute(text.toUpperCase());
-  };
-
-  const handleMtrOnClick = () => {
-    updateRoute("MTR");
   };
 
   return (
