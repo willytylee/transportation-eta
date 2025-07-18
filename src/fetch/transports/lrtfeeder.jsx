@@ -25,6 +25,7 @@ export const fetchLrtFeederEtas = async ({ stopId, route, seq }) => {
           "seconds"
         )
         .format("YYYY-MM-DD HH:mm:ss"),
+      stopId,
     }));
 
   return result;

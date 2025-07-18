@@ -14,5 +14,6 @@ export const fetchGmbEtas = async ({ seq, gtfsId, stopId, route }) => {
       eta: e.timestamp,
       seq,
       route,
+      stopId,
     }));
 };
