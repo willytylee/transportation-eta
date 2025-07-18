@@ -108,20 +108,22 @@ export const List = ({ etaResult, longList }) => {
                 ` → ${stationMap[e?.dest]}`}
             </div>
             <div className="eta">
-              <div className="str">
-                {
-                  phaseEta({
-                    etaStr: e.eta,
-                    remark: e.rmk_tc,
-                  }).etaIntervalStr
-                }
-              </div>
               {
                 phaseEta({
                   etaStr: e.eta,
                   remark: e.rmk_tc,
-                }).time
+                }).etaIntervalStr
               }
+              <span className="time">
+                (
+                {
+                  phaseEta({
+                    etaStr: e.eta,
+                    remark: e.rmk_tc,
+                  }).time
+                }
+                )
+              </span>
             </div>
           </AccordionSummary>
           <AccordionDetails>
@@ -199,8 +201,9 @@ const ListView = styled("div")({
         ".eta": {
           display: "flex",
           width: "42%",
-          ".str": {
-            width: "50px",
+          ".time": {
+            fontSize: "11px",
+            paddingLeft: "4px",
           },
         },
       },
