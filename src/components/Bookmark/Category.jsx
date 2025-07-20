@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { styled, IconButton } from "@mui/material";
 import { Refresh as RefreshIcon } from "@mui/icons-material";
 import { DbContext } from "../../context/DbContext";
-import { buildRouteObjForEta } from "../../Utils/Utils";
+import { buildRouteObjForEta } from "../../utils/Eta";
 import { List } from "./List";
 import { Table } from "./Table";
 

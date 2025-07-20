@@ -1,5 +1,5 @@
 import axios from "axios";
-import { findNearestNumber } from "../../Utils/Utils";
+import { findNearestNumber } from "../../utils/Utils";
 
 export const fetchNwfbCtbEtas = async ({ co, stopId, route, bound, seq }) => {
   const response = await axios.get(

@@ -5,7 +5,7 @@ import { Edit as EditIcon } from "@mui/icons-material";
 import { Category } from "../components/Bookmark/Category";
 import { BookmarkDialog } from "../components/Settings/BookmarkDialog";
 import { dataSet } from "../data/DataSet";
-import { getLocalStorage, setLocalStorage } from "../Utils/Utils";
+import { getLocalStorage, setLocalStorage } from "../utils/Utils";
 
 export const Bookmark = () => {
   const [bookmarkDialogMode, setBookmarkDialogMode] = useState(null);

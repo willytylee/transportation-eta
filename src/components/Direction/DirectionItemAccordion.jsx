@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Accordion, AccordionDetails, styled } from "@mui/material";
 import { primaryColor } from "../../constants/Constants";
-import { phaseEta } from "../../Utils/Utils";
+import { phaseEta } from "../../utils/Utils";
 import { DirectionContext } from "../../context/DirectionContext";
 import { Walking } from "./Box/Walking";
 import { TransportEta } from "./Box/TransportEta";

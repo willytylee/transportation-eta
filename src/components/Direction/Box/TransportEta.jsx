@@ -1,5 +1,5 @@
 import { styled, Button } from "@mui/material";
-import { phaseEta } from "../../../Utils/Utils";
+import { phaseEta } from "../../../utils/Utils";
 import { mtrLineColor } from "../../../constants/Mtr";
 import { TransportSign } from "./TransportSign";
 

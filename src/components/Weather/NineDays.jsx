@@ -3,7 +3,7 @@ import { styled } from "@mui/material";
 import moment from "moment";
 import { fetch9DForecast } from "../../fetch/Weather";
 import { weatherIconMap, psrIconMap } from "../../constants/Weather";
-import { getHeatIndex } from "../../Utils/Utils";
+import { getHeatIndex } from "../../utils/Utils";
 
 export const NineDays = () => {
   const [nineDForecast, setNineDForecast] = useState({});

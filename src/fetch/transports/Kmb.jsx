@@ -1,6 +1,6 @@
 import axios from "axios";
 import moment from "moment";
-import { findNearestNumber } from "../../Utils/Utils";
+import { findNearestNumber } from "../../utils/Utils";
 
 export const fetchKmbEtas = async ({
   stopId,

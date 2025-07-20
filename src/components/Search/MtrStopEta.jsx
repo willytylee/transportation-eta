@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { useParams } from "react-router-dom";
 import { styled } from "@mui/material";
-import { phaseEta } from "../../Utils/Utils";
+import { phaseEta } from "../../utils/Utils";
 import { useEtas } from "../../hooks/Etas";
 import { stationMap } from "../../constants/Mtr";
 

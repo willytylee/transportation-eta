@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material";
-import { phaseEta } from "../../../../Utils/Utils";
+import { phaseEta } from "../../../../utils/Utils";
 import { mtrLineColor } from "../../../../constants/Mtr";
 import { DbContext } from "../../../../context/DbContext";
 import { TransportSign } from "../../../Direction/Box/TransportSign";

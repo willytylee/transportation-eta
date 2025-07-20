@@ -7,7 +7,7 @@ import {
 import { DbContext } from "../../context/DbContext";
 import { useLocationOnce } from "../../hooks/Location";
 import { useStopIdsNearby } from "../../hooks/StopIdsNearBy";
-import { basicFiltering } from "../../Utils/Utils";
+import { basicFiltering } from "../../utils/Utils";
 import { DirectionContext } from "../../context/DirectionContext";
 import { DirectionItem } from "./DirectionItem";
 

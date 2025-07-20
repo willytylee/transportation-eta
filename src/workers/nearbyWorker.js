@@ -1,6 +1,6 @@
 // src/workers/worker.js
 import _ from "lodash";
-import { getFirstCoByRouteObj } from "../Utils/Utils";
+import { getFirstCoByRouteObj } from "../utils/Utils";
 
 self.onmessage = function handleMessage(e) {
   const { routeKeyList, gRouteList, stopIdsNearby } = e.data;

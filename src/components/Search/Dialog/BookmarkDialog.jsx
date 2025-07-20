@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
 import { styled, Dialog } from "@mui/material/";
-import { getLocalStorage, setLocalStorage } from "../../../Utils/Utils";
+import { getLocalStorage, setLocalStorage } from "../../../utils/Utils";
 import { FormDialog } from "../../BookmarkDialog/FormDialog";
 import { ListDialog } from "../../BookmarkDialog/ListDialog";
 

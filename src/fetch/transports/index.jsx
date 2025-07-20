@@ -1,4 +1,4 @@
-import { sortEtaObj } from "../../Utils/Utils";
+import { sortEtaObj } from "../../utils/Utils";
 import { fetchGmbEtas } from "./Gmb";
 import { fetchKmbEtas } from "./Kmb";
 import { fetchMtrEtas } from "./Mtr";

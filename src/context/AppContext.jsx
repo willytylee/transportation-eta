@@ -5,7 +5,7 @@ import {
   setLocalStorage,
   getLocalStorage,
   upgradeBookmark,
-} from "../Utils/Utils";
+} from "../utils/Utils";
 
 export const AppContext = createContext();
 

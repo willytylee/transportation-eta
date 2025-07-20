@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 import { companyIconMap } from "../../../constants/Constants";
-import { getCoIconByRouteObj } from "../../../Utils/Utils";
+import { getCoIconByRouteObj } from "../../../utils/Utils";
 import { mtrIconColor, mtrLineColor, routeMap } from "../../../constants/Mtr";
 
 export const TransportSign = ({ routeObj }) => {

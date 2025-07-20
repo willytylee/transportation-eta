@@ -1,9 +1,8 @@
 import { useContext } from "react";
 import { useDebounce } from "use-debounce";
-import { basicFiltering } from "../../../Utils/Utils";
+import { basicFiltering, sortByCompany } from "../../../utils/Utils";
 import { DbContext } from "../../../context/DbContext";
 import { EtaContext } from "../../../context/EtaContext";
-import { sortByCompany } from "../../../Utils/Utils";
 import { SimpleRouteList } from "./SimpleRouteList";
 
 export const SearchRouteList = () => {

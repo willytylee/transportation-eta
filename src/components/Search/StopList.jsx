@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getDistance } from "geolib";
-import { getFirstCoByRouteObj } from "../../Utils/Utils";
+import { getFirstCoByRouteObj } from "../../utils/Utils";
 import { EtaContext } from "../../context/EtaContext";
 import { DbContext } from "../../context/DbContext";
 import { useLocationWithInterval } from "../../hooks/Location";

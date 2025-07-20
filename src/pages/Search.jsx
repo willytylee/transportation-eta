@@ -9,7 +9,7 @@ import { TabPanel } from "../components/TabPanel";
 import { NearbyRouteList } from "../components/Search/RouteList/NearbyRouteList";
 import { SearchRouteList } from "../components/Search/RouteList/SearchRouteList";
 import { HistoryRouteList } from "../components/Search/RouteList/HistoryRouteList";
-import { a11yProps } from "../Utils/Utils";
+import { a11yProps } from "../utils/Utils";
 import { primaryColor } from "../constants/Constants";
 import { AppContext } from "../context/AppContext";
 import { DbContext } from "../context/DbContext";

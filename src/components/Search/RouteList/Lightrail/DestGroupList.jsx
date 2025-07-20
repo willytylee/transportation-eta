@@ -4,7 +4,7 @@ import moment from "moment";
 import { styled } from "@mui/material";
 import { primaryColor } from "../../../../constants/Constants";
 import { fetchLrtStopInfo } from "../../../../fetch/transports/Lrt";
-import { phaseEta } from "../../../../Utils/Utils";
+import { phaseEta } from "../../../../utils/Utils";
 import { TransportSign } from "../../../Direction/Box/TransportSign";
 
 export const DestGroupList = ({ lrtStopId, orderMode, childStyles }) => {

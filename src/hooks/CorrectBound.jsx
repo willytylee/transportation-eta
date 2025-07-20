@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { fetchNwfbCtbRouteStop } from "../fetch/transports/NwfbCtb";
-import { getFirstCoByRouteObj } from "../Utils/Utils";
+import { getFirstCoByRouteObj } from "../utils/Utils";
 
 export const useCorrectBound = ({ routeObj }) => {
   const [scoreI, setScoreI] = useState(-1);

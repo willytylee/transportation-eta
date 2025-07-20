@@ -1,6 +1,6 @@
 // src/workers/worker.js
 import { getDistance } from "geolib";
-import { getFirstCoByRouteObj } from "../Utils/Utils";
+import { getFirstCoByRouteObj } from "../utils/Utils";
 
 const routeRatio = 0.9; // 0 to 1, the larger, the route become a straight line from point to point, apply on multi-route only.
 const maxCommonStopDistance = 100; // The maximum distance between common stops

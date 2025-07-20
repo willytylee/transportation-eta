@@ -11,7 +11,7 @@ import {
 } from "@mui/icons-material";
 import { IconButton, styled, Avatar } from "@mui/material";
 import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
-import { getFirstCoByRouteObj } from "../../Utils/Utils";
+import { getFirstCoByRouteObj } from "../../utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { EtaContext } from "../../context/EtaContext";
 import { mtrLineColor } from "../../constants/Mtr";

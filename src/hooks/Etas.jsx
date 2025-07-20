@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchEtas } from "../fetch/transports";
-import { getFirstCoByRouteObj } from "../Utils/Utils";
+import { getFirstCoByRouteObj } from "../utils/Utils";
 
 export const useEtas = ({ seq, routeObj, interval }) => {
   const [eta, setEta] = useState([]);

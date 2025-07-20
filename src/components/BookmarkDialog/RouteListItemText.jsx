@@ -4,7 +4,7 @@ import { PriorityHigh as PriorityHighIcon } from "@mui/icons-material";
 import { DbContext } from "../../context/DbContext";
 import { companyColor } from "../../constants/Constants";
 import { mtrLineColor, routeMap } from "../../constants/Mtr";
-import { getFirstCoByRouteObj } from "../../Utils/Utils";
+import { getFirstCoByRouteObj } from "../../utils/Utils";
 
 export const RouteListItemText = ({ e }) => {
   const { gRouteList, gStopList } = useContext(DbContext);

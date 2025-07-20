@@ -3,7 +3,7 @@ import { useSnackbar } from "notistack";
 import { styled, Dialog, IconButton } from "@mui/material/";
 import { Close as CloseIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { FormDialog } from "../BookmarkDialog/FormDialog";
-import { getLocalStorage, setLocalStorage } from "../../Utils/Utils";
+import { getLocalStorage, setLocalStorage } from "../../utils/Utils";
 import { ListBtnDialog } from "../BookmarkDialog/ListBtnDialog";
 
 export const BookmarkDialog = ({

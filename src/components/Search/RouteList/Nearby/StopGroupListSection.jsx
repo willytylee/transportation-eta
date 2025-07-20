@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { buildRouteObjForEta } from "../../../../Utils/Utils";
+import { buildRouteObjForEta } from "../../../../utils/Eta";
 import { DbContext } from "../../../../context/DbContext";
 import { StopGroupListSectionItem } from "./StopGroupListSectionItem";
 

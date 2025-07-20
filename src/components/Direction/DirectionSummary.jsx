@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { styled, AccordionSummary } from "@mui/material";
-import { phaseEta } from "../../Utils/Utils";
+import { phaseEta } from "../../utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { DbContext } from "../../context/DbContext";
 import { WalkSign } from "./Box/WalkSign";

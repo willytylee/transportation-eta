@@ -13,7 +13,7 @@ import {
 } from "@mui/icons-material";
 import { DbContext } from "../../context/DbContext";
 import { companyColor } from "../../constants/Constants";
-import { getFirstCoByRouteObj, upgradeBookmark } from "../../Utils/Utils";
+import { getFirstCoByRouteObj, upgradeBookmark } from "../../utils/Utils";
 
 export const PreviewDialog = ({ data, setImportExportMode, previewFrom }) => {
   const { gStopList, gRouteList } = useContext(DbContext);

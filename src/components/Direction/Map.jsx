@@ -13,7 +13,7 @@ import {
   Polyline,
   Popup,
 } from "react-leaflet";
-import { getFirstCoByRouteObj } from "../../Utils/Utils";
+import { getFirstCoByRouteObj } from "../../utils/Utils";
 import { companyColor } from "../../constants/Constants";
 import { mtrLineColor } from "../../constants/Mtr";
 import { DbContext } from "../../context/DbContext";

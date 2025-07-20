@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import _ from "lodash";
-import { basicFiltering } from "../../../Utils/Utils";
+import { basicFiltering } from "../../../utils/Utils";
 import { DbContext } from "../../../context/DbContext";
 import { EtaContext } from "../../../context/EtaContext";
 import { useLocationWithInterval } from "../../../hooks/Location";

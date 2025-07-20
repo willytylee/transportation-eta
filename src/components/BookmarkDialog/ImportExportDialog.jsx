@@ -16,7 +16,7 @@ import {
 } from "@mui/material/";
 import { useSnackbar } from "notistack";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { upgradeBookmark, setLocalStorage } from "../../Utils/Utils";
+import { upgradeBookmark, setLocalStorage } from "../../utils/Utils";
 import { PreviewDialog } from "./PreviewDialog";
 
 export const ImportExportDialog = ({

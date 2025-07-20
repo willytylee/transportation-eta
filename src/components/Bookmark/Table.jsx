@@ -13,7 +13,7 @@ import {
   DirectionsBus as DirectionsBusIcon,
   PriorityHigh as PriorityHighIcon,
 } from "@mui/icons-material";
-import { phaseEta } from "../../Utils/Utils";
+import { phaseEta } from "../../utils/Utils";
 import { companyColor, primaryColor } from "../../constants/Constants";
 import { routeMap, mtrLineColor, stationMap } from "../../constants/Mtr";
 

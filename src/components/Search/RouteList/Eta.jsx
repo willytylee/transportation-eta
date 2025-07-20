@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEtas } from "../../../hooks/Etas";
-import { phaseEta } from "../../../Utils/Utils";
+import { phaseEta } from "../../../utils/Utils";
 
 export const Eta = ({ seq, routeObj, slice }) => {
   const { stopId } = useParams();

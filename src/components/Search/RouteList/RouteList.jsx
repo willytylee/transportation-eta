@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, styled } from "@mui/material";
-import { basicFiltering, sortByCompany } from "../../../Utils/Utils";
+import { basicFiltering, sortByCompany } from "../../../utils/Utils";
 import { EtaContext } from "../../../context/EtaContext";
 import { mtrLineColor } from "../../../constants/Mtr";
 import { DbContext } from "../../../context/DbContext";

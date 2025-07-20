@@ -1,7 +1,7 @@
 import { useContext, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material";
-import { getCoIconByRouteObj } from "../../../Utils/Utils";
+import { getCoIconByRouteObj } from "../../../utils/Utils";
 import { companyIconMap } from "../../../constants/Constants";
 import { EtaContext } from "../../../context/EtaContext";
 import { mtrIconColor, mtrLineColor, routeMap } from "../../../constants/Mtr";
