@@ -17,7 +17,7 @@ export const StopEta = ({
       <div className="seq">{seq}.</div>
       <div className="col2Wrapper">
         <div className="stop">{stopObj.name.zh}</div>
-        {stopId && stopId === stopObj.stopId && (
+        {stopId && stopId === stopObj.stopId && routeObj.fares && (
           <div className="fare">${routeObj.fares[seq - 1]}</div>
         )}
       </div>
